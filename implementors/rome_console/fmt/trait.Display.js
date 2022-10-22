@@ -1,0 +1,4 @@
+(function() {var implementors = {};
+implementors["rome_console"] = [];
+implementors["rome_diagnostics"] = [{"text":"impl&lt;'fmt, D:&nbsp;AsDiagnostic + ?<a class=\"trait\" href=\"https://doc.rust-lang.org/1.64.0/core/marker/trait.Sized.html\" title=\"trait core::marker::Sized\">Sized</a>&gt; <a class=\"trait\" href=\"rome_console/fmt/trait.Display.html\" title=\"trait rome_console::fmt::Display\">Display</a> for <a class=\"struct\" href=\"rome_diagnostics/v2/display/struct.PrintDiagnostic.html\" title=\"struct rome_diagnostics::v2::display::PrintDiagnostic\">PrintDiagnostic</a>&lt;'fmt, D&gt;","synthetic":false,"types":["rome_diagnostics::v2::display::PrintDiagnostic"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Severity","The severity to associate to a diagnostic."]],"struct":[["DiagnosticTags",""]],"trait":[["Diagnostic","The `Diagnostic` trait defines the metadata that can be exposed by error types in order to print details diagnostics in the console of the editor"]]};

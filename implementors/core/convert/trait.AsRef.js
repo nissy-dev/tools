@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rome_service"] = [{"text":"impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/1.64.0/core/convert/trait.AsRef.html\" title=\"trait core::convert::AsRef\">AsRef</a>&lt;<a class=\"struct\" href=\"rome_service/settings/struct.WorkspaceSettings.html\" title=\"struct rome_service::settings::WorkspaceSettings\">WorkspaceSettings</a>&gt; for <a class=\"struct\" href=\"rome_service/settings/struct.SettingsHandle.html\" title=\"struct rome_service::settings::SettingsHandle\">SettingsHandle</a>&lt;'a&gt;","synthetic":false,"types":["rome_service::settings::SettingsHandle"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Error","The `Error` struct wraps any type implementing [Diagnostic] into a single dynamic type."]],"type":[["Result","Alias of [std::result::Result] with the `Err` type defaulting to [Error]."]]};

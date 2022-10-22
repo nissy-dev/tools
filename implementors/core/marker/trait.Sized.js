@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rome_diagnostics"] = [{"text":"impl !<a class=\"trait\" href=\"https://doc.rust-lang.org/1.64.0/core/marker/trait.Sized.html\" title=\"trait core::marker::Sized\">Sized</a> for <a class=\"struct\" href=\"rome_diagnostics/v2/location/struct.LineIndex.html\" title=\"struct rome_diagnostics::v2::location::LineIndex\">LineIndex</a>","synthetic":true,"types":["rome_diagnostics::v2::location::LineIndex"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

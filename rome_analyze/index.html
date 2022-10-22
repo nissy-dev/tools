@@ -1,0 +1,354 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Analyzer"><meta name="keywords" content="rust, rustlang, rust-lang, rome_analyze"><title>rome_analyze - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../dark.css" disabled><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../storage.js"></script><script defer src="../crates.js"></script><script defer src="../main.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../favicon.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div></a><h2 class="location"><a href="#">Crate rome_analyze</a></h2><div class="sidebar-elems"><div class="block"><ul><li class="version">Version 0.0.0</li><li><a id="all-types" href="all.html">All Items</a></li></ul></div><section><div class="block"><ul><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#types">Type Definitions</a></li></ul></div></section></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../rome_analyze/index.html"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="main-heading"><h1 class="fqn"><span class="in-band">Crate <a class="mod" href="#">rome_analyze</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../src/rome_analyze/lib.rs.html#1-726">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="analyzer"><a href="#analyzer">Analyzer</a></h2>
+<p>The analyzer is a generic crate aimed to implement a visitor-like infrastructure, where
+it’s possible to inspect a piece of AST and emit diagnostics or actions based on a 
+static check.</p>
+<h2 id="folder-structure"><a href="#folder-structure">Folder structure</a></h2>
+<p>First of all, you need to identify the crate where you want to implement the rule. If the rule
+is going to be implemented for the JavaScript language (and its super languages), then the rule
+will be implemented inside the <code>rome_js_analyzer</code> crate.</p>
+<p>Rules are divided by capabilities:</p>
+<ul>
+<li><code>analyzers/</code> folder contains rules that don’t require any particular capabilities;</li>
+<li><code>semantic_analyzer/</code> folder contains rules that require the use of the semantic model;</li>
+<li><code>assists/</code> folder contains rules that contribute to refactor code, with not associated diagnostics;
+these are rules that are usually meant for editors/IDEs;</li>
+</ul>
+<p>Most of the rules will go under <code>semantic_analyzer/</code> or  <code>analyzers/</code> folders.</p>
+<p>Inside the folders, we will have folders for each group that Rome supports.</p>
+<p>When implementing <strong>new rules</strong>, they have to be implemented under the group <code>nursery</code>. New rules should
+always be considered unstable/not exhaustive.</p>
+<h3 id="lint-rules"><a href="#lint-rules">Lint rules</a></h3>
+<p>This gives to the project time to test the rule, find edge cases, etc.</p>
+<p>When creating or updating lint rules, you need to be aware that there’s a lot of generated code inside our toolchain, and
+our CI makes sure that this code is not out of sync. If some autogenerated files are out of sync,
+the CI will fail.</p>
+<h4 id="create-your-first-rule"><a href="#create-your-first-rule">Create your first rule</a></h4>
+<p>Let’s say we want to create a new rule called <code>useAwesomeTricks</code>, which uses the semantic model.</p>
+<ol>
+<li>
+<p>create a new file under <code>semantic_analyzers/nursery</code> called <code>use_awesome_tricks</code>;</p>
+</li>
+<li>
+<p>run the cargo alias <code>cargo codegen analyzer</code>, this command will update the file called <code>nursery.rs</code>
+inside the <code>semantic_analyzers</code> folder</p>
+</li>
+<li>
+<p>from there, use the <a href="#declare_rule"><code>declare_rule</code></a> macro to create a new type</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">use</span> <span class="ident">rome_analyze::declare_rule</span>;
+ 
+<span class="macro">declare_rule!</span> {
+  <span class="doccomment">/// Promotes the use of awesome tricks</span>
+  <span class="doccomment">/// </span>
+  <span class="doccomment">/// ## Examples</span>
+  <span class="doccomment">///</span>
+  <span class="doccomment">/// ### Invalid</span>
+  <span class="doccomment">///</span>
+  <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseAwesomeTricks</span> {
+      <span class="ident">version</span>: <span class="string">&quot;0.10.0&quot;</span>,
+      <span class="ident">name</span>: <span class="string">&quot;useAwesomeTricks&quot;</span>,
+      <span class="ident">recommended</span>: <span class="bool-val">false</span>,
+     }
+ }</code></pre></div>
+</li>
+<li>
+<p>Then you need to use the <code>Rule</code> trait to implement the rule on this new created struct</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">Rule</span>, <span class="ident">RuleCategory</span>};
+<span class="kw">use</span> <span class="ident">rome_js_syntax::JsAnyExpression</span>;
+<span class="kw">use</span> <span class="ident">rome_analyze::context::RuleContext</span>;
+
+<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseAwesomeTricks</span> {
+     <span class="kw">const</span> <span class="ident">CATEGORY</span>: <span class="ident">RuleCategory</span> <span class="op">=</span> <span class="ident">RuleCategory::Lint</span>;
+     <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Semantic</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span>;
+     <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> <span class="ident">String</span>;
+     <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
+     <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+
+     <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::Signals</span> {}
+}</code></pre></div>
+</li>
+<li>
+<p>the const <code>CATEGORY</code> must be <code>RuleCategory::Lint</code> otherwise it won’t work</p>
+</li>
+<li>
+<p>the <code>Query</code> needs to have the <code>Semantic</code> type, because we want to have access to the semantic model.
+<code>Query</code> tells the engine on which AST node we want to trigger the rule. </p>
+</li>
+<li>
+<p>The <code>State</code> type doesn’t have to be used, so it can be considered optional, but it has
+be defined as <code>type State = ()</code></p>
+</li>
+<li>
+<p>The <code>run</code> function must be implemented. This function is called every time the analyzer
+finds a match for the query specified by the rule, and may return zero or more “signals”.</p>
+</li>
+<li>
+<p>Implement the optional <code>diagnostic</code> function, to tell the user where’s the error and why:</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseAwesomeTricks</span> {
+    <span class="comment">// .. code</span>
+    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">_ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {}
+}</code></pre></div>
+<p>While implementing the diagnostic, please keep <a href="https://rome.tools/#technical">Rome’s technical principals</a> in mind.
+This function is called of every signal emitted by the <code>run</code> function, and it may return
+zero or one diagnostic. </p>
+<p>You will have to manually update the file <code>rome_diagnostics_categories/src/categories.rs</code> and add a new category
+for the new rule you’re about to create.</p>
+</li>
+<li>
+<p>Implement the optional <code>action</code> function, if we are able to provide automatic code fix to the rule:</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseAwesomeTricks</span> {
+    <span class="comment">// .. code</span>
+    <span class="kw">fn</span> <span class="ident">action</span>(<span class="ident">_ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {}
+}</code></pre></div>
+<p>This function is called of every signal emitted by the <code>run</code> function, and it may return
+zero or one code action.
+When returning a code action, you will need to pass <code>category</code> and <code>applicability</code> fields.
+<code>category</code> must be <code>ActionCategory::QuickFix</code>, while <code>applicability</code> must be <code>Applicability:MaybeIncorrect</code></p>
+</li>
+</ol>
+<p>That’s it! Now, let’s test the rule</p>
+<h4 id="test-a-rule"><a href="#test-a-rule">Test a rule</a></h4>
+<p>Inside the <code>tests/spec</code> folder, rules are divided by group and rule name. The test infrastructure
+is rigid around the association of the pair “group/rule name”, which means that <em><strong>your test cases
+are placed inside the wrong group, you won’t see any diagnostics</strong></em>.</p>
+<p>Since each new rule will start from <code>nursery</code>, that’s where we start.</p>
+<p>From there, you have two options:</p>
+<ul>
+<li>create a single file called like the rule name, e.g. <code>useAwesomeTricks.js</code>, <code>useAwesomeTricks.tsx</code>, etc. The
+extension of the file matters based on which kind of file you need to test;</li>
+<li>create a folder called <code>useAwesomeTricks/</code>, and then create various files where you want to create
+different cases. These options are useful if your rules target different super languages, or you want
+to split your cases among different files;</li>
+</ul>
+<p>Run the command <code>cargo test</code> and if you’ve done everything correctly, you should see some snapshots
+emitted with diagnostics and code actions.</p>
+<p>Check our main <a href="https://github.com/rome/tools/blob/main/CONTRIBUTING.md#snapshot-tests">contribution document</a>
+to know how to deal with the snapshot tests.</p>
+<h4 id="code-generation"><a href="#code-generation">Code generation</a></h4>
+<p>Run the following commands to update the generated files:</p>
+<ul>
+<li><code>cargo codegen-configuration</code>, <strong>this command must be run first</strong> and, it will update the configuration;</li>
+<li><code>cargo lintdoc</code>, it will update the website with the documentation of the rules, check <a href="#declare_rule"><code>declare_rule</code></a>
+for more information about it;</li>
+<li><code>cargo codegen-bindings</code>, it will update the TypeScript types released inside the JS APIs;</li>
+<li><code>cargo codegen-schema</code>, it will update the JSON Schema file of the configuration, used by VSCode;</li>
+</ul>
+<h4 id="naming-patterns-for-rules"><a href="#naming-patterns-for-rules">Naming patterns for rules</a></h4>
+<ol>
+<li>
+<p>Forbid a concept</p>
+<div class="example-wrap"><pre class="language-block"><code>no&lt;Concept&gt;</code></pre></div>
+<p>When a rule’s sole intention is to <strong>forbid a single concept</strong> - such as disallowing the use of <code>debugger</code> statements - the rule should be named using the <code>no</code> prefix. For example, the rule to disallow the use of <code>debugger</code> statements is named <code>noDebugger</code>.</p>
+</li>
+<li>
+<p>Mandate a concept</p>
+<div class="example-wrap"><pre class="language-block"><code>use&lt;Concept&gt;</code></pre></div>
+<p>When a rule’s sole intention is to <strong>mandate a single concept</strong> - such as forcing the use of camel-casing - the rule should be named using the <code>use</code> prefix. For example, the rule to mandating the use of camel-cased variable names is named <code>useCamelCase</code>.</p>
+</li>
+</ol>
+<h4 id="declare_rule"><a href="#declare_rule"><code>declare_rule</code></a></h4>
+<p>This macro is used to declare an analyzer rule type, and implement the
+<a href="trait.RuleMeta.html" title="RuleMeta">RuleMeta</a> trait for it</p>
+<h2 id="example"><a href="#example">Example</a></h2>
+<p>The macro itself expect the following syntax:</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">use</span> <span class="ident">rome_analyze::declare_rule</span>;
+
+<span class="macro">declare_rule!</span> {
+    <span class="doccomment">/// Documentation</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">ExampleRule</span> {
+        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
+        <span class="ident">name</span>: <span class="string">&quot;ruleName&quot;</span>,
+        <span class="ident">recommended</span>: <span class="bool-val">false</span>,
+    }
+}</code></pre></div>
+<h5 id="documentation"><a href="#documentation">Documentation</a></h5>
+<p>The doc-comment for the rule is mandatory and is used to generate the
+documentation page for the rule on the website.</p>
+<p>Importantly, the tool used to generate those pages also runs tests on the
+code blocks included in the documentation written in languages supported by
+the Rome toolchain (JavaScript, JSX, TypeScript, …) similar to how
+<code>rustdoc</code> generates tests from code blocks written in Rust. Because code
+blocks in Rust doc-comments are assumed to be written in Rust by default
+the language of the test must be explicitly specified, for instance:</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">use</span> <span class="ident">rome_analyze::declare_rule</span>;
+<span class="macro">declare_rule!</span> {
+    <span class="doccomment">/// Disallow the use of `var`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ### Valid</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```js</span>
+    <span class="doccomment">/// let a, b;</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">NoVar</span> {
+        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
+        <span class="ident">name</span>: <span class="string">&quot;noVar&quot;</span>,
+        <span class="ident">recommended</span>: <span class="bool-val">false</span>,
+    }
+}</code></pre></div>
+<p>Additionally, it’s possible to declare that a test should emit a diagnostic
+by adding <code>expect_diagnostic</code> to the language metadata:</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">use</span> <span class="ident">rome_analyze::declare_rule</span>;
+<span class="macro">declare_rule!</span> {
+    <span class="doccomment">///  Disallow the use of `var`</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">///  ### Invalid</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">///  ```js,expect_diagnostic</span>
+    <span class="doccomment">///  var a, b;</span>
+    <span class="doccomment">///  ```</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">NoVar</span> {
+        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
+        <span class="ident">name</span>: <span class="string">&quot;noVar&quot;</span>,
+        <span class="ident">recommended</span>: <span class="bool-val">false</span>,
+    }
+}</code></pre></div>
+<p>This will cause the documentation generator to ensure the rule does emit
+exactly one diagnostic for this code, and to include a snapshot for the
+diagnostic in the resulting documentation page</p>
+<h5 id="deprecation"><a href="#deprecation">Deprecation</a></h5>
+<p>There are occasions when a rule must be deprecated, to avoid breaking changes. The reason
+of deprecations can be multiples.</p>
+<p>In order to do, the macro allows to add additional field to add the reason for deprecation</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">use</span> <span class="ident">rome_analyze::declare_rule</span>;
+
+<span class="macro">declare_rule!</span> {
+     <span class="doccomment">/// Disallow the use of `var`</span>
+     <span class="doccomment">/// </span>
+     <span class="doccomment">/// ### Invalid</span>
+     <span class="doccomment">/// </span>
+     <span class="doccomment">/// ```js,expect_diagnostic</span>
+     <span class="doccomment">/// var a, b;</span>
+     <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">NoVar</span> {
+        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
+        <span class="ident">name</span>: <span class="string">&quot;noVar&quot;</span>,
+        <span class="ident">deprecated</span>: <span class="string">&quot;Use the rule `noAnotherVar`&quot;</span>,
+        <span class="ident">recommended</span>: <span class="bool-val">false</span>,
+    }
+}</code></pre></div>
+<h5 id="category-macro"><a href="#category-macro">Category Macro</a></h5>
+<p>Declaring a rule using <code>declare_rule!</code> will cause a new <code>rule_category!</code>
+macro to be declared in the surrounding module. This macro can be used to
+refer to the corresponding diagnostic category for this lint rule, if it
+has one. Using this macro instead of getting the category for a diagnostic
+by dynamically parsing its string name has the advantage of statically
+injecting the category at compile time and checking that it is correctly
+registered to the <code>rome_diagnostics</code> library</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="macro">declare_rule!</span> {
+    <span class="doccomment">/// Documentation</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">ExampleRule</span> {
+        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
+        <span class="ident">name</span>: <span class="string">&quot;ruleName&quot;</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">ExampleRule</span> {
+    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">RuleDiagnostic::new</span>(
+            <span class="macro">rule_category!</span>(),
+            <span class="ident">ctx</span>.<span class="ident">query</span>().<span class="ident">text_trimmed_range</span>(),
+            <span class="string">&quot;message&quot;</span>,
+        ))
+    }
+}</code></pre></div>
+</div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="context/index.html" title="rome_analyze::context mod">context</a></div><div class="item-right docblock-short"></div></div></div><h2 id="macros" class="small-section-header"><a href="#macros">Macros</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.category_concat.html" title="rome_analyze::category_concat macro">category_concat</a></div><div class="item-right docblock-short"><p>The <code>category_concat!</code> macro is a variant of <code>category!</code> using a
+slightly different syntax, for use in the <code>declare_group</code> and
+<code>declare_rule</code> macros in the analyzer</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.declare_category.html" title="rome_analyze::declare_category macro">declare_category</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.declare_group.html" title="rome_analyze::declare_group macro">declare_group</a></div><div class="item-right docblock-short"><p>This macro is used by the codegen script to declare an analyzer rule group,
+and implement the <a href="trait.RuleGroup.html" title="RuleGroup">RuleGroup</a> trait for it</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.declare_rule.html" title="rome_analyze::declare_rule macro">declare_rule</a></div><div class="item-right docblock-short"><p>This macro is used to declare an analyzer rule type, and implement the</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.merge_node_visitors.html" title="rome_analyze::merge_node_visitors macro">merge_node_visitors</a></div><div class="item-right docblock-short"><p>Creates a single struct implementing <a href="trait.Visitor.html" title="Visitor">Visitor</a> over a collection of type
+implementing the <a href="trait.NodeVisitor.html" title="NodeVisitor">NodeVisitor</a> helper trait. Unlike the global <a href="trait.Visitor.html" title="Visitor">Visitor</a>,
+node visitors are transient: they get instantiated when the traversal
+enters the corresponding node and destroyed when the node is exited. They
+are intended as a building blocks for creating and managing the state of
+complex visitors by allowing the implementation to be split over multiple
+smaller components.</p>
+</div></div></div><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AnalysisFilter.html" title="rome_analyze::AnalysisFilter struct">AnalysisFilter</a></div><div class="item-right docblock-short"><p>Allows filtering the list of rules that will be executed in a run of the analyzer,
+and at what source code range signals (diagnostics or actions) may be raised</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Analyzer.html" title="rome_analyze::Analyzer struct">Analyzer</a></div><div class="item-right docblock-short"><p>The analyzer is the main entry point into the <code>rome_analyze</code> infrastructure.
+Its role is to run a collection of <a href="trait.Visitor.html" title="Visitor">Visitor</a>s over a syntax tree, with each
+visitor implementing various analysis over this syntax tree to generate
+auxiliary data structures as well as emit “query match” events to be
+processed by lint rules and in turn emit “analyzer signals” in the form of
+diagnostics, code actions or both</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AnalyzerAction.html" title="rome_analyze::AnalyzerAction struct">AnalyzerAction</a></div><div class="item-right docblock-short"><p>Code Action object returned by the analyzer, generated from a <a href="struct.RuleAction.html" title="crate::RuleAction">crate::RuleAction</a>
+with additional information about the rule injected by the analyzer</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AnalyzerConfiguration.html" title="rome_analyze::AnalyzerConfiguration struct">AnalyzerConfiguration</a></div><div class="item-right docblock-short"><p>A data structured derived from the <code>rome.json</code> file</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AnalyzerContext.html" title="rome_analyze::AnalyzerContext struct">AnalyzerContext</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AnalyzerOptions.html" title="rome_analyze::AnalyzerOptions struct">AnalyzerOptions</a></div><div class="item-right docblock-short"><p>A set of information useful to the analyzer infrastructure</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AnalyzerRules.html" title="rome_analyze::AnalyzerRules struct">AnalyzerRules</a></div><div class="item-right docblock-short"><p>A convenient new type data structure to insert and get rules</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Ast.html" title="rome_analyze::Ast struct">Ast</a></div><div class="item-right docblock-short"><p>Query type usable by lint rules to match on specific <a href="../rome_rowan/ast/trait.AstNode.html" title="AstNode">AstNode</a> types</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.InspectMatcher.html" title="rome_analyze::InspectMatcher struct">InspectMatcher</a></div><div class="item-right docblock-short"><p>Adapter type wrapping a <a href="trait.QueryMatcher.html" title="QueryMatcher">QueryMatcher</a> type with a function that can be
+used to inspect the query matches emitted by the analyzer</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.MatchQueryParams.html" title="rome_analyze::MatchQueryParams struct">MatchQueryParams</a></div><div class="item-right docblock-short"><p>Parameters provided to <a href="trait.QueryMatcher.html#tymethod.match_query" title="QueryMatcher::match_query">QueryMatcher::match_query</a> and require to run lint rules</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.MetadataRegistry.html" title="rome_analyze::MetadataRegistry struct">MetadataRegistry</a></div><div class="item-right docblock-short"><p>Stores metadata information for all the rules in the registry, sorted
+alphabetically</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.MissingServicesDiagnostic.html" title="rome_analyze::MissingServicesDiagnostic struct">MissingServicesDiagnostic</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RegistryRuleMetadata.html" title="rome_analyze::RegistryRuleMetadata struct">RegistryRuleMetadata</a></div><div class="item-right docblock-short"><p>Metadata entry for a rule and its group in the registry</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RuleAction.html" title="rome_analyze::RuleAction struct">RuleAction</a></div><div class="item-right docblock-short"><p>Code Action object returned by a single analysis rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RuleCategories.html" title="rome_analyze::RuleCategories struct">RuleCategories</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RuleDiagnostic.html" title="rome_analyze::RuleDiagnostic struct">RuleDiagnostic</a></div><div class="item-right docblock-short"><p>Diagnostic object returned by a single analysis rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RuleKey.html" title="rome_analyze::RuleKey struct">RuleKey</a></div><div class="item-right docblock-short"><p>Opaque identifier for a single rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RuleMetadata.html" title="rome_analyze::RuleMetadata struct">RuleMetadata</a></div><div class="item-right docblock-short"><p>Static metadata containing information about a rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RuleRegistry.html" title="rome_analyze::RuleRegistry struct">RuleRegistry</a></div><div class="item-right docblock-short"><p>The rule registry holds type-erased instances of all active analysis rules
+for each phase.
+What defines a phase is the set of services that a phase offers. Currently
+we have:</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RuleRegistryBuilder.html" title="rome_analyze::RuleRegistryBuilder struct">RuleRegistryBuilder</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RuleSuppressions.html" title="rome_analyze::RuleSuppressions struct">RuleSuppressions</a></div><div class="item-right docblock-short"><p>Set of nodes this rule has suppressed from matching its query</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ServiceBag.html" title="rome_analyze::ServiceBag struct">ServiceBag</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SignalEntry.html" title="rome_analyze::SignalEntry struct">SignalEntry</a></div><div class="item-right docblock-short"><p>Entry for a pending signal in the <code>signal_queue</code></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SyntaxVisitor.html" title="rome_analyze::SyntaxVisitor struct">SyntaxVisitor</a></div><div class="item-right docblock-short"><p>The <a href="struct.SyntaxVisitor.html" title="SyntaxVisitor">SyntaxVisitor</a> is the simplest form of visitor implemented for the
+analyzer, it simply broadcast each <a href="../rome_rowan/utility_types/enum.WalkEvent.html#variant.Enter" title="WalkEvent::Enter">WalkEvent::Enter</a> as a query match
+event for the <a href="../rome_rowan/syntax/node/struct.SyntaxNode.html" title="SyntaxNode">SyntaxNode</a> being entered</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.VisitorContext.html" title="rome_analyze::VisitorContext struct">VisitorContext</a></div><div class="item-right docblock-short"><p>Mutable context objects shared by all visitors</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.VisitorFinishContext.html" title="rome_analyze::VisitorFinishContext struct">VisitorFinishContext</a></div><div class="item-right docblock-short"><p>Mutable context objects provided to the finish hook of visitors</p>
+</div></div></div><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ActionCategory.html" title="rome_analyze::ActionCategory enum">ActionCategory</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.AnalyzerDiagnostic.html" title="rome_analyze::AnalyzerDiagnostic enum">AnalyzerDiagnostic</a></div><div class="item-right docblock-short"><p>Small wrapper for diagnostics during the analysis phase.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Never.html" title="rome_analyze::Never enum">Never</a></div><div class="item-right docblock-short"><p>Utility type to be used as a default value for the <code>B</code> generic type on
+<code>analyze</code> when the provided callback never breaks</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Phases.html" title="rome_analyze::Phases enum">Phases</a></div><div class="item-right docblock-short"><p>Defines all the phases that the <a href="struct.RuleRegistry.html" title="RuleRegistry">RuleRegistry</a> supports.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.QueryKey.html" title="rome_analyze::QueryKey enum">QueryKey</a></div><div class="item-right docblock-short"><p>Mirrors the variants of <a href="enum.QueryMatch.html" title="QueryMatch">QueryMatch</a> to statically compute which queries a
+given <a href="trait.Queryable.html" title="Queryable">Queryable</a> type can match</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.QueryMatch.html" title="rome_analyze::QueryMatch enum">QueryMatch</a></div><div class="item-right docblock-short"><p>Enumerate all the types of <a href="trait.Queryable.html" title="Queryable">Queryable</a> analyzer visitors may emit</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.RuleCategory.html" title="rome_analyze::RuleCategory enum">RuleCategory</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.RuleFilter.html" title="rome_analyze::RuleFilter enum">RuleFilter</a></div><div class="item-right docblock-short"><p>Allow filtering a single rule or group of rules by their names</p>
+</div></div></div><h2 id="traits" class="small-section-header"><a href="#traits">Traits</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.AnalyzerSignal.html" title="rome_analyze::AnalyzerSignal trait">AnalyzerSignal</a></div><div class="item-right docblock-short"><p>Event raised by the analyzer when a <a href="trait.Rule.html">Rule</a>
+emits a diagnostic, a code action, or both</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.CategoryLanguage.html" title="rome_analyze::CategoryLanguage trait">CategoryLanguage</a></div><div class="item-right docblock-short"><p>This trait is implemented for tuples of <a href="trait.Rule.html" title="Rule">Rule</a> types of size 1 to 29 if the
+language of all the groups in the tuple share the same associated
+<a href="../rome_rowan/syntax/trait.Language.html" title="Language">Language</a> (which is then aliased as the <code>Language</code> associated type on
+<a href="trait.CategoryLanguage.html" title="CategoryLanguage">CategoryLanguage</a> itself). It is used to ensure all the groups in a given
+category are all querying the same underlying language</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.FromServices.html" title="rome_analyze::FromServices trait">FromServices</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.GroupCategory.html" title="rome_analyze::GroupCategory trait">GroupCategory</a></div><div class="item-right docblock-short"><p>A group category is a collection of rule groups under a given category ID,
+serving as a broad classification on the kind of diagnostic or code action
+these rule emit, and allowing whole categories of rules to be disabled at
+once depending on the kind of analysis being performed</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.GroupLanguage.html" title="rome_analyze::GroupLanguage trait">GroupLanguage</a></div><div class="item-right docblock-short"><p>This trait is implemented for tuples of <a href="trait.Rule.html" title="Rule">Rule</a> types of size 1 to 29 if the
+query type of all the rules in the tuple share the same associated
+<a href="../rome_rowan/syntax/trait.Language.html" title="Language">Language</a> (which is then aliased as the <code>Language</code> associated type on
+<a href="trait.GroupLanguage.html" title="GroupLanguage">GroupLanguage</a> itself). It is used to ensure all the rules in a given
+group are all querying the same underlying language</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.NodeVisitor.html" title="rome_analyze::NodeVisitor trait">NodeVisitor</a></div><div class="item-right docblock-short"><p>A node visitor is a special kind of visitor that does not have a persistent
+state for the entire run of the analyzer. Instead these visitors are
+transient, they get instantiated when the traversal enters the
+corresponding node type and destroyed when the corresponding node exits</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Phase.html" title="rome_analyze::Phase trait">Phase</a></div><div class="item-right docblock-short"><p>Defines which phase a rule will run. This will be defined
+by the set of services a rule demands.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.QueryMatcher.html" title="rome_analyze::QueryMatcher trait">QueryMatcher</a></div><div class="item-right docblock-short"><p>The <a href="trait.QueryMatcher.html" title="QueryMatcher">QueryMatcher</a> trait is responsible of running lint rules on
+<a href="enum.QueryMatch.html" title="QueryMatch">QueryMatch</a> instances emitted by the various <a href="trait.Visitor.html">Visitor</a>
+and push signals wrapped in <a href="struct.SignalEntry.html" title="SignalEntry">SignalEntry</a> to the signal queue</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Queryable.html" title="rome_analyze::Queryable trait">Queryable</a></div><div class="item-right docblock-short"><p>Trait implemented for all types, for example lint rules can query them to emit diagnostics or code actions.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.RegistryVisitor.html" title="rome_analyze::RegistryVisitor trait">RegistryVisitor</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Rule.html" title="rome_analyze::Rule trait">Rule</a></div><div class="item-right docblock-short"><p>Trait implemented by all analysis rules: declares interest to a certain AstNode type,
+and a callback function to be executed on all nodes matching the query to possibly
+raise an analysis event</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.RuleGroup.html" title="rome_analyze::RuleGroup trait">RuleGroup</a></div><div class="item-right docblock-short"><p>A rule group is a collection of rules under a given name, serving as a
+“namespace” for lint rules and allowing the entire set of rules to be
+disabled at once</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.RuleMeta.html" title="rome_analyze::RuleMeta trait">RuleMeta</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Visitor.html" title="rome_analyze::Visitor trait">Visitor</a></div><div class="item-right docblock-short"><p>Visitors are the main building blocks of the analyzer: they receive syntax
+<a href="../rome_rowan/utility_types/enum.WalkEvent.html" title="WalkEvent">WalkEvent</a>s, process these events to build secondary data structures from
+the syntax tree, and emit rule query matches through the <a href="struct.RuleRegistry.html" title="crate::RuleRegistry">crate::RuleRegistry</a></p>
+</div></div></div><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="type" href="type.ControlFlow.html" title="rome_analyze::ControlFlow type">ControlFlow</a></div><div class="item-right docblock-short"><p>Type alias of <a href="https://doc.rust-lang.org/1.64.0/core/ops/control_flow/enum.ControlFlow.html" title="ops::ControlFlow">ops::ControlFlow</a> with the <code>B</code> generic type defaulting to <a href="enum.Never.html" title="Never">Never</a></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.LanguageRoot.html" title="rome_analyze::LanguageRoot type">LanguageRoot</a></div><div class="item-right docblock-short"></div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>

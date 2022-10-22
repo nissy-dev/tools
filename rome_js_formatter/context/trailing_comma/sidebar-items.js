@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["TrailingComma","Print trailing commas wherever possible in multi-line comma-separated syntactic structures."]]};

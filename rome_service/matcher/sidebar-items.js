@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["pattern",""]],"struct":[["Matcher","A data structure to use when there’s need to match a string or a path a against a unix shell style patterns"]]};
