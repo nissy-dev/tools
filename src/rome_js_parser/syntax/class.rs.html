@@ -2222,31 +2222,6 @@
 <span id="2222">2222</span>
 <span id="2223">2223</span>
 <span id="2224">2224</span>
-<span id="2225">2225</span>
-<span id="2226">2226</span>
-<span id="2227">2227</span>
-<span id="2228">2228</span>
-<span id="2229">2229</span>
-<span id="2230">2230</span>
-<span id="2231">2231</span>
-<span id="2232">2232</span>
-<span id="2233">2233</span>
-<span id="2234">2234</span>
-<span id="2235">2235</span>
-<span id="2236">2236</span>
-<span id="2237">2237</span>
-<span id="2238">2238</span>
-<span id="2239">2239</span>
-<span id="2240">2240</span>
-<span id="2241">2241</span>
-<span id="2242">2242</span>
-<span id="2243">2243</span>
-<span id="2244">2244</span>
-<span id="2245">2245</span>
-<span id="2246">2246</span>
-<span id="2247">2247</span>
-<span id="2248">2248</span>
-<span id="2249">2249</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">ParsedSyntax</span>, <span class="ident">ParserProgress</span>, <span class="ident">RecoveryResult</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state</span>::{
     <span class="ident">EnableStrictMode</span>, <span class="ident">EnterClassPropertyInitializer</span>, <span class="ident">EnterClassStaticInitializationBlock</span>,
@@ -2284,11 +2259,11 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsSyntaxFeature::TypeScript</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ParsedSyntax</span>::{<span class="ident">Absent</span>, <span class="ident">Present</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">CompletedMarker</span>, <span class="ident">Marker</span>, <span class="ident">ParseNodeList</span>, <span class="ident">ParseRecovery</span>, <span class="ident">Parser</span>, <span class="ident">StrictMode</span>, <span class="ident">SyntaxFeature</span>,
+    <span class="ident">CompletedMarker</span>, <span class="ident">Marker</span>, <span class="ident">ParseDiagnostic</span>, <span class="ident">ParseNodeList</span>, <span class="ident">ParseRecovery</span>, <span class="ident">Parser</span>, <span class="ident">StrictMode</span>,
+    <span class="ident">SyntaxFeature</span>,
 };
 <span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
 <span class="kw">use</span> <span class="ident">drop_bomb::DebugDropBomb</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Diagnostic</span>;
 <span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">rome_js_syntax::TextSize</span>;
 <span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>, <span class="ident">T</span>};
@@ -2400,8 +2375,11 @@
         <span class="comment">// test_err class_in_single_statement_context</span>
         <span class="comment">// if (true) class A {}</span>
         <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Classes can only be declared at top level or inside a block&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">class</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;wrap the class in a block statement&quot;</span>),
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;Classes can only be declared at top level or inside a block&quot;</span>,
+                <span class="ident">class</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            )
+            .<span class="ident">hint</span>(<span class="string">&quot;wrap the class in a block statement&quot;</span>),
         );
         <span class="ident">class</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>)
     }
@@ -2475,20 +2453,20 @@
             <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">source</span>(<span class="ident">id</span>.<span class="ident">range</span>(<span class="ident">p</span>));
             <span class="kw">if</span> <span class="ident">TypeScript</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) <span class="op">&amp;&amp;</span> <span class="ident">is_reserved_type_name</span>(<span class="ident">text</span>) {
                 <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                    .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+                    .<span class="ident">err_builder</span>(<span class="macro">format!</span>(
                             <span class="string">&quot;`{}` cannot be used as a class name because it is already reserved as a type&quot;</span>,
                             <span class="ident">text</span>
-                        ))
-                    .<span class="ident">primary</span>(<span class="ident">id</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>);
+                        ),<span class="ident">id</span>.<span class="ident">range</span>(<span class="ident">p</span>), );
 
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
             }
         }
         <span class="ident">Absent</span> =&gt; {
             <span class="kw">if</span> <span class="op">!</span><span class="ident">kind</span>.<span class="ident">is_id_optional</span>() {
-                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                    .<span class="ident">err_builder</span>(<span class="string">&quot;class declarations must have a name&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">class_token_range</span>.<span class="ident">start</span>()..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(), <span class="string">&quot;&quot;</span>);
+                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;class declarations must have a name&quot;</span>,
+                    <span class="ident">class_token_range</span>.<span class="ident">start</span>()..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(),
+                );
 
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
             }
@@ -2549,9 +2527,12 @@
                                 <span class="ident">p</span>.<span class="ident">error</span>(
                                     <span class="ident">p</span>.<span class="ident">err_builder</span>(
                                         <span class="string">&quot;&#39;extends&#39; clause must precede &#39;implements&#39; clause.&quot;</span>,
+                                        <span class="ident">current</span>.<span class="ident">range</span>(<span class="ident">p</span>),
                                     )
-                                    .<span class="ident">primary</span>(<span class="ident">current</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>)
-                                    .<span class="ident">secondary</span>(<span class="ident">first_implements</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
+                                    .<span class="ident">detail</span>(
+                                        <span class="ident">first_implements</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                                        <span class="string">&quot;This is where implements was found&quot;</span>,
+                                    ),
                                 )
                             }
 
@@ -2559,9 +2540,8 @@
                         }
                     }
                     <span class="prelude-val">Some</span>(<span class="ident">first_extends</span>) =&gt; <span class="ident">p</span>.<span class="ident">error</span>(
-                        <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;extends&#39; clause already seen.&quot;</span>)
-                            .<span class="ident">primary</span>(<span class="ident">current</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>)
-                            .<span class="ident">secondary</span>(<span class="ident">first_extends</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;first &#39;extends&#39; clause&quot;</span>),
+                        <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;extends&#39; clause already seen.&quot;</span>, <span class="ident">current</span>.<span class="ident">range</span>(<span class="ident">p</span>))
+                            .<span class="ident">detail</span>(<span class="ident">first_extends</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;first &#39;extends&#39; clause&quot;</span>),
                     ),
                 }
             }
@@ -2572,12 +2552,10 @@
                     <span class="prelude-val">None</span> =&gt; {
                         <span class="ident">first_implements</span> <span class="op">=</span> {
                             <span class="kw">if</span> <span class="ident">TypeScript</span>.<span class="ident">is_unsupported</span>(<span class="ident">p</span>) {
-                                <span class="ident">p</span>.<span class="ident">error</span>(
-                                    <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                                        <span class="string">&quot;classes can only implement interfaces in TypeScript files&quot;</span>,
-                                    )
-                                    .<span class="ident">primary</span>(<span class="ident">current</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-                                );
+                                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                                    <span class="string">&quot;classes can only implement interfaces in TypeScript files&quot;</span>,
+                                    <span class="ident">current</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                                ));
                                 <span class="ident">current</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
                             }
                             <span class="prelude-val">Some</span>(<span class="ident">current</span>)
@@ -2585,9 +2563,8 @@
                     }
                     <span class="prelude-val">Some</span>(<span class="ident">first_implements</span>) =&gt; {
                         <span class="ident">p</span>.<span class="ident">error</span>(
-                            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;implements&#39; clause already seen.&quot;</span>)
-                                .<span class="ident">primary</span>(<span class="ident">current</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>)
-                                .<span class="ident">secondary</span>(<span class="ident">first_implements</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;first &#39;implements&#39; clause&quot;</span>),
+                            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;implements&#39; clause already seen.&quot;</span>, <span class="ident">current</span>.<span class="ident">range</span>(<span class="ident">p</span>))
+                                .<span class="ident">detail</span>(<span class="ident">first_implements</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;first &#39;implements&#39; clause&quot;</span>),
                         );
                     }
                 }
@@ -2612,10 +2589,7 @@
     <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="ident">extends</span>]);
 
     <span class="kw">if</span> <span class="ident">parse_extends_expression</span>(<span class="ident">p</span>).<span class="ident">is_absent</span>() {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;extends&#39; list cannot be empty.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">extends_end</span>..<span class="ident">extends_end</span>, <span class="string">&quot;&quot;</span>),
-        )
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;extends&#39; list cannot be empty.&quot;</span>, <span class="ident">extends_end</span>..<span class="ident">extends_end</span>))
     } <span class="kw">else</span> {
         <span class="ident">TypeScript</span>
             .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_arguments</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">arguments</span><span class="op">|</span> {
@@ -2630,10 +2604,7 @@
 
         <span class="kw">let</span> <span class="ident">extra</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
         <span class="kw">if</span> <span class="ident">parse_extends_expression</span>(<span class="ident">p</span>).<span class="ident">is_absent</span>() {
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Trailing comma not allowed.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">comma_range</span>, <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Trailing comma not allowed.&quot;</span>, <span class="ident">comma_range</span>));
             <span class="ident">extra</span>.<span class="ident">abandon</span>(<span class="ident">p</span>);
             <span class="kw">break</span>;
         }
@@ -2642,10 +2613,10 @@
 
         <span class="kw">let</span> <span class="ident">extra_class</span> <span class="op">=</span> <span class="ident">extra</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN</span>);
 
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Classes can only extend a single class.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">extra_class</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;Classes can only extend a single class.&quot;</span>,
+            <span class="ident">extra_class</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        ));
     }
 
     <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_EXTENDS_CLAUSE</span>))
@@ -2761,9 +2732,10 @@
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">abstract_token_range</span>) <span class="op">=</span>
                     <span class="ident">modifiers</span>.<span class="ident">get_first_range</span>(<span class="ident">ModifierKind::Abstract</span>)
                 {
-                    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                        .<span class="ident">err_builder</span>(<span class="string">&quot;Only abstract classes can have abstract members&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">abstract_token_range</span>, <span class="string">&quot;&quot;</span>);
+                    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;Only abstract classes can have abstract members&quot;</span>,
+                        <span class="ident">abstract_token_range</span>,
+                    );
                     <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                     <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
                 }
@@ -2827,9 +2799,7 @@
     <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw-2">*</span>]) {
         <span class="ident">p</span>.<span class="ident">bump_any</span>(); <span class="comment">// bump * token</span>
         <span class="kw">if</span> <span class="ident">is_at_constructor</span>(<span class="ident">p</span>, <span class="ident">modifiers</span>) {
-            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="string">&quot;constructors can&#39;t be generators&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">generator_range</span>, <span class="string">&quot;&quot;</span>);
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;constructors can&#39;t be generators&quot;</span>, <span class="ident">generator_range</span>);
 
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
         }
@@ -2858,9 +2828,7 @@
         }
 
         <span class="kw">return</span> <span class="ident">Present</span>(<span class="kw">if</span> <span class="ident">is_at_constructor</span>(<span class="ident">p</span>, <span class="ident">modifiers</span>) {
-            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="string">&quot;constructors cannot be async&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">async_range</span>, <span class="string">&quot;&quot;</span>);
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;constructors cannot be async&quot;</span>, <span class="ident">async_range</span>);
 
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
             <span class="ident">parse_class_member_name</span>(<span class="ident">p</span>, <span class="ident">modifiers</span>).<span class="ident">unwrap</span>();
@@ -3067,9 +3035,10 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">property</span> <span class="op">=</span> <span class="ident">parse_property_class_member_body</span>(<span class="ident">p</span>, <span class="ident">member_marker</span>, <span class="ident">modifiers</span>);
 
             <span class="kw">if</span> <span class="op">!</span><span class="ident">property</span>.<span class="ident">kind</span>().<span class="ident">is_unknown</span>() <span class="op">&amp;&amp;</span> <span class="ident">is_constructor</span> {
-                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                    .<span class="ident">err_builder</span>(<span class="string">&quot;class properties may not be called `constructor`&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">property</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>);
+                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;class properties may not be called `constructor`&quot;</span>,
+                    <span class="ident">property</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                );
 
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                 <span class="ident">property</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
@@ -3116,10 +3085,10 @@
         <span class="comment">// class A {</span>
         <span class="comment">//   public static { }</span>
         <span class="comment">// }</span>
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Static class blocks cannot have any modifier.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">modifiers</span>.<span class="ident">list_marker</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;Static class blocks cannot have any modifier.&quot;</span>,
+            <span class="ident">modifiers</span>.<span class="ident">list_marker</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        ));
         <span class="ident">modifiers</span>.<span class="ident">validate_and_complete</span>(<span class="ident">p</span>, <span class="ident">JS_STATIC_INITIALIZATION_BLOCK_CLASS_MEMBER</span>);
     }
 
@@ -3186,18 +3155,18 @@
             <span class="comment">// abstract class A {</span>
             <span class="comment">//     abstract name: string = &quot;&quot;;</span>
             <span class="comment">// }</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Property cannot have an initializer because it is marked abstract.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;Property cannot have an initializer because it is marked abstract.&quot;</span>,
+                <span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            ));
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">modifiers</span>.<span class="ident">has</span>(<span class="ident">ModifierKind::Declare</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_ambient_context</span>() {
             <span class="comment">// test_err ts ts_property_initializer_ambient_context</span>
             <span class="comment">// declare class A { prop = &quot;test&quot; }</span>
             <span class="comment">// class B { declare prop = &quot;test&quot; }</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Initializers are not allowed in ambient contexts.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;Initializers are not allowed in ambient contexts.&quot;</span>,
+                <span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            ));
         }
     }
 
@@ -3209,11 +3178,10 @@
         <span class="comment">// Gets the start of the member</span>
         <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">last_end</span>().<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>());
 
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-            .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                <span class="string">&quot;expected a semicolon to end the {name}, but found none&quot;</span>
-            ))
-            .<span class="ident">primary</span>(<span class="ident">member_marker</span>.<span class="ident">start</span>()..<span class="ident">end</span>, <span class="string">&quot;&quot;</span>);
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="macro">format!</span>(<span class="string">&quot;expected a semicolon to end the {name}, but found none&quot;</span>),
+            <span class="ident">member_marker</span>.<span class="ident">start</span>()..<span class="ident">end</span>,
+        );
 
         <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
     }
@@ -3257,9 +3225,7 @@
         <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="op">!</span>]);
 
         <span class="kw">if</span> <span class="ident">TypeScript</span>.<span class="ident">is_unsupported</span>(<span class="ident">p</span>) {
-            <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="string">&quot;`!` modifiers can only be used in TypeScript files&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>);
+            <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`!` modifiers can only be used in TypeScript files&quot;</span>, <span class="ident">range</span>);
 
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">error</span>);
             <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
@@ -3269,23 +3235,19 @@
         <span class="comment">//      abstract name!: string;</span>
         <span class="comment">// }</span>
         <span class="kw">else</span> <span class="kw">if</span> <span class="ident">modifiers</span>.<span class="ident">has</span>(<span class="ident">ModifierKind::Abstract</span>) {
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                    <span class="string">&quot;A definite assignment operator &#39;!&#39; cannot appear on an &#39;abstract&#39; property.&quot;</span>,
-                )
-                .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;A definite assignment operator &#39;!&#39; cannot appear on an &#39;abstract&#39; property.&quot;</span>,
+                <span class="ident">range</span>,
+            ));
             <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">modifiers</span>.<span class="ident">has</span>(<span class="ident">ModifierKind::Declare</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_ambient_context</span>() {
             <span class="comment">// test_err ts ts_definite_assignment_in_ambient_context</span>
             <span class="comment">// declare class A { prop!: string }</span>
             <span class="comment">// class B { declare prop!: string }</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                    <span class="string">&quot;Definite assignment operators &#39;!&#39; aren&#39;t allowed in ambient contexts.&quot;</span>,
-                )
-                .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;Definite assignment operators &#39;!&#39; aren&#39;t allowed in ambient contexts.&quot;</span>,
+                <span class="ident">range</span>,
+            ));
         }
 
         <span class="prelude-val">Some</span>(<span class="ident">range</span>)
@@ -3300,16 +3262,19 @@
         }
         (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; {
             <span class="ident">parse_ts_type_annotation</span>(<span class="ident">p</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">range</span><span class="op">|</span> {
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Properties with definite assignment assertions must also have type annotations.&quot;</span>).<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>)
+                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Properties with definite assignment assertions must also have type annotations.&quot;</span>,<span class="ident">range</span>, )
             });
             <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">TS_DEFINITE_PROPERTY_ANNOTATION</span>)
         }
         (<span class="prelude-val">Some</span>(<span class="ident">optional_range</span>), <span class="prelude-val">Some</span>(<span class="ident">definite_range</span>)) =&gt; {
             <span class="ident">parse_ts_type_annotation</span>(<span class="ident">p</span>).<span class="ident">ok</span>();
             <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="string">&quot;class properties cannot be both optional and definite&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">definite_range</span>, <span class="string">&quot;&quot;</span>)
-                .<span class="ident">secondary</span>(<span class="ident">optional_range</span>, <span class="string">&quot;&quot;</span>);
+                .<span class="ident">err_builder</span>(
+                    <span class="string">&quot;class properties cannot be both optional and definite&quot;</span>,
+                    <span class="ident">definite_range</span>,
+                )
+                .<span class="ident">detail</span>(<span class="ident">definite_range</span>, <span class="string">&quot;The definite&quot;</span>)
+                .<span class="ident">detail</span>(<span class="ident">optional_range</span>, <span class="string">&quot;The optional&quot;</span>);
 
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">error</span>);
 
@@ -3338,9 +3303,7 @@
         <span class="kw">if</span> <span class="ident">TypeScript</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">range</span>))
         } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="string">&quot;`?` modifiers can only be used in TypeScript files&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>);
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`?` modifiers can only be used in TypeScript files&quot;</span>, <span class="ident">range</span>);
 
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
             <span class="prelude-val">Err</span>(<span class="ident">range</span>)
@@ -3442,17 +3405,17 @@
         <span class="comment">//      * overload();</span>
         <span class="comment">//      * overload() {}</span>
         <span class="comment">// }</span>
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;A method signature cannot be declared as a generator.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">member</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;A method signature cannot be declared as a generator.&quot;</span>,
+            <span class="ident">member</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        ));
     } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_ambient_context</span>() <span class="op">&amp;&amp;</span> <span class="ident">is_async</span> {
         <span class="comment">// test_err ts ts_ambient_async_method</span>
         <span class="comment">// declare class A { async method(); }</span>
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;async&#39; modifier cannot be used in an ambient context.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">member</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;&#39;async&#39; modifier cannot be used in an ambient context.&quot;</span>,
+            <span class="ident">member</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        ));
         <span class="ident">member</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
     } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">optional</span>.<span class="ident">is_err</span>() {
         <span class="comment">// error already emitted by `optional_member_token()`</span>
@@ -3674,9 +3637,7 @@
     <span class="ident">modifiers</span>: <span class="kw-2">&amp;</span><span class="ident">ClassMemberModifiers</span>,
 ) -&gt; <span class="ident">CompletedMarker</span> {
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">range</span>)) <span class="op">=</span> <span class="ident">optional_member_token</span>(<span class="ident">p</span>) {
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-            .<span class="ident">err_builder</span>(<span class="string">&quot;constructors cannot be optional&quot;</span>)
-            .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>);
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;constructors cannot be optional&quot;</span>, <span class="ident">range</span>);
 
         <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
     }
@@ -3691,9 +3652,7 @@
         .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_constructor_parameters</span>);
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">marker</span>) <span class="op">=</span> <span class="ident">parse_ts_type_annotation</span>(<span class="ident">p</span>) {
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-            .<span class="ident">err_builder</span>(<span class="string">&quot;constructors cannot have type annotations&quot;</span>)
-            .<span class="ident">primary</span>(<span class="ident">marker</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>);
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;constructors cannot have type annotations&quot;</span>, <span class="ident">marker</span>.<span class="ident">range</span>(<span class="ident">p</span>));
 
         <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
     }
@@ -3758,10 +3717,10 @@
             <span class="comment">// test_err ts ts_constructor_this_parameter</span>
             <span class="comment">// class C { constructor(this) {} }</span>
             <span class="kw">if</span> <span class="ident">parameter</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">TS_THIS_PARAMETER</span> {
-                <span class="ident">p</span>.<span class="ident">error</span>(
-                    <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;A constructor cannot have a &#39;this&#39; parameter.&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-                );
+                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;A constructor cannot have a &#39;this&#39; parameter.&quot;</span>,
+                    <span class="ident">parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                ));
                 <span class="ident">parameter</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
             }
             <span class="ident">parameter</span>
@@ -4197,19 +4156,19 @@
         <span class="ident">modifier</span>: <span class="kw-2">&amp;</span><span class="ident">ClassMemberModifier</span>,
         <span class="ident">preceding_modifiers</span>: <span class="ident">ModifierFlags</span>,
         <span class="ident">member_kind</span>: <span class="ident">JsSyntaxKind</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Diagnostic</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ParseDiagnostic</span><span class="op">&gt;</span> {
         <span class="comment">// test_err index_signature_class_member_in_js</span>
         <span class="comment">// class A {</span>
         <span class="comment">//     [a: number]: string;</span>
         <span class="comment">// }</span>
         <span class="kw">if</span> <span class="ident">TypeScript</span>.<span class="ident">is_unsupported</span>(<span class="ident">p</span>) <span class="op">&amp;&amp;</span> <span class="ident">modifier</span>.<span class="ident">kind</span>.<span class="ident">is_ts_modifier</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="macro">format!</span>(
                     <span class="string">&quot;&#39;{}&#39; modifier can only be used in TypeScript files&quot;</span>,
                     <span class="ident">p</span>.<span class="ident">source</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>())
-                ))
-                .<span class="ident">primary</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), <span class="string">&quot;&quot;</span>),
-            );
+                ),
+                <span class="ident">modifier</span>.<span class="ident">as_text_range</span>(),
+            ));
         }
 
         <span class="comment">// test_err ts ts_index_signature_class_member_cannot_have_visibility_modifiers</span>
@@ -4230,13 +4189,13 @@
         <span class="kw">if</span> <span class="ident">member_kind</span> <span class="op">==</span> <span class="ident">TS_INDEX_SIGNATURE_CLASS_MEMBER</span>
             <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">modifier</span>.<span class="ident">kind</span>, <span class="ident">ModifierKind::Static</span> <span class="op">|</span> <span class="ident">ModifierKind::Readonly</span>)
         {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="macro">format!</span>(
                     <span class="string">&quot;&#39;{}&#39; modifier cannot appear on an index signature.&quot;</span>,
                     <span class="ident">p</span>.<span class="ident">source</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>())
-                ))
-                .<span class="ident">primary</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), <span class="string">&quot;&quot;</span>),
-            );
+                ),
+                <span class="ident">modifier</span>.<span class="ident">as_text_range</span>(),
+            ));
         } <span class="kw">else</span> <span class="kw">if</span> <span class="macro">matches!</span>(
             <span class="ident">member_kind</span>,
             <span class="ident">JS_CONSTRUCTOR_CLASS_MEMBER</span> <span class="op">|</span> <span class="ident">TS_CONSTRUCTOR_SIGNATURE_CLASS_MEMBER</span>
@@ -4295,12 +4254,10 @@
                     <span class="comment">//   readonly get test() { return &quot;a&quot;; }</span>
                     <span class="comment">//   readonly set test(value: string) {}</span>
                     <span class="comment">// }</span>
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(
-                        <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                            <span class="string">&quot;Readonly can only appear on a property declaration or index signature.&quot;</span>
-                        )
-                            .<span class="ident">primary</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), <span class="string">&quot;&quot;</span>),
-                    );
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;Readonly can only appear on a property declaration or index signature.&quot;</span>,
+                        <span class="ident">modifier</span>.<span class="ident">as_text_range</span>(),
+                    ));
                 }
             }
             <span class="ident">ModifierKind::Declare</span> =&gt; {
@@ -4328,19 +4285,17 @@
                     <span class="ident">member_kind</span>,
                     <span class="ident">JS_PROPERTY_CLASS_MEMBER</span> <span class="op">|</span> <span class="ident">TS_PROPERTY_SIGNATURE_CLASS_MEMBER</span>
                 ) {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(
-                        <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;declare&#39; modifier is only allowed on properties.&quot;</span>)
-                            .<span class="ident">primary</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), <span class="string">&quot;&quot;</span>),
-                    );
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;&#39;declare&#39; modifier is only allowed on properties.&quot;</span>,
+                        <span class="ident">modifier</span>.<span class="ident">as_text_range</span>(),
+                    ));
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModifierFlags::PRIVATE_NAME</span>) {
                     <span class="comment">// test_err ts ts_declare_property_private_name</span>
                     <span class="comment">// class A { declare #name(); };</span>
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(
-                        <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                            <span class="string">&quot;&#39;declare&#39; modifier cannot be used with a private identifier&#39;.&quot;</span>,
-                        )
-                        .<span class="ident">primary</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), <span class="string">&quot;&quot;</span>),
-                    );
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;&#39;declare&#39; modifier cannot be used with a private identifier&#39;.&quot;</span>,
+                        <span class="ident">modifier</span>.<span class="ident">as_text_range</span>(),
+                    ));
                 }
             }
             <span class="ident">ModifierKind::Abstract</span> =&gt; {
@@ -4363,8 +4318,7 @@
                         <span class="op">|</span> <span class="ident">JS_UNKNOWN_MEMBER</span>
                 ) {
                     <span class="kw">return</span> <span class="prelude-val">Some</span>(
-                        <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;abstract&#39; modifier can only appear on a class, method or property declaration.&quot;</span>)
-                            .<span class="ident">primary</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), <span class="string">&quot;&quot;</span>)
+                        <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;abstract&#39; modifier can only appear on a class, method or property declaration.&quot;</span>,<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), )
                     );
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModifierFlags::STATIC</span>) {
                     <span class="comment">// test_err ts typescript_abstract_classes_invalid_static_abstract_member</span>
@@ -4384,12 +4338,10 @@
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModifierFlags::PRIVATE_NAME</span>) {
                     <span class="comment">// test_err ts typescript_abstract_classes_invalid_abstract_private_member</span>
                     <span class="comment">// abstract class A { abstract #name(); };</span>
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(
-                        <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                            <span class="string">&quot;&#39;abstract&#39; modifier cannot be used with a private identifier&#39;.&quot;</span>,
-                        )
-                        .<span class="ident">primary</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), <span class="string">&quot;&quot;</span>),
-                    );
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;&#39;abstract&#39; modifier cannot be used with a private identifier&#39;.&quot;</span>,
+                        <span class="ident">modifier</span>.<span class="ident">as_text_range</span>(),
+                    ));
                 }
             }
             <span class="ident">ModifierKind::Private</span> <span class="op">|</span> <span class="ident">ModifierKind::Protected</span> <span class="op">|</span> <span class="ident">ModifierKind::Public</span> =&gt; {
@@ -4442,12 +4394,10 @@
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModifierFlags::PRIVATE_NAME</span>) {
                     <span class="comment">// test_err ts typescript_classes_invalid_accessibility_modifier_private_member</span>
                     <span class="comment">// class A { private #name; protected #other; public #baz; };</span>
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(
-                        <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                            <span class="string">&quot;An accessibility modifier cannot be used with a private identifier.&quot;</span>,
-                        )
-                        .<span class="ident">primary</span>(<span class="ident">modifier</span>.<span class="ident">as_text_range</span>(), <span class="string">&quot;&quot;</span>),
-                    );
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;An accessibility modifier cannot be used with a private identifier.&quot;</span>,
+                        <span class="ident">modifier</span>.<span class="ident">as_text_range</span>(),
+                    ));
                 }
             }
             <span class="ident">ModifierKind::Static</span> =&gt; {

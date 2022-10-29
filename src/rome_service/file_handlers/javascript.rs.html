@@ -531,11 +531,32 @@
 <span id="531">531</span>
 <span id="532">532</span>
 <span id="533">533</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_analyze</span>::{
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">settings</span>::{<span class="ident">FormatSettings</span>, <span class="ident">Language</span>, <span class="ident">LanguageSettings</span>, <span class="ident">LanguagesSettings</span>, <span class="ident">SettingsHandle</span>},
+    <span class="ident">workspace</span>::{
+        <span class="ident">server::AnyParse</span>, <span class="ident">CodeAction</span>, <span class="ident">FixAction</span>, <span class="ident">FixFileMode</span>, <span class="ident">FixFileResult</span>, <span class="ident">GetSyntaxTreeResult</span>,
+        <span class="ident">PullActionsResult</span>, <span class="ident">RenameResult</span>,
+    },
+    <span class="ident">RomeError</span>, <span class="ident">Rules</span>,
+};
+<span class="kw">use</span> <span class="ident">rome_analyze</span>::{
     <span class="ident">AnalysisFilter</span>, <span class="ident">AnalyzerOptions</span>, <span class="ident">ControlFlow</span>, <span class="ident">GroupCategory</span>, <span class="ident">Never</span>, <span class="ident">QueryMatch</span>,
     <span class="ident">RegistryVisitor</span>, <span class="ident">RuleCategories</span>, <span class="ident">RuleCategory</span>, <span class="ident">RuleFilter</span>, <span class="ident">RuleGroup</span>,
 };
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">Applicability</span>, <span class="ident">CodeSuggestion</span>, <span class="ident">Diagnostic</span>};
+<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">Applicability</span>, <span class="ident">CodeSuggestion</span>};
 <span class="kw">use</span> <span class="ident">rome_formatter</span>::{<span class="ident">FormatError</span>, <span class="ident">Printed</span>};
 <span class="kw">use</span> <span class="ident">rome_fs::RomePath</span>;
 <span class="kw">use</span> <span class="ident">rome_js_analyze</span>::{<span class="ident">analyze</span>, <span class="ident">analyze_with_inspect_matcher</span>, <span class="ident">visit_registry</span>, <span class="ident">RuleError</span>};
@@ -548,23 +569,14 @@
 };
 <span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">BatchMutationExt</span>, <span class="ident">Direction</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">settings</span>::{<span class="ident">FormatSettings</span>, <span class="ident">Language</span>, <span class="ident">LanguageSettings</span>, <span class="ident">LanguagesSettings</span>, <span class="ident">SettingsHandle</span>},
-    <span class="ident">workspace</span>::{
-        <span class="ident">server::AnyParse</span>, <span class="ident">CodeAction</span>, <span class="ident">FixAction</span>, <span class="ident">FixFileMode</span>, <span class="ident">FixFileResult</span>, <span class="ident">GetSyntaxTreeResult</span>,
-        <span class="ident">PullActionsResult</span>, <span class="ident">RenameResult</span>,
-    },
-    <span class="ident">RomeError</span>, <span class="ident">Rules</span>,
-};
-
 <span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">AnalyzerCapabilities</span>, <span class="ident">DebugCapabilities</span>, <span class="ident">ExtensionHandler</span>, <span class="ident">FormatterCapabilities</span>, <span class="ident">Mime</span>,
-    <span class="ident">ParserCapabilities</span>,
+    <span class="ident">AnalyzerCapabilities</span>, <span class="ident">DebugCapabilities</span>, <span class="ident">ExtensionHandler</span>, <span class="ident">FormatterCapabilities</span>, <span class="ident">LintParams</span>,
+    <span class="ident">LintResults</span>, <span class="ident">Mime</span>, <span class="ident">ParserCapabilities</span>,
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::configuration::to_analyzer_configuration</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::file_handlers</span>::{<span class="ident">FixAllParams</span>, <span class="ident">Language</span> <span class="kw">as</span> <span class="ident">LanguageId</span>};
 <span class="kw">use</span> <span class="ident">indexmap::IndexSet</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Severity</span>;
+<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">v2</span>, <span class="ident">v2::Diagnostic</span>};
 <span class="kw">use</span> <span class="ident">rome_js_analyze::utils::rename</span>::{<span class="ident">RenameError</span>, <span class="ident">RenameSymbolExtensions</span>};
 <span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
 <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
@@ -742,41 +754,55 @@
     <span class="prelude-val">Ok</span>(<span class="ident">root_element</span>.<span class="ident">to_string</span>())
 }
 
-<span class="kw">fn</span> <span class="ident">lint</span>(
-    <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>,
-    <span class="ident">parse</span>: <span class="ident">AnyParse</span>,
-    <span class="ident">filter</span>: <span class="ident">AnalysisFilter</span>,
-    <span class="ident">rules</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Rules</span><span class="op">&gt;</span>,
-    <span class="ident">settings</span>: <span class="ident">SettingsHandle</span>,
-) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Diagnostic</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">tree</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostics</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">into_diagnostics</span>();
+<span class="kw">fn</span> <span class="ident">lint</span>(<span class="ident">params</span>: <span class="ident">LintParams</span>) -&gt; <span class="ident">LintResults</span> {
+    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">parse</span>.<span class="ident">tree</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostics</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">parse</span>.<span class="ident">into_diagnostics</span>();
 
-    <span class="kw">let</span> <span class="ident">file_id</span> <span class="op">=</span> <span class="ident">rome_path</span>.<span class="ident">file_id</span>();
-    <span class="kw">let</span> <span class="ident">analyzer_options</span> <span class="op">=</span> <span class="ident">compute_analyzer_options</span>(<span class="kw-2">&amp;</span><span class="ident">settings</span>);
-    <span class="ident">analyze</span>(<span class="ident">file_id</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>, <span class="ident">filter</span>, <span class="kw-2">&amp;</span><span class="ident">analyzer_options</span>, <span class="op">|</span><span class="ident">signal</span><span class="op">|</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">diagnostic</span>) <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">diagnostic</span>() {
+    <span class="kw">let</span> <span class="ident">file_id</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">rome_path</span>.<span class="ident">file_id</span>();
+    <span class="kw">let</span> <span class="ident">analyzer_options</span> <span class="op">=</span> <span class="ident">compute_analyzer_options</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">settings</span>);
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostic_count</span> <span class="op">=</span> <span class="ident">diagnostics</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="ident">diagnostics</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">any</span>(<span class="op">|</span><span class="ident">diag</span><span class="op">|</span> <span class="ident">diag</span>.<span class="ident">severity</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">v2::Severity::Error</span>);
+
+    <span class="ident">analyze</span>(<span class="ident">file_id</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>, <span class="ident">params</span>.<span class="ident">filter</span>, <span class="kw-2">&amp;</span><span class="ident">analyzer_options</span>, <span class="op">|</span><span class="ident">signal</span><span class="op">|</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">diagnostic</span>) <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">diagnostic</span>() {
+            <span class="ident">diagnostic_count</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+
             <span class="comment">// We do now check if the severity of the diagnostics should be changed.</span>
             <span class="comment">// The configuration allows to change the severity of the diagnostics emitted by rules.</span>
             <span class="kw">let</span> <span class="ident">severity</span> <span class="op">=</span> <span class="ident">diagnostic</span>
-                .<span class="ident">code</span>()
+                .<span class="ident">category</span>()
                 .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">category</span><span class="op">|</span> <span class="ident">category</span>.<span class="ident">name</span>().<span class="ident">starts_with</span>(<span class="string">&quot;lint/&quot;</span>))
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">category</span><span class="op">|</span> <span class="ident">rules</span>.<span class="ident">as_ref</span>()<span class="question-mark">?</span>.<span class="ident">get_severity_from_code</span>(<span class="ident">category</span>))
-                .<span class="ident">unwrap_or</span>(<span class="ident">Severity::Error</span>);
+                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">category</span><span class="op">|</span> <span class="ident">params</span>.<span class="ident">rules</span>.<span class="ident">as_ref</span>()<span class="question-mark">?</span>.<span class="ident">get_severity_from_code</span>(<span class="ident">category</span>))
+                .<span class="ident">unwrap_or</span>(<span class="ident">v2::Severity::Error</span>);
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">into_diagnostic</span>(<span class="ident">severity</span>);
-
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">action</span>) <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">action</span>() {
-                <span class="ident">diagnostic</span>.<span class="ident">suggestions</span>.<span class="ident">push</span>(<span class="ident">action</span>.<span class="ident">into</span>());
+            <span class="kw">if</span> <span class="ident">severity</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">v2::Severity::Error</span> {
+                <span class="ident">has_errors</span> <span class="op">=</span> <span class="bool-val">true</span>;
             }
 
-            <span class="ident">diagnostics</span>.<span class="ident">push</span>(<span class="ident">diagnostic</span>);
+            <span class="kw">if</span> <span class="ident">diagnostic_count</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">params</span>.<span class="ident">max_diagnostics</span> {
+                <span class="ident">diagnostic</span>.<span class="ident">set_severity</span>(<span class="ident">severity</span>);
+
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">action</span>) <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">action</span>() {
+                    <span class="ident">diagnostic</span>.<span class="ident">add_code_suggestion</span>(<span class="ident">action</span>.<span class="ident">into</span>());
+                }
+
+                <span class="ident">diagnostics</span>.<span class="ident">push</span>(<span class="ident">v2::serde::Diagnostic::new</span>(<span class="ident">diagnostic</span>));
+            }
         }
 
         <span class="ident">ControlFlow</span>::<span class="op">&lt;</span><span class="ident">Never</span><span class="op">&gt;</span><span class="ident">::Continue</span>(())
     });
 
-    <span class="ident">diagnostics</span>
+    <span class="kw">let</span> <span class="ident">skipped_diagnostics</span> <span class="op">=</span> <span class="ident">diagnostic_count</span> <span class="op">-</span> <span class="ident">diagnostics</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+
+    <span class="ident">LintResults</span> {
+        <span class="ident">diagnostics</span>,
+        <span class="ident">has_errors</span>,
+        <span class="ident">skipped_diagnostics</span>,
+    }
 }
 
 <span class="kw">struct</span> <span class="ident">ActionsVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {

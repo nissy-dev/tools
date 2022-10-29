@@ -204,14 +204,62 @@
 <span id="204">204</span>
 <span id="205">205</span>
 <span id="206">206</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Configuration</span>, <span class="ident">MatchOptions</span>, <span class="ident">Matcher</span>, <span class="ident">RomeError</span>, <span class="ident">Rules</span>};
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">configuration::FilesConfiguration</span>, <span class="ident">Configuration</span>, <span class="ident">MatchOptions</span>, <span class="ident">Matcher</span>, <span class="ident">RomeError</span>, <span class="ident">Rules</span>,
+};
 <span class="kw">use</span> <span class="ident">indexmap::IndexSet</span>;
 <span class="kw">use</span> <span class="ident">rome_diagnostics::v2::Category</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Severity</span>;
 <span class="kw">use</span> <span class="ident">rome_formatter</span>::{<span class="ident">IndentStyle</span>, <span class="ident">LineWidth</span>};
 <span class="kw">use</span> <span class="ident">rome_fs::RomePath</span>;
 <span class="kw">use</span> <span class="ident">rome_js_syntax::JsLanguage</span>;
-<span class="kw">use</span> <span class="ident">std::sync</span>::{<span class="ident">RwLock</span>, <span class="ident">RwLockReadGuard</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">num::NonZeroU64</span>,
+    <span class="ident">sync</span>::{<span class="ident">RwLock</span>, <span class="ident">RwLockReadGuard</span>},
+};
 
 <span class="doccomment">/// Global settings for the entire workspace</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
@@ -222,6 +270,8 @@
     <span class="kw">pub</span> <span class="ident">linter</span>: <span class="ident">LinterSettings</span>,
     <span class="doccomment">/// Language specific settings</span>
     <span class="kw">pub</span> <span class="ident">languages</span>: <span class="ident">LanguagesSettings</span>,
+    <span class="doccomment">/// Filesystem settings for the workspace</span>
+    <span class="kw">pub</span> <span class="ident">files</span>: <span class="ident">FilesSettings</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">WorkspaceSettings</span> {
@@ -262,6 +312,11 @@
         <span class="kw">let</span> <span class="ident">globals</span> <span class="op">=</span> <span class="ident">configuration</span>.<span class="ident">javascript</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">j</span><span class="op">|</span> <span class="ident">j</span>.<span class="ident">globals</span>);
         <span class="self">self</span>.<span class="ident">languages</span>.<span class="ident">javascript</span>.<span class="ident">globals</span> <span class="op">=</span> <span class="ident">globals</span>;
 
+        <span class="comment">// Filesystem settings</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">files</span>) <span class="op">=</span> <span class="ident">configuration</span>.<span class="ident">files</span> {
+            <span class="self">self</span>.<span class="ident">files</span> <span class="op">=</span> <span class="ident">FilesSettings::try_from</span>(<span class="ident">files</span>)<span class="question-mark">?</span>;
+        }
+
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -270,7 +325,10 @@
     <span class="doccomment">/// The code of the has the following pattern: `{group}/{rule_name}`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// It returns [None] if the `code` doesn&#39;t match any rule.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_severity_from_rule_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="ident">Category</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Severity</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_severity_from_rule_code</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="ident">Category</span>,
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">rome_diagnostics::v2::Severity</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">linter</span>.<span class="ident">rules</span>.<span class="ident">as_ref</span>();
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">rules</span>) <span class="op">=</span> <span class="ident">rules</span> {
             <span class="ident">rules</span>.<span class="ident">get_severity_from_code</span>(<span class="ident">code</span>)
@@ -374,6 +432,36 @@
 
     <span class="doccomment">/// Globals variables/bindings that can be found in a file</span>
     <span class="kw">pub</span> <span class="ident">globals</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IndexSet</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+}
+
+<span class="doccomment">/// Filesystem settings for the entire workspace</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FilesSettings</span> {
+    <span class="doccomment">/// File size limit in bytes</span>
+    <span class="kw">pub</span> <span class="ident">max_size</span>: <span class="ident">NonZeroU64</span>,
+}
+
+<span class="doccomment">/// Limit the size of files to 1.0 MiB by default</span>
+<span class="kw">const</span> <span class="ident">DEFAULT_FILE_SIZE_LIMIT</span>: <span class="ident">NonZeroU64</span> <span class="op">=</span>
+    <span class="comment">// SAFETY: This constant is initialized with a non-zero value</span>
+    <span class="kw">unsafe</span> { <span class="ident">NonZeroU64::new_unchecked</span>(<span class="number">1024</span> <span class="op">*</span> <span class="number">1024</span>) };
+
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">FilesSettings</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">max_size</span>: <span class="ident">DEFAULT_FILE_SIZE_LIMIT</span>,
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">FilesConfiguration</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FilesSettings</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">RomeError</span>;
+
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">config</span>: <span class="ident">FilesConfiguration</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
+            <span class="ident">max_size</span>: <span class="ident">config</span>.<span class="ident">max_size</span>.<span class="ident">unwrap_or</span>(<span class="ident">DEFAULT_FILE_SIZE_LIMIT</span>),
+        })
+    }
 }
 
 <span class="doccomment">/// Handle object holding a temporary lock on the workspace settings until</span>

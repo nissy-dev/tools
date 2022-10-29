@@ -881,6 +881,44 @@
 <span id="881">881</span>
 <span id="882">882</span>
 <span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">CliSession</span>, <span class="ident">Execution</span>, <span class="ident">FormatterReportFileDetail</span>, <span class="ident">FormatterReportSummary</span>, <span class="ident">Report</span>,
     <span class="ident">ReportDiagnostic</span>, <span class="ident">ReportDiff</span>, <span class="ident">ReportErrorKind</span>, <span class="ident">ReportKind</span>, <span class="ident">Termination</span>, <span class="ident">TraversalMode</span>,
@@ -892,7 +930,7 @@
     <span class="ident">v2</span>::{
         <span class="self">self</span>,
         <span class="ident">adapters</span>::{<span class="ident">IoError</span>, <span class="ident">StdError</span>},
-        <span class="ident">category</span>, <span class="ident">Advices</span>, <span class="ident">Category</span>, <span class="ident">Diagnostic</span>, <span class="ident">DiagnosticExt</span>, <span class="ident">Error</span>, <span class="ident">FilePath</span>, <span class="ident">PrintDescription</span>,
+        <span class="ident">category</span>, <span class="ident">Advices</span>, <span class="ident">Category</span>, <span class="ident">DiagnosticExt</span>, <span class="ident">Error</span>, <span class="ident">FilePath</span>, <span class="ident">PrintDescription</span>,
         <span class="ident">PrintDiagnostic</span>, <span class="ident">Severity</span>, <span class="ident">Visit</span>,
     },
     <span class="ident">MAXIMUM_DISPLAYABLE_DIAGNOSTICS</span>,
@@ -913,7 +951,10 @@
     <span class="ident">io</span>,
     <span class="ident">panic::catch_unwind</span>,
     <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
-    <span class="ident">sync::atomic</span>::{<span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>},
+    <span class="ident">sync</span>::{
+        <span class="ident">atomic</span>::{<span class="ident">AtomicU64</span>, <span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>},
+        <span class="ident">Arc</span>,
+    },
     <span class="ident">time</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>},
 };
 
@@ -958,6 +999,8 @@
     <span class="kw">let</span> <span class="ident">console</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">session</span>.<span class="ident">app</span>.<span class="ident">console</span>;
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="kw">let</span> <span class="ident">remaining_diagnostics</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">AtomicU64::new</span>(<span class="ident">u64::MAX</span>));
+
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">duration</span> <span class="op">=</span> <span class="prelude-val">None</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">report</span> <span class="op">=</span> <span class="prelude-val">None</span>;
     <span class="kw">let</span> <span class="ident">sender_reports_from_messages</span> <span class="op">=</span> <span class="ident">sender_reports_from_traversal</span>.<span class="ident">clone</span>();
@@ -973,6 +1016,7 @@
                 <span class="ident">recv_files</span>,
                 <span class="ident">recv_msgs</span>,
                 <span class="ident">sender_reports</span>: <span class="ident">sender_reports_from_messages</span>,
+                <span class="ident">remaining_diagnostics</span>: <span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="ident">remaining_diagnostics</span>),
             }));
         });
         <span class="ident">s</span>.<span class="ident">spawn</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
@@ -990,6 +1034,7 @@
                     <span class="ident">skipped</span>: <span class="kw-2">&amp;</span><span class="ident">skipped</span>,
                     <span class="ident">messages</span>: <span class="ident">send_msgs</span>,
                     <span class="ident">sender_reports</span>: <span class="ident">sender_reports_from_traversal</span>,
+                    <span class="ident">remaining_diagnostics</span>: <span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="ident">remaining_diagnostics</span>),
                 },
             ));
         })
@@ -1090,6 +1135,9 @@
     <span class="ident">recv_msgs</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Sender of reports</span>
     <span class="ident">sender_reports</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">ReportKind</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The approximate number of diagnostics the console will print before</span>
+    <span class="doccomment">/// folding the rest into the &quot;skipped diagnostics&quot; counter</span>
+    <span class="ident">remaining_diagnostics</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicU64</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">v2::Diagnostic</span>)]</span>
@@ -1152,7 +1200,15 @@
         <span class="ident">recv_files</span>,
         <span class="ident">recv_msgs</span>,
         <span class="ident">sender_reports</span>,
+        <span class="ident">remaining_diagnostics</span>,
     } <span class="op">=</span> <span class="ident">options</span>;
+
+    <span class="comment">// The command `rome check` gives a default value of 20.</span>
+    <span class="comment">// In case of other commands that pass here, we limit to 50 to avoid to delay the terminal.</span>
+    <span class="comment">// Once `--max-diagnostics` will be a global argument, `unwrap_of_default` should be enough.</span>
+    <span class="kw">let</span> <span class="ident">max_diagnostics</span> <span class="op">=</span> <span class="ident">mode</span>
+        .<span class="ident">get_max_diagnostics</span>()
+        .<span class="ident">unwrap_or</span>(<span class="ident">MAXIMUM_DISPLAYABLE_DIAGNOSTICS</span>);
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="bool-val">false</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paths</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
@@ -1237,13 +1293,10 @@
                 <span class="ident">name</span>,
                 <span class="ident">content</span>,
                 <span class="ident">diagnostics</span>,
+                <span class="ident">skipped_diagnostics</span>,
             } =&gt; {
-                <span class="comment">// The command `rome check` gives a default value of 20.</span>
-                <span class="comment">// In case of other commands that pass here, we limit to 50 to avoid to delay the terminal.</span>
-                <span class="comment">// Once `--max-diagnostics` will be a global argument, `unwrap_of_default` should be enough.</span>
-                <span class="kw">let</span> <span class="ident">max_diagnostics</span> <span class="op">=</span> <span class="ident">mode</span>
-                    .<span class="ident">get_max_diagnostics</span>()
-                    .<span class="ident">unwrap_or</span>(<span class="ident">MAXIMUM_DISPLAYABLE_DIAGNOSTICS</span>);
+                <span class="ident">not_printed_diagnostics</span> <span class="op">+</span><span class="op">=</span> <span class="ident">skipped_diagnostics</span>;
+
                 <span class="comment">// is CI mode we want to print all the diagnostics</span>
                 <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">is_ci</span>() {
                     <span class="kw">for</span> <span class="ident">diag</span> <span class="kw">in</span> <span class="ident">diagnostics</span> {
@@ -1261,6 +1314,10 @@
                         <span class="kw">let</span> <span class="ident">should_print</span> <span class="op">=</span> <span class="ident">printed_diagnostics</span> <span class="op">&lt;</span> <span class="ident">max_diagnostics</span>;
                         <span class="kw">if</span> <span class="ident">should_print</span> {
                             <span class="ident">printed_diagnostics</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                            <span class="ident">remaining_diagnostics</span>.<span class="ident">store</span>(
+                                <span class="ident">u64::from</span>(<span class="ident">max_diagnostics</span>.<span class="ident">saturating_sub</span>(<span class="ident">printed_diagnostics</span>)),
+                                <span class="ident">Ordering::Relaxed</span>,
+                            );
                         } <span class="kw">else</span> {
                             <span class="ident">not_printed_diagnostics</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
@@ -1387,6 +1444,9 @@
     <span class="ident">messages</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Channel sending reports to the reports thread</span>
     <span class="ident">sender_reports</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">ReportKind</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The approximate number of diagnostics the console will print before</span>
+    <span class="doccomment">/// folding the rest into the &quot;skipped diagnostics&quot; counter</span>
+    <span class="ident">remaining_diagnostics</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicU64</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> <span class="ident">TraversalOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> {
@@ -1414,6 +1474,14 @@
             <span class="ident">feature</span>: <span class="ident">FeatureName::Lint</span>,
         })
     }
+
+    <span class="kw">fn</span> <span class="ident">miss_handler_err</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">err</span>: <span class="ident">RomeError</span>, <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>) {
+        <span class="self">self</span>.<span class="ident">push_diagnostic</span>(
+            <span class="ident">StdError::from</span>(<span class="ident">err</span>)
+                .<span class="ident">with_category</span>(<span class="macro">category!</span>(<span class="string">&quot;files/missingHandler&quot;</span>))
+                .<span class="ident">with_file_path</span>(<span class="ident">rome_path</span>.<span class="ident">file_id</span>()),
+        );
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> <span class="ident">TraversalContext</span> <span class="kw">for</span> <span class="ident">TraversalOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> {
@@ -1426,24 +1494,32 @@
     }
 
     <span class="kw">fn</span> <span class="ident">can_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
-            <span class="ident">TraversalMode::Check</span> { .. } =&gt; <span class="self">self</span>.<span class="ident">can_lint</span>(<span class="ident">rome_path</span>),
-            <span class="ident">TraversalMode::CI</span> { .. } =&gt; <span class="self">self</span>
-                .<span class="ident">can_lint</span>(<span class="ident">rome_path</span>)
-                .<span class="ident">or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">can_format</span>(<span class="ident">rome_path</span>)),
-            <span class="ident">TraversalMode::Format</span> { .. } =&gt; <span class="self">self</span>.<span class="ident">can_format</span>(<span class="ident">rome_path</span>),
-        };
+        <span class="kw">let</span> <span class="ident">can_lint</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">can_lint</span>(<span class="ident">rome_path</span>);
+        <span class="kw">let</span> <span class="ident">can_format</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">can_format</span>(<span class="ident">rome_path</span>);
 
-        <span class="kw">match</span> <span class="ident">result</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">result</span>) =&gt; <span class="ident">result</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>(),
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">push_diagnostic</span>(
-                    <span class="ident">StdError::from</span>(<span class="ident">err</span>)
-                        .<span class="ident">with_category</span>(<span class="macro">category!</span>(<span class="string">&quot;files/missingHandler&quot;</span>))
-                        .<span class="ident">with_file_path</span>(<span class="ident">rome_path</span>.<span class="ident">file_id</span>()),
-                );
-                <span class="bool-val">false</span>
-            }
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
+            <span class="ident">TraversalMode::Check</span> { .. } =&gt; <span class="ident">can_lint</span>
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">result</span><span class="op">|</span> <span class="ident">result</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>())
+                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                    <span class="self">self</span>.<span class="ident">miss_handler_err</span>(<span class="ident">err</span>, <span class="ident">rome_path</span>);
+                    <span class="bool-val">false</span>
+                }),
+            <span class="ident">TraversalMode::CI</span> { .. } =&gt; <span class="kw">match</span> (<span class="ident">can_format</span>, <span class="ident">can_lint</span>) {
+                <span class="comment">// the result of the error is the same, rome can&#39;t handle the file</span>
+                (<span class="prelude-val">Err</span>(<span class="ident">err</span>), <span class="kw">_</span>) <span class="op">|</span> (<span class="kw">_</span>, <span class="prelude-val">Err</span>(<span class="ident">err</span>)) =&gt; {
+                    <span class="self">self</span>.<span class="ident">miss_handler_err</span>(<span class="ident">err</span>, <span class="ident">rome_path</span>);
+                    <span class="bool-val">false</span>
+                }
+                (<span class="prelude-val">Ok</span>(<span class="ident">can_format</span>), <span class="prelude-val">Ok</span>(<span class="ident">can_lint</span>)) =&gt; {
+                    <span class="ident">can_lint</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">can_format</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>()
+                }
+            },
+            <span class="ident">TraversalMode::Format</span> { .. } =&gt; <span class="ident">can_format</span>
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">result</span><span class="op">|</span> <span class="ident">result</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>())
+                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                    <span class="self">self</span>.<span class="ident">miss_handler_err</span>(<span class="ident">err</span>, <span class="ident">rome_path</span>);
+                    <span class="bool-val">false</span>
+                }),
         }
     }
 
@@ -1580,16 +1656,13 @@
             <span class="ident">RuleCategories::SYNTAX</span> <span class="op">|</span> <span class="ident">RuleCategories::LINT</span>
         };
 
+        <span class="kw">let</span> <span class="ident">max_diagnostics</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">remaining_diagnostics</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>);
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">file_guard</span>
-            .<span class="ident">pull_diagnostics</span>(<span class="ident">categories</span>)
+            .<span class="ident">pull_diagnostics</span>(<span class="ident">categories</span>, <span class="ident">max_diagnostics</span>)
             .<span class="ident">with_file_id_and_code</span>(<span class="ident">file_id</span>, <span class="macro">category!</span>(<span class="string">&quot;lint&quot;</span>))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="ident">result</span>
-            .<span class="ident">diagnostics</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">diag</span><span class="op">|</span> <span class="ident">diag</span>.<span class="ident">severity</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">Severity::Error</span>);
-
         <span class="comment">// In formatting mode, abort immediately if the file has errors</span>
+        <span class="kw">let</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">has_errors</span>;
         <span class="kw">match</span> <span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
             <span class="ident">TraversalMode::Format</span> { <span class="ident">ignore_errors</span>, .. } <span class="kw">if</span> <span class="ident">has_errors</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">if</span> <span class="kw-2">*</span><span class="ident">ignore_errors</span> {
@@ -1599,6 +1672,7 @@
                         <span class="ident">name</span>: <span class="ident">path</span>.<span class="ident">display</span>().<span class="ident">to_string</span>(),
                         <span class="ident">content</span>: <span class="ident">input</span>,
                         <span class="ident">diagnostics</span>: <span class="ident">result</span>.<span class="ident">diagnostics</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Error::from</span>).<span class="ident">collect</span>(),
+                        <span class="ident">skipped_diagnostics</span>: <span class="ident">result</span>.<span class="ident">skipped_diagnostics</span>,
                     }
                 });
             }
@@ -1616,6 +1690,7 @@
                 <span class="ident">name</span>: <span class="ident">path</span>.<span class="ident">display</span>().<span class="ident">to_string</span>(),
                 <span class="ident">content</span>: <span class="ident">input</span>.<span class="ident">clone</span>(),
                 <span class="ident">diagnostics</span>: <span class="ident">result</span>.<span class="ident">diagnostics</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Error::from</span>).<span class="ident">collect</span>(),
+                <span class="ident">skipped_diagnostics</span>: <span class="ident">result</span>.<span class="ident">skipped_diagnostics</span>,
             })
         };
 
@@ -1692,6 +1767,7 @@
         <span class="ident">name</span>: <span class="ident">String</span>,
         <span class="ident">content</span>: <span class="ident">String</span>,
         <span class="ident">diagnostics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>,
+        <span class="ident">skipped_diagnostics</span>: <span class="ident">u64</span>,
     },
     <span class="ident">Diff</span> {
         <span class="ident">file_name</span>: <span class="ident">String</span>,

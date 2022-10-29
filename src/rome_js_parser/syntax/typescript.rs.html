@@ -282,13 +282,6 @@
 <span id="282">282</span>
 <span id="283">283</span>
 <span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
 </pre><pre class="rust"><code><span class="doccomment">//! TypeScript specific functions.</span>
 
 <span class="kw">mod</span> <span class="ident">statement</span>;
@@ -340,9 +333,7 @@
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">source</span>(<span class="ident">ident</span>.<span class="ident">range</span>(<span class="ident">p</span>));
         <span class="kw">let</span> <span class="ident">is_reserved_word_this_context</span> <span class="op">=</span> <span class="ident">ts_identifier_context</span>.<span class="ident">is_reserved_word</span>(<span class="ident">name</span>);
         <span class="kw">if</span> <span class="ident">is_reserved_word_this_context</span> {
-            <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Type alias cannot be {}&quot;</span>, <span class="ident">name</span>))
-                .<span class="ident">primary</span>(<span class="ident">ident</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>);
+            <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="macro">format!</span>(<span class="string">&quot;Type alias cannot be {}&quot;</span>, <span class="ident">name</span>), <span class="ident">ident</span>.<span class="ident">range</span>(<span class="ident">p</span>));
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">error</span>);
             <span class="ident">ident</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
         }
@@ -390,10 +381,10 @@
     <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
 
     <span class="kw">if</span> <span class="ident">parse_ts_name_with_type_arguments</span>(<span class="ident">p</span>).<span class="ident">is_absent</span>() {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;&#39;{}&#39; list cannot be empty.&quot;</span>, <span class="ident">clause_name</span>))
-                .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>()..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(), <span class="string">&quot;&quot;</span>),
-        )
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="macro">format!</span>(<span class="string">&quot;&#39;{}&#39; list cannot be empty.&quot;</span>, <span class="ident">clause_name</span>),
+            <span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>()..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(),
+        ))
     }
 
     <span class="kw">while</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[,]) {
@@ -403,10 +394,7 @@
         <span class="comment">// interface A {}</span>
         <span class="comment">// interface B extends A, {}</span>
         <span class="kw">if</span> <span class="ident">parse_ts_name_with_type_arguments</span>(<span class="ident">p</span>).<span class="ident">is_absent</span>() {
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Trailing comma not allowed.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">comma_range</span>, <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Trailing comma not allowed.&quot;</span>, <span class="ident">comma_range</span>));
             <span class="kw">break</span>;
         }
     }
@@ -496,8 +484,7 @@
     <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]);
 
     <span class="ident">parse_ts_type_annotation</span>(<span class="ident">p</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">range</span><span class="op">|</span> {
-        <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;An index signature must have a type annotation&quot;</span>)
-            .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>)
+        <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;An index signature must have a type annotation&quot;</span>, <span class="ident">range</span>)
     });
 
     <span class="ident">eat_members_separator</span>(<span class="ident">p</span>, <span class="ident">parent</span>);
@@ -523,10 +510,9 @@
 
     <span class="kw">if</span> <span class="op">!</span><span class="ident">separator_eaten</span> {
         <span class="kw">if</span> <span class="ident">semi_colon</span> {
-            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;;&#39; expected&#39;&quot;</span>).<span class="ident">primary</span>(
-                <span class="ident">p</span>.<span class="ident">cur_range</span>(),
-                <span class="string">&quot;An explicit or implicit semicolon is expected here...&quot;</span>,
-            );
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
+                .<span class="ident">err_builder</span>(<span class="string">&quot;&#39;;&#39; expected&#39;&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>())
+                .<span class="ident">hint</span>(<span class="string">&quot;An explicit or implicit semicolon is expected here...&quot;</span>);
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
         } <span class="kw">else</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tokens</span> <span class="op">=</span> <span class="macro">vec!</span>[];

@@ -271,13 +271,13 @@
 <span id="271">271</span>
 <span id="272">272</span>
 <span id="273">273</span>
+<span id="274">274</span>
 </pre><pre class="rust"><code><span class="doccomment">///! Provides traits for parsing pattern like nodes</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::ParserProgress</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::expr</span>::{<span class="ident">parse_assignment_expression_or_higher</span>, <span class="ident">ExpressionContext</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::js_parse_error</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ParsedSyntax</span>::{<span class="ident">Absent</span>, <span class="ident">Present</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CompletedMarker</span>, <span class="ident">ParseRecovery</span>, <span class="ident">ParsedSyntax</span>, <span class="ident">Parser</span>};
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Diagnostic</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CompletedMarker</span>, <span class="ident">ParseDiagnostic</span>, <span class="ident">ParseRecovery</span>, <span class="ident">ParsedSyntax</span>, <span class="ident">Parser</span>};
 <span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>::{<span class="ident">EOF</span>, <span class="ident">JS_ARRAY_HOLE</span>};
 <span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>, <span class="ident">TextRange</span>, <span class="ident">T</span>};
 
@@ -288,7 +288,7 @@
 
     <span class="doccomment">/// Creates a diagnostic for the case where the pattern is missing. For example, if the</span>
     <span class="doccomment">/// code only contains ` = default`</span>
-    <span class="kw">fn</span> <span class="ident">expected_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">Diagnostic</span>;
+    <span class="kw">fn</span> <span class="ident">expected_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span>;
 
     <span class="doccomment">/// Parses a pattern (without its default value)</span>
     <span class="kw">fn</span> <span class="ident">parse_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span>;
@@ -326,7 +326,7 @@
     <span class="doccomment">/// The kind of the list</span>
     <span class="kw">fn</span> <span class="ident">list_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
     <span class="doccomment">///  Creates a diagnostic saying that the parser expected an element at the position passed as an argument.</span>
-    <span class="kw">fn</span> <span class="ident">expected_element_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">Diagnostic</span>;
+    <span class="kw">fn</span> <span class="ident">expected_element_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span>;
     <span class="doccomment">/// Creates a pattern with default instance. Used to parse the array elements.</span>
     <span class="kw">fn</span> <span class="ident">pattern_with_default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">P</span>;
 
@@ -416,7 +416,7 @@
     <span class="doccomment">/// The kind of the property list</span>
     <span class="kw">fn</span> <span class="ident">list_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
     <span class="doccomment">/// Creates a diagnostic saying that a property is expected at the passed in range that isn&#39;t present.</span>
-    <span class="kw">fn</span> <span class="ident">expected_property_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">Diagnostic</span>;
+    <span class="kw">fn</span> <span class="ident">expected_property_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span>;
 
     <span class="doccomment">/// Parses the object pattern like node</span>
     <span class="kw">fn</span> <span class="ident">parse_object_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
@@ -510,12 +510,15 @@
             <span class="ident">recovered</span>.<span class="ident">undo_completion</span>(<span class="ident">p</span>).<span class="ident">abandon</span>(<span class="ident">p</span>); <span class="comment">// append recovered content to parent</span>
         }
         <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest element cannot have a default&quot;</span>)
-                .<span class="ident">primary</span>(
-                    <span class="ident">default_start</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(),
-                    <span class="string">&quot;Remove the default value here&quot;</span>,
-                )
-                .<span class="ident">secondary</span>(<span class="ident">rest_range</span>, <span class="string">&quot;Rest element&quot;</span>),
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;rest element cannot have a default&quot;</span>,
+                <span class="ident">default_start</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(),
+            )
+            .<span class="ident">detail</span>(
+                <span class="ident">default_start</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(),
+                <span class="string">&quot;Remove the default value here&quot;</span>,
+            )
+            .<span class="ident">detail</span>(<span class="ident">rest_range</span>, <span class="string">&quot;Rest element&quot;</span>),
         );
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">invalid</span> <span class="op">=</span> <span class="ident">rest_marker</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">kind</span>);
@@ -523,21 +526,20 @@
         <span class="ident">invalid</span>
     } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[,]) <span class="op">&amp;&amp;</span> <span class="ident">p</span>.<span class="ident">nth_at</span>(<span class="number">1</span>, <span class="ident">end_token</span>) {
         <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest element may not have a trailing comma&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;Remove the trailing comma here&quot;</span>)
-                .<span class="ident">secondary</span>(<span class="ident">rest</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;Rest element&quot;</span>),
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest element may not have a trailing comma&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>())
+                .<span class="ident">detail</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;Remove the trailing comma here&quot;</span>)
+                .<span class="ident">detail</span>(<span class="ident">rest</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;Rest element&quot;</span>),
         );
         <span class="ident">rest</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
         <span class="ident">rest</span>
     } <span class="kw">else</span> {
         <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest element must be the last element&quot;</span>)
-                .<span class="ident">primary</span>(
-                    <span class="ident">rest</span>.<span class="ident">range</span>(<span class="ident">p</span>),
-                    <span class="kw-2">&amp;</span><span class="macro">format!</span>(
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest element must be the last element&quot;</span>, <span class="ident">rest</span>.<span class="ident">range</span>(<span class="ident">p</span>),)
+                .<span class="ident">hint</span>(
+                    <span class="macro">format!</span>(
                     <span class="string">&quot;Move the rest element to the end of the pattern, right before the closing &#39;{}&#39;&quot;</span>,
                     <span class="ident">end_token</span>.<span class="ident">to_string</span>().<span class="ident">unwrap</span>(),
-                ),
+                    ),
                 ),
         );
         <span class="ident">rest</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);

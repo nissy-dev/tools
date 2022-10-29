@@ -947,7 +947,6 @@
 <span id="947">947</span>
 <span id="948">948</span>
 <span id="949">949</span>
-<span id="950">950</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp::Ordering</span>, <span class="ident">collections::VecDeque</span>, <span class="ident">num::NonZeroU32</span>, <span class="ident">vec::IntoIter</span>};
 
 <span class="kw">use</span> <span class="ident">roaring::bitmap::RoaringBitmap</span>;
@@ -1031,7 +1030,7 @@
                 <span class="string">&quot;This code will never be reached ...&quot;</span>
             },
         )
-        .<span class="ident">summary</span>(<span class="string">&quot;This code is unreachable&quot;</span>)
+        .<span class="ident">description</span>(<span class="string">&quot;This code is unreachable&quot;</span>)
         .<span class="ident">unnecessary</span>();
 
         <span class="comment">// Pluralize and adapt the error message accordingly based on the</span>
@@ -1042,7 +1041,7 @@
             [] =&gt; {}
             <span class="comment">// A single node is responsible for this range being unreachable</span>
             [<span class="ident">node</span>] =&gt; {
-                <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">secondary</span>(
+                <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
                     <span class="ident">node</span>.<span class="ident">range</span>,
                     <span class="macro">format_args!</span>(
                         <span class="string">&quot;... because this statement will {} beforehand&quot;</span>,
@@ -1054,8 +1053,8 @@
             [<span class="ident">node_a</span>, <span class="ident">node_b</span>] =&gt; {
                 <span class="kw">if</span> <span class="ident">node_a</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">node_b</span>.<span class="ident">kind</span> {
                     <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>
-                        .<span class="ident">secondary</span>(<span class="ident">node_a</span>.<span class="ident">range</span>, <span class="string">&quot;... because either this statement ...&quot;</span>)
-                        .<span class="ident">secondary</span>(
+                        .<span class="ident">detail</span>(<span class="ident">node_a</span>.<span class="ident">range</span>, <span class="string">&quot;... because either this statement ...&quot;</span>)
+                        .<span class="ident">detail</span>(
                             <span class="ident">node_b</span>.<span class="ident">range</span>,
                             <span class="macro">format_args!</span>(
                                 <span class="string">&quot;... or this statement will {} beforehand&quot;</span>,
@@ -1064,14 +1063,14 @@
                         );
                 } <span class="kw">else</span> {
                     <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>
-                        .<span class="ident">secondary</span>(
+                        .<span class="ident">detail</span>(
                             <span class="ident">node_a</span>.<span class="ident">range</span>,
                             <span class="macro">format_args!</span>(
                                 <span class="string">&quot;... because either this statement will {} ...&quot;</span>,
                                 <span class="ident">node_a</span>.<span class="ident">reason</span>()
                             ),
                         )
-                        .<span class="ident">secondary</span>(
+                        .<span class="ident">detail</span>(
                             <span class="ident">node_b</span>.<span class="ident">range</span>,
                             <span class="macro">format_args!</span>(
                                 <span class="string">&quot;... or this statement will {} beforehand&quot;</span>,
@@ -1100,12 +1099,11 @@
                     <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">node</span>) <span class="kw">in</span> <span class="ident">terminators</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
                         <span class="kw">if</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">0</span> {
                             <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>
-                                .<span class="ident">secondary</span>(<span class="ident">node</span>.<span class="ident">range</span>, <span class="string">&quot;... because either this statement, ...&quot;</span>);
+                                .<span class="ident">detail</span>(<span class="ident">node</span>.<span class="ident">range</span>, <span class="string">&quot;... because either this statement, ...&quot;</span>);
                         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">last</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span>
-                                <span class="ident">diagnostic</span>.<span class="ident">secondary</span>(<span class="ident">node</span>.<span class="ident">range</span>, <span class="string">&quot;... this statement, ...&quot;</span>);
+                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(<span class="ident">node</span>.<span class="ident">range</span>, <span class="string">&quot;... this statement, ...&quot;</span>);
                         } <span class="kw">else</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">secondary</span>(
+                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
                                 <span class="ident">node</span>.<span class="ident">range</span>,
                                 <span class="macro">format_args!</span>(
                                     <span class="string">&quot;... or this statement will {} beforehand&quot;</span>,
@@ -1117,7 +1115,7 @@
                 } <span class="kw">else</span> {
                     <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">node</span>) <span class="kw">in</span> <span class="ident">terminators</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
                         <span class="kw">if</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">0</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">secondary</span>(
+                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
                                 <span class="ident">node</span>.<span class="ident">range</span>,
                                 <span class="macro">format_args!</span>(
                                     <span class="string">&quot;... because either this statement will {}, ...&quot;</span>,
@@ -1125,12 +1123,12 @@
                                 ),
                             );
                         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">last</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">secondary</span>(
+                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
                                 <span class="ident">node</span>.<span class="ident">range</span>,
                                 <span class="macro">format_args!</span>(<span class="string">&quot;... this statement will {}, ...&quot;</span>, <span class="ident">node</span>.<span class="ident">reason</span>()),
                             );
                         } <span class="kw">else</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">secondary</span>(
+                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
                                 <span class="ident">node</span>.<span class="ident">range</span>,
                                 <span class="macro">format_args!</span>(
                                     <span class="string">&quot;... or this statement will {} beforehand&quot;</span>,

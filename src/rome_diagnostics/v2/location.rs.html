@@ -518,10 +518,25 @@
 <span id="518">518</span>
 <span id="519">519</span>
 <span id="520">520</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Borrow</span>, <span class="ident">ops::Deref</span>};
-
-<span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+<span class="kw">use</span> <span class="ident">std::ops::Range</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Borrow</span>, <span class="ident">ops::Deref</span>};
 
 <span class="doccomment">/// Represents the location of a diagnostic in a resource.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
@@ -934,6 +949,19 @@
 <span class="kw">impl</span> <span class="ident">AsSpan</span> <span class="kw">for</span> <span class="ident">TextRange</span> {
     <span class="kw">fn</span> <span class="ident">as_span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">AsSpan</span> <span class="kw">for</span> <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">TextSize</span>: <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="op">&lt;</span><span class="ident">TextSize</span> <span class="kw">as</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Error</span>: <span class="ident">Debug</span>,
+{
+    <span class="kw">fn</span> <span class="ident">as_span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">TextRange::new</span>(
+            <span class="ident">TextSize::try_from</span>(<span class="self">self</span>.<span class="ident">start</span>).<span class="ident">expect</span>(<span class="string">&quot;integer overflow&quot;</span>),
+            <span class="ident">TextSize::try_from</span>(<span class="self">self</span>.<span class="ident">end</span>).<span class="ident">expect</span>(<span class="string">&quot;integer overflow&quot;</span>),
+        ))
     }
 }
 

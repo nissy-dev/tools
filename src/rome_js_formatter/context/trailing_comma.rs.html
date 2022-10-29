@@ -86,6 +86,21 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">JsFormatContext</span>, <span class="ident">JsFormatOptions</span>};
 <span class="kw">use</span> <span class="ident">rome_formatter::formatter::Formatter</span>;
@@ -107,6 +122,10 @@
 <span class="kw">impl</span> <span class="ident">FormatTrailingComma</span> {
     <span class="doccomment">/// This function returns corresponding [TrailingSeparator] for [format_separated] function.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">trailing_separator</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">JsFormatOptions</span>) -&gt; <span class="ident">TrailingSeparator</span> {
+        <span class="kw">if</span> <span class="ident">options</span>.<span class="ident">trailing_comma</span>.<span class="ident">is_none</span>() {
+            <span class="kw">return</span> <span class="ident">TrailingSeparator::Omit</span>;
+        }
+
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">FormatTrailingComma::All</span> =&gt; {
                 <span class="kw">if</span> <span class="ident">options</span>.<span class="ident">trailing_comma</span>.<span class="ident">is_all</span>() {
@@ -122,6 +141,10 @@
 
 <span class="kw">impl</span> <span class="ident">Format</span><span class="op">&lt;</span><span class="ident">JsFormatContext</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FormatTrailingComma</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="ident">JsFormatContext</span><span class="op">&gt;</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">f</span>.<span class="ident">options</span>().<span class="ident">trailing_comma</span>.<span class="ident">is_none</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+        }
+
         <span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">FormatTrailingComma::ES5</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">options</span>().<span class="ident">trailing_comma</span>().<span class="ident">is_all</span>() {
             <span class="macro">write!</span>(<span class="ident">f</span>, [<span class="ident">if_group_breaks</span>(<span class="kw-2">&amp;</span><span class="ident">text</span>(<span class="string">&quot;,&quot;</span>))])<span class="question-mark">?</span>
         }
@@ -142,6 +165,8 @@
     <span class="ident">All</span>,
     <span class="doccomment">/// Trailing commas where valid in ES5 (objects, arrays, etc.). No trailing commas in type parameters in TypeScript.</span>
     <span class="ident">ES5</span>,
+    <span class="doccomment">/// No trailing commas.</span>
+    <span class="prelude-val">None</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">TrailingComma</span> {
@@ -150,6 +175,9 @@
     }
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">TrailingComma::All</span>)
+    }
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_none</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">TrailingComma::None</span>)
     }
 }
 
@@ -160,6 +188,7 @@
         <span class="kw">match</span> <span class="ident">s</span> {
             <span class="string">&quot;es5&quot;</span> <span class="op">|</span> <span class="string">&quot;ES5&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::ES5</span>),
             <span class="string">&quot;all&quot;</span> <span class="op">|</span> <span class="string">&quot;All&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::All</span>),
+            <span class="string">&quot;none&quot;</span> <span class="op">|</span> <span class="string">&quot;None&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::None</span>),
             <span class="comment">// TODO: replace this error with a diagnostic</span>
             <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Value not supported for TrailingComma&quot;</span>),
         }
@@ -171,6 +200,7 @@
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">TrailingComma::ES5</span> =&gt; <span class="macro">std::write!</span>(<span class="ident">f</span>, <span class="string">&quot;ES5&quot;</span>),
             <span class="ident">TrailingComma::All</span> =&gt; <span class="macro">std::write!</span>(<span class="ident">f</span>, <span class="string">&quot;All&quot;</span>),
+            <span class="ident">TrailingComma::None</span> =&gt; <span class="macro">std::write!</span>(<span class="ident">f</span>, <span class="string">&quot;None&quot;</span>),
         }
     }
 }

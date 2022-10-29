@@ -1345,6 +1345,13 @@
 <span id="1345">1345</span>
 <span id="1346">1346</span>
 <span id="1347">1347</span>
+<span id="1348">1348</span>
+<span id="1349">1349</span>
+<span id="1350">1350</span>
+<span id="1351">1351</span>
+<span id="1352">1352</span>
+<span id="1353">1353</span>
+<span id="1354">1354</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::lexer::TextSize</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">expected_any</span>, <span class="ident">expected_node</span>, <span class="ident">ParserProgress</span>, <span class="ident">RecoveryResult</span>, <span class="ident">ToDiagnostic</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state</span>::{<span class="ident">EnterAmbientContext</span>, <span class="ident">ExportDefaultItem</span>, <span class="ident">ExportDefaultItemKind</span>};
@@ -1588,8 +1595,8 @@
 
                 <span class="comment">// test_err ts ts_typed_default_import_with_named</span>
                 <span class="comment">// import type A, { B, C } from &#39;./a&#39;;</span>
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;A type-only import can specify a default import or named bindings, but not both.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">default_start</span>..<span class="ident">end</span>, <span class="string">&quot;&quot;</span>))
+                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;A type-only import can specify a default import or named bindings, but not both.&quot;</span>,
+                    <span class="ident">default_start</span>..<span class="ident">end</span>,))
             }
 
             <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="ident">from</span>]);
@@ -2136,15 +2143,19 @@
             <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_string</span> {
                 <span class="ident">p</span>.<span class="ident">err_builder</span>(
                     <span class="string">&quot;A string literal cannot be used as an export binding without `from`.&quot;</span>,
+                    <span class="ident">export_name</span>.<span class="ident">range</span>(<span class="ident">p</span>),
                 )
             } <span class="kw">else</span> {
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                    <span class="string">&quot;\&quot;{}\&quot; can only be used with \&quot;export ... from ...\&quot;&quot;</span>,
-                    <span class="ident">export_name</span>.<span class="ident">text</span>(<span class="ident">p</span>)
-                ))
+                <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="macro">format!</span>(
+                        <span class="string">&quot;\&quot;{}\&quot; can only be used with \&quot;export ... from ...\&quot;&quot;</span>,
+                        <span class="ident">export_name</span>.<span class="ident">text</span>(<span class="ident">p</span>)
+                    ),
+                    <span class="ident">export_name</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                )
             };
 
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">error</span>.<span class="ident">primary</span>(<span class="ident">export_name</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>));
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">error</span>);
         }
     }
 
@@ -2460,12 +2471,15 @@
                 <span class="comment">// or if the overloads define different functions.</span>
             } <span class="kw">else</span> {
                 <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                    .<span class="ident">err_builder</span>(<span class="string">&quot;Illegal duplicate default export declarations&quot;</span>)
-                    .<span class="ident">secondary</span>(
+                    .<span class="ident">err_builder</span>(
+                        <span class="string">&quot;Illegal duplicate default export declarations&quot;</span>,
+                        <span class="ident">clause</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                    )
+                    .<span class="ident">detail</span>(<span class="ident">clause</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;multiple default exports are erroneous&quot;</span>)
+                    .<span class="ident">detail</span>(
                         <span class="kw-2">&amp;</span><span class="ident">existing_default_item</span>.<span class="ident">range</span>.<span class="ident">to_owned</span>(),
                         <span class="string">&quot;the module&#39;s default export is first defined here&quot;</span>,
-                    )
-                    .<span class="ident">primary</span>(<span class="ident">clause</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;multiple default exports are erroneous&quot;</span>);
+                    );
 
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                 <span class="ident">clause</span>.<span class="ident">change_kind</span>(<span class="ident">p</span>, <span class="ident">JsSyntaxKind::JS_UNKNOWN</span>);
@@ -2523,8 +2537,8 @@
             <span class="comment">// test_err ts ts_export_default_enum</span>
             <span class="comment">// export default enum A { X, Y, Z }</span>
             <span class="ident">parse_ts_enum_declaration</span>(<span class="ident">p</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">enum_declaration</span><span class="op">|</span> {
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;export default&#39; isn&#39;t allowed for &#39;enum&#39;s. Move the &#39;enum&#39; declaration in its own statement and then export the enum&#39;s name.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">enum_declaration</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>)
+                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;export default&#39; isn&#39;t allowed for &#39;enum&#39;s. Move the &#39;enum&#39; declaration in its own statement and then export the enum&#39;s name.&quot;</span>,
+                    <span class="ident">enum_declaration</span>.<span class="ident">range</span>(<span class="ident">p</span>))
                 );
 
                 <span class="ident">enum_declaration</span>

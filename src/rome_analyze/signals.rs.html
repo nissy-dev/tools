@@ -142,6 +142,20 @@
 <span id="142">142</span>
 <span id="143">143</span>
 <span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">categories::ActionCategory</span>,
     <span class="ident">context::RuleContext</span>,
@@ -150,10 +164,9 @@
     <span class="ident">AnalyzerDiagnostic</span>, <span class="ident">AnalyzerOptions</span>, <span class="ident">Queryable</span>, <span class="ident">RuleGroup</span>, <span class="ident">ServiceBag</span>,
 };
 <span class="kw">use</span> <span class="ident">rome_console::MarkupBuf</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{
-    <span class="ident">file</span>::{<span class="ident">FileId</span>, <span class="ident">FileSpan</span>},
-    <span class="ident">Applicability</span>, <span class="ident">CodeSuggestion</span>,
-};
+<span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileSpan</span>;
+<span class="kw">use</span> <span class="ident">rome_diagnostics::v2::advice::CodeSuggestionAdvice</span>;
+<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">file::FileId</span>, <span class="ident">Applicability</span>, <span class="ident">CodeSuggestion</span>};
 <span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">BatchMutation</span>, <span class="ident">Language</span>};
 
 <span class="doccomment">/// Event raised by the analyzer when a [Rule](crate::Rule)</span>
@@ -207,6 +220,21 @@
     <span class="kw">pub</span> <span class="ident">mutation</span>: <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
 }
 
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">AnalyzerAction</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CodeSuggestionAdvice</span><span class="op">&lt;</span><span class="ident">MarkupBuf</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">L</span>: <span class="ident">Language</span>,
+{
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">action</span>: <span class="ident">AnalyzerAction</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">suggestion</span>) <span class="op">=</span> <span class="ident">action</span>.<span class="ident">mutation</span>.<span class="ident">as_text_edits</span>().<span class="ident">unwrap_or_default</span>();
+
+        <span class="ident">CodeSuggestionAdvice</span> {
+            <span class="ident">applicability</span>: <span class="ident">action</span>.<span class="ident">applicability</span>,
+            <span class="ident">msg</span>: <span class="ident">action</span>.<span class="ident">message</span>,
+            <span class="ident">suggestion</span>,
+        }
+    }
+}
+
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">AnalyzerAction</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CodeSuggestion</span>
 <span class="kw">where</span>
     <span class="ident">L</span>: <span class="ident">Language</span>,
@@ -222,7 +250,7 @@
             <span class="ident">applicability</span>: <span class="ident">action</span>.<span class="ident">applicability</span>,
             <span class="ident">msg</span>: <span class="ident">action</span>.<span class="ident">message</span>,
             <span class="ident">suggestion</span>,
-            <span class="ident">labels</span>: <span class="ident">Vec::new</span>(),
+            <span class="ident">labels</span>: <span class="macro">vec!</span>[],
         }
     }
 }

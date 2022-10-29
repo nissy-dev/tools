@@ -319,7 +319,15 @@
 <span id="319">319</span>
 <span id="320">320</span>
 <span id="321">321</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">expected_any</span>, <span class="ident">ToDiagnostic</span>};
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::expected_any</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::class::parse_initializer_clause</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::expr</span>::{<span class="ident">is_nth_at_identifier</span>, <span class="ident">parse_identifier</span>, <span class="ident">ExpressionContext</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::js_parse_error</span>::{
@@ -329,8 +337,8 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::pattern</span>::{<span class="ident">ParseArrayPattern</span>, <span class="ident">ParseObjectPattern</span>, <span class="ident">ParseWithDefaultPattern</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsSyntaxFeature::StrictMode</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ParsedSyntax</span>::{<span class="ident">Absent</span>, <span class="ident">Present</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ParsedSyntax</span>, <span class="ident">Parser</span>, <span class="ident">SyntaxFeature</span>};
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">Diagnostic</span>, <span class="ident">Span</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ParseDiagnostic</span>, <span class="ident">ParsedSyntax</span>, <span class="ident">Parser</span>, <span class="ident">SyntaxFeature</span>, <span class="ident">ToDiagnostic</span>};
+<span class="kw">use</span> <span class="ident">rome_diagnostics::Span</span>;
 <span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>::<span class="kw-2">*</span>, <span class="kw-2">*</span>};
 <span class="kw">use</span> <span class="ident">rome_rowan::SyntaxKind</span> <span class="kw">as</span> <span class="ident">SyntaxKindTrait</span>;
 
@@ -391,12 +399,13 @@
         <span class="kw">let</span> <span class="ident">identifier_name</span> <span class="op">=</span> <span class="ident">identifier</span>.<span class="ident">text</span>(<span class="ident">p</span>);
 
         <span class="kw">if</span> <span class="ident">StrictMode</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) <span class="op">&amp;&amp;</span> <span class="macro">matches!</span>(<span class="ident">identifier_name</span>, <span class="string">&quot;eval&quot;</span> <span class="op">|</span> <span class="string">&quot;arguments&quot;</span>) {
-            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="macro">format!</span>(
                     <span class="string">&quot;Illegal use of `{}` as an identifier in strict mode&quot;</span>,
                     <span class="ident">identifier_name</span>
-                ))
-                .<span class="ident">primary</span>(<span class="ident">identifier</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>);
+                ),
+                <span class="ident">identifier</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            );
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
 
             <span class="ident">identifier</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
@@ -406,11 +415,15 @@
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">duplicate_binding_parent</span> {
             <span class="kw">if</span> <span class="ident">identifier_name</span> <span class="op">==</span> <span class="string">&quot;let&quot;</span> {
                 <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                    .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+                    .<span class="ident">err_builder</span>(
+                        <span class="macro">format!</span>(
                         <span class="string">&quot;`let` cannot be declared as a variable name inside of a `{}` declaration&quot;</span>,
-                        <span class="ident">parent</span>
-                    ))
-                    .<span class="ident">primary</span>(<span class="ident">identifier</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;Rename the let identifier here&quot;</span>);
+                        <span class="ident">parent</span>,
+
+                    ),
+                        <span class="ident">identifier</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                    )
+                    .<span class="ident">hint</span>(<span class="string">&quot;Rename the let identifier here&quot;</span>);
 
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                 <span class="ident">identifier</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
@@ -419,20 +432,23 @@
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">existing</span>) <span class="op">=</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">name_map</span>.<span class="ident">get</span>(<span class="ident">identifier_name</span>) {
                 <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                    .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                        <span class="string">&quot;Declarations inside of a `{}` declaration may not have duplicates&quot;</span>,
-                        <span class="ident">parent</span>
-                    ))
-                    .<span class="ident">secondary</span>(
-                        <span class="ident">existing</span>.<span class="ident">to_owned</span>(),
-                        <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;`{}` is first declared here&quot;</span>, <span class="ident">identifier_name</span>),
-                    )
-                    .<span class="ident">primary</span>(
+                    .<span class="ident">err_builder</span>(
+                        <span class="macro">format!</span>(
+                            <span class="string">&quot;Declarations inside of a `{}` declaration may not have duplicates&quot;</span>,
+                            <span class="ident">parent</span>
+                        ),
                         <span class="ident">identifier</span>.<span class="ident">range</span>(<span class="ident">p</span>),
-                        <span class="kw-2">&amp;</span><span class="macro">format!</span>(
+                    )
+                    .<span class="ident">detail</span>(
+                        <span class="ident">identifier</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                        <span class="macro">format!</span>(
                             <span class="string">&quot;a second declaration of `{}` is not allowed&quot;</span>,
                             <span class="ident">identifier_name</span>
                         ),
+                    )
+                    .<span class="ident">detail</span>(
+                        <span class="ident">existing</span>.<span class="ident">to_owned</span>(),
+                        <span class="macro">format!</span>(<span class="string">&quot;`{}` is first declared here&quot;</span>, <span class="ident">identifier_name</span>),
                     );
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                 <span class="ident">identifier</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
@@ -458,7 +474,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">expected_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">Diagnostic</span> {
+    <span class="kw">fn</span> <span class="ident">expected_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span> {
         <span class="ident">expected_binding</span>(<span class="ident">p</span>, <span class="ident">range</span>)
     }
 
@@ -514,7 +530,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">expected_element_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">Diagnostic</span> {
+    <span class="kw">fn</span> <span class="ident">expected_element_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span> {
         <span class="ident">expected_any</span>(
             <span class="kw-2">&amp;</span>[
                 <span class="string">&quot;identifier&quot;</span>,
@@ -556,7 +572,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">expected_property_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">Diagnostic</span> {
+    <span class="kw">fn</span> <span class="ident">expected_property_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span> {
         <span class="ident">expected_any</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;identifier&quot;</span>, <span class="string">&quot;member name&quot;</span>, <span class="string">&quot;rest pattern&quot;</span>], <span class="ident">range</span>).<span class="ident">to_diagnostic</span>(<span class="ident">p</span>)
     }
 
@@ -627,7 +643,7 @@
                     <span class="kw">let</span> <span class="ident">inner_range</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">range</span>(<span class="ident">p</span>);
                     <span class="comment">// Don&#39;t add multiple errors</span>
                     <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">kind</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">JS_UNKNOWN_BINDING</span> {
-                        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Expected identifier binding&quot;</span>).<span class="ident">primary</span>(<span class="ident">inner_range</span>, <span class="string">&quot;Object rest patterns must bind to an identifier, other patterns are not allowed.&quot;</span>));
+                        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Expected identifier binding&quot;</span>, <span class="ident">inner_range</span>,).<span class="ident">hint</span>( <span class="string">&quot;Object rest patterns must bind to an identifier, other patterns are not allowed.&quot;</span>));
                     }
 
                     <span class="ident">inner</span>.<span class="ident">change_kind</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN_BINDING</span>);

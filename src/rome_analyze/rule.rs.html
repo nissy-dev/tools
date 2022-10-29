@@ -453,15 +453,49 @@
 <span id="453">453</span>
 <span id="454">454</span>
 <span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::categories</span>::{<span class="ident">ActionCategory</span>, <span class="ident">RuleCategory</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::context::RuleContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::registry</span>::{<span class="ident">RegistryVisitor</span>, <span class="ident">RuleLanguage</span>, <span class="ident">RuleSuppressions</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">AnalyzerDiagnostic</span>, <span class="ident">Phase</span>, <span class="ident">Phases</span>, <span class="ident">Queryable</span>};
 <span class="kw">use</span> <span class="ident">rome_console::fmt::Display</span>;
 <span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">markup</span>, <span class="ident">MarkupBuf</span>};
-<span class="kw">use</span> <span class="ident">rome_diagnostics::v2::Category</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">file::FileId</span>, <span class="ident">Applicability</span>, <span class="ident">Severity</span>};
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">DiagnosticTag</span>, <span class="ident">Footer</span>, <span class="ident">Span</span>};
+<span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileId</span>;
+<span class="kw">use</span> <span class="ident">rome_diagnostics::v2::advice::CodeSuggestionAdvice</span>;
+<span class="kw">use</span> <span class="ident">rome_diagnostics::v2::location::AsSpan</span>;
+<span class="kw">use</span> <span class="ident">rome_diagnostics::v2</span>::{
+    <span class="ident">Advices</span>, <span class="ident">Category</span>, <span class="ident">Diagnostic</span>, <span class="ident">DiagnosticTags</span>, <span class="ident">Location</span>, <span class="ident">LogCategory</span>, <span class="ident">MessageAndDescription</span>,
+    <span class="ident">Visit</span>,
+};
+<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
 <span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">BatchMutation</span>, <span class="ident">Language</span>, <span class="ident">TextRange</span>};
 <span class="kw">use</span> <span class="ident">serde::de::DeserializeOwned</span>;
 
@@ -718,7 +752,7 @@
     <span class="doccomment">/// override this if generating a diagnostic for this rule requires heavy</span>
     <span class="doccomment">/// processing and the range could be determined through a faster path</span>
     <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
-        <span class="ident"><span class="self">Self</span>::diagnostic</span>(<span class="ident">ctx</span>, <span class="ident">state</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">diag</span><span class="op">|</span> <span class="ident">diag</span>.<span class="ident">span</span>())
+        <span class="ident"><span class="self">Self</span>::diagnostic</span>(<span class="ident">ctx</span>, <span class="ident">state</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">diag</span><span class="op">|</span> <span class="ident">diag</span>.<span class="ident">span</span>())
     }
 
     <span class="doccomment">/// Allows the rule to suppress a set of syntax nodes to prevent them from</span>
@@ -781,38 +815,78 @@
 }
 
 <span class="doccomment">/// Diagnostic object returned by a single analysis rule</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Diagnostic</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuleDiagnostic</span> {
+    <span class="attribute">#[<span class="ident">category</span>]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">category</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">span</span>: <span class="ident">TextRange</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">title</span>: <span class="ident">MarkupBuf</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">summary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tag</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DiagnosticTag</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">primary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MarkupBuf</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">secondaries</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Severity</span>, <span class="ident">MarkupBuf</span>, <span class="ident">TextRange</span>)<span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">footers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Footer</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">location</span>(<span class="ident">span</span>)]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">span</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">message</span>]</span>
+    <span class="attribute">#[<span class="ident">description</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">message</span>: <span class="ident">MessageAndDescription</span>,
+    <span class="attribute">#[<span class="ident">tags</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tags</span>: <span class="ident">DiagnosticTags</span>,
+    <span class="attribute">#[<span class="ident">advice</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rule_advice</span>: <span class="ident">RuleAdvice</span>,
 }
 
-<span class="comment">// Some of these methods aren&#39;t used by anything yet</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
+<span class="doccomment">/// It contains possible advices to show when printing a diagnostic that belong to the rule</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuleAdvice</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">details</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Detail</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">notes</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">LogCategory</span>, <span class="ident">MarkupBuf</span>)<span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">code_suggestion_list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CodeSuggestionAdvice</span><span class="op">&lt;</span><span class="ident">MarkupBuf</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">RuleAdvice</span> {
+    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">for</span> <span class="ident">detail</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">details</span> {
+            <span class="ident">visitor</span>.<span class="ident">record_log</span>(
+                <span class="ident">detail</span>.<span class="ident">log_category</span>,
+                <span class="kw-2">&amp;</span><span class="macro">markup!</span> { {<span class="ident">detail</span>.<span class="ident">message</span>} }.<span class="ident">to_owned</span>(),
+            )<span class="question-mark">?</span>;
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">location</span>) <span class="op">=</span> <span class="ident">Location::builder</span>().<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">detail</span>.<span class="ident">range</span>).<span class="ident">build</span>() {
+                <span class="ident">visitor</span>.<span class="ident">record_frame</span>(<span class="ident">location</span>)<span class="question-mark">?</span>;
+            }
+        }
+        <span class="comment">// we then print notes</span>
+        <span class="kw">for</span> (<span class="ident">log_category</span>, <span class="ident">note</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">notes</span> {
+            <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="kw-2">*</span><span class="ident">log_category</span>, <span class="kw-2">&amp;</span><span class="macro">markup!</span> { {<span class="ident">note</span>} }.<span class="ident">to_owned</span>())<span class="question-mark">?</span>;
+        }
+
+        <span class="comment">// finally, we print possible code suggestions on how to fix the issue</span>
+        <span class="kw">for</span> <span class="ident">suggestion</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">code_suggestion_list</span> {
+            <span class="ident">suggestion</span>.<span class="ident">record</span>(<span class="ident">visitor</span>)<span class="question-mark">?</span>;
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Detail</span> {
+    <span class="kw">pub</span> <span class="ident">log_category</span>: <span class="ident">LogCategory</span>,
+    <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">MarkupBuf</span>,
+    <span class="kw">pub</span> <span class="ident">range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
+}
+
 <span class="kw">impl</span> <span class="ident">RuleDiagnostic</span> {
     <span class="doccomment">/// Creates a new [`RuleDiagnostic`] with a severity and title that will be</span>
     <span class="doccomment">/// used in a builder-like way to modify labels.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">category</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">Span</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">category</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">AsSpan</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">title</span> }).<span class="ident">to_owned</span>();
         <span class="self">Self</span> {
             <span class="ident">category</span>,
-            <span class="ident">span</span>: <span class="ident">span</span>.<span class="ident">as_range</span>(),
-            <span class="ident">title</span>: <span class="macro">markup!</span>({ <span class="ident">title</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">summary</span>: <span class="prelude-val">None</span>,
-            <span class="ident">tag</span>: <span class="prelude-val">None</span>,
-            <span class="ident">primary</span>: <span class="prelude-val">None</span>,
-            <span class="ident">secondaries</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">footers</span>: <span class="ident">Vec::new</span>(),
+            <span class="ident">span</span>: <span class="ident">span</span>.<span class="ident">as_span</span>(),
+            <span class="ident">message</span>: <span class="ident">MessageAndDescription::from</span>(<span class="ident">message</span>),
+            <span class="ident">tags</span>: <span class="ident">DiagnosticTags::empty</span>(),
+            <span class="ident">rule_advice</span>: <span class="ident">RuleAdvice::default</span>(),
         }
     }
 
     <span class="doccomment">/// Set an explicit plain-text summary for this diagnostic.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">summary</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">summary</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">summary</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">summary</span>.<span class="ident">into</span>());
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">summary</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">set_description</span>(<span class="ident">summary</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
 
@@ -821,11 +895,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This does not have any influence on the diagnostic rendering.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deprecated</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">tag</span> <span class="op">=</span> <span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">tag</span>, <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Unnecessary</span>)) {
-            <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Both</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Deprecated</span>)
-        };
+        <span class="self">self</span>.<span class="ident">tags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">DiagnosticTags::DEPRECATED_CODE</span>;
         <span class="self">self</span>
     }
 
@@ -834,62 +904,46 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This does not have any influence on the diagnostic rendering.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unnecessary</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">tag</span> <span class="op">=</span> <span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">tag</span>, <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Deprecated</span>)) {
-            <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Both</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Unnecessary</span>)
-        };
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Attaches a label to this [`RuleDiagnostic`], that will point to another file</span>
-    <span class="doccomment">/// that is provided.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label_in_file</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">severity</span>: <span class="ident">Severity</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">Span</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">secondaries</span>
-            .<span class="ident">push</span>((<span class="ident">severity</span>, <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(), <span class="ident">span</span>.<span class="ident">as_range</span>()));
+        <span class="self">self</span>.<span class="ident">tags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">DiagnosticTags::UNNECESSARY_CODE</span>;
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Attaches a label to this [`RuleDiagnostic`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The given span has to be in the file that was provided while creating this [`RuleDiagnostic`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">severity</span>: <span class="ident">Severity</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">Span</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">secondaries</span>
-            .<span class="ident">push</span>((<span class="ident">severity</span>, <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(), <span class="ident">span</span>.<span class="ident">as_range</span>()));
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Attaches a primary label to this [`RuleDiagnostic`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">primary</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>());
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Attaches a secondary label to this [`RuleDiagnostic`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">secondary</span>(<span class="self">self</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">Span</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">label</span>(<span class="ident">Severity::Note</span>, <span class="ident">span</span>, <span class="ident">msg</span>)
-    }
-
-    <span class="doccomment">/// Adds a footer to this [`RuleDiagnostic`], which will be displayed under the actual error.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">footer</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">severity</span>: <span class="ident">Severity</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">footers</span>.<span class="ident">push</span>(<span class="ident">Footer</span> {
-            <span class="ident">msg</span>: <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">severity</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">AsSpan</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">rule_advice</span>.<span class="ident">details</span>.<span class="ident">push</span>(<span class="ident">Detail</span> {
+            <span class="ident">log_category</span>: <span class="ident">LogCategory::Info</span>,
+            <span class="ident">message</span>: <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(),
+            <span class="ident">range</span>: <span class="ident">span</span>.<span class="ident">as_span</span>(),
         });
         <span class="self">self</span>
     }
 
-    <span class="doccomment">/// Adds a footer to this [`RuleDiagnostic`], with the `Help` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">footer_help</span>(<span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">footer</span>(<span class="ident">Severity::Help</span>, <span class="ident">msg</span>)
+    <span class="doccomment">/// Attaches a detailed message to this [`RuleDiagnostic`].</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">detail</span>(<span class="self">self</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">AsSpan</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">label</span>(<span class="ident">span</span>, <span class="ident">msg</span>)
     }
 
-    <span class="doccomment">/// Adds a footer to this [`RuleDiagnostic`], with the `Note` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">footer_note</span>(<span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">footer</span>(<span class="ident">Severity::Note</span>, <span class="ident">msg</span>)
+    <span class="doccomment">/// Adds a footer to this [`RuleDiagnostic`], which will be displayed under the actual error.</span>
+    <span class="kw">fn</span> <span class="ident">footer</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">log_category</span>: <span class="ident">LogCategory</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">rule_advice</span>
+            .<span class="ident">notes</span>
+            .<span class="ident">push</span>((<span class="ident">log_category</span>, <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>()));
+        <span class="self">self</span>
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
+    <span class="doccomment">/// Adds a footer to this [`RuleDiagnostic`], with the `Info` log category.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">note</span>(<span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">footer</span>(<span class="ident">LogCategory::Info</span>, <span class="ident">msg</span>)
+    }
+
+    <span class="doccomment">/// Adds a footer to this [`RuleDiagnostic`], with the `Warn` severity.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">warning</span>(<span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">footer</span>(<span class="ident">LogCategory::Warn</span>, <span class="ident">msg</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">span</span>
     }
 
@@ -898,6 +952,10 @@
     <span class="doccomment">/// the rule was being run on</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_analyzer_diagnostic</span>(<span class="self">self</span>, <span class="ident">file_id</span>: <span class="ident">FileId</span>) -&gt; <span class="ident">AnalyzerDiagnostic</span> {
         <span class="ident">AnalyzerDiagnostic::from_rule_diagnostic</span>(<span class="ident">file_id</span>, <span class="self">self</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">RuleAdvice</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">rule_advice</span>
     }
 }
 

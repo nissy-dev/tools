@@ -1141,6 +1141,13 @@
 <span id="1141">1141</span>
 <span id="1142">1142</span>
 <span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">ParsedSyntax</span>, <span class="ident">ParserProgress</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state</span>::{<span class="ident">EnterFunction</span>, <span class="ident">EnterParameters</span>, <span class="ident">SignatureFlags</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::binding</span>::{
@@ -1227,7 +1234,7 @@
             <span class="comment">// if (true) function a() {}</span>
             <span class="comment">// label1: function b() {}</span>
             <span class="comment">// while (true) function c() {}</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;In strict mode code, functions can only be declared at top level or inside a block&quot;</span>).<span class="ident">primary</span>(<span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;wrap the function in a block statement&quot;</span>));
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;In strict mode code, functions can only be declared at top level or inside a block&quot;</span>, <span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>)).<span class="ident">hint</span>( <span class="string">&quot;wrap the function in a block statement&quot;</span>));
             <span class="ident">function</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">context</span>, <span class="ident">StatementContext::If</span> <span class="op">|</span> <span class="ident">StatementContext::Label</span>) {
             <span class="comment">// test function_in_if_or_labelled_stmt_loose_mode</span>
@@ -1236,7 +1243,7 @@
             <span class="comment">// if (true) function b() {} else function c() {}</span>
             <span class="comment">// if (true) function d() {}</span>
             <span class="comment">// if (true) &quot;test&quot;; else function e() {}</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if or labelled statement&quot;</span>).<span class="ident">primary</span>(<span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;wrap the function in a block statement&quot;</span>));
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if or labelled statement&quot;</span>, <span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>)).<span class="ident">hint</span>( <span class="string">&quot;wrap the function in a block statement&quot;</span>));
             <span class="ident">function</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
         }
     }
@@ -1344,15 +1351,17 @@
         <span class="ident">id</span>.<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">range</span><span class="op">|</span> {
             <span class="ident">p</span>.<span class="ident">err_builder</span>(
                 <span class="string">&quot;expected a name for the function in a function declaration, but found none&quot;</span>,
+                <span class="ident">range</span>,
             )
-            .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>)
         });
     }
 
     <span class="ident">TypeScript</span>
         .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_parameters</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">marker</span><span class="op">|</span> {
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;type parameters can only be used in TypeScript files&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">marker</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>)
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;type parameters can only be used in TypeScript files&quot;</span>,
+                <span class="ident">marker</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            )
         })
         .<span class="ident">ok</span>();
 
@@ -1371,8 +1380,10 @@
 
     <span class="ident">TypeScript</span>
         .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_return_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">marker</span><span class="op">|</span> {
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;return types can only be used in TypeScript files&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">marker</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>)
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;return types can only be used in TypeScript files&quot;</span>,
+                <span class="ident">marker</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            )
         })
         .<span class="ident">ok</span>();
 
@@ -1397,10 +1408,10 @@
         <span class="comment">// function* test(a: string);</span>
         <span class="comment">// function* test(a: string) {}</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">generator_range</span>) <span class="op">=</span> <span class="ident">generator_range</span> {
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;An overload signature cannot be declared as a generator.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">generator_range</span>, <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;An overload signature cannot be declared as a generator.&quot;</span>,
+                <span class="ident">generator_range</span>,
+            ));
         }
 
         <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">TS_DECLARE_FUNCTION_DECLARATION</span>)
@@ -1413,7 +1424,7 @@
         <span class="comment">// if (true) async function t() {}</span>
         <span class="comment">// if (true) function* t() {}</span>
         <span class="kw">if</span> <span class="ident">kind</span>.<span class="ident">is_in_single_statement_context</span>() <span class="op">&amp;&amp;</span> (<span class="ident">in_async</span> <span class="op">|</span><span class="op">|</span> <span class="ident">generator_range</span>.<span class="ident">is_some</span>()) {
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`async` and generator functions can only be declared at top level or inside a block&quot;</span>).<span class="ident">primary</span>(<span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>));
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`async` and generator functions can only be declared at top level or inside a block&quot;</span>, <span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>) ));
             <span class="ident">function</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
         }
 
@@ -1490,10 +1501,10 @@
     <span class="comment">// declare async function test();</span>
     <span class="kw">let</span> <span class="ident">is_async</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw">async</span>]);
     <span class="kw">if</span> <span class="ident">is_async</span> {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;async&#39; modifier cannot be used in an ambient context.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;&#39;async&#39; modifier cannot be used in an ambient context.&quot;</span>,
+            <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+        ));
         <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="kw">async</span>]);
     }
 
@@ -1506,8 +1517,11 @@
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">body</span>) <span class="op">=</span> <span class="ident">parse_function_body</span>(<span class="ident">p</span>, <span class="ident">SignatureFlags::empty</span>()) {
         <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;A &#39;declare&#39; function cannot have a function body&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">body</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;remove this body&quot;</span>),
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;A &#39;declare&#39; function cannot have a function body&quot;</span>,
+                <span class="ident">body</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            )
+            .<span class="ident">hint</span>(<span class="string">&quot;remove this body&quot;</span>),
         );
     }
 
@@ -1522,8 +1536,11 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_ts_type_annotation_or_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
     <span class="ident">TypeScript</span>.<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">annotation</span><span class="op">|</span> {
-        <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;return types can only be used in TypeScript files&quot;</span>)
-            .<span class="ident">primary</span>(<span class="ident">annotation</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;remove this type annotation&quot;</span>)
+        <span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;return types can only be used in TypeScript files&quot;</span>,
+            <span class="ident">annotation</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        )
+        .<span class="ident">hint</span>(<span class="string">&quot;remove this type annotation&quot;</span>)
     })
 }
 
@@ -1631,10 +1648,7 @@
         .<span class="ident">ok</span>();
 
     <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">has_preceding_line_break</span>() {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Line terminator not permitted before arrow.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Line terminator not permitted before arrow.&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>()));
     }
 
     <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[=&gt;]) <span class="op">&amp;&amp;</span> <span class="ident">ambiguity</span>.<span class="ident">is_disallowed</span>() {
@@ -1957,10 +1971,10 @@
                 <span class="comment">// test_err ts ts_arrow_function_this_parameter</span>
                 <span class="comment">// let a = (this: string) =&gt; {}</span>
                 <span class="ident">parameter</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
-                <span class="ident">p</span>.<span class="ident">error</span>(
-                    <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;An arrow function cannot have a &#39;this&#39; parameter.&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-                );
+                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;An arrow function cannot have a &#39;this&#39; parameter.&quot;</span>,
+                    <span class="ident">parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                ));
             }
         }
 
@@ -1980,9 +1994,7 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
     <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>]) {
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-            .<span class="ident">err_builder</span>(<span class="string">&quot;rest patterns cannot be optional&quot;</span>)
-            .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>);
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest patterns cannot be optional&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>());
 
         <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
         <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
@@ -1998,9 +2010,10 @@
     <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">initializer</span>) <span class="op">=</span> <span class="ident">parse_initializer_clause</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>()) {
         <span class="comment">// test_err arrow_rest_in_expr_in_initializer</span>
         <span class="comment">// for ((...a = &quot;b&quot; in {}) =&gt; {};;) {}</span>
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-            .<span class="ident">err_builder</span>(<span class="string">&quot;rest elements may not have default initializers&quot;</span>)
-            .<span class="ident">primary</span>(<span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>);
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;rest elements may not have default initializers&quot;</span>,
+            <span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        );
 
         <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
         <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
@@ -2009,9 +2022,10 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rest_parameter</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_REST_PARAMETER</span>);
 
     <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[,]) {
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-            .<span class="ident">err_builder</span>(<span class="string">&quot;rest elements may not have trailing commas&quot;</span>)
-            .<span class="ident">primary</span>(<span class="ident">rest_parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>);
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;rest elements may not have trailing commas&quot;</span>,
+            <span class="ident">rest_parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        );
 
         <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
         <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
@@ -2104,10 +2118,10 @@
                 ));
                 <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">parameter_context</span>.<span class="ident">is_setter</span>() {
-                <span class="ident">p</span>.<span class="ident">error</span>(
-                    <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;A &#39;set&#39; accessor cannot have an optional parameter.&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>),
-                );
+                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;A &#39;set&#39; accessor cannot have an optional parameter.&quot;</span>,
+                    <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+                ));
                 <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
             }
 
@@ -2131,10 +2145,10 @@
             <span class="op">&amp;&amp;</span> <span class="ident">parameter_context</span>.<span class="ident">is_parameter_property</span>()
         {
             <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;A parameter property may not be declared using a binding pattern.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">binding_range</span>, <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;A parameter property may not be declared using a binding pattern.&quot;</span>,
+                <span class="ident">binding_range</span>,
+            ));
         }
 
         <span class="ident">TypeScript</span>
@@ -2145,15 +2159,15 @@
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">initializer</span>) <span class="op">=</span> <span class="ident">parse_initializer_clause</span>(<span class="ident">p</span>, <span class="ident">expression_context</span>) {
             <span class="kw">if</span> <span class="ident">valid</span> <span class="op">&amp;&amp;</span> <span class="ident">parameter_context</span>.<span class="ident">is_setter</span>() <span class="op">&amp;&amp;</span> <span class="ident">TypeScript</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) {
-                <span class="ident">p</span>.<span class="ident">error</span>(
-                    <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;A &#39;set&#39; accessor parameter cannot have an initializer.&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-                );
+                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;A &#39;set&#39; accessor parameter cannot have an initializer.&quot;</span>,
+                    <span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                ));
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_optional</span> <span class="op">&amp;&amp;</span> <span class="ident">valid</span> {
-                <span class="ident">p</span>.<span class="ident">error</span>(
-                    <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Parameter cannot have question mark and initializer&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-                );
+                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;Parameter cannot have question mark and initializer&quot;</span>,
+                    <span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                ));
             }
         }
 

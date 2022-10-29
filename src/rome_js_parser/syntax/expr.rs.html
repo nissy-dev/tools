@@ -2053,6 +2053,11 @@
 <span id="2053">2053</span>
 <span id="2054">2054</span>
 <span id="2055">2055</span>
+<span id="2056">2056</span>
+<span id="2057">2057</span>
+<span id="2058">2058</span>
+<span id="2059">2059</span>
+<span id="2060">2060</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Expressions, these include `this`, identifiers, arrays, objects,</span>
 <span class="doccomment">//! binary expressions, unary expressions, and more.</span>
 <span class="doccomment">//!</span>
@@ -2272,7 +2277,7 @@
         } <span class="kw">else</span> {
             <span class="string">&quot;\&quot;0\&quot;-prefixed octal literals are deprecated; use the \&quot;0o\&quot; prefix instead.&quot;</span>
         };
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="ident">err_msg</span>).<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>));
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="ident">err_msg</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>()));
     }
 
     <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
@@ -2418,10 +2423,10 @@
         <span class="comment">// test_err yield_expr_in_parameter_initializer</span>
         <span class="comment">// function* test(a = yield &quot;test&quot;) {}</span>
         <span class="comment">// function test2(a = yield &quot;test&quot;) {}</span>
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`yield` is only allowed within generator functions.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">yield_expr</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;`yield` is only allowed within generator functions.&quot;</span>,
+            <span class="ident">yield_expr</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        ));
         <span class="ident">yield_expr</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
     }
 
@@ -2575,9 +2580,10 @@
                 <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
 					.<span class="ident">err_builder</span>(
 						<span class="string">&quot;unparenthesized unary expression can&#39;t appear on the left-hand side of &#39;**&#39;&quot;</span>,
+                        <span class="ident">left</span>.<span class="ident">range</span>(<span class="ident">p</span>)
 					)
-					.<span class="ident">secondary</span>(<span class="ident">op_range</span>, <span class="string">&quot;&quot;</span>)
-					.<span class="ident">primary</span>(<span class="ident">left</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>);
+					.<span class="ident">detail</span>(<span class="ident">op_range</span>, <span class="string">&quot;The operation&quot;</span>)
+					.<span class="ident">detail</span>(<span class="ident">left</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;The left-hand side&quot;</span>);
 
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                 <span class="ident">is_unknown</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -2590,11 +2596,14 @@
             }
         } <span class="kw">else</span> {
             <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                    <span class="string">&quot;Expected an expression for the left hand side of the `{}` operator.&quot;</span>,
-                    <span class="ident">p</span>.<span class="ident">source</span>(<span class="ident">op_range</span>)
-                ))
-                .<span class="ident">primary</span>(<span class="ident">op_range</span>, <span class="string">&quot;This operator requires a left hand side value&quot;</span>);
+                .<span class="ident">err_builder</span>(
+                    <span class="macro">format!</span>(
+                        <span class="string">&quot;Expected an expression for the left hand side of the `{}` operator.&quot;</span>,
+                        <span class="ident">p</span>.<span class="ident">source</span>(<span class="ident">op_range</span>),
+                    ),
+                    <span class="ident">op_range</span>,
+                )
+                .<span class="ident">hint</span>(<span class="string">&quot;This operator requires a left hand side value&quot;</span>);
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
         }
 
@@ -2805,10 +2814,11 @@
             <span class="kw">let</span> <span class="ident">identifier_range</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">cur_range</span>();
             <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">cur_src</span>();
             <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                    <span class="string">&quot;&#39;{name}&#39; is not a valid meta-property for keyword &#39;new&#39;.&quot;</span>
-                ))
-                .<span class="ident">primary</span>(<span class="ident">identifier_range</span>, <span class="string">&quot;Did you mean &#39;target&#39;?&quot;</span>);
+                .<span class="ident">err_builder</span>(
+                    <span class="macro">format!</span>(<span class="string">&quot;&#39;{name}&#39; is not a valid meta-property for keyword &#39;new&#39;.&quot;</span>),
+                    <span class="ident">identifier_range</span>,
+                )
+                .<span class="ident">hint</span>(<span class="string">&quot;Did you mean &#39;target&#39;?&quot;</span>);
 
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">error</span>);
             <span class="ident">p</span>.<span class="ident">bump_remap</span>(<span class="macro">T!</span>[<span class="ident">ident</span>]);
@@ -2832,11 +2842,8 @@
         <span class="comment">// new A.b?.()()</span>
         <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>.]) {
             <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">err_builder</span>(<span class="string">&quot;Invalid optional chain from new expression.&quot;</span>)
-                .<span class="ident">primary</span>(
-                    <span class="ident">p</span>.<span class="ident">cur_range</span>(),
-                    <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Did you mean to call &#39;{}()&#39;?&quot;</span>, <span class="ident">lhs</span>.<span class="ident">text</span>(<span class="ident">p</span>)),
-                );
+                .<span class="ident">err_builder</span>(<span class="string">&quot;Invalid optional chain from new expression.&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>())
+                .<span class="ident">hint</span>(<span class="macro">format!</span>(<span class="string">&quot;Did you mean to call &#39;{}()&#39;?&quot;</span>, <span class="ident">lhs</span>.<span class="ident">text</span>(<span class="ident">p</span>)));
 
             <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">error</span>);
         }
@@ -2885,15 +2892,15 @@
 
     <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>.]) {
         <span class="ident">super_expression</span>.<span class="ident">change_kind</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN_EXPRESSION</span>);
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Super doesn&#39;t support optional chaining as super can never be null&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">super_expression</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;Super doesn&#39;t support optional chaining as super can never be null&quot;</span>,
+            <span class="ident">super_expression</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        ));
     } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_constructor</span>() {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`super` is only valid inside of a class constructor of a subclass.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">super_expression</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;`super` is only valid inside of a class constructor of a subclass.&quot;</span>,
+            <span class="ident">super_expression</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        ));
         <span class="ident">super_expression</span>.<span class="ident">change_kind</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN_EXPRESSION</span>);
     }
 
@@ -2952,8 +2959,11 @@
         <span class="comment">// 	# test;</span>
         <span class="comment">// }</span>
         <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Unexpected space or comment between `#` and identifier&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">hash_end</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(), <span class="string">&quot;remove the space here&quot;</span>),
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;Unexpected space or comment between `#` and identifier&quot;</span>,
+                <span class="ident">hash_end</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(),
+            )
+            .<span class="ident">hint</span>(<span class="string">&quot;remove the space here&quot;</span>),
         );
         <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN</span>))
     } <span class="kw">else</span> {
@@ -3127,8 +3137,11 @@
         <span class="comment">// test_err empty_parenthesized_expression</span>
         <span class="comment">// ();</span>
         <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Parenthesized expression didnt contain anything&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;Expected an expression here&quot;</span>),
+            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;Parenthesized expression didnt contain anything&quot;</span>,
+                <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+            )
+            .<span class="ident">hint</span>(<span class="string">&quot;Expected an expression here&quot;</span>),
         );
     } <span class="kw">else</span> {
         <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">parse_assignment_expression_or_higher</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>());
@@ -3295,19 +3308,21 @@
                     <span class="ident">p</span>.<span class="ident">bump_remap</span>(<span class="ident">META</span>);
                     <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">IMPORT_META</span>)
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="ident">ident</span>]) {
-                    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                        .<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+                    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="macro">format!</span>(
                             <span class="string">&quot;Expected `meta` following an import keyword, but found `{}`&quot;</span>,
                             <span class="ident">p</span>.<span class="ident">source</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>())
-                        ))
-                        .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>);
+                        ),
+                        <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+                    );
 
                     <span class="ident">p</span>.<span class="ident">err_and_bump</span>(<span class="ident">err</span>, <span class="ident">JS_UNKNOWN</span>);
                     <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">IMPORT_META</span>)
                 } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                        .<span class="ident">err_builder</span>(<span class="string">&quot;Expected `meta` following an import keyword, but found none&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>);
+                    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;Expected `meta` following an import keyword, but found none&quot;</span>,
+                        <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+                    );
 
                     <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                     <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN</span>)
@@ -3341,8 +3356,7 @@
                     <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[...]) {
                         <span class="ident">parse_spread_element</span>(<span class="ident">p</span>, <span class="ident">context</span>)
                             .<span class="ident">add_diagnostic_if_present</span>(<span class="ident">p</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">range</span><span class="op">|</span> {
-                                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`...` is not allowed in `import()`&quot;</span>)
-                                    .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>)
+                                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`...` is not allowed in `import()`&quot;</span>, <span class="ident">range</span>)
                             })
                             .<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">marker</span><span class="op">|</span> {
                                 <span class="ident">marker</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
@@ -3362,9 +3376,10 @@
 
                 <span class="ident">args_list</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_CALL_ARGUMENT_LIST</span>);
                 <span class="kw">if</span> <span class="ident">args_count</span> <span class="op">==</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">args_count</span> <span class="op">&gt;</span> <span class="number">2</span> {
-                    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                        .<span class="ident">err_builder</span>(<span class="string">&quot;`import()` requires exactly one or two arguments. &quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">error_range_start</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">end</span>(), <span class="string">&quot;&quot;</span>);
+                    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;`import()` requires exactly one or two arguments. &quot;</span>,
+                        <span class="ident">error_range_start</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">end</span>(),
+                    );
                     <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                 }
 
@@ -3460,20 +3475,20 @@
     }
 
     <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">cur</span>() {
-        <span class="macro">T!</span>[<span class="kw">yield</span>] <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_generator</span>() =&gt; <span class="prelude-val">Some</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Illegal use of `yield` as an identifier in generator function&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>),
-        ),
+        <span class="macro">T!</span>[<span class="kw">yield</span>] <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_generator</span>() =&gt; <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;Illegal use of `yield` as an identifier in generator function&quot;</span>,
+            <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+        )),
         <span class="ident">t</span> <span class="kw">if</span> <span class="ident">t</span>.<span class="ident">is_future_reserved_keyword</span>() =&gt; {
             <span class="kw">if</span> <span class="ident">StrictMode</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) {
                 <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">cur_src</span>();
-                <span class="prelude-val">Some</span>(
-                    <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+                <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="macro">format!</span>(
                         <span class="string">&quot;Illegal use of reserved keyword `{}` as an identifier in strict mode&quot;</span>,
                         <span class="ident">name</span>
-                    ))
-                    .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>),
-                )
+                    ),
+                    <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+                ))
             } <span class="kw">else</span> {
                 <span class="prelude-val">None</span>
             }
@@ -3482,15 +3497,15 @@
         <span class="comment">// declare const await: any;</span>
         <span class="macro">T!</span>[<span class="kw">await</span>] <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_ambient_context</span>() =&gt; {
             <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_async</span>() {
-                <span class="prelude-val">Some</span>(
-                    <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Illegal use of `await` as an identifier in an async context&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>),
-                )
+                <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;Illegal use of `await` as an identifier in an async context&quot;</span>,
+                    <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+                ))
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">source_type</span>.<span class="ident">is_module</span>() {
-                <span class="prelude-val">Some</span>(
-                    <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Illegal use of `await` as an identifier inside of a module&quot;</span>)
-                        .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>),
-                )
+                <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;Illegal use of `await` as an identifier inside of a module&quot;</span>,
+                    <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+                ))
             } <span class="kw">else</span> {
                 <span class="prelude-val">None</span>
             }
@@ -3572,10 +3587,10 @@
     <span class="comment">// obj.val?.[expr]`template`</span>
     <span class="comment">// obj.func?.(args)`template`</span>
     <span class="kw">if</span> <span class="ident">in_optional_chain</span> {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Tagged template expressions are not permitted in an optional chain.&quot;</span>)
-                .<span class="ident">primary</span>(<span class="ident">completed</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-        );
+        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            <span class="string">&quot;Tagged template expressions are not permitted in an optional chain.&quot;</span>,
+            <span class="ident">completed</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+        ));
         <span class="ident">completed</span>.<span class="ident">change_kind</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN_EXPRESSION</span>);
     }
 
@@ -3619,8 +3634,7 @@
                 <span class="ident">e</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">element_kind</span>);
             }
             <span class="ident">ERROR_TOKEN</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Invalid template literal&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;&quot;</span>);
+                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Invalid template literal&quot;</span>,<span class="ident">p</span>.<span class="ident">cur_range</span>(), );
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                 <span class="ident">p</span>.<span class="ident">bump_with_context</span>(<span class="ident">p</span>.<span class="ident">cur</span>(), <span class="ident">LexContext::TemplateElement</span> { <span class="ident">tagged</span> });
             }
@@ -3775,30 +3789,32 @@
             <span class="ident">parse_call_arguments</span>(<span class="ident">p</span>)
                 .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="op">|</span><span class="ident">p</span>, <span class="kw">_</span><span class="op">|</span> <span class="ident">expected_token</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]).<span class="ident">to_diagnostic</span>(<span class="ident">p</span>));
             <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_CALL_EXPRESSION</span>);
-            <span class="kw">continue</span>;
-        }
-
-        <span class="kw">if</span> <span class="ident">in_optional_chain</span> {
-            <span class="comment">// If the `?.` is present and what followed was neither a valid type arguments nor valid arguments.</span>
-            <span class="comment">// In this case, parse this as a static member access with an optional chain</span>
-
-            <span class="comment">// test_err ts optional_chain_call_without_arguments</span>
-            <span class="comment">// let a = { test: null };</span>
-            <span class="comment">// a.test?.;</span>
-            <span class="comment">// a.test?.&lt;ab;</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">expected_identifier</span>(<span class="ident">p</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>()));
-            <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_STATIC_MEMBER_EXPRESSION</span>);
         } <span class="kw">else</span> {
-            <span class="comment">// Safety:</span>
-            <span class="comment">// * The method initially checks if the parsers at a &#39;&lt;&#39;, &#39;(&#39;, or &#39;?.&#39; token.</span>
-            <span class="comment">// * if the parser is at &#39;?.&#39;: It takes the branch right above, ensuring that no token was consumed</span>
-            <span class="comment">// * if the parser is at &#39;&lt;&#39;: `parse_ts_type_arguments_in_expression` rewinds if what follows aren&#39;t  valid type arguments and this is the only way we can reach this branch</span>
-            <span class="comment">// * if the parser is at &#39;(&#39;: This always parses out as valid arguments.</span>
-            <span class="macro">debug_assert_eq!</span>(<span class="ident">p</span>.<span class="ident">tokens</span>.<span class="ident">position</span>(), <span class="ident">start_pos</span>);
-            <span class="ident">m</span>.<span class="ident">abandon</span>(<span class="ident">p</span>);
-        }
+            <span class="kw">break</span> <span class="kw">if</span> <span class="ident">optional_chain_call</span> {
+                <span class="comment">// If the `?.` is present and what followed was neither a valid type arguments nor valid arguments.</span>
+                <span class="comment">// In this case, parse this as a static member access with an optional chain</span>
 
-        <span class="kw">break</span> <span class="ident">lhs</span>;
+                <span class="comment">// test_err ts optional_chain_call_without_arguments</span>
+                <span class="comment">// let a = { test: null };</span>
+                <span class="comment">// a.test?.;</span>
+                <span class="comment">// a.test?.&lt;ab;</span>
+                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">expected_identifier</span>(<span class="ident">p</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>()));
+                <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_STATIC_MEMBER_EXPRESSION</span>)
+            } <span class="kw">else</span> {
+                <span class="comment">// test ts optional_chain_call_less_than</span>
+                <span class="comment">// String(item)?.b &lt; 0;</span>
+                <span class="comment">// String(item)?.b &lt;aBcd;</span>
+
+                <span class="comment">// Safety:</span>
+                <span class="comment">// * The method initially checks if the parsers at a &#39;&lt;&#39;, &#39;(&#39;, or &#39;?.&#39; token.</span>
+                <span class="comment">// * if the parser is at &#39;?.&#39;: It takes the branch right above, ensuring that no token was consumed</span>
+                <span class="comment">// * if the parser is at &#39;&lt;&#39;: `parse_ts_type_arguments_in_expression` rewinds if what follows aren&#39;t  valid type arguments and this is the only way we can reach this branch</span>
+                <span class="comment">// * if the parser is at &#39;(&#39;: This always parses out as valid arguments.</span>
+                <span class="macro">debug_assert_eq!</span>(<span class="ident">p</span>.<span class="ident">tokens</span>.<span class="ident">position</span>(), <span class="ident">start_pos</span>);
+                <span class="ident">m</span>.<span class="ident">abandon</span>(<span class="ident">p</span>);
+                <span class="ident">lhs</span>
+            };
+        }
     }
 }
 
@@ -3875,10 +3891,10 @@
             <span class="comment">//     await;</span>
             <span class="comment">//   }</span>
             <span class="comment">// }</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`await` is only allowed within async functions and at the top levels of modules.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">expr</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;`await` is only allowed within async functions and at the top levels of modules.&quot;</span>,
+                <span class="ident">expr</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            ));
             <span class="ident">expr</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
         }
 
@@ -4004,23 +4020,19 @@
                 <span class="kw">if</span> <span class="ident">StrictMode</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">range</span>) <span class="op">=</span> <span class="ident">rewriter</span>.<span class="ident">exited_ident_expr</span> {
                         <span class="ident">kind</span> <span class="op">=</span> <span class="ident">JS_UNKNOWN_EXPRESSION</span>;
-                        <span class="ident">p</span>.<span class="ident">error</span>(
-                            <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                                <span class="string">&quot;the target for a delete operator cannot be a single identifier&quot;</span>,
-                            )
-                            .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>),
-                        );
+                        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                            <span class="string">&quot;the target for a delete operator cannot be a single identifier&quot;</span>,
+                            <span class="ident">range</span>,
+                        ));
                     }
                 }
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">range</span>) <span class="op">=</span> <span class="ident">rewriter</span>.<span class="ident">exited_private_member_expr</span> {
                     <span class="ident">kind</span> <span class="op">=</span> <span class="ident">JS_UNKNOWN_EXPRESSION</span>;
-                    <span class="ident">p</span>.<span class="ident">error</span>(
-                        <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                            <span class="string">&quot;the target for a delete operator cannot be a private member&quot;</span>,
-                        )
-                        .<span class="ident">primary</span>(<span class="ident">range</span>, <span class="string">&quot;&quot;</span>),
-                    );
+                    <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                        <span class="string">&quot;the target for a delete operator cannot be a private member&quot;</span>,
+                        <span class="ident">range</span>,
+                    ));
                 }
 
                 <span class="ident">res</span>
@@ -4035,12 +4047,10 @@
                     <span class="ident">JS_STATIC_MEMBER_EXPRESSION</span> <span class="op">|</span> <span class="ident">JS_COMPUTED_MEMBER_EXPRESSION</span> =&gt; {}
                     <span class="kw">_</span> =&gt; {
                         <span class="ident">kind</span> <span class="op">=</span> <span class="ident">JS_UNKNOWN_EXPRESSION</span>;
-                        <span class="ident">p</span>.<span class="ident">error</span>(
-                            <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                                <span class="string">&quot;the target for a delete operator must be a property access&quot;</span>,
-                            )
-                            .<span class="ident">primary</span>(<span class="ident">res</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;&quot;</span>),
-                        );
+                        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                            <span class="string">&quot;the target for a delete operator must be a property access&quot;</span>,
+                            <span class="ident">res</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                        ));
                     }
                 }
             }

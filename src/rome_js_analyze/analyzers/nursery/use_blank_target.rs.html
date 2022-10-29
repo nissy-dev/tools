@@ -194,6 +194,36 @@
 <span id="194">194</span>
 <span id="195">195</span>
 <span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsRuleAction</span>;
 <span class="kw">use</span> <span class="ident">rome_analyze::context::RuleContext</span>;
 <span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
@@ -226,9 +256,15 @@
     <span class="doccomment">/// ```jsx,expect_diagnostic</span>
     <span class="doccomment">/// &lt;a href=&#39;http://external.link&#39; target=&#39;_blank&#39;&gt;child&lt;/a&gt;</span>
     <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ```jsx,expect_diagnostic</span>
     <span class="doccomment">/// &lt;a href=&#39;http://external.link&#39; target=&#39;_blank&#39; rel=&quot;noopener&quot;&gt;child&lt;/a&gt;</span>
     <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```jsx,expect_diagnostic</span>
+    <span class="doccomment">/// &lt;a {...props} href=&#39;http://external.link&#39; target=&#39;_blank&#39; rel=&quot;noopener&quot;&gt;child&lt;/a&gt;</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ```jsx,expect_diagnostic</span>
     <span class="doccomment">/// // case-insensitive</span>
     <span class="doccomment">/// &lt;a href=&#39;http://external.link&#39; target=&#39;_BlaNk&#39;&gt;child&lt;/a&gt;</span>
@@ -236,7 +272,8 @@
     <span class="doccomment">/// ### Valid</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```jsx</span>
-    <span class="doccomment">/// &lt;a href=&#39;http://external.link&#39; rel=&#39;noreferrer&#39; target=&#39;_blank&#39;&gt;child&lt;/a&gt;</span>
+    <span class="doccomment">/// let a = &lt;a href=&#39;http://external.link&#39; rel=&#39;noreferrer&#39; target=&#39;_blank&#39;&gt;child&lt;/a&gt;;</span>
+    <span class="doccomment">/// let a = &lt;a href=&#39;http://external.link&#39; target=&#39;_blank&#39; rel=&quot;noopener&quot; {...props}&gt;child&lt;/a&gt;;</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseBlankTarget</span> {
         <span class="ident">version</span>: <span class="string">&quot;10.0.0&quot;</span>,
@@ -247,6 +284,23 @@
 
 <span class="macro">declare_node_union!</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseBlankTargetQuery</span> <span class="op">=</span> <span class="ident">JsxElement</span> <span class="op">|</span> <span class="ident">JsxSelfClosingElement</span>
+}
+
+<span class="kw">impl</span> <span class="ident">UseBlankTargetQuery</span> {
+    <span class="kw">fn</span> <span class="ident">has_trailing_spread_attribute</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">current_attribute</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">JsxAnyAttribute</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">UseBlankTargetQuery::JsxElement</span>(<span class="ident">element</span>) =&gt; <span class="ident">element</span>
+                .<span class="ident">opening_element</span>()
+                .<span class="ident">ok</span>()<span class="question-mark">?</span>
+                .<span class="ident">has_trailing_spread_prop</span>(<span class="ident">current_attribute</span>),
+            <span class="ident">UseBlankTargetQuery::JsxSelfClosingElement</span>(<span class="ident">element</span>) =&gt; {
+                <span class="ident">element</span>.<span class="ident">has_trailing_spread_prop</span>(<span class="ident">current_attribute</span>)
+            }
+        })
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseBlankTarget</span> {
@@ -291,6 +345,7 @@
         };
 
         <span class="kw">let</span> <span class="ident">target_attribute</span> <span class="op">=</span> <span class="ident">target_attribute</span><span class="question-mark">?</span>;
+
         <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">target_attribute</span>
             .<span class="ident">initializer</span>()<span class="question-mark">?</span>
             .<span class="ident">value</span>()
@@ -302,7 +357,9 @@
         <span class="kw">if</span> <span class="ident">text</span>.<span class="ident">to_lowercase</span>() <span class="op">==</span> <span class="string">&quot;_blank&quot;</span> {
             <span class="kw">match</span> <span class="ident">rel_attribute</span> {
                 <span class="prelude-val">None</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">target_attribute</span>, <span class="prelude-val">None</span>));
+                    <span class="kw">if</span> <span class="op">!</span><span class="ident">node</span>.<span class="ident">has_trailing_spread_attribute</span>(<span class="ident">target_attribute</span>.<span class="ident">clone</span>())<span class="question-mark">?</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">target_attribute</span>, <span class="prelude-val">None</span>));
+                    }
                 }
                 <span class="prelude-val">Some</span>(<span class="ident">rel_attribute</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">rel_text</span> <span class="op">=</span> <span class="ident">rel_attribute</span>
@@ -312,7 +369,10 @@
                         .<span class="ident">as_jsx_string</span>()<span class="question-mark">?</span>
                         .<span class="ident">inner_string_text</span>()
                         .<span class="ident">ok</span>()<span class="question-mark">?</span>;
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">rel_text</span>.<span class="ident">text</span>().<span class="ident">contains</span>(<span class="string">&quot;noreferrer&quot;</span>) {
+                    <span class="kw">if</span> <span class="op">!</span><span class="ident">rel_text</span>.<span class="ident">text</span>().<span class="ident">contains</span>(<span class="string">&quot;noreferrer&quot;</span>)
+                        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">node</span>.<span class="ident">has_trailing_spread_attribute</span>(<span class="ident">target_attribute</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>
+                        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">node</span>.<span class="ident">has_trailing_spread_attribute</span>(<span class="ident">rel_attribute</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>
+                    {
                         <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">target_attribute</span>, <span class="prelude-val">Some</span>(<span class="ident">rel_attribute</span>)));
                     }
                 }
@@ -382,7 +442,7 @@
             <span class="macro">markup!</span> {
                 <span class="string">&quot;Avoid using &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;target=\&quot;_blank\&quot;&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; without &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;rel=\&quot;noreferrer\&quot;&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;.&quot;</span>
             },
-        ).<span class="ident">footer_note</span>(
+        ).<span class="ident">note</span>(
             <span class="macro">markup!</span>{
                 <span class="string">&quot;Opening external links in new tabs without rel=\&quot;noreferrer\&quot; is a security risk. See \
                 &quot;</span><span class="op">&lt;</span><span class="ident">Hyperlink</span> <span class="ident">href</span><span class="op">=</span><span class="string">&quot;https://html.spec.whatwg.org/multipage/links.html#link-type-noopener&quot;</span><span class="op">&gt;</span><span class="string">&quot;the explanation&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Hyperlink</span><span class="op">&gt;</span><span class="string">&quot; for more details.&quot;</span>

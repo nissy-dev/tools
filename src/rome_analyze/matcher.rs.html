@@ -515,7 +515,8 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">file::FileId</span>, <span class="ident">v2::category</span>, <span class="ident">Diagnostic</span>, <span class="ident">Severity</span>};
+    <span class="kw">use</span> <span class="ident">rome_diagnostics::v2</span>::{<span class="ident">Diagnostic</span>, <span class="ident">Error</span>, <span class="ident">Severity</span>};
+    <span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">file::FileId</span>, <span class="ident">v2::category</span>};
     <span class="kw">use</span> <span class="ident">rome_rowan</span>::{
         <span class="ident">raw_language</span>::{<span class="ident">RawLanguage</span>, <span class="ident">RawLanguageKind</span>, <span class="ident">RawLanguageRoot</span>, <span class="ident">RawSyntaxTreeBuilder</span>},
         <span class="ident">AstNode</span>, <span class="ident">TextRange</span>, <span class="ident">TextSize</span>, <span class="ident">TriviaPiece</span>, <span class="ident">TriviaPieceKind</span>,
@@ -530,6 +531,15 @@
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::MatchQueryParams</span>;
 
     <span class="kw">struct</span> <span class="ident">SuppressionMatcher</span>;
+
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Diagnostic</span>)]</span>
+    <span class="attribute">#[<span class="ident">diagnostic</span>(<span class="ident">category</span> <span class="op">=</span> <span class="string">&quot;args/fileNotFound&quot;</span>, <span class="ident">message</span> <span class="op">=</span> <span class="string">&quot;test_suppression&quot;</span>)]</span>
+    <span class="kw">struct</span> <span class="ident">TestDiagnostic</span> {
+        <span class="attribute">#[<span class="ident">location</span>(<span class="ident">resource</span>)]</span>
+        <span class="ident">location</span>: <span class="ident">FileId</span>,
+        <span class="attribute">#[<span class="ident">location</span>(<span class="ident">span</span>)]</span>
+        <span class="ident">span</span>: <span class="ident">TextRange</span>,
+    }
 
     <span class="kw">impl</span> <span class="ident">QueryMatcher</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SuppressionMatcher</span> {
         <span class="doccomment">/// Emits a warning diagnostic for all literal expressions</span>
@@ -546,17 +556,10 @@
             <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">text_trimmed_range</span>();
             <span class="ident">params</span>.<span class="ident">signal_queue</span>.<span class="ident">push</span>(<span class="ident">SignalEntry</span> {
                 <span class="ident">signal</span>: <span class="ident">Box::new</span>(<span class="ident">DiagnosticSignal::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-                    <span class="ident">AnalyzerDiagnostic::from_diagnostic</span>(
-                        <span class="ident">Diagnostic::warning</span>(
-                            <span class="ident">FileId::zero</span>(),
-                            <span class="comment">// This is a random category for testing that&#39;s</span>
-                            <span class="comment">// pretty much guaranteed to never be emitted by</span>
-                            <span class="comment">// the analyzer</span>
-                            <span class="macro">category!</span>(<span class="string">&quot;args/fileNotFound&quot;</span>),
-                            <span class="string">&quot;test_suppression&quot;</span>,
-                        )
-                        .<span class="ident">primary</span>(<span class="ident">span</span>, <span class="string">&quot;&quot;</span>),
-                    )
+                    <span class="ident">AnalyzerDiagnostic::from_error</span>(<span class="ident">Error::from</span>(<span class="ident">TestDiagnostic</span> {
+                        <span class="ident">span</span>,
+                        <span class="ident">location</span>: <span class="ident">FileId::zero</span>(),
+                    }))
                 })),
                 <span class="ident">rule</span>: <span class="ident">RuleKey::new</span>(<span class="string">&quot;group&quot;</span>, <span class="string">&quot;rule&quot;</span>),
                 <span class="ident">text_range</span>: <span class="ident">span</span>,
@@ -656,15 +659,12 @@
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostics</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">emit_signal</span> <span class="op">=</span> <span class="op">|</span><span class="ident">signal</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">AnalyzerSignal</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ControlFlow</span><span class="op">&lt;</span><span class="ident">Never</span><span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">signal</span>
-                .<span class="ident">diagnostic</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;diagnostic&quot;</span>)
-                .<span class="ident">into_diagnostic</span>(<span class="ident">Severity::Warning</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">diagnostic</span>().<span class="ident">expect</span>(<span class="string">&quot;diagnostic&quot;</span>);
+            <span class="ident">diag</span>.<span class="ident">set_severity</span>(<span class="ident">Severity::Warning</span>);
+            <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">category</span>().<span class="ident">expect</span>(<span class="string">&quot;code&quot;</span>);
+            <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">get_span</span>().<span class="ident">expect</span>(<span class="string">&quot;range&quot;</span>);
 
-            <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">code</span>.<span class="ident">expect</span>(<span class="string">&quot;code&quot;</span>);
-            <span class="kw">let</span> <span class="ident">label</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">primary</span>.<span class="ident">expect</span>(<span class="string">&quot;primary label&quot;</span>);
-
-            <span class="ident">diagnostics</span>.<span class="ident">push</span>((<span class="ident">code</span>, <span class="ident">label</span>.<span class="ident">span</span>.<span class="ident">range</span>));
+            <span class="ident">diagnostics</span>.<span class="ident">push</span>((<span class="ident">code</span>, <span class="ident">range</span>));
             <span class="ident">ControlFlow::Continue</span>(())
         };
 

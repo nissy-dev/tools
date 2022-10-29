@@ -506,6 +506,11 @@
 <span id="506">506</span>
 <span id="507">507</span>
 <span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The [Workspace] is the main entry point for high-level clients (the Rome</span>
 <span class="doccomment">//! CLI and Language Server) into the various language-specific services of the</span>
 <span class="doccomment">//! Rome toolchain (parser, formatter, analyzer ...)</span>
@@ -685,12 +690,15 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PullDiagnosticsParams</span> {
     <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
     <span class="kw">pub</span> <span class="ident">categories</span>: <span class="ident">RuleCategories</span>,
+    <span class="kw">pub</span> <span class="ident">max_diagnostics</span>: <span class="ident">u64</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PullDiagnosticsResult</span> {
     <span class="kw">pub</span> <span class="ident">diagnostics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">v2::serde::Diagnostic</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">has_errors</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">skipped_diagnostics</span>: <span class="ident">u64</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
@@ -960,10 +968,12 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pull_diagnostics</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">categories</span>: <span class="ident">RuleCategories</span>,
+        <span class="ident">max_diagnostics</span>: <span class="ident">u64</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullDiagnosticsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">pull_diagnostics</span>(<span class="ident">PullDiagnosticsParams</span> {
             <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
             <span class="ident">categories</span>,
+            <span class="ident">max_diagnostics</span>,
         })
     }
 

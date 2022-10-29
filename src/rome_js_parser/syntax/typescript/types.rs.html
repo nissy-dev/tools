@@ -1423,8 +1423,6 @@
 <span id="1423">1423</span>
 <span id="1424">1424</span>
 <span id="1425">1425</span>
-<span id="1426">1426</span>
-<span id="1427">1427</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">RecoveryError</span>, <span class="ident">RecoveryResult</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state</span>::{<span class="ident">EnterType</span>, <span class="ident">SignatureFlags</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::expr</span>::{
@@ -2234,12 +2232,10 @@
         <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">TS_METHOD_SIGNATURE_TYPE_MEMBER</span>);
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">readonly_range</span>) <span class="op">=</span> <span class="ident">readonly_range</span> {
-            <span class="ident">p</span>.<span class="ident">error</span>(
-                <span class="ident">p</span>.<span class="ident">err_builder</span>(
-                    <span class="string">&quot;readonly modifier can only appear on a property or signature declaration&quot;</span>,
-                )
-                .<span class="ident">primary</span>(<span class="ident">readonly_range</span>, <span class="string">&quot;&quot;</span>),
-            );
+            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                <span class="string">&quot;readonly modifier can only appear on a property or signature declaration&quot;</span>,
+                <span class="ident">readonly_range</span>,
+            ));
         }
 
         <span class="ident">Present</span>(<span class="ident">method</span>)
@@ -2370,9 +2366,10 @@
             <span class="comment">// test_err ts ts_tuple_type_cannot_be_optional_and_rest</span>
             <span class="comment">// type A = [ ...name?: string[] ]</span>
             <span class="kw">if</span> <span class="ident">has_ellipsis</span> <span class="op">&amp;&amp;</span> <span class="ident">has_question_mark</span> {
-                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
-                    .<span class="ident">err_builder</span>(<span class="string">&quot;A tuple member cannot be both optional and rest.&quot;</span>)
-                    .<span class="ident">primary</span>(<span class="ident">syntax</span>.<span class="ident">range</span>(<span class="ident">p</span>).<span class="ident">as_range</span>(), <span class="string">&quot;&quot;</span>);
+                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+                    <span class="string">&quot;A tuple member cannot be both optional and rest.&quot;</span>,
+                    <span class="ident">syntax</span>.<span class="ident">range</span>(<span class="ident">p</span>).<span class="ident">as_range</span>(),
+                );
                 <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
                 <span class="ident">syntax</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
             }
@@ -2844,10 +2841,9 @@
 
     <span class="comment">// or a semicolon (possibly ASI)</span>
     <span class="kw">if</span> <span class="op">!</span><span class="ident">optional_semi</span>(<span class="ident">p</span>) {
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;&#39;;&#39; expected&#39;&quot;</span>).<span class="ident">primary</span>(
-            <span class="ident">p</span>.<span class="ident">cur_range</span>(),
-            <span class="string">&quot;An explicit or implicit semicolon is expected here...&quot;</span>,
-        );
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>
+            .<span class="ident">err_builder</span>(<span class="string">&quot;&#39;;&#39; expected&#39;&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>())
+            .<span class="ident">hint</span>(<span class="string">&quot;An explicit or implicit semicolon is expected here...&quot;</span>);
 
         <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
     }

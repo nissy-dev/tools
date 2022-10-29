@@ -103,6 +103,15 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::AsFormat</span>;
 
@@ -120,6 +129,8 @@
     <span class="ident">N</span>: <span class="ident">AstSeparatedList</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">JsLanguage</span>, <span class="ident">Node</span> <span class="op">=</span> <span class="ident">I</span><span class="op">&gt;</span>,
     <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">I</span>: <span class="ident">ArrayNodeElement</span> <span class="op">+</span> <span class="ident">AsFormat</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
 {
+    <span class="kw">let</span> <span class="ident">trailing_separator</span> <span class="op">=</span> <span class="ident">FormatTrailingComma::ES5</span>.<span class="ident">trailing_separator</span>(<span class="ident">f</span>.<span class="ident">options</span>());
+
     <span class="comment">// Specifically do not use format_separated as arrays need separators</span>
     <span class="comment">// inserted after holes regardless of the formatting since this makes a</span>
     <span class="comment">// semantic difference</span>
@@ -151,7 +162,14 @@
                         <span class="prelude-val">None</span> =&gt; <span class="ident">text</span>(<span class="string">&quot;,&quot;</span>).<span class="ident">fmt</span>(<span class="ident">f</span>)<span class="question-mark">?</span>,
                     };
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">separator</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">trailing_separator</span>()<span class="question-mark">?</span> {
-                    <span class="macro">write!</span>(<span class="ident">f</span>, [<span class="ident">format_only_if_breaks</span>(<span class="ident">separator</span>, <span class="kw-2">&amp;</span><span class="ident">separator</span>.<span class="ident">format</span>())])<span class="question-mark">?</span>;
+                    <span class="kw">match</span> <span class="ident">trailing_separator</span> {
+                        <span class="ident">TrailingSeparator::Omit</span> =&gt; {
+                            <span class="macro">write!</span>(<span class="ident">f</span>, [<span class="ident">format_removed</span>(<span class="ident">separator</span>)])<span class="question-mark">?</span>;
+                        }
+                        <span class="kw">_</span> =&gt; {
+                            <span class="macro">write!</span>(<span class="ident">f</span>, [<span class="ident">format_only_if_breaks</span>(<span class="ident">separator</span>, <span class="kw-2">&amp;</span><span class="ident">separator</span>.<span class="ident">format</span>())])<span class="question-mark">?</span>;
+                        }
+                    }
                 } <span class="kw">else</span> {
                     <span class="macro">write!</span>(<span class="ident">f</span>, [<span class="ident">FormatTrailingComma::ES5</span>])<span class="question-mark">?</span>;
                 };

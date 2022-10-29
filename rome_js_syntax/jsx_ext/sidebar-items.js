@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["find_attribute_by_name",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["find_attribute_by_name",""],["has_trailing_spread_prop",""]]};

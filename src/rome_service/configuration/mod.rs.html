@@ -359,6 +359,23 @@
 <span id="359">359</span>
 <span id="360">360</span>
 <span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
 </pre><pre class="rust"><code><span class="doccomment">//! This module contains the configuration of `rome.json`</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The configuration is divided by &quot;tool&quot;, and then it&#39;s possible to further customise it</span>
@@ -373,6 +390,7 @@
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Formatter</span>};
 <span class="kw">use</span> <span class="ident">std::io::ErrorKind</span>;
 <span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
+<span class="kw">use</span> <span class="ident">std::num::NonZeroU64</span>;
 <span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
 <span class="kw">use</span> <span class="ident">tracing</span>::{<span class="ident">error</span>, <span class="ident">info</span>};
 
@@ -391,6 +409,10 @@
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">deny_unknown_fields</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Configuration</span> {
+    <span class="doccomment">/// The configuration of the filesystem</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">files</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FilesConfiguration</span><span class="op">&gt;</span>,
+
     <span class="doccomment">/// The configuration of the formatter</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">formatter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FormatterConfiguration</span><span class="op">&gt;</span>,
@@ -407,6 +429,7 @@
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Configuration</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
+            <span class="ident">files</span>: <span class="prelude-val">None</span>,
             <span class="ident">linter</span>: <span class="prelude-val">Some</span>(<span class="ident">LinterConfiguration</span> {
                 <span class="ident">enabled</span>: <span class="bool-val">true</span>,
                 ..<span class="ident">LinterConfiguration::default</span>()
@@ -425,6 +448,16 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_linter_disabled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">linter</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="op">!</span><span class="ident">f</span>.<span class="ident">enabled</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
     }
+}
+
+<span class="doccomment">/// The configuration of the filesystem</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>, <span class="ident">default</span>, <span class="ident">deny_unknown_fields</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FilesConfiguration</span> {
+    <span class="doccomment">/// The maximum allowed size for source code files in bytes. Files above</span>
+    <span class="doccomment">/// this limit will be ignore for performance reason. Defaults to 1 MiB</span>
+    <span class="kw">pub</span> <span class="ident">max_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NonZeroU64</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Series of errors that can be thrown while computing the configuration</span>
@@ -672,6 +705,7 @@
 <span class="doccomment">///  )</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// [WorkspaceSettings]: crate::settings::WorkspaceSettings</span>
 <span class="doccomment">/// [metadata]: rome_analyze::RegistryRuleMetadata</span>
 <span class="doccomment">/// [configuration for the analyzer]: AnalyzerConfiguration</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_analyzer_configuration</span><span class="op">&lt;</span><span class="ident">ToGlobals</span><span class="op">&gt;</span>(

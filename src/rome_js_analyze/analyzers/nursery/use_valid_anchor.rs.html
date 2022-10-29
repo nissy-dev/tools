@@ -309,6 +309,23 @@
 <span id="309">309</span>
 <span id="310">310</span>
 <span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_analyze::context::RuleContext</span>;
 <span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">declare_rule</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
 <span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">markup</span>, <span class="ident">MarkupBuf</span>};
@@ -365,6 +382,7 @@
     <span class="doccomment">/// &lt;&gt;</span>
     <span class="doccomment">///     &lt;a href={`https://www.javascript.com`}&gt;navigate here&lt;/a&gt;</span>
     <span class="doccomment">///     &lt;a href={somewhere}&gt;navigate here&lt;/a&gt;</span>
+    <span class="doccomment">///     &lt;a {...spread}&gt;navigate here&lt;/a&gt;</span>
     <span class="doccomment">/// &lt;/&gt;</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -505,6 +523,21 @@
             }
         }
     }
+
+    <span class="kw">fn</span> <span class="ident">has_spread_attribute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">UseValidAnchorQuery::JsxElement</span>(<span class="ident">element</span>) =&gt; <span class="ident">element</span>
+                .<span class="ident">opening_element</span>()
+                .<span class="ident">ok</span>()<span class="question-mark">?</span>
+                .<span class="ident">attributes</span>()
+                .<span class="ident">iter</span>()
+                .<span class="ident">any</span>(<span class="op">|</span><span class="ident">attribute</span><span class="op">|</span> <span class="ident">attribute</span>.<span class="ident">as_jsx_spread_attribute</span>().<span class="ident">is_some</span>()),
+            <span class="ident">UseValidAnchorQuery::JsxSelfClosingElement</span>(<span class="ident">element</span>) =&gt; <span class="ident">element</span>
+                .<span class="ident">attributes</span>()
+                .<span class="ident">iter</span>()
+                .<span class="ident">any</span>(<span class="op">|</span><span class="ident">attribute</span><span class="op">|</span> <span class="ident">attribute</span>.<span class="ident">as_jsx_spread_attribute</span>().<span class="ident">is_some</span>()),
+        })
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseValidAnchor</span> {
@@ -530,16 +563,17 @@
             (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">on_click_attribute</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">UseValidAnchorState::CantBeAnchor</span>(
                 <span class="ident">on_click_attribute</span>.<span class="ident">syntax</span>().<span class="ident">text_trimmed_range</span>(),
             )),
-            (<span class="prelude-val">None</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">UseValidAnchorState::MissingHrefAttribute</span>(
-                <span class="ident">node</span>.<span class="ident">syntax</span>().<span class="ident">text_trimmed_range</span>(),
-            )),
+            (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) <span class="kw">if</span> <span class="op">!</span><span class="ident">node</span>.<span class="ident">has_spread_attribute</span>()<span class="question-mark">?</span> =&gt; <span class="prelude-val">Some</span>(
+                <span class="ident">UseValidAnchorState::MissingHrefAttribute</span>(<span class="ident">node</span>.<span class="ident">syntax</span>().<span class="ident">text_trimmed_range</span>()),
+            ),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
         }
     }
 
     <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">_ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">RuleDiagnostic::new</span>(<span class="macro">rule_category!</span>(), <span class="ident">state</span>.<span class="ident">range</span>(), <span class="ident">state</span>.<span class="ident">message</span>())
-            .<span class="ident">footer_note</span>(<span class="ident">state</span>.<span class="ident">note</span>())
-            .<span class="ident">footer_note</span>(
+            .<span class="ident">note</span>(<span class="ident">state</span>.<span class="ident">note</span>())
+            .<span class="ident">note</span>(
             <span class="macro">markup!</span> {
                 <span class="string">&quot;Check &quot;</span><span class="op">&lt;</span><span class="ident">Hyperlink</span> <span class="ident">href</span><span class="op">=</span><span class="string">&quot;https://marcysutton.com/links-vs-buttons-in-modern-web-applications&quot;</span><span class="op">&gt;</span><span class="string">&quot;this thorough explanation&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Hyperlink</span><span class="op">&gt;</span><span class="string">&quot; to better understand the context.&quot;</span>
             }
