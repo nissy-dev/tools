@@ -834,87 +834,10 @@
 <span id="834">834</span>
 <span id="835">835</span>
 <span id="836">836</span>
-<span id="837">837</span>
-<span id="838">838</span>
-<span id="839">839</span>
-<span id="840">840</span>
-<span id="841">841</span>
-<span id="842">842</span>
-<span id="843">843</span>
-<span id="844">844</span>
-<span id="845">845</span>
-<span id="846">846</span>
-<span id="847">847</span>
-<span id="848">848</span>
-<span id="849">849</span>
-<span id="850">850</span>
-<span id="851">851</span>
-<span id="852">852</span>
-<span id="853">853</span>
-<span id="854">854</span>
-<span id="855">855</span>
-<span id="856">856</span>
-<span id="857">857</span>
-<span id="858">858</span>
-<span id="859">859</span>
-<span id="860">860</span>
-<span id="861">861</span>
-<span id="862">862</span>
-<span id="863">863</span>
-<span id="864">864</span>
-<span id="865">865</span>
-<span id="866">866</span>
-<span id="867">867</span>
-<span id="868">868</span>
-<span id="869">869</span>
-<span id="870">870</span>
-<span id="871">871</span>
-<span id="872">872</span>
-<span id="873">873</span>
-<span id="874">874</span>
-<span id="875">875</span>
-<span id="876">876</span>
-<span id="877">877</span>
-<span id="878">878</span>
-<span id="879">879</span>
-<span id="880">880</span>
-<span id="881">881</span>
-<span id="882">882</span>
-<span id="883">883</span>
-<span id="884">884</span>
-<span id="885">885</span>
-<span id="886">886</span>
-<span id="887">887</span>
-<span id="888">888</span>
-<span id="889">889</span>
-<span id="890">890</span>
-<span id="891">891</span>
-<span id="892">892</span>
-<span id="893">893</span>
-<span id="894">894</span>
-<span id="895">895</span>
-<span id="896">896</span>
-<span id="897">897</span>
-<span id="898">898</span>
-<span id="899">899</span>
-<span id="900">900</span>
-<span id="901">901</span>
-<span id="902">902</span>
-<span id="903">903</span>
-<span id="904">904</span>
-<span id="905">905</span>
-<span id="906">906</span>
-<span id="907">907</span>
-<span id="908">908</span>
-<span id="909">909</span>
-<span id="910">910</span>
-<span id="911">911</span>
-<span id="912">912</span>
-<span id="913">913</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Rome&#39;s official JavaScript formatter.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Implement the formatter</span>
-<span class="doccomment">//!`</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! Our formatter is node based. Meaning that each AST node knows how to format itself. In order to implement</span>
 <span class="doccomment">//! the formatting, a node has to implement the trait `FormatNode`.</span>
 <span class="doccomment">//!</span>
@@ -925,12 +848,9 @@
 <span class="doccomment">//! Our formatter has its own [internal IR](https://en.wikipedia.org/wiki/Intermediate_representation), it creates its own abstraction from an AST.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The developer won&#39;t be creating directly this IR, but they will use a series of utilities that will help</span>
-<span class="doccomment">//! to create this IR. The whole IR is represented by the `enum` `FormatElement`. Please refer to [its internal</span>
-<span class="doccomment">//! documentation](#build-the-documentation) to understand the meaning of each variant.</span>
+<span class="doccomment">//! to create this IR. The whole IR is represented by the `enum` `FormatElement`.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ### Rules to follow when implementing a formatter</span>
+<span class="doccomment">//! ### Best Practices</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! 1. Use the `*Fields` struct to extract all the tokens/nodes</span>
 <span class="doccomment">//!     ```rust,ignore</span>
@@ -971,6 +891,7 @@
 <span class="doccomment">//!    documentation to understand how to use them and when;</span>
 <span class="doccomment">//!    3. `format_extensions.rs`: with these traits, we give the ability to nodes and tokens to implements certain methods</span>
 <span class="doccomment">//!    that are exposed based on its type. If you have a good IDE support, this feature will help you. For example:</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//!    ```rust,ignore</span>
 <span class="doccomment">//!    #[derive(Debug, Clone, Default)]</span>
 <span class="doccomment">//!    pub struct FormatJsExportDefaultExpressionClause;</span>
@@ -985,27 +906,27 @@
 <span class="doccomment">//!             let element = expression.format();</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!             if let Some(expression) = &amp;expression? {</span>
-<span class="doccomment">//!                 write!(f, [expression.format(), space_token()])?;</span>
+<span class="doccomment">//!                 write!(f, [expression.format(), space()])?;</span>
 <span class="doccomment">//!             }</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!             if let Some(semicolon) = &amp;semicolon_token {</span>
 <span class="doccomment">//!                 write!(f, [semicolon.format()])?;</span>
 <span class="doccomment">//!             } else {</span>
-<span class="doccomment">//!                 write!(f, [space_token()])?;</span>
+<span class="doccomment">//!                 write!(f, [space()])?;</span>
 <span class="doccomment">//!             }</span>
 <span class="doccomment">//!         }</span>
 <span class="doccomment">//!    }</span>
 <span class="doccomment">//!    ```</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! 4. Use our [playground](https://play.rome.tools) to inspect the code that you want to format. You can inspect</span>
-<span class="doccomment">//! the AST given by a certain snippet. This will help you to understand which nodes need to be implemented/modified</span>
+<span class="doccomment">//! 4. Use the [playground](https://play.rome.tools) to inspect the code that you want to format.</span>
+<span class="doccomment">//! It helps you to understand which nodes need to be implemented/modified</span>
 <span class="doccomment">//! in order to implement formatting. Alternatively, you can locally run the playground by following</span>
 <span class="doccomment">//! the [playground instructions](https://github.com/rome/tools/blob/main/website/playground/README.md).</span>
 <span class="doccomment">//! 5. Use the [`quick_test()`](https://github.com/rome/tools/blob/main/crates/rome_js_formatter/src/lib.rs#L597-L616)</span>
 <span class="doccomment">//! function to test you snippet straight from your IDE, without running the whole test suite. The test</span>
 <span class="doccomment">//! is ignored on purpose, so you won&#39;t need to worry about the CI breaking.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## Write tests for the formatter</span>
+<span class="doccomment">//! ## Testing</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! We use [insta.rs](https://insta.rs/docs) for our snapshot tests, please make sure you read its documentation to learn the basics of snapshot testing.</span>
 <span class="doccomment">//! You should install the companion [`cargo-insta`](https://insta.rs/docs/cli/) command to assist with snapshot reviewing.</span>
@@ -1065,7 +986,7 @@
 <span class="doccomment">//!    In this case the test suite will run a **second test case** with `line_width` to 120 and `ident_style` with  4 spaces</span>
 <span class="doccomment">//! 6. when the test suite is run, you will have two outputs in your snapshot: the default one and the custom one</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## Identify issues</span>
+<span class="doccomment">//! ### Debugging Test Failures</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! There are four cases when a test is not correct:</span>
 <span class="doccomment">//! - you try to print/format the same token multiple times; the formatter will check at runtime when a test is run;</span>
@@ -1073,86 +994,11 @@
 <span class="doccomment">//! called `&quot;Unimplemented tokens/nodes&quot;`; a test, in order to be valid, can&#39;t have that section;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!    If removing a token is the actual behaviour (removing some parenthesis or a semicolon), then the correct way</span>
-<span class="doccomment">//!    to do it by using the formatter API `formatter.format_replaced(token, empty_element())`;</span>
+<span class="doccomment">//!    to do it by using the formatter API [rome_formatter::trivia::format_removed];</span>
 <span class="doccomment">//! - the emitted code is not a valid program anymore, the test suite will parse again the emitted code and it will</span>
 <span class="doccomment">//! fail if there are syntax errors;</span>
 <span class="doccomment">//! - the emitted code, when formatted again, differs from the original; this usually happens when removing/adding new</span>
 <span class="doccomment">//! elements, and the grouping is not correctly set;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Write tests for a parser</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! If you want to create a new test for an existing parser, you will have to inline</span>
-<span class="doccomment">//! the code that you want to test in a comment that is created in a specific way.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Let&#39;s say that you created a new parsing feature and you need new tests from scratch,</span>
-<span class="doccomment">//! just go to the source code where you parse this new feature if JavaScript, and add the following comment:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```rust,ignore</span>
-<span class="doccomment">//! // test feature_name</span>
-<span class="doccomment">//! // let a = { new_feature : &quot;&quot; }</span>
-<span class="doccomment">//! // let b = { new_feature : &quot;&quot; }</span>
-<span class="doccomment">//! fn parse_new_feature(p: &amp;mut Parser) -&gt; ParsedSyntax {}</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The first line, `// test feature_name` the important one. This will tell to the</span>
-<span class="doccomment">//! testing infrastructure to create a **positive test** (without parsing errors), called</span>
-<span class="doccomment">//! `feature_name.js` inside the `test_data/inline/ok` folder.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The content of this file will be:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```js</span>
-<span class="doccomment">//! let a = { new_feature : &quot;&quot; }</span>
-<span class="doccomment">//! let b = { new_feature : &quot;&quot; }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Basically, everything after the key comment will be the content of the new file.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Now you need to run `cargo codegen test` and the task will actually generate this file for you.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! In case you want to create a **negative test** (*with* parsing errors), you will</span>
-<span class="doccomment">//! create a new comment like this:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```diff</span>
-<span class="doccomment">//! // test feature_name</span>
-<span class="doccomment">//! // let a = { new_feature : &quot;&quot; }</span>
-<span class="doccomment">//! // let b = { new_feature : &quot;&quot; }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! + // test_err feature_name</span>
-<span class="doccomment">//! + // let a = {  : &quot;&quot; }</span>
-<span class="doccomment">//! + // let b = { new_feature :  }</span>
-<span class="doccomment">//! fn parse_new_feature(p: &amp;mut Parser) -&gt; ParsedSyntax {}</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Mind the different comment **`test_err`**, which marks the error for the test suite</span>
-<span class="doccomment">//! as a test that has to fail.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Run the command `cargo codegen test` and you will see a new file called</span>
-<span class="doccomment">//! `feature_name.js` inside the `test_data/inline/err` folder.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The content of this file will be:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```js</span>
-<span class="doccomment">//! let a = {  : &quot;&quot; }</span>
-<span class="doccomment">//! let b = { new_feature :  }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Now run the command:</span>
-<span class="doccomment">//! Unix/macOS</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```bash</span>
-<span class="doccomment">//! env UPDATE_EXPECT=1 cargo test</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Windows</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```powershell</span>
-<span class="doccomment">//! set UPDATE_EXPECT=1 &amp; cargo test</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! The command will tell the test suite to generate and update the `.rast` files.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! If tests that are inside the `ok/` folder fail or if tests that are inside the `err/`</span>
-<span class="doccomment">//! folder don&#39;t emit, the whole test suite will fail.</span>
 
 <span class="kw">mod</span> <span class="ident">cst</span>;
 <span class="kw">mod</span> <span class="ident">js</span>;
