@@ -18,10 +18,48 @@
 <span id="18">18</span>
 <span id="19">19</span>
 <span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">configuration::load_configuration</span>, <span class="ident">execute_mode</span>, <span class="ident">CliSession</span>, <span class="ident">Execution</span>, <span class="ident">Termination</span>,
     <span class="ident">TraversalMode</span>,
 };
+<span class="kw">use</span> <span class="ident">rome_service::configuration</span>::{<span class="ident">FormatterConfiguration</span>, <span class="ident">LinterConfiguration</span>};
 <span class="kw">use</span> <span class="ident">rome_service::workspace::UpdateSettingsParams</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::format::apply_format_settings_from_cli</span>;
@@ -29,7 +67,43 @@
 <span class="doccomment">/// Handler for the &quot;ci&quot; command of the Rome CLI</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">ci</span>(<span class="kw-2">mut</span> <span class="ident">session</span>: <span class="ident">CliSession</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Termination</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">configuration</span> <span class="op">=</span> <span class="ident">load_configuration</span>(<span class="kw-2">&amp;mut</span> <span class="ident">session</span>)<span class="question-mark">?</span>;
-    <span class="ident">apply_format_settings_from_cli</span>(<span class="kw-2">&amp;mut</span> <span class="ident">session</span>, <span class="kw-2">&amp;mut</span> <span class="ident">configuration</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="ident">formatter_enabled</span> <span class="op">=</span> <span class="ident">session</span>
+        .<span class="ident">args</span>
+        .<span class="ident">opt_value_from_str</span>(<span class="string">&quot;--formatter-enabled&quot;</span>)
+        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Termination::ParseError</span> {
+            <span class="ident">argument</span>: <span class="string">&quot;--formatter-enabled&quot;</span>,
+            <span class="ident">source</span>,
+        })<span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="ident">linter_enabled</span> <span class="op">=</span> <span class="ident">session</span>
+        .<span class="ident">args</span>
+        .<span class="ident">opt_value_from_str</span>(<span class="string">&quot;--linter-enabled&quot;</span>)
+        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Termination::ParseError</span> {
+            <span class="ident">argument</span>: <span class="string">&quot;--linter-enabled&quot;</span>,
+            <span class="ident">source</span>,
+        })<span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="ident">formatter</span> <span class="op">=</span> <span class="ident">configuration</span>
+        .<span class="ident">formatter</span>
+        .<span class="ident">get_or_insert_with</span>(<span class="ident">FormatterConfiguration::default</span>);
+
+    <span class="ident">formatter</span>.<span class="ident">enabled</span> <span class="op">=</span> <span class="ident">formatter_enabled</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>);
+
+    <span class="kw">let</span> <span class="ident">linter</span> <span class="op">=</span> <span class="ident">configuration</span>
+        .<span class="ident">linter</span>
+        .<span class="ident">get_or_insert_with</span>(<span class="ident">LinterConfiguration::default</span>);
+
+    <span class="ident">linter</span>.<span class="ident">enabled</span> <span class="op">=</span> <span class="ident">linter_enabled</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>);
+
+    <span class="comment">// no point in doing the traversal if all the checks have been disabled</span>
+    <span class="kw">if</span> <span class="ident">configuration</span>.<span class="ident">is_formatter_disabled</span>() <span class="op">&amp;&amp;</span> <span class="ident">configuration</span>.<span class="ident">is_linter_disabled</span>() {
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Termination::IncompatibleEndConfiguration</span>(<span class="string">&quot;Formatter and Linter are both disabled, can&#39;t perform the command. This probably and error.&quot;</span>));
+    }
+
+    <span class="kw">if</span> <span class="op">!</span><span class="ident">configuration</span>.<span class="ident">is_formatter_disabled</span>() {
+        <span class="ident">apply_format_settings_from_cli</span>(<span class="kw-2">&amp;mut</span> <span class="ident">session</span>, <span class="kw-2">&amp;mut</span> <span class="ident">configuration</span>)<span class="question-mark">?</span>;
+    }
 
     <span class="ident">session</span>
         .<span class="ident">app</span>
