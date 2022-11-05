@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/cursor/trivia.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>trivia.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/cursor/trivia.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>trivia.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -180,187 +180,187 @@
 <span id="180">180</span>
 <span id="181">181</span>
 <span id="182">182</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cursor::SyntaxToken</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green::GreenTrivia</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::TriviaPiece</span>;
-<span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::iter::FusedIterator</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cursor::SyntaxToken;
+<span class="kw">use </span><span class="kw">crate</span>::green::GreenTrivia;
+<span class="kw">use </span><span class="kw">crate</span>::TriviaPiece;
+<span class="kw">use </span>rome_text_size::{TextRange, TextSize};
+<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>std::iter::FusedIterator;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">SyntaxTrivia</span> {
-    <span class="ident">token</span>: <span class="ident">SyntaxToken</span>,
-    <span class="ident">is_leading</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(PartialEq, Eq, Clone, Hash)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SyntaxTrivia {
+    token: SyntaxToken,
+    is_leading: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxTrivia</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">leading</span>(<span class="ident">token</span>: <span class="ident">SyntaxToken</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">token</span>,
-            <span class="ident">is_leading</span>: <span class="bool-val">true</span>,
+<span class="kw">impl </span>SyntaxTrivia {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>leading(token: SyntaxToken) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            token,
+            is_leading: <span class="bool-val">true</span>,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">trailing</span>(<span class="ident">token</span>: <span class="ident">SyntaxToken</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">token</span>,
-            <span class="ident">is_leading</span>: <span class="bool-val">false</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>trailing(token: SyntaxToken) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            token,
+            is_leading: <span class="bool-val">false</span>,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">let</span> <span class="ident">trivia_range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">text_range</span>();
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">let </span>trivia_range = <span class="self">self</span>.text_range();
 
-        <span class="kw">let</span> <span class="ident">relative_range</span> <span class="op">=</span> <span class="ident">TextRange::at</span>(
-            <span class="ident">trivia_range</span>.<span class="ident">start</span>() <span class="op">-</span> <span class="self">self</span>.<span class="ident">token</span>.<span class="ident">data</span>().<span class="ident">offset</span>,
-            <span class="ident">trivia_range</span>.<span class="ident">len</span>(),
+        <span class="kw">let </span>relative_range = TextRange::at(
+            trivia_range.start() - <span class="self">self</span>.token.data().offset,
+            trivia_range.len(),
         );
 
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>.<span class="ident">text</span>()[<span class="ident">relative_range</span>]
+        <span class="kw-2">&amp;</span><span class="self">self</span>.token.text()[relative_range]
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxToken</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxToken {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.token
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">green_trivia</span>().<span class="ident">text_len</span>();
-        <span class="kw">let</span> <span class="ident">token_range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">token</span>.<span class="ident">text_range</span>();
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="kw">let </span>length = <span class="self">self</span>.green_trivia().text_len();
+        <span class="kw">let </span>token_range = <span class="self">self</span>.token.text_range();
 
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">is_leading</span> {
-            <span class="bool-val">true</span> =&gt; <span class="ident">TextRange::at</span>(<span class="ident">token_range</span>.<span class="ident">start</span>(), <span class="ident">length</span>),
-            <span class="bool-val">false</span> =&gt; <span class="ident">TextRange::at</span>(<span class="ident">token_range</span>.<span class="ident">end</span>() <span class="op">-</span> <span class="ident">length</span>, <span class="ident">length</span>),
+        <span class="kw">match </span><span class="self">self</span>.is_leading {
+            <span class="bool-val">true </span>=&gt; TextRange::at(token_range.start(), length),
+            <span class="bool-val">false </span>=&gt; TextRange::at(token_range.end() - length, length),
         }
     }
 
-    <span class="doccomment">/// Get the number of TriviaPiece inside this trivia</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">green_trivia</span>().<span class="ident">len</span>()
+    <span class="doccomment">/// Get the number of TriviaPiece inside this trivia
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.green_trivia().len()
     }
 
-    <span class="doccomment">/// Gets index-th trivia piece when the token associated with this trivia was created.</span>
-    <span class="doccomment">/// See [SyntaxTriviaPiece].</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_piece</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TriviaPiece</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">green_trivia</span>().<span class="ident">get_piece</span>(<span class="ident">index</span>)
+    <span class="doccomment">/// Gets index-th trivia piece when the token associated with this trivia was created.
+    /// See [SyntaxTriviaPiece].
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_piece(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TriviaPiece&gt; {
+        <span class="self">self</span>.green_trivia().get_piece(index)
     }
 
-    <span class="kw">fn</span> <span class="ident">green_trivia</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GreenTrivia</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">is_leading</span> {
-            <span class="bool-val">true</span> =&gt; <span class="self">self</span>.<span class="ident">token</span>.<span class="ident">green</span>().<span class="ident">leading_trivia</span>(),
-            <span class="bool-val">false</span> =&gt; <span class="self">self</span>.<span class="ident">token</span>.<span class="ident">green</span>().<span class="ident">trailing_trivia</span>(),
+    <span class="kw">fn </span>green_trivia(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>GreenTrivia {
+        <span class="kw">match </span><span class="self">self</span>.is_leading {
+            <span class="bool-val">true </span>=&gt; <span class="self">self</span>.token.green().leading_trivia(),
+            <span class="bool-val">false </span>=&gt; <span class="self">self</span>.token.green().trailing_trivia(),
         }
     }
 
-    <span class="doccomment">/// Returns the last trivia piece element</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">last</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TriviaPiece</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">green_trivia</span>().<span class="ident">pieces</span>().<span class="ident">last</span>()
+    <span class="doccomment">/// Returns the last trivia piece element
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>last(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TriviaPiece&gt; {
+        <span class="self">self</span>.green_trivia().pieces().last()
     }
 
-    <span class="doccomment">/// Returns the first trivia piece element</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">first</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TriviaPiece</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">green_trivia</span>().<span class="ident">pieces</span>().<span class="ident">first</span>()
+    <span class="doccomment">/// Returns the first trivia piece element
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>first(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TriviaPiece&gt; {
+        <span class="self">self</span>.green_trivia().pieces().first()
     }
 
-    <span class="doccomment">/// Iterate over all pieces of the trivia. The iterator returns the offset</span>
-    <span class="doccomment">/// of the trivia as [TextSize] and its data as [Trivia], which contains its length.</span>
-    <span class="doccomment">/// See [SyntaxTriviaPiece].</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">pieces</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxTriviaPiecesIterator</span> {
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">text_range</span>();
-        <span class="ident">SyntaxTriviaPiecesIterator</span> {
-            <span class="ident">raw</span>: <span class="self">self</span>.<span class="ident">clone</span>(),
-            <span class="ident">next_index</span>: <span class="number">0</span>,
-            <span class="ident">next_offset</span>: <span class="ident">range</span>.<span class="ident">start</span>(),
-            <span class="ident">end_index</span>: <span class="self">self</span>.<span class="ident">len</span>(),
-            <span class="ident">end_offset</span>: <span class="ident">range</span>.<span class="ident">end</span>(),
+    <span class="doccomment">/// Iterate over all pieces of the trivia. The iterator returns the offset
+    /// of the trivia as [TextSize] and its data as [Trivia], which contains its length.
+    /// See [SyntaxTriviaPiece].
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>pieces(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxTriviaPiecesIterator {
+        <span class="kw">let </span>range = <span class="self">self</span>.text_range();
+        SyntaxTriviaPiecesIterator {
+            raw: <span class="self">self</span>.clone(),
+            next_index: <span class="number">0</span>,
+            next_offset: range.start(),
+            end_index: <span class="self">self</span>.len(),
+            end_offset: range.end(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">SyntaxTrivia</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;SyntaxTrivia&quot;</span>);
-        <span class="ident">f</span>.<span class="ident">field</span>(<span class="string">&quot;text_range&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text_range</span>());
-        <span class="ident">f</span>.<span class="ident">finish</span>()
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>SyntaxTrivia {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">let </span><span class="kw-2">mut </span>f = f.debug_struct(<span class="string">&quot;SyntaxTrivia&quot;</span>);
+        f.field(<span class="string">&quot;text_range&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.text_range());
+        f.finish()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">SyntaxTrivia</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">fmt::Display::fmt</span>(<span class="self">self</span>.<span class="ident">text</span>(), <span class="ident">f</span>)
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>SyntaxTrivia {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        fmt::Display::fmt(<span class="self">self</span>.text(), f)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxTriviaPiecesIterator</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">raw</span>: <span class="ident">SyntaxTrivia</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">next_index</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">next_offset</span>: <span class="ident">TextSize</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">end_index</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">end_offset</span>: <span class="ident">TextSize</span>,
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>SyntaxTriviaPiecesIterator {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) raw: SyntaxTrivia,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) next_index: usize,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) next_offset: TextSize,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) end_index: usize,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) end_offset: TextSize,
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SyntaxTriviaPiecesIterator</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> (<span class="ident">TextSize</span>, <span class="ident">TriviaPiece</span>);
+<span class="kw">impl </span>Iterator <span class="kw">for </span>SyntaxTriviaPiecesIterator {
+    <span class="kw">type </span>Item = (TextSize, TriviaPiece);
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">trivia</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">get_piece</span>(<span class="self">self</span>.<span class="ident">next_index</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">piece</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">next_offset</span>, <span class="kw-2">*</span><span class="ident">trivia</span>);
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>trivia = <span class="self">self</span>.raw.get_piece(<span class="self">self</span>.next_index)<span class="question-mark">?</span>;
+        <span class="kw">let </span>piece = (<span class="self">self</span>.next_offset, <span class="kw-2">*</span>trivia);
 
-        <span class="self">self</span>.<span class="ident">next_index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="self">self</span>.<span class="ident">next_offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">text_len</span>();
+        <span class="self">self</span>.next_index += <span class="number">1</span>;
+        <span class="self">self</span>.next_offset += trivia.text_len();
 
-        <span class="prelude-val">Some</span>(<span class="ident">piece</span>)
+        <span class="prelude-val">Some</span>(piece)
     }
 
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">end_index</span>.<span class="ident">saturating_sub</span>(<span class="self">self</span>.<span class="ident">next_index</span>);
-        (<span class="ident">len</span>, <span class="prelude-val">Some</span>(<span class="ident">len</span>))
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="kw">let </span>len = <span class="self">self</span>.end_index.saturating_sub(<span class="self">self</span>.next_index);
+        (len, <span class="prelude-val">Some</span>(len))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxTriviaPiecesIterator</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>SyntaxTriviaPiecesIterator {}
 
-<span class="kw">impl</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxTriviaPiecesIterator</span> {
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">end_index</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">next_index</span> {
-            <span class="kw">return</span> <span class="prelude-val">None</span>;
+<span class="kw">impl </span>DoubleEndedIterator <span class="kw">for </span>SyntaxTriviaPiecesIterator {
+    <span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">if </span><span class="self">self</span>.end_index == <span class="self">self</span>.next_index {
+            <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="self">self</span>.<span class="ident">end_index</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="self">self</span>.end_index -= <span class="number">1</span>;
 
-        <span class="kw">let</span> <span class="ident">trivia</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">get_piece</span>(<span class="self">self</span>.<span class="ident">end_index</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">end_offset</span> <span class="op">-</span><span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">text_len</span>();
+        <span class="kw">let </span>trivia = <span class="self">self</span>.raw.get_piece(<span class="self">self</span>.end_index)<span class="question-mark">?</span>;
+        <span class="self">self</span>.end_offset -= trivia.text_len();
 
-        <span class="prelude-val">Some</span>((<span class="self">self</span>.<span class="ident">end_offset</span>, <span class="kw-2">*</span><span class="ident">trivia</span>))
+        <span class="prelude-val">Some</span>((<span class="self">self</span>.end_offset, <span class="kw-2">*</span>trivia))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">SyntaxTriviaPiecesIterator</span> {}
+<span class="kw">impl </span>ExactSizeIterator <span class="kw">for </span>SyntaxTriviaPiecesIterator {}
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::raw_language</span>::{<span class="ident">RawLanguage</span>, <span class="ident">RawLanguageKind</span>, <span class="ident">RawSyntaxTreeBuilder</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">SyntaxNode</span>, <span class="ident">TriviaPiece</span>, <span class="ident">TriviaPieceKind</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    <span class="kw">use crate</span>::{SyntaxNode, TriviaPiece, TriviaPieceKind};
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">trivia_text</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-        <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-            <span class="ident">RawLanguageKind::WHITESPACE</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>trivia_text() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
+        builder.start_node(RawLanguageKind::ROOT);
+        builder.token_with_trivia(
+            RawLanguageKind::WHITESPACE,
             <span class="string">&quot;\t let \t\t&quot;</span>,
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="number">2</span>)],
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="number">3</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::new(TriviaPieceKind::Whitespace, <span class="number">2</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::new(TriviaPieceKind::Whitespace, <span class="number">3</span>)],
         );
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish_green</span>();
-        <span class="kw">let</span> <span class="ident">syntax</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">SyntaxNode::new_root</span>(<span class="ident">root</span>);
+        <span class="kw">let </span>root = builder.finish_green();
+        <span class="kw">let </span>syntax: SyntaxNode&lt;RawLanguage&gt; = SyntaxNode::new_root(root);
 
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">syntax</span>.<span class="ident">first_token</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">token</span>.<span class="ident">leading_trivia</span>().<span class="ident">text</span>(), <span class="string">&quot;\t &quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">text</span>(), <span class="string">&quot; \t\t&quot;</span>);
+        <span class="kw">let </span>token = syntax.first_token().unwrap();
+        <span class="macro">assert_eq!</span>(token.leading_trivia().text(), <span class="string">&quot;\t &quot;</span>);
+        <span class="macro">assert_eq!</span>(token.trailing_trivia().text(), <span class="string">&quot; \t\t&quot;</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/control_flow/nodes/if_stmt.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>if_stmt.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/control_flow/nodes/if_stmt.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>if_stmt.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -121,128 +121,128 @@
 <span id="121">121</span>
 <span id="122">122</span>
 <span id="123">123</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_control_flow::builder::BlockId</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsElseClause</span>, <span class="ident">JsIfStatement</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">SyntaxResult</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>rome_control_flow::builder::BlockId;
+<span class="kw">use </span>rome_js_syntax::{JsElseClause, JsIfStatement};
+<span class="kw">use </span>rome_rowan::{AstNode, SyntaxResult};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>::{
-    <span class="ident">visitor</span>::{<span class="ident">NodeVisitor</span>, <span class="ident">StatementStack</span>},
-    <span class="ident">FunctionBuilder</span>,
+<span class="kw">use </span><span class="kw">crate</span>::control_flow::{
+    visitor::{NodeVisitor, StatementStack},
+    FunctionBuilder,
 };
 
-<span class="kw">pub</span>(<span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>) <span class="kw">struct</span> <span class="ident">IfVisitor</span> {
-    <span class="doccomment">/// Saved position of the control flow cursor before entering the statement</span>
-    <span class="ident">entry_block</span>: <span class="ident">BlockId</span>,
-    <span class="doccomment">/// First block of the consequent for this statement</span>
-    <span class="ident">consequent_start</span>: <span class="ident">BlockId</span>,
-    <span class="doccomment">/// Last block of the consequent for this statement, implicitly jumps to</span>
-    <span class="doccomment">/// the next block</span>
-    <span class="doccomment">/// This is only set if the statement has an else clause (by the [ElseVisitor]),</span>
-    <span class="doccomment">/// otherwise this information is derived from the cursor of the function builder</span>
-    <span class="ident">consequent_end</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockId</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Start and end block of the alternate of this statement, set by the</span>
-    <span class="doccomment">/// [ElseVisitor] if this node has an else clause</span>
-    <span class="ident">alt_block</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">BlockId</span>, <span class="ident">BlockId</span>)<span class="op">&gt;</span>,
+<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::control_flow) <span class="kw">struct </span>IfVisitor {
+    <span class="doccomment">/// Saved position of the control flow cursor before entering the statement
+    </span>entry_block: BlockId,
+    <span class="doccomment">/// First block of the consequent for this statement
+    </span>consequent_start: BlockId,
+    <span class="doccomment">/// Last block of the consequent for this statement, implicitly jumps to
+    /// the next block
+    /// This is only set if the statement has an else clause (by the [ElseVisitor]),
+    /// otherwise this information is derived from the cursor of the function builder
+    </span>consequent_end: <span class="prelude-ty">Option</span>&lt;BlockId&gt;,
+    <span class="doccomment">/// Start and end block of the alternate of this statement, set by the
+    /// [ElseVisitor] if this node has an else clause
+    </span>alt_block: <span class="prelude-ty">Option</span>&lt;(BlockId, BlockId)&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">NodeVisitor</span> <span class="kw">for</span> <span class="ident">IfVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Node</span> <span class="op">=</span> <span class="ident">JsIfStatement</span>;
+<span class="kw">impl </span>NodeVisitor <span class="kw">for </span>IfVisitor {
+    <span class="kw">type </span>Node = JsIfStatement;
 
-    <span class="kw">fn</span> <span class="ident">enter</span>(
-        <span class="kw">_</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="kw">_</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">entry_block</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">cursor</span>();
+    <span class="kw">fn </span>enter(
+        <span class="kw">_</span>: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        <span class="kw">_</span>: StatementStack,
+    ) -&gt; SyntaxResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>entry_block = builder.cursor();
 
-        <span class="kw">let</span> <span class="ident">consequent_start</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">append_block</span>();
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">consequent_start</span>);
+        <span class="kw">let </span>consequent_start = builder.append_block();
+        builder.set_cursor(consequent_start);
 
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">entry_block</span>,
-            <span class="ident">consequent_start</span>,
-            <span class="ident">consequent_end</span>: <span class="prelude-val">None</span>,
-            <span class="ident">alt_block</span>: <span class="prelude-val">None</span>,
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            entry_block,
+            consequent_start,
+            consequent_end: <span class="prelude-val">None</span>,
+            alt_block: <span class="prelude-val">None</span>,
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">exit</span>(
+    <span class="kw">fn </span>exit(
         <span class="self">self</span>,
-        <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="kw">_</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">consequent_end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">consequent_end</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">builder</span>.<span class="ident">cursor</span>());
+        node: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        <span class="kw">_</span>: StatementStack,
+    ) -&gt; SyntaxResult&lt;()&gt; {
+        <span class="kw">let </span>consequent_end = <span class="self">self</span>.consequent_end.unwrap_or_else(|| builder.cursor());
 
-        <span class="kw">let</span> <span class="ident">alt_block</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">alt_block</span>;
+        <span class="kw">let </span>alt_block = <span class="self">self</span>.alt_block;
 
-        <span class="kw">let</span> <span class="ident">next_block</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">append_block</span>();
+        <span class="kw">let </span>next_block = builder.append_block();
 
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="self">self</span>.<span class="ident">entry_block</span>);
+        builder.set_cursor(<span class="self">self</span>.entry_block);
 
-        <span class="comment">// If this node has an else clause the start and end of `alt_block`</span>
-        <span class="comment">// were generated by the `ElseVisitor`</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">alt_start</span>, <span class="ident">alt_end</span>)) <span class="op">=</span> <span class="ident">alt_block</span> {
-            <span class="ident">builder</span>
-                .<span class="ident">append_jump</span>(<span class="bool-val">true</span>, <span class="self">self</span>.<span class="ident">consequent_start</span>)
-                .<span class="ident">with_node</span>(<span class="ident">node</span>.<span class="ident">test</span>()<span class="question-mark">?</span>.<span class="ident">into_syntax</span>());
-            <span class="ident">builder</span>.<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">alt_start</span>);
+        <span class="comment">// If this node has an else clause the start and end of `alt_block`
+        // were generated by the `ElseVisitor`
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>((alt_start, alt_end)) = alt_block {
+            builder
+                .append_jump(<span class="bool-val">true</span>, <span class="self">self</span>.consequent_start)
+                .with_node(node.test()<span class="question-mark">?</span>.into_syntax());
+            builder.append_jump(<span class="bool-val">false</span>, alt_start);
 
-            <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">alt_end</span>);
-            <span class="ident">builder</span>.<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">next_block</span>);
-        } <span class="kw">else</span> {
-            <span class="ident">builder</span>
-                .<span class="ident">append_jump</span>(<span class="bool-val">true</span>, <span class="self">self</span>.<span class="ident">consequent_start</span>)
-                .<span class="ident">with_node</span>(<span class="ident">node</span>.<span class="ident">test</span>()<span class="question-mark">?</span>.<span class="ident">into_syntax</span>());
-            <span class="ident">builder</span>.<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">next_block</span>);
+            builder.set_cursor(alt_end);
+            builder.append_jump(<span class="bool-val">false</span>, next_block);
+        } <span class="kw">else </span>{
+            builder
+                .append_jump(<span class="bool-val">true</span>, <span class="self">self</span>.consequent_start)
+                .with_node(node.test()<span class="question-mark">?</span>.into_syntax());
+            builder.append_jump(<span class="bool-val">false</span>, next_block);
         }
 
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">consequent_end</span>);
-        <span class="ident">builder</span>.<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">next_block</span>);
+        builder.set_cursor(consequent_end);
+        builder.append_jump(<span class="bool-val">false</span>, next_block);
 
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">next_block</span>);
+        builder.set_cursor(next_block);
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>) <span class="kw">struct</span> <span class="ident">ElseVisitor</span> {
-    <span class="ident">consequent_block</span>: <span class="ident">BlockId</span>,
-    <span class="ident">alt_block</span>: <span class="ident">BlockId</span>,
+<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::control_flow) <span class="kw">struct </span>ElseVisitor {
+    consequent_block: BlockId,
+    alt_block: BlockId,
 }
 
-<span class="kw">impl</span> <span class="ident">NodeVisitor</span> <span class="kw">for</span> <span class="ident">ElseVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Node</span> <span class="op">=</span> <span class="ident">JsElseClause</span>;
+<span class="kw">impl </span>NodeVisitor <span class="kw">for </span>ElseVisitor {
+    <span class="kw">type </span>Node = JsElseClause;
 
-    <span class="kw">fn</span> <span class="ident">enter</span>(
-        <span class="kw">_</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="kw">_</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">consequent_block</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">cursor</span>();
+    <span class="kw">fn </span>enter(
+        <span class="kw">_</span>: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        <span class="kw">_</span>: StatementStack,
+    ) -&gt; SyntaxResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>consequent_block = builder.cursor();
 
-        <span class="kw">let</span> <span class="ident">alt_block</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">append_block</span>();
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">alt_block</span>);
+        <span class="kw">let </span>alt_block = builder.append_block();
+        builder.set_cursor(alt_block);
 
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">consequent_block</span>,
-            <span class="ident">alt_block</span>,
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            consequent_block,
+            alt_block,
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">exit</span>(
+    <span class="kw">fn </span>exit(
         <span class="self">self</span>,
-        <span class="kw">_</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="ident">stack</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">if_state</span> <span class="op">=</span> <span class="ident">stack</span>.<span class="ident">read_top</span>::<span class="op">&lt;</span><span class="ident">IfVisitor</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+        <span class="kw">_</span>: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        stack: StatementStack,
+    ) -&gt; SyntaxResult&lt;()&gt; {
+        <span class="kw">let </span>if_state = stack.read_top::&lt;IfVisitor&gt;()<span class="question-mark">?</span>;
 
-        <span class="ident">if_state</span>.<span class="ident">consequent_end</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">consequent_block</span>);
-        <span class="ident">if_state</span>.<span class="ident">alt_block</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="self">self</span>.<span class="ident">alt_block</span>, <span class="ident">builder</span>.<span class="ident">cursor</span>()));
+        if_state.consequent_end = <span class="prelude-val">Some</span>(<span class="self">self</span>.consequent_block);
+        if_state.alt_block = <span class="prelude-val">Some</span>((<span class="self">self</span>.alt_block, builder.cursor()));
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

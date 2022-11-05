@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/correctness/use_single_case_statement.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_single_case_statement.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/correctness/use_single_case_statement.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_single_case_statement.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -149,156 +149,156 @@
 <span id="149">149</span>
 <span id="150">150</span>
 <span id="151">151</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::iter</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::iter;
 
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">context::RuleContext</span>, <span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_factory::make</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsAnyStatement</span>, <span class="ident">JsCaseClause</span>, <span class="ident">JsCaseClauseFields</span>, <span class="ident">JsSyntaxToken</span>, <span class="ident">TriviaPieceKind</span>, <span class="ident">T</span>,
+<span class="kw">use </span>rome_analyze::{context::RuleContext, declare_rule, ActionCategory, Ast, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_factory::make;
+<span class="kw">use </span>rome_js_syntax::{
+    JsAnyStatement, JsCaseClause, JsCaseClauseFields, JsSyntaxToken, TriviaPieceKind, T,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">AstNodeList</span>, <span class="ident">BatchMutationExt</span>, <span class="ident">TriviaPiece</span>};
+<span class="kw">use </span>rome_rowan::{AstNode, AstNodeList, BatchMutationExt, TriviaPiece};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsRuleAction</span>;
+<span class="kw">use </span><span class="kw">crate</span>::JsRuleAction;
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Enforces case clauses have a single statement, emits a quick fix wrapping</span>
-    <span class="doccomment">/// the statements in a block</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// switch (foo) {</span>
-    <span class="doccomment">///     case true:</span>
-    <span class="doccomment">///     case false:</span>
-    <span class="doccomment">///         let foo = &#39;&#39;;</span>
-    <span class="doccomment">///         foo;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Valid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// switch (foo) {</span>
-    <span class="doccomment">///     case true:</span>
-    <span class="doccomment">///     case false: {</span>
-    <span class="doccomment">///         let foo = &#39;&#39;;</span>
-    <span class="doccomment">///         foo;</span>
-    <span class="doccomment">///     }</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseSingleCaseStatement</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;useSingleCaseStatement&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">true</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Enforces case clauses have a single statement, emits a quick fix wrapping
+    /// the statements in a block
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    /// switch (foo) {
+    ///     case true:
+    ///     case false:
+    ///         let foo = &#39;&#39;;
+    ///         foo;
+    /// }
+    /// ```
+    ///
+    /// ### Valid
+    ///
+    /// ```js
+    /// switch (foo) {
+    ///     case true:
+    ///     case false: {
+    ///         let foo = &#39;&#39;;
+    ///         foo;
+    ///     }
+    /// }
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) UseSingleCaseStatement {
+        version: <span class="string">&quot;0.7.0&quot;</span>,
+        name: <span class="string">&quot;useSingleCaseStatement&quot;</span>,
+        recommended: <span class="bool-val">true</span>,
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseSingleCaseStatement</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">JsCaseClause</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> ();
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>UseSingleCaseStatement {
+    <span class="kw">type </span>Query = Ast&lt;JsCaseClause&gt;;
+    <span class="kw">type </span>State = ();
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">if</span> <span class="ident">n</span>.<span class="ident">consequent</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt; {
+        <span class="kw">let </span>n = ctx.query();
+        <span class="kw">if </span>n.consequent().len() &gt; <span class="number">1 </span>{
             <span class="prelude-val">Some</span>(())
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+    <span class="kw">fn </span>diagnostic(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>n = ctx.query();
 
-        <span class="prelude-val">Some</span>(<span class="ident">RuleDiagnostic::new</span>(
+        <span class="prelude-val">Some</span>(RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">n</span>.<span class="ident">consequent</span>().<span class="ident">range</span>(),
-            <span class="macro">markup!</span> {
-                <span class="string">&quot;A switch case should only have a single statement. If you want more, then wrap it in a block.&quot;</span>
-            },
+            n.consequent().range(),
+            <span class="macro">markup! </span>{
+                <span class="string">&quot;A switch case should only have a single statement. If you want more, then wrap it in a block.&quot;
+            </span>},
         ))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
+    <span class="kw">fn </span>action(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">let </span>n = ctx.query();
+        <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
 
-        <span class="kw">let</span> <span class="ident">JsCaseClauseFields</span> {
-            <span class="ident">case_token</span>,
-            <span class="ident">colon_token</span>,
-            <span class="ident">consequent</span>,
+        <span class="kw">let </span>JsCaseClauseFields {
+            case_token,
+            colon_token,
+            consequent,
             ..
-        } <span class="op">=</span> <span class="ident">n</span>.<span class="ident">as_fields</span>();
+        } = n.as_fields();
 
-        <span class="comment">// Move the trailing trivia of the colon token to the opening bracket token,</span>
-        <span class="comment">// this ensure comments stay in the right place</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">opening_token</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="string">&quot; {&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="comment">// Move the trailing trivia of the colon token to the opening bracket token,
+        // this ensure comments stay in the right place
+        </span><span class="kw">let </span><span class="kw-2">mut </span>opening_token = String::from(<span class="string">&quot; {&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>trailing = Vec::new();
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">token</span>) <span class="op">=</span> <span class="ident">colon_token</span> {
-            <span class="kw">for</span> <span class="ident">piece</span> <span class="kw">in</span> <span class="ident">token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>() {
-                <span class="ident">opening_token</span>.<span class="ident">push_str</span>(<span class="ident">piece</span>.<span class="ident">text</span>());
-                <span class="ident">trailing</span>.<span class="ident">push</span>(<span class="ident">TriviaPiece::new</span>(<span class="ident">piece</span>.<span class="ident">kind</span>(), <span class="ident">piece</span>.<span class="ident">text_len</span>()));
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(token) = colon_token {
+            <span class="kw">for </span>piece <span class="kw">in </span>token.trailing_trivia().pieces() {
+                opening_token.push_str(piece.text());
+                trailing.push(TriviaPiece::new(piece.kind(), piece.text_len()));
             }
         }
 
-        <span class="comment">// Copy the leading trivia of the case token on the closing bracket token</span>
-        <span class="comment">// up to the first newline to align the indentation level</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">closing_token</span> <span class="op">=</span> <span class="ident">String::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leading</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="comment">// Copy the leading trivia of the case token on the closing bracket token
+        // up to the first newline to align the indentation level
+        </span><span class="kw">let </span><span class="kw-2">mut </span>closing_token = String::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>leading = Vec::new();
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">token</span>) <span class="op">=</span> <span class="ident">case_token</span> {
-            <span class="kw">let</span> <span class="ident">leading_trivia</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>();
-            <span class="kw">let</span> <span class="ident">num_pieces</span> <span class="op">=</span> <span class="ident">leading_trivia</span>.<span class="ident">len</span>();
-            <span class="kw">let</span> <span class="ident">skip_count</span> <span class="op">=</span> <span class="ident">leading_trivia</span>
-                .<span class="ident">rev</span>()
-                .<span class="ident">position</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_newline</span>())
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> <span class="ident">num_pieces</span>.<span class="ident">checked_sub</span>(<span class="ident">index</span> <span class="op">+</span> <span class="number">1</span>))
-                .<span class="ident">unwrap_or</span>(<span class="number">0</span>);
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(token) = case_token {
+            <span class="kw">let </span>leading_trivia = token.leading_trivia().pieces();
+            <span class="kw">let </span>num_pieces = leading_trivia.len();
+            <span class="kw">let </span>skip_count = leading_trivia
+                .rev()
+                .position(|piece| piece.is_newline())
+                .and_then(|index| num_pieces.checked_sub(index + <span class="number">1</span>))
+                .unwrap_or(<span class="number">0</span>);
 
-            <span class="kw">for</span> <span class="ident">piece</span> <span class="kw">in</span> <span class="ident">token</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>().<span class="ident">skip</span>(<span class="ident">skip_count</span>) {
-                <span class="ident">closing_token</span>.<span class="ident">push_str</span>(<span class="ident">piece</span>.<span class="ident">text</span>());
-                <span class="ident">leading</span>.<span class="ident">push</span>(<span class="ident">TriviaPiece::new</span>(<span class="ident">piece</span>.<span class="ident">kind</span>(), <span class="ident">piece</span>.<span class="ident">text_len</span>()));
+            <span class="kw">for </span>piece <span class="kw">in </span>token.leading_trivia().pieces().skip(skip_count) {
+                closing_token.push_str(piece.text());
+                leading.push(TriviaPiece::new(piece.kind(), piece.text_len()));
             }
         }
 
-        <span class="ident">closing_token</span>.<span class="ident">push</span>(<span class="string">&#39;}&#39;</span>);
+        closing_token.push(<span class="string">&#39;}&#39;</span>);
 
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">n</span>
-            .<span class="ident">clone</span>()
-            .<span class="ident">with_consequent</span>(<span class="ident">make::js_statement_list</span>(<span class="ident">iter::once</span>(
-                <span class="ident">JsAnyStatement::JsBlockStatement</span>(<span class="ident">make::js_block_statement</span>(
-                    <span class="ident">JsSyntaxToken::new_detached</span>(
+        <span class="kw">let </span>node = n
+            .clone()
+            .with_consequent(make::js_statement_list(iter::once(
+                JsAnyStatement::JsBlockStatement(make::js_block_statement(
+                    JsSyntaxToken::new_detached(
                         <span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>],
-                        <span class="kw-2">&amp;</span><span class="ident">opening_token</span>,
-                        [<span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="number">1</span>)],
-                        <span class="ident">trailing</span>,
+                        <span class="kw-2">&amp;</span>opening_token,
+                        [TriviaPiece::new(TriviaPieceKind::Whitespace, <span class="number">1</span>)],
+                        trailing,
                     ),
-                    <span class="ident">consequent</span>,
-                    <span class="ident">JsSyntaxToken::new_detached</span>(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>], <span class="kw-2">&amp;</span><span class="ident">closing_token</span>, <span class="ident">leading</span>, []),
+                    consequent,
+                    JsSyntaxToken::new_detached(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>], <span class="kw-2">&amp;</span>closing_token, leading, []),
                 )),
             )));
 
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">colon_token</span>) <span class="op">=</span> <span class="ident">n</span>.<span class="ident">colon_token</span>() {
-            <span class="ident">node</span>.<span class="ident">with_colon_token</span>(<span class="ident">colon_token</span>.<span class="ident">with_trailing_trivia</span>(<span class="ident">iter::empty</span>()))
-        } <span class="kw">else</span> {
-            <span class="ident">node</span>
+        <span class="kw">let </span>node = <span class="kw">if let </span><span class="prelude-val">Ok</span>(colon_token) = n.colon_token() {
+            node.with_colon_token(colon_token.with_trailing_trivia(iter::empty()))
+        } <span class="kw">else </span>{
+            node
         };
 
-        <span class="ident">mutation</span>.<span class="ident">replace_node</span>(<span class="ident">n</span>.<span class="ident">clone</span>(), <span class="ident">node</span>);
+        mutation.replace_node(n.clone(), node);
 
-        <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-            <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
-            <span class="ident">applicability</span>: <span class="ident">Applicability::MaybeIncorrect</span>,
-            <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;Wrap the statements in a block&quot;</span> }.<span class="ident">to_owned</span>(),
-            <span class="ident">mutation</span>,
+        <span class="prelude-val">Some</span>(JsRuleAction {
+            category: ActionCategory::QuickFix,
+            applicability: Applicability::MaybeIncorrect,
+            message: <span class="macro">markup! </span>{ <span class="string">&quot;Wrap the statements in a block&quot; </span>}.to_owned(),
+            mutation,
         })
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

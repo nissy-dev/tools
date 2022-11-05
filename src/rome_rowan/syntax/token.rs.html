@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax/token.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>token.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax/token.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>token.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -416,423 +416,423 @@
 <span id="416">416</span>
 <span id="417">417</span>
 <span id="418">418</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green</span>::{<span class="ident">GreenToken</span>, <span class="ident">GreenTrivia</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::element::SyntaxElementKey</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::SyntaxTrivia</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax_token_text::SyntaxTokenText</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">cursor</span>, <span class="ident">Direction</span>, <span class="ident">Language</span>, <span class="ident">NodeOrToken</span>, <span class="ident">SyntaxElement</span>, <span class="ident">SyntaxKind</span>, <span class="ident">SyntaxNode</span>,
-    <span class="ident">SyntaxTriviaPiece</span>, <span class="ident">TriviaPiece</span>, <span class="ident">TriviaPieceKind</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::green::{GreenToken, GreenTrivia};
+<span class="kw">use </span><span class="kw">crate</span>::syntax::element::SyntaxElementKey;
+<span class="kw">use </span><span class="kw">crate</span>::syntax::SyntaxTrivia;
+<span class="kw">use </span><span class="kw">crate</span>::syntax_token_text::SyntaxTokenText;
+<span class="kw">use crate</span>::{
+    cursor, Direction, Language, NodeOrToken, SyntaxElement, SyntaxKind, SyntaxNode,
+    SyntaxTriviaPiece, TriviaPiece, TriviaPieceKind,
 };
-<span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextLen</span>, <span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
+<span class="kw">use </span>rome_text_size::{TextLen, TextRange, TextSize};
+<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>std::marker::PhantomData;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">raw</span>: <span class="ident">cursor::SyntaxToken</span>,
-    <span class="ident">_p</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Clone, PartialEq, Eq, Hash)]
+</span><span class="kw">pub struct </span>SyntaxToken&lt;L: Language&gt; {
+    raw: cursor::SyntaxToken,
+    _p: PhantomData&lt;L&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new token detached from any tree</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is mainly useful for creating a small number of individual tokens</span>
-    <span class="doccomment">/// when mutating an existing tree, the bulk of the tokens in a given file</span>
-    <span class="doccomment">/// should be created through the [crate::TreeBuilder] abstraction instead</span>
-    <span class="doccomment">/// as it will efficiently cache and reuse the created tokens</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_detached</span><span class="op">&lt;</span><span class="ident">Leading</span>, <span class="ident">Trailing</span><span class="op">&gt;</span>(
-        <span class="ident">kind</span>: <span class="ident">L::Kind</span>,
-        <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">leading</span>: <span class="ident">Leading</span>,
-        <span class="ident">trailing</span>: <span class="ident">Trailing</span>,
-    ) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">Leading</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">TriviaPiece</span><span class="op">&gt;</span>,
-        <span class="ident">Leading::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
-        <span class="ident">Trailing</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">TriviaPiece</span><span class="op">&gt;</span>,
-        <span class="ident">Trailing::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxToken&lt;L&gt; {
+    <span class="doccomment">/// Create a new token detached from any tree
+    ///
+    /// This is mainly useful for creating a small number of individual tokens
+    /// when mutating an existing tree, the bulk of the tokens in a given file
+    /// should be created through the [crate::TreeBuilder] abstraction instead
+    /// as it will efficiently cache and reuse the created tokens
+    </span><span class="kw">pub fn </span>new_detached&lt;Leading, Trailing&gt;(
+        kind: L::Kind,
+        text: <span class="kw-2">&amp;</span>str,
+        leading: Leading,
+        trailing: Trailing,
+    ) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>Leading: IntoIterator&lt;Item = TriviaPiece&gt;,
+        Leading::IntoIter: ExactSizeIterator,
+        Trailing: IntoIterator&lt;Item = TriviaPiece&gt;,
+        Trailing::IntoIter: ExactSizeIterator,
     {
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">cursor::SyntaxToken::new_detached</span>(<span class="ident">GreenToken::with_trivia</span>(
-                <span class="ident">kind</span>.<span class="ident">to_raw</span>(),
-                <span class="ident">text</span>,
-                <span class="ident">GreenTrivia::new</span>(<span class="ident">leading</span>),
-                <span class="ident">GreenTrivia::new</span>(<span class="ident">trailing</span>),
+        <span class="self">Self </span>{
+            raw: cursor::SyntaxToken::new_detached(GreenToken::with_trivia(
+                kind.to_raw(),
+                text,
+                GreenTrivia::new(leading),
+                GreenTrivia::new(trailing),
             )),
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+            _p: PhantomData,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">green_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">GreenToken</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">green</span>().<span class="ident">to_owned</span>()
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>green_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; GreenToken {
+        <span class="self">self</span>.raw.green().to_owned()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxElementKey</span> {
-        <span class="kw">let</span> (<span class="ident">node_data</span>, <span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">key</span>();
-        <span class="ident">SyntaxElementKey::new</span>(<span class="ident">node_data</span>, <span class="ident">offset</span>)
+    <span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxElementKey {
+        <span class="kw">let </span>(node_data, offset) = <span class="self">self</span>.raw.key();
+        SyntaxElementKey::new(node_data, offset)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">L::Kind</span> {
-        <span class="ident">L::Kind::from_raw</span>(<span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">kind</span>())
+    <span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; L::Kind {
+        L::Kind::from_raw(<span class="self">self</span>.raw.kind())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">text_range</span>()
+    <span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.raw.text_range()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_trimmed_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">text_trimmed_range</span>()
+    <span class="kw">pub fn </span>text_trimmed_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.raw.text_trimmed_range()
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">index</span>()
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.raw.index()
     }
 
-    <span class="doccomment">/// Returns the text of the token, including all trivia.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// })</span>
-    <span class="doccomment">/// .first_token()</span>
-    <span class="doccomment">/// .unwrap();</span>
-    <span class="doccomment">/// assert_eq!(&quot;\n\t let \t\t&quot;, token.text());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">text</span>()
+    <span class="doccomment">/// Returns the text of the token, including all trivia.
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t let \t\t&quot;,
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// })
+    /// .first_token()
+    /// .unwrap();
+    /// assert_eq!(&quot;\n\t let \t\t&quot;, token.text());
+    /// ```
+    </span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.raw.text()
     }
 
-    <span class="doccomment">/// Returns the text of a token, including all trivia as an owned value.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// })</span>
-    <span class="doccomment">/// .first_token()</span>
-    <span class="doccomment">/// .unwrap();</span>
-    <span class="doccomment">/// assert_eq!(&quot;\n\t let \t\t&quot;, token.token_text());</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     format!(&quot;{}&quot;, &quot;\n\t let \t\t&quot;),</span>
-    <span class="doccomment">///     format!(&quot;{}&quot;, token.token_text())</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     format!(&quot;{:?}&quot;, &quot;\n\t let \t\t&quot;),</span>
-    <span class="doccomment">///     format!(&quot;{:?}&quot;, token.token_text())</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxTokenText</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">token_text</span>()
+    <span class="doccomment">/// Returns the text of a token, including all trivia as an owned value.
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t let \t\t&quot;,
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// })
+    /// .first_token()
+    /// .unwrap();
+    /// assert_eq!(&quot;\n\t let \t\t&quot;, token.token_text());
+    /// assert_eq!(
+    ///     format!(&quot;{}&quot;, &quot;\n\t let \t\t&quot;),
+    ///     format!(&quot;{}&quot;, token.token_text())
+    /// );
+    /// assert_eq!(
+    ///     format!(&quot;{:?}&quot;, &quot;\n\t let \t\t&quot;),
+    ///     format!(&quot;{:?}&quot;, token.token_text())
+    /// );
+    /// ```
+    </span><span class="kw">pub fn </span>token_text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxTokenText {
+        <span class="self">self</span>.raw.token_text()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_text_trimmed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxTokenText</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">token_text_trimmed</span>()
+    <span class="kw">pub fn </span>token_text_trimmed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxTokenText {
+        <span class="self">self</span>.raw.token_text_trimmed()
     }
 
-    <span class="doccomment">/// Returns the text of the token, excluding all trivia.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// })</span>
-    <span class="doccomment">/// .first_token()</span>
-    <span class="doccomment">/// .unwrap();</span>
-    <span class="doccomment">/// assert_eq!(&quot;let&quot;, token.text_trimmed());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_trimmed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">text_trimmed</span>()
+    <span class="doccomment">/// Returns the text of the token, excluding all trivia.
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t let \t\t&quot;,
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// })
+    /// .first_token()
+    /// .unwrap();
+    /// assert_eq!(&quot;let&quot;, token.text_trimmed());
+    /// ```
+    </span><span class="kw">pub fn </span>text_trimmed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.raw.text_trimmed()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">parent</span>().<span class="ident">map</span>(<span class="ident">SyntaxNode::from</span>)
+    <span class="kw">pub fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&lt;L&gt;&gt; {
+        <span class="self">self</span>.raw.parent().map(SyntaxNode::from)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ancestors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">ancestors</span>().<span class="ident">map</span>(<span class="ident">SyntaxNode::from</span>)
+    <span class="kw">pub fn </span>ancestors(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SyntaxNode&lt;L&gt;&gt; {
+        <span class="self">self</span>.raw.ancestors().map(SyntaxNode::from)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_sibling_or_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">next_sibling_or_token</span>().<span class="ident">map</span>(<span class="ident">NodeOrToken::from</span>)
+    <span class="kw">pub fn </span>next_sibling_or_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&lt;L&gt;&gt; {
+        <span class="self">self</span>.raw.next_sibling_or_token().map(NodeOrToken::from)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prev_sibling_or_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">prev_sibling_or_token</span>().<span class="ident">map</span>(<span class="ident">NodeOrToken::from</span>)
+    <span class="kw">pub fn </span>prev_sibling_or_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&lt;L&gt;&gt; {
+        <span class="self">self</span>.raw.prev_sibling_or_token().map(NodeOrToken::from)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">siblings_with_tokens</span>(
+    <span class="kw">pub fn </span>siblings_with_tokens(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">direction</span>: <span class="ident">Direction</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>
-            .<span class="ident">siblings_with_tokens</span>(<span class="ident">direction</span>)
-            .<span class="ident">map</span>(<span class="ident">SyntaxElement::from</span>)
+        direction: Direction,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SyntaxElement&lt;L&gt;&gt; {
+        <span class="self">self</span>.raw
+            .siblings_with_tokens(direction)
+            .map(SyntaxElement::from)
     }
 
-    <span class="doccomment">/// Next token in the tree (i.e, not necessary a sibling).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">next_token</span>().<span class="ident">map</span>(<span class="ident">SyntaxToken::from</span>)
+    <span class="doccomment">/// Next token in the tree (i.e, not necessary a sibling).
+    </span><span class="kw">pub fn </span>next_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxToken&lt;L&gt;&gt; {
+        <span class="self">self</span>.raw.next_token().map(SyntaxToken::from)
     }
-    <span class="doccomment">/// Previous token in the tree (i.e, not necessary a sibling).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prev_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">prev_token</span>().<span class="ident">map</span>(<span class="ident">SyntaxToken::from</span>)
+    <span class="doccomment">/// Previous token in the tree (i.e, not necessary a sibling).
+    </span><span class="kw">pub fn </span>prev_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxToken&lt;L&gt;&gt; {
+        <span class="self">self</span>.raw.prev_token().map(SyntaxToken::from)
     }
 
-    <span class="doccomment">/// Return a new version of this token detached from its parent node</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">detach</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">detach</span>(),
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+    <span class="doccomment">/// Return a new version of this token detached from its parent node
+    </span><span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">pub fn </span>detach(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            raw: <span class="self">self</span>.raw.detach(),
+            _p: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Return a new version of this token with its leading trivia replaced with `trivia`</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_leading_trivia</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">trivia</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">TriviaPieceKind</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>)<span class="op">&gt;</span>,
-        <span class="ident">I::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
+    <span class="doccomment">/// Return a new version of this token with its leading trivia replaced with `trivia`
+    </span><span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">pub fn </span>with_leading_trivia&lt;<span class="lifetime">&#39;a</span>, I&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, trivia: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>I: IntoIterator&lt;Item = (TriviaPieceKind, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str)&gt;,
+        I::IntoIter: ExactSizeIterator,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_text</span> <span class="op">=</span> <span class="ident">String::new</span>();
-        <span class="kw">let</span> <span class="ident">trivia</span> <span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">kind</span>, <span class="ident">text</span>)<span class="op">|</span> {
-            <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">text</span>);
-            <span class="ident">TriviaPiece::new</span>(<span class="ident">kind</span>, <span class="ident">TextSize::of</span>(<span class="ident">text</span>))
+        <span class="kw">let </span><span class="kw-2">mut </span>token_text = String::new();
+        <span class="kw">let </span>trivia = trivia.into_iter().map(|(kind, text)| {
+            token_text.push_str(text);
+            TriviaPiece::new(kind, TextSize::of(text))
         });
 
-        <span class="kw">let</span> <span class="ident">leading</span> <span class="op">=</span> <span class="ident">GreenTrivia::new</span>(<span class="ident">trivia</span>);
+        <span class="kw">let </span>leading = GreenTrivia::new(trivia);
 
-        <span class="comment">// Copy over token text and trailing trivia</span>
-        <span class="kw">let</span> <span class="ident">leading_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">green</span>().<span class="ident">leading_trivia</span>().<span class="ident">text_len</span>();
-        <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>()[<span class="ident">usize::from</span>(<span class="ident">leading_len</span>)..]);
+        <span class="comment">// Copy over token text and trailing trivia
+        </span><span class="kw">let </span>leading_len = <span class="self">self</span>.raw.green().leading_trivia().text_len();
+        token_text.push_str(<span class="kw-2">&amp;</span><span class="self">self</span>.text()[usize::from(leading_len)..]);
 
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">cursor::SyntaxToken::new_detached</span>(<span class="ident">GreenToken::with_trivia</span>(
-                <span class="self">self</span>.<span class="ident">kind</span>().<span class="ident">to_raw</span>(),
-                <span class="kw-2">&amp;</span><span class="ident">token_text</span>,
-                <span class="ident">leading</span>,
-                <span class="self">self</span>.<span class="ident">green_token</span>().<span class="ident">trailing_trivia</span>().<span class="ident">clone</span>(),
+        <span class="self">Self </span>{
+            raw: cursor::SyntaxToken::new_detached(GreenToken::with_trivia(
+                <span class="self">self</span>.kind().to_raw(),
+                <span class="kw-2">&amp;</span>token_text,
+                leading,
+                <span class="self">self</span>.green_token().trailing_trivia().clone(),
             )),
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+            _p: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Return a new version of this token with its leading trivia replaced with `trivia`</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_leading_trivia_pieces</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">trivia</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">I::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
+    <span class="doccomment">/// Return a new version of this token with its leading trivia replaced with `trivia`
+    </span><span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">pub fn </span>with_leading_trivia_pieces&lt;I&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, trivia: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>I: IntoIterator&lt;Item = SyntaxTriviaPiece&lt;L&gt;&gt;,
+        I::IntoIter: ExactSizeIterator,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_text</span> <span class="op">=</span> <span class="ident">String::new</span>();
-        <span class="kw">let</span> <span class="ident">trivia</span> <span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> {
-            <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">piece</span>.<span class="ident">text</span>());
-            <span class="ident">piece</span>.<span class="ident">into_raw_piece</span>()
+        <span class="kw">let </span><span class="kw-2">mut </span>token_text = String::new();
+        <span class="kw">let </span>trivia = trivia.into_iter().map(|piece| {
+            token_text.push_str(piece.text());
+            piece.into_raw_piece()
         });
 
-        <span class="kw">let</span> <span class="ident">leading</span> <span class="op">=</span> <span class="ident">GreenTrivia::new</span>(<span class="ident">trivia</span>);
+        <span class="kw">let </span>leading = GreenTrivia::new(trivia);
 
-        <span class="comment">// Copy over token text and trailing trivia</span>
-        <span class="kw">let</span> <span class="ident">leading_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">green</span>().<span class="ident">leading_trivia</span>().<span class="ident">text_len</span>();
-        <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>()[<span class="ident">usize::from</span>(<span class="ident">leading_len</span>)..]);
+        <span class="comment">// Copy over token text and trailing trivia
+        </span><span class="kw">let </span>leading_len = <span class="self">self</span>.raw.green().leading_trivia().text_len();
+        token_text.push_str(<span class="kw-2">&amp;</span><span class="self">self</span>.text()[usize::from(leading_len)..]);
 
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">cursor::SyntaxToken::new_detached</span>(<span class="ident">GreenToken::with_trivia</span>(
-                <span class="self">self</span>.<span class="ident">kind</span>().<span class="ident">to_raw</span>(),
-                <span class="kw-2">&amp;</span><span class="ident">token_text</span>,
-                <span class="ident">leading</span>,
-                <span class="self">self</span>.<span class="ident">green_token</span>().<span class="ident">trailing_trivia</span>().<span class="ident">clone</span>(),
+        <span class="self">Self </span>{
+            raw: cursor::SyntaxToken::new_detached(GreenToken::with_trivia(
+                <span class="self">self</span>.kind().to_raw(),
+                <span class="kw-2">&amp;</span>token_text,
+                leading,
+                <span class="self">self</span>.green_token().trailing_trivia().clone(),
             )),
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+            _p: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Return a new version of this token with its trailing trivia replaced with `trivia`</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_trailing_trivia</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">trivia</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">TriviaPieceKind</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>)<span class="op">&gt;</span>,
-        <span class="ident">I::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
+    <span class="doccomment">/// Return a new version of this token with its trailing trivia replaced with `trivia`
+    </span><span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">pub fn </span>with_trailing_trivia&lt;<span class="lifetime">&#39;a</span>, I&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, trivia: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>I: IntoIterator&lt;Item = (TriviaPieceKind, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str)&gt;,
+        I::IntoIter: ExactSizeIterator,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_text</span> <span class="op">=</span> <span class="ident">String::new</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>token_text = String::new();
 
-        <span class="comment">// copy over leading trivia and token text</span>
-        <span class="kw">let</span> <span class="ident">trailing_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">green_token</span>().<span class="ident">trailing_trivia</span>().<span class="ident">text_len</span>();
-        <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>()[..<span class="ident">usize::from</span>(<span class="self">self</span>.<span class="ident">text</span>().<span class="ident">text_len</span>() <span class="op">-</span> <span class="ident">trailing_len</span>)]);
+        <span class="comment">// copy over leading trivia and token text
+        </span><span class="kw">let </span>trailing_len = <span class="self">self</span>.green_token().trailing_trivia().text_len();
+        token_text.push_str(<span class="kw-2">&amp;</span><span class="self">self</span>.text()[..usize::from(<span class="self">self</span>.text().text_len() - trailing_len)]);
 
-        <span class="kw">let</span> <span class="ident">trivia</span> <span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">kind</span>, <span class="ident">text</span>)<span class="op">|</span> {
-            <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">text</span>);
-            <span class="ident">TriviaPiece::new</span>(<span class="ident">kind</span>, <span class="ident">TextSize::of</span>(<span class="ident">text</span>))
+        <span class="kw">let </span>trivia = trivia.into_iter().map(|(kind, text)| {
+            token_text.push_str(text);
+            TriviaPiece::new(kind, TextSize::of(text))
         });
 
-        <span class="kw">let</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="ident">GreenTrivia::new</span>(<span class="ident">trivia</span>);
+        <span class="kw">let </span>trailing = GreenTrivia::new(trivia);
 
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">cursor::SyntaxToken::new_detached</span>(<span class="ident">GreenToken::with_trivia</span>(
-                <span class="self">self</span>.<span class="ident">kind</span>().<span class="ident">to_raw</span>(),
-                <span class="kw-2">&amp;</span><span class="ident">token_text</span>,
-                <span class="self">self</span>.<span class="ident">green_token</span>().<span class="ident">leading_trivia</span>().<span class="ident">clone</span>(),
-                <span class="ident">trailing</span>,
+        <span class="self">Self </span>{
+            raw: cursor::SyntaxToken::new_detached(GreenToken::with_trivia(
+                <span class="self">self</span>.kind().to_raw(),
+                <span class="kw-2">&amp;</span>token_text,
+                <span class="self">self</span>.green_token().leading_trivia().clone(),
+                trailing,
             )),
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+            _p: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Return a new version of this token with its trailing trivia replaced with `trivia`</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_trailing_trivia_pieces</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">trivia</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">I::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
+    <span class="doccomment">/// Return a new version of this token with its trailing trivia replaced with `trivia`
+    </span><span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">pub fn </span>with_trailing_trivia_pieces&lt;I&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, trivia: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>I: IntoIterator&lt;Item = SyntaxTriviaPiece&lt;L&gt;&gt;,
+        I::IntoIter: ExactSizeIterator,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_text</span> <span class="op">=</span> <span class="ident">String::new</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>token_text = String::new();
 
-        <span class="comment">// copy over leading trivia and token text</span>
-        <span class="kw">let</span> <span class="ident">trailing_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">green_token</span>().<span class="ident">trailing_trivia</span>().<span class="ident">text_len</span>();
-        <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>()[..<span class="ident">usize::from</span>(<span class="self">self</span>.<span class="ident">text</span>().<span class="ident">text_len</span>() <span class="op">-</span> <span class="ident">trailing_len</span>)]);
+        <span class="comment">// copy over leading trivia and token text
+        </span><span class="kw">let </span>trailing_len = <span class="self">self</span>.green_token().trailing_trivia().text_len();
+        token_text.push_str(<span class="kw-2">&amp;</span><span class="self">self</span>.text()[..usize::from(<span class="self">self</span>.text().text_len() - trailing_len)]);
 
-        <span class="kw">let</span> <span class="ident">trivia</span> <span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> {
-            <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">piece</span>.<span class="ident">text</span>());
-            <span class="ident">piece</span>.<span class="ident">into_raw_piece</span>()
+        <span class="kw">let </span>trivia = trivia.into_iter().map(|piece| {
+            token_text.push_str(piece.text());
+            piece.into_raw_piece()
         });
 
-        <span class="kw">let</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="ident">GreenTrivia::new</span>(<span class="ident">trivia</span>);
+        <span class="kw">let </span>trailing = GreenTrivia::new(trivia);
 
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">cursor::SyntaxToken::new_detached</span>(<span class="ident">GreenToken::with_trivia</span>(
-                <span class="self">self</span>.<span class="ident">kind</span>().<span class="ident">to_raw</span>(),
-                <span class="kw-2">&amp;</span><span class="ident">token_text</span>,
-                <span class="self">self</span>.<span class="ident">green_token</span>().<span class="ident">leading_trivia</span>().<span class="ident">clone</span>(),
-                <span class="ident">trailing</span>,
+        <span class="self">Self </span>{
+            raw: cursor::SyntaxToken::new_detached(GreenToken::with_trivia(
+                <span class="self">self</span>.kind().to_raw(),
+                <span class="kw-2">&amp;</span>token_text,
+                <span class="self">self</span>.green_token().leading_trivia().clone(),
+                trailing,
             )),
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+            _p: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Returns the token&#39;s leading trivia.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Looking backward in the text, a token owns all of its preceding trivia up to and including the first newline character.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// })</span>
-    <span class="doccomment">/// .first_token()</span>
-    <span class="doccomment">/// .unwrap();</span>
-    <span class="doccomment">/// assert_eq!(&quot;\n\t &quot;, token.leading_trivia().text());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">leading_trivia</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxTrivia</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">SyntaxTrivia::new</span>(<span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">leading_trivia</span>())
+    <span class="doccomment">/// Returns the token&#39;s leading trivia.
+    ///
+    /// Looking backward in the text, a token owns all of its preceding trivia up to and including the first newline character.
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t let \t\t&quot;,
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// })
+    /// .first_token()
+    /// .unwrap();
+    /// assert_eq!(&quot;\n\t &quot;, token.leading_trivia().text());
+    /// ```
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>leading_trivia(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxTrivia&lt;L&gt; {
+        SyntaxTrivia::new(<span class="self">self</span>.raw.leading_trivia())
     }
 
-    <span class="doccomment">/// Returns the token&#39;s trailing trivia.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A token owns all of its following trivia up to, but not including, the next newline character.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// })</span>
-    <span class="doccomment">/// .first_token()</span>
-    <span class="doccomment">/// .unwrap();</span>
-    <span class="doccomment">/// assert_eq!(&quot; \t\t&quot;, token.trailing_trivia().text());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">trailing_trivia</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxTrivia</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">SyntaxTrivia::new</span>(<span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">trailing_trivia</span>())
+    <span class="doccomment">/// Returns the token&#39;s trailing trivia.
+    ///
+    /// A token owns all of its following trivia up to, but not including, the next newline character.
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// let mut token = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t let \t\t&quot;,
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// })
+    /// .first_token()
+    /// .unwrap();
+    /// assert_eq!(&quot; \t\t&quot;, token.trailing_trivia().text());
+    /// ```
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>trailing_trivia(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxTrivia&lt;L&gt; {
+        SyntaxTrivia::new(<span class="self">self</span>.raw.trailing_trivia())
     }
 
-    <span class="doccomment">/// Checks if the current token has trailing comments</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_trailing_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">trailing_trivia</span>()
-            .<span class="ident">pieces</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_comments</span>())
+    <span class="doccomment">/// Checks if the current token has trailing comments
+    </span><span class="kw">pub fn </span>has_trailing_comments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.trailing_trivia()
+            .pieces()
+            .any(|piece| piece.is_comments())
     }
 
-    <span class="doccomment">/// Checks if the current token has leading comments</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_leading_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">leading_trivia</span>()
-            .<span class="ident">pieces</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_comments</span>())
+    <span class="doccomment">/// Checks if the current token has leading comments
+    </span><span class="kw">pub fn </span>has_leading_comments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.leading_trivia()
+            .pieces()
+            .any(|piece| piece.is_comments())
     }
 
-    <span class="doccomment">/// Checks if the token has any leading trivia that isn&#39;t a whitespace nor a line break</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_leading_non_whitespace_trivia</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">leading_trivia</span>()
-            .<span class="ident">pieces</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_whitespace</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_newline</span>())
+    <span class="doccomment">/// Checks if the token has any leading trivia that isn&#39;t a whitespace nor a line break
+    </span><span class="kw">pub fn </span>has_leading_non_whitespace_trivia(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.leading_trivia()
+            .pieces()
+            .any(|piece| piece.is_whitespace() || piece.is_newline())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+<span class="kw">impl</span>&lt;L: Language&gt; fmt::Debug <span class="kw">for </span>SyntaxToken&lt;L&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
         <span class="macro">write!</span>(
-            <span class="ident">f</span>,
+            f,
             <span class="string">&quot;{:?}@{:?} {:?} &quot;</span>,
-            <span class="self">self</span>.<span class="ident">kind</span>(),
-            <span class="self">self</span>.<span class="ident">text_range</span>(),
-            <span class="self">self</span>.<span class="ident">text_trimmed</span>()
+            <span class="self">self</span>.kind(),
+            <span class="self">self</span>.text_range(),
+            <span class="self">self</span>.text_trimmed()
         )<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">leading_trivia</span>().<span class="ident">fmt</span>(<span class="ident">f</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">trailing_trivia</span>().<span class="ident">fmt</span>(<span class="ident">f</span>)
+        <span class="self">self</span>.leading_trivia().fmt(f)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.trailing_trivia().fmt(f)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">fmt::Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">raw</span>, <span class="ident">f</span>)
+<span class="kw">impl</span>&lt;L: Language&gt; fmt::Display <span class="kw">for </span>SyntaxToken&lt;L&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        fmt::Display::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.raw, f)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">cursor::SyntaxToken</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">cursor::SyntaxToken</span> {
-        <span class="ident">token</span>.<span class="ident">raw</span>
+<span class="kw">impl</span>&lt;L: Language&gt; From&lt;SyntaxToken&lt;L&gt;&gt; <span class="kw">for </span>cursor::SyntaxToken {
+    <span class="kw">fn </span>from(token: SyntaxToken&lt;L&gt;) -&gt; cursor::SyntaxToken {
+        token.raw
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">cursor::SyntaxToken</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">raw</span>: <span class="ident">cursor::SyntaxToken</span>) -&gt; <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">SyntaxToken</span> {
-            <span class="ident">raw</span>,
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; From&lt;cursor::SyntaxToken&gt; <span class="kw">for </span>SyntaxToken&lt;L&gt; {
+    <span class="kw">fn </span>from(raw: cursor::SyntaxToken) -&gt; SyntaxToken&lt;L&gt; {
+        SyntaxToken {
+            raw,
+            _p: PhantomData,
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

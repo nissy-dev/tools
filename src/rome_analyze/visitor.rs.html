@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_analyze/src/visitor.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>visitor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_analyze/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_analyze/src/visitor.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>visitor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_analyze/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -178,180 +178,180 @@
 <span id="178">178</span>
 <span id="179">179</span>
 <span id="180">180</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::BinaryHeap</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::collections::BinaryHeap;
 
-<span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileId</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">Language</span>, <span class="ident">SyntaxNode</span>, <span class="ident">TextRange</span>, <span class="ident">WalkEvent</span>};
+<span class="kw">use </span>rome_diagnostics::file::FileId;
+<span class="kw">use </span>rome_rowan::{AstNode, Language, SyntaxNode, TextRange, WalkEvent};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">matcher::MatchQueryParams</span>,
-    <span class="ident">registry</span>::{<span class="ident">NodeLanguage</span>, <span class="ident">Phases</span>},
-    <span class="ident">AnalyzerOptions</span>, <span class="ident">LanguageRoot</span>, <span class="ident">QueryMatch</span>, <span class="ident">QueryMatcher</span>, <span class="ident">ServiceBag</span>, <span class="ident">SignalEntry</span>,
+<span class="kw">use crate</span>::{
+    matcher::MatchQueryParams,
+    registry::{NodeLanguage, Phases},
+    AnalyzerOptions, LanguageRoot, QueryMatch, QueryMatcher, ServiceBag, SignalEntry,
 };
 
-<span class="doccomment">/// Mutable context objects shared by all visitors</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">VisitorContext</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="lifetime">&#39;query</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">phase</span>: <span class="ident">Phases</span>,
-    <span class="kw">pub</span> <span class="ident">file_id</span>: <span class="ident">FileId</span>,
-    <span class="kw">pub</span> <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;phase</span> <span class="ident">LanguageRoot</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">services</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;phase</span> <span class="ident">ServiceBag</span>,
-    <span class="kw">pub</span> <span class="ident">range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">query_matcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">QueryMatcher</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">signal_queue</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query</span> <span class="kw-2">mut</span> <span class="ident">BinaryHeap</span><span class="op">&lt;</span><span class="ident">SignalEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query</span> <span class="ident">AnalyzerOptions</span>,
+<span class="doccomment">/// Mutable context objects shared by all visitors
+</span><span class="kw">pub struct </span>VisitorContext&lt;<span class="lifetime">&#39;phase</span>, <span class="lifetime">&#39;query</span>, L: Language&gt; {
+    <span class="kw">pub </span>phase: Phases,
+    <span class="kw">pub </span>file_id: FileId,
+    <span class="kw">pub </span>root: <span class="kw-2">&amp;</span><span class="lifetime">&#39;phase </span>LanguageRoot&lt;L&gt;,
+    <span class="kw">pub </span>services: <span class="kw-2">&amp;</span><span class="lifetime">&#39;phase </span>ServiceBag,
+    <span class="kw">pub </span>range: <span class="prelude-ty">Option</span>&lt;TextRange&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) query_matcher: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query </span><span class="kw-2">mut </span><span class="kw">dyn </span>QueryMatcher&lt;L&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) signal_queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query </span><span class="kw-2">mut </span>BinaryHeap&lt;SignalEntry&lt;<span class="lifetime">&#39;phase</span>, L&gt;&gt;,
+    <span class="kw">pub </span>options: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query </span>AnalyzerOptions,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="lifetime">&#39;query</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">VisitorContext</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="lifetime">&#39;query</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">match_query</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">query</span>: <span class="ident">QueryMatch</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">query_matcher</span>.<span class="ident">match_query</span>(<span class="ident">MatchQueryParams</span> {
-            <span class="ident">phase</span>: <span class="self">self</span>.<span class="ident">phase</span>,
-            <span class="ident">file_id</span>: <span class="self">self</span>.<span class="ident">file_id</span>,
-            <span class="ident">root</span>: <span class="self">self</span>.<span class="ident">root</span>,
-            <span class="ident">query</span>,
-            <span class="ident">services</span>: <span class="self">self</span>.<span class="ident">services</span>,
-            <span class="ident">signal_queue</span>: <span class="self">self</span>.<span class="ident">signal_queue</span>,
-            <span class="ident">options</span>: <span class="self">self</span>.<span class="ident">options</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;phase</span>, <span class="lifetime">&#39;query</span>, L: Language&gt; VisitorContext&lt;<span class="lifetime">&#39;phase</span>, <span class="lifetime">&#39;query</span>, L&gt; {
+    <span class="kw">pub fn </span>match_query(<span class="kw-2">&amp;mut </span><span class="self">self</span>, query: QueryMatch&lt;L&gt;) {
+        <span class="self">self</span>.query_matcher.match_query(MatchQueryParams {
+            phase: <span class="self">self</span>.phase,
+            file_id: <span class="self">self</span>.file_id,
+            root: <span class="self">self</span>.root,
+            query,
+            services: <span class="self">self</span>.services,
+            signal_queue: <span class="self">self</span>.signal_queue,
+            options: <span class="self">self</span>.options,
         })
     }
 }
 
-<span class="doccomment">/// Mutable context objects provided to the finish hook of visitors</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">VisitorFinishContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">LanguageRoot</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">services</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">ServiceBag</span>,
+<span class="doccomment">/// Mutable context objects provided to the finish hook of visitors
+</span><span class="kw">pub struct </span>VisitorFinishContext&lt;<span class="lifetime">&#39;a</span>, L: Language&gt; {
+    <span class="kw">pub </span>root: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>LanguageRoot&lt;L&gt;,
+    <span class="kw">pub </span>services: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>ServiceBag,
 }
 
-<span class="doccomment">/// Visitors are the main building blocks of the analyzer: they receive syntax</span>
-<span class="doccomment">/// [WalkEvent]s, process these events to build secondary data structures from</span>
-<span class="doccomment">/// the syntax tree, and emit rule query matches through the [crate::RuleRegistry]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Visitor</span> {
-    <span class="kw">type</span> <span class="ident">Language</span>: <span class="ident">Language</span>;
+<span class="doccomment">/// Visitors are the main building blocks of the analyzer: they receive syntax
+/// [WalkEvent]s, process these events to build secondary data structures from
+/// the syntax tree, and emit rule query matches through the [crate::RuleRegistry]
+</span><span class="kw">pub trait </span>Visitor {
+    <span class="kw">type </span>Language: Language;
 
-    <span class="kw">fn</span> <span class="ident">visit</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">ctx</span>: <span class="ident">VisitorContext</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>visit(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        event: <span class="kw-2">&amp;</span>WalkEvent&lt;SyntaxNode&lt;<span class="self">Self</span>::Language&gt;&gt;,
+        ctx: VisitorContext&lt;<span class="self">Self</span>::Language&gt;,
     );
 
-    <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">ctx</span>: <span class="ident">VisitorFinishContext</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">ctx</span>;
+    <span class="kw">fn </span>finish(<span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, ctx: VisitorFinishContext&lt;<span class="self">Self</span>::Language&gt;) {
+        <span class="kw">let _ </span>= ctx;
     }
 }
 
-<span class="doccomment">/// A node visitor is a special kind of visitor that does not have a persistent</span>
-<span class="doccomment">/// state for the entire run of the analyzer. Instead these visitors are</span>
-<span class="doccomment">/// transient, they get instantiated when the traversal enters the</span>
-<span class="doccomment">/// corresponding node type and destroyed when the corresponding node exits</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Due to these specificities node visitors do not implement [Visitor]</span>
-<span class="doccomment">/// directly, instead one or more of these must the merged into a single</span>
-<span class="doccomment">/// visitor type using the [crate::merge_node_visitors] macro</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NodeVisitor</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>: <span class="ident">Sized</span> {
-    <span class="kw">type</span> <span class="ident">Node</span>: <span class="ident">AstNode</span>;
+<span class="doccomment">/// A node visitor is a special kind of visitor that does not have a persistent
+/// state for the entire run of the analyzer. Instead these visitors are
+/// transient, they get instantiated when the traversal enters the
+/// corresponding node type and destroyed when the corresponding node exits
+///
+/// Due to these specificities node visitors do not implement [Visitor]
+/// directly, instead one or more of these must the merged into a single
+/// visitor type using the [crate::merge_node_visitors] macro
+</span><span class="kw">pub trait </span>NodeVisitor&lt;V&gt;: Sized {
+    <span class="kw">type </span>Node: AstNode;
 
-    <span class="kw">fn</span> <span class="ident">enter</span>(
-        <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">ctx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">VisitorContext</span><span class="op">&lt;</span><span class="ident">NodeLanguage</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Node</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">stack</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>,
+    <span class="kw">fn </span>enter(
+        node: <span class="self">Self</span>::Node,
+        ctx: <span class="kw-2">&amp;mut </span>VisitorContext&lt;NodeLanguage&lt;<span class="self">Self</span>::Node&gt;&gt;,
+        stack: <span class="kw-2">&amp;mut </span>V,
     ) -&gt; <span class="self">Self</span>;
 
-    <span class="kw">fn</span> <span class="ident">exit</span>(
+    <span class="kw">fn </span>exit(
         <span class="self">self</span>,
-        <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">ctx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">VisitorContext</span><span class="op">&lt;</span><span class="ident">NodeLanguage</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Node</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">stack</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>,
+        node: <span class="self">Self</span>::Node,
+        ctx: <span class="kw-2">&amp;mut </span>VisitorContext&lt;NodeLanguage&lt;<span class="self">Self</span>::Node&gt;&gt;,
+        stack: <span class="kw-2">&amp;mut </span>V,
     );
 }
 
-<span class="doccomment">/// Creates a single struct implementing [Visitor] over a collection of type</span>
-<span class="doccomment">/// implementing the [NodeVisitor] helper trait. Unlike the global [Visitor],</span>
-<span class="doccomment">/// node visitors are transient: they get instantiated when the traversal</span>
-<span class="doccomment">/// enters the corresponding node and destroyed when the node is exited. They</span>
-<span class="doccomment">/// are intended as a building blocks for creating and managing the state of</span>
-<span class="doccomment">/// complex visitors by allowing the implementation to be split over multiple</span>
-<span class="doccomment">/// smaller components.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Example</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```ignore</span>
-<span class="doccomment">/// struct BinaryVisitor;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// impl NodeVisitor for BinaryVisitor {</span>
-<span class="doccomment">///     type Node = BinaryExpression;</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// struct UnaryVisitor;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// impl NodeVisitor for UnaryVisitor {</span>
-<span class="doccomment">///     type Node = UnaryExpression;</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// merge_node_visitors! {</span>
-<span class="doccomment">///     // This declares a new `ExpressionVisitor` struct that implements</span>
-<span class="doccomment">///     // `Visitor` and manages instances of `BinaryVisitor` and</span>
-<span class="doccomment">///     // `UnaryVisitor`</span>
-<span class="doccomment">///     pub(crate) ExpressionVisitor {</span>
-<span class="doccomment">///         binary: BinaryVisitor,</span>
-<span class="doccomment">///         unary: UnaryVisitor,</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">merge_node_visitors</span> {
-    ( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">vis</span>:<span class="ident">vis</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>:<span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span>:<span class="ident">ty</span>, )<span class="op">+</span> } ) =&gt; {
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">vis</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="ident">stack</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">::std::any::TypeId</span>, <span class="ident">usize</span>)<span class="op">&gt;</span>,
-            $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">vis</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span>)<span class="op">&gt;</span>, )<span class="op">*</span>
+<span class="doccomment">/// Creates a single struct implementing [Visitor] over a collection of type
+/// implementing the [NodeVisitor] helper trait. Unlike the global [Visitor],
+/// node visitors are transient: they get instantiated when the traversal
+/// enters the corresponding node and destroyed when the node is exited. They
+/// are intended as a building blocks for creating and managing the state of
+/// complex visitors by allowing the implementation to be split over multiple
+/// smaller components.
+///
+/// # Example
+///
+/// ```ignore
+/// struct BinaryVisitor;
+///
+/// impl NodeVisitor for BinaryVisitor {
+///     type Node = BinaryExpression;
+/// }
+///
+/// struct UnaryVisitor;
+///
+/// impl NodeVisitor for UnaryVisitor {
+///     type Node = UnaryExpression;
+/// }
+///
+/// merge_node_visitors! {
+///     // This declares a new `ExpressionVisitor` struct that implements
+///     // `Visitor` and manages instances of `BinaryVisitor` and
+///     // `UnaryVisitor`
+///     pub(crate) ExpressionVisitor {
+///         binary: BinaryVisitor,
+///         unary: UnaryVisitor,
+///     }
+/// }
+/// ```
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>merge_node_visitors {
+    ( <span class="macro-nonterminal">$vis</span>:vis <span class="macro-nonterminal">$name</span>:ident { $( <span class="macro-nonterminal">$id</span>:ident: <span class="macro-nonterminal">$visitor</span>:ty, )+ } ) =&gt; {
+        <span class="macro-nonterminal">$vis </span><span class="kw">struct </span><span class="macro-nonterminal">$name </span>{
+            stack: Vec&lt;(::std::any::TypeId, usize)&gt;,
+            $( <span class="macro-nonterminal">$vis $id</span>: Vec&lt;(usize, <span class="macro-nonterminal">$visitor</span>)&gt;, )*
         }
 
-        <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">vis</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-                <span class="self">Self</span> {
-                    <span class="ident">stack</span>: <span class="ident">Vec::new</span>(),
-                    $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>: <span class="ident">Vec::new</span>(), )<span class="op">*</span>
+        <span class="kw">impl </span><span class="macro-nonterminal">$name </span>{
+            <span class="macro-nonterminal">$vis </span><span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+                <span class="self">Self </span>{
+                    stack: Vec::new(),
+                    $( <span class="macro-nonterminal">$id</span>: Vec::new(), )*
                 }
             }
         }
 
-        <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Visitor</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="op">&lt;</span>( $( <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::NodeVisitor</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Node</span>, )<span class="op">*</span> ) <span class="kw">as</span> <span class="ident">::rome_rowan::macros::UnionLanguage</span><span class="op">&gt;</span><span class="ident">::Language</span>;
+        <span class="kw">impl </span><span class="macro-nonterminal">$crate::Visitor </span><span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="kw">type </span>Language = &lt;( $( &lt;<span class="macro-nonterminal">$visitor </span><span class="kw">as </span><span class="macro-nonterminal">$crate::NodeVisitor</span>&lt;<span class="macro-nonterminal">$name</span>&gt;&gt;::Node, )* ) <span class="kw">as </span>::rome_rowan::macros::UnionLanguage&gt;::Language;
 
-            <span class="kw">fn</span> <span class="ident">visit</span>(
-                <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-                <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">::rome_rowan::WalkEvent</span><span class="op">&lt;</span><span class="ident">::rome_rowan::SyntaxNode</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-                <span class="kw-2">mut</span> <span class="ident">ctx</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::VisitorContext</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
+            <span class="kw">fn </span>visit(
+                <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+                event: <span class="kw-2">&amp;</span>::rome_rowan::WalkEvent&lt;::rome_rowan::SyntaxNode&lt;<span class="self">Self</span>::Language&gt;&gt;,
+                <span class="kw-2">mut </span>ctx: <span class="macro-nonterminal">$crate::VisitorContext</span>&lt;<span class="self">Self</span>::Language&gt;,
             ) {
-                <span class="kw">match</span> <span class="ident">event</span> {
-                    <span class="ident">::rome_rowan::WalkEvent::Enter</span>(<span class="ident">node</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">kind</span>();
+                <span class="kw">match </span>event {
+                    ::rome_rowan::WalkEvent::Enter(node) =&gt; {
+                        <span class="kw">let </span>kind = node.kind();
 
                         $(
-                            <span class="kw">if</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::NodeVisitor</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Node</span> <span class="kw">as</span> <span class="ident">::rome_rowan::AstNode</span><span class="op">&gt;</span><span class="ident">::can_cast</span>(<span class="ident">kind</span>) {
-                                <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::NodeVisitor</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Node</span> <span class="kw">as</span> <span class="ident">::rome_rowan::AstNode</span><span class="op">&gt;</span><span class="ident">::unwrap_cast</span>(<span class="ident">node</span>.<span class="ident">clone</span>());
-                                <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::NodeVisitor</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::enter</span>(<span class="ident">node</span>, <span class="kw-2">&amp;mut</span> <span class="ident">ctx</span>, <span class="self">self</span>);
+                            <span class="kw">if </span>&lt;&lt;<span class="macro-nonterminal">$visitor </span><span class="kw">as </span><span class="macro-nonterminal">$crate::NodeVisitor</span>&lt;<span class="macro-nonterminal">$name</span>&gt;&gt;::Node <span class="kw">as </span>::rome_rowan::AstNode&gt;::can_cast(kind) {
+                                <span class="kw">let </span>node = &lt;&lt;<span class="macro-nonterminal">$visitor </span><span class="kw">as </span><span class="macro-nonterminal">$crate::NodeVisitor</span>&lt;<span class="macro-nonterminal">$name</span>&gt;&gt;::Node <span class="kw">as </span>::rome_rowan::AstNode&gt;::unwrap_cast(node.clone());
+                                <span class="kw">let </span>state = &lt;<span class="macro-nonterminal">$visitor </span><span class="kw">as </span><span class="macro-nonterminal">$crate::NodeVisitor</span>&lt;<span class="macro-nonterminal">$name</span>&gt;&gt;::enter(node, <span class="kw-2">&amp;mut </span>ctx, <span class="self">self</span>);
 
-                                <span class="kw">let</span> <span class="ident">stack_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">len</span>();
-                                <span class="kw">let</span> <span class="ident">ty_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>.<span class="ident">len</span>();
+                                <span class="kw">let </span>stack_index = <span class="self">self</span>.stack.len();
+                                <span class="kw">let </span>ty_index = <span class="self">self</span>.<span class="macro-nonterminal">$id</span>.len();
 
-                                <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>.<span class="ident">push</span>((<span class="ident">stack_index</span>, <span class="ident">state</span>));
-                                <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">push</span>((<span class="ident">::std::any::TypeId::of</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span><span class="op">&gt;</span>(), <span class="ident">ty_index</span>));
+                                <span class="self">self</span>.<span class="macro-nonterminal">$id</span>.push((stack_index, state));
+                                <span class="self">self</span>.stack.push((::std::any::TypeId::of::&lt;<span class="macro-nonterminal">$visitor</span>&gt;(), ty_index));
                                 <span class="kw">return</span>;
                             }
-                        )<span class="op">*</span>
+                        )*
                     }
-                    <span class="ident">::rome_rowan::WalkEvent::Leave</span>(<span class="ident">node</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">kind</span>();
+                    ::rome_rowan::WalkEvent::Leave(node) =&gt; {
+                        <span class="kw">let </span>kind = node.kind();
 
                         $(
-                            <span class="kw">if</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::NodeVisitor</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Node</span> <span class="kw">as</span> <span class="ident">::rome_rowan::AstNode</span><span class="op">&gt;</span><span class="ident">::can_cast</span>(<span class="ident">kind</span>) {
-                                <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>();
-                                <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">state</span>) <span class="op">=</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>();
+                            <span class="kw">if </span>&lt;&lt;<span class="macro-nonterminal">$visitor </span><span class="kw">as </span><span class="macro-nonterminal">$crate::NodeVisitor</span>&lt;<span class="macro-nonterminal">$name</span>&gt;&gt;::Node <span class="kw">as </span>::rome_rowan::AstNode&gt;::can_cast(kind) {
+                                <span class="self">self</span>.stack.pop().unwrap();
+                                <span class="kw">let </span>(<span class="kw">_</span>, state) = <span class="self">self</span>.<span class="macro-nonterminal">$id</span>.pop().unwrap();
 
-                                <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::NodeVisitor</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Node</span> <span class="kw">as</span> <span class="ident">::rome_rowan::AstNode</span><span class="op">&gt;</span><span class="ident">::unwrap_cast</span>(<span class="ident">node</span>.<span class="ident">clone</span>());
-                                <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::NodeVisitor</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::exit</span>(<span class="ident">state</span>, <span class="ident">node</span>, <span class="kw-2">&amp;mut</span> <span class="ident">ctx</span>, <span class="self">self</span>);
+                                <span class="kw">let </span>node = &lt;&lt;<span class="macro-nonterminal">$visitor </span><span class="kw">as </span><span class="macro-nonterminal">$crate::NodeVisitor</span>&lt;<span class="macro-nonterminal">$name</span>&gt;&gt;::Node <span class="kw">as </span>::rome_rowan::AstNode&gt;::unwrap_cast(node.clone());
+                                &lt;<span class="macro-nonterminal">$visitor </span><span class="kw">as </span><span class="macro-nonterminal">$crate::NodeVisitor</span>&lt;<span class="macro-nonterminal">$name</span>&gt;&gt;::exit(state, node, <span class="kw-2">&amp;mut </span>ctx, <span class="self">self</span>);
                                 <span class="kw">return</span>;
                             }
-                        )<span class="op">*</span>
+                        )*
                     }
                 }
             }
@@ -359,4 +359,4 @@
     };
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

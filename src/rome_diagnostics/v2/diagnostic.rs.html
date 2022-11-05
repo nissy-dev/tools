@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/diagnostic.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>diagnostic.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/diagnostic.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>diagnostic.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -184,191 +184,191 @@
 <span id="184">184</span>
 <span id="185">185</span>
 <span id="186">186</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">io</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::{fmt::Debug, io};
 
-<span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use </span>bitflags::bitflags;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="kw">use</span> <span class="ident">rome_console::fmt</span>;
+<span class="kw">use </span>rome_console::fmt;
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Category</span>, <span class="ident">Location</span>, <span class="ident">Visit</span>};
+<span class="kw">use super</span>::{Category, Location, Visit};
 
-<span class="doccomment">/// The `Diagnostic` trait defines the metadata that can be exposed by error</span>
-<span class="doccomment">/// types in order to print details diagnostics in the console of the editor</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Implementation</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Most types should not have to implement this trait manually, and should</span>
-<span class="doccomment">/// instead rely on the `Diagnostic` derive macro also provided by this crate:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use rome_diagnostics::v2::Diagnostic;</span>
-<span class="doccomment">/// #[derive(Debug, Diagnostic)]</span>
-<span class="doccomment">/// #[diagnostic(category = &quot;lint/style/noShoutyConstants&quot;, tags(FIXABLE))]</span>
-<span class="doccomment">/// struct ExampleDiagnostic {</span>
-<span class="doccomment">///     #[message]</span>
-<span class="doccomment">///     #[description]</span>
-<span class="doccomment">///     message: String,</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Diagnostic</span>: <span class="ident">Debug</span> {
-    <span class="doccomment">/// The category of a diagnostic uniquely identifying this</span>
-    <span class="doccomment">/// diagnostic type, such as `lint/correctness/noArguments`, `args/invalid`</span>
-    <span class="doccomment">/// or `format/disabled`.</span>
-    <span class="kw">fn</span> <span class="ident">category</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span><span class="op">&gt;</span> {
-        <span class="prelude-val">None</span>
+<span class="doccomment">/// The `Diagnostic` trait defines the metadata that can be exposed by error
+/// types in order to print details diagnostics in the console of the editor
+///
+/// ## Implementation
+///
+/// Most types should not have to implement this trait manually, and should
+/// instead rely on the `Diagnostic` derive macro also provided by this crate:
+///
+/// ```
+/// # use rome_diagnostics::v2::Diagnostic;
+/// #[derive(Debug, Diagnostic)]
+/// #[diagnostic(category = &quot;lint/style/noShoutyConstants&quot;, tags(FIXABLE))]
+/// struct ExampleDiagnostic {
+///     #[message]
+///     #[description]
+///     message: String,
+/// }
+/// ```
+</span><span class="kw">pub trait </span>Diagnostic: Debug {
+    <span class="doccomment">/// The category of a diagnostic uniquely identifying this
+    /// diagnostic type, such as `lint/correctness/noArguments`, `args/invalid`
+    /// or `format/disabled`.
+    </span><span class="kw">fn </span>category(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category&gt; {
+        <span class="prelude-val">None
+    </span>}
+
+    <span class="doccomment">/// The severity defines whether this diagnostic reports an error, a
+    /// warning, an information or a hint to the user.
+    </span><span class="kw">fn </span>severity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Severity {
+        Severity::Error
     }
 
-    <span class="doccomment">/// The severity defines whether this diagnostic reports an error, a</span>
-    <span class="doccomment">/// warning, an information or a hint to the user.</span>
-    <span class="kw">fn</span> <span class="ident">severity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Severity</span> {
-        <span class="ident">Severity::Error</span>
-    }
-
-    <span class="doccomment">/// The description is a text-only explanation of the issue this diagnostic</span>
-    <span class="doccomment">/// is reporting, intended for display contexts that do not support rich</span>
-    <span class="doccomment">/// markup such as in-editor popovers</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The description should generally be as exhaustive as possible, since</span>
-    <span class="doccomment">/// the clients that do not support rendering markup will not render the</span>
-    <span class="doccomment">/// advices for the diagnostic either.</span>
-    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">fmt</span>;
+    <span class="doccomment">/// The description is a text-only explanation of the issue this diagnostic
+    /// is reporting, intended for display contexts that do not support rich
+    /// markup such as in-editor popovers
+    ///
+    /// The description should generally be as exhaustive as possible, since
+    /// the clients that do not support rendering markup will not render the
+    /// advices for the diagnostic either.
+    </span><span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="kw">let _ </span>= fmt;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// An explanation of the issue this diagnostic is reporting</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In general it&#39;s better to keep this message as short as possible, and</span>
-    <span class="doccomment">/// instead rely on advices to better convey contextual explanations to the</span>
-    <span class="doccomment">/// user.</span>
-    <span class="kw">fn</span> <span class="ident">message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">fmt</span>;
+    <span class="doccomment">/// An explanation of the issue this diagnostic is reporting
+    ///
+    /// In general it&#39;s better to keep this message as short as possible, and
+    /// instead rely on advices to better convey contextual explanations to the
+    /// user.
+    </span><span class="kw">fn </span>message(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= fmt;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Advices are the main building blocks used compose rich errors. They are</span>
-    <span class="doccomment">/// implemented using a visitor pattern, where consumers of a diagnostic</span>
-    <span class="doccomment">/// can visit the object and collect the advices that make it up for the</span>
-    <span class="doccomment">/// purpose of display or introspection.</span>
-    <span class="kw">fn</span> <span class="ident">advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">visitor</span>;
+    <span class="doccomment">/// Advices are the main building blocks used compose rich errors. They are
+    /// implemented using a visitor pattern, where consumers of a diagnostic
+    /// can visit the object and collect the advices that make it up for the
+    /// purpose of display or introspection.
+    </span><span class="kw">fn </span>advices(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= visitor;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Diagnostics can defines additional advices to be printed if the user</span>
-    <span class="doccomment">/// requires more detail about the diagnostic.</span>
-    <span class="kw">fn</span> <span class="ident">verbose_advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">visitor</span>;
+    <span class="doccomment">/// Diagnostics can defines additional advices to be printed if the user
+    /// requires more detail about the diagnostic.
+    </span><span class="kw">fn </span>verbose_advices(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= visitor;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// A diagnostic can be tied to a specific &quot;location&quot;: this can be a file,</span>
-    <span class="doccomment">/// memory buffer, command line argument, etc. It may also be tied to a</span>
-    <span class="doccomment">/// specific text range within the content of that location. Finally, it</span>
-    <span class="doccomment">/// may also provide the source string for that location (this is required</span>
-    <span class="doccomment">/// in order to display a code frame advice for the diagnostic).</span>
-    <span class="kw">fn</span> <span class="ident">location</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">None</span>
+    <span class="doccomment">/// A diagnostic can be tied to a specific &quot;location&quot;: this can be a file,
+    /// memory buffer, command line argument, etc. It may also be tied to a
+    /// specific text range within the content of that location. Finally, it
+    /// may also provide the source string for that location (this is required
+    /// in order to display a code frame advice for the diagnostic).
+    </span><span class="kw">fn </span>location(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Location&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+        <span class="prelude-val">None
+    </span>}
+
+    <span class="doccomment">/// Tags convey additional boolean metadata about the nature of a diagnostic:
+    /// - If the diagnostic can be automatically fixed
+    /// - If the diagnostic resulted from and internal error
+    /// - If the diagnostic is being emitted as part of a crash / fatal error
+    /// - If the diagnostic is a warning about a piece of unused or unnecessary code
+    /// - If the diagnostic is a warning about a piece of deprecated or obsolete code.
+    </span><span class="kw">fn </span>tags(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DiagnosticTags {
+        DiagnosticTags::empty()
     }
 
-    <span class="doccomment">/// Tags convey additional boolean metadata about the nature of a diagnostic:</span>
-    <span class="doccomment">/// - If the diagnostic can be automatically fixed</span>
-    <span class="doccomment">/// - If the diagnostic resulted from and internal error</span>
-    <span class="doccomment">/// - If the diagnostic is being emitted as part of a crash / fatal error</span>
-    <span class="doccomment">/// - If the diagnostic is a warning about a piece of unused or unnecessary code</span>
-    <span class="doccomment">/// - If the diagnostic is a warning about a piece of deprecated or obsolete code.</span>
-    <span class="kw">fn</span> <span class="ident">tags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">DiagnosticTags</span> {
-        <span class="ident">DiagnosticTags::empty</span>()
-    }
+    <span class="doccomment">/// Similarly to the `source` method of the [std::error::Error] trait, this
+    /// returns another diagnostic that&#39;s the logical &quot;cause&quot; for this issue.
+    /// For instance, a &quot;request failed&quot; diagnostic may have been cause by a
+    /// &quot;deserialization error&quot;. This allows low-level error to be wrapped in
+    /// higher level concepts, while retaining enough information to display
+    /// and fix the underlying issue.
+    </span><span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">dyn </span>Diagnostic&gt; {
+        <span class="prelude-val">None
+    </span>}
+}
 
-    <span class="doccomment">/// Similarly to the `source` method of the [std::error::Error] trait, this</span>
-    <span class="doccomment">/// returns another diagnostic that&#39;s the logical &quot;cause&quot; for this issue.</span>
-    <span class="doccomment">/// For instance, a &quot;request failed&quot; diagnostic may have been cause by a</span>
-    <span class="doccomment">/// &quot;deserialization error&quot;. This allows low-level error to be wrapped in</span>
-    <span class="doccomment">/// higher level concepts, while retaining enough information to display</span>
-    <span class="doccomment">/// and fix the underlying issue.</span>
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Diagnostic</span><span class="op">&gt;</span> {
-        <span class="prelude-val">None</span>
+<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="doccomment">/// The severity to associate to a diagnostic.
+</span><span class="kw">pub enum </span>Severity {
+    <span class="doccomment">/// Reports a crash.
+    </span>Fatal,
+    <span class="doccomment">/// Reports an error.
+    </span>Error,
+    <span class="doccomment">/// Reports a warning.
+    </span>Warning,
+    <span class="doccomment">/// Reports an information.
+    </span>Information,
+    <span class="doccomment">/// Reports a hint.
+    </span>Hint,
+}
+
+<span class="doccomment">/// Internal enum used to automatically generate bit offsets for [DiagnosticTags]
+/// and help with the implementation of `serde` and `schemars` for tags.
+</span><span class="attribute">#[derive(Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>DiagnosticTag {
+    Fixable,
+    Internal,
+    UnnecessaryCode,
+    DeprecatedCode,
+}
+
+<span class="macro">bitflags! </span>{
+    <span class="kw">pub struct </span>DiagnosticTags: u8 {
+        <span class="doccomment">/// This diagnostic has a fix suggestion.
+        </span><span class="kw">const </span>FIXABLE = <span class="number">1 </span>&lt;&lt; DiagnosticTag::Fixable <span class="kw">as </span>u8;
+        <span class="doccomment">/// This diagnostic results from an internal error.
+        </span><span class="kw">const </span>INTERNAL = <span class="number">1 </span>&lt;&lt; DiagnosticTag::Internal <span class="kw">as </span>u8;
+        <span class="doccomment">/// This diagnostic tags unused or unnecessary code, this may change
+        /// how the diagnostic is render in editors.
+        </span><span class="kw">const </span>UNNECESSARY_CODE = <span class="number">1 </span>&lt;&lt; DiagnosticTag::UnnecessaryCode <span class="kw">as </span>u8;
+        <span class="doccomment">/// This diagnostic tags deprecated or obsolete code, this may change
+        /// how the diagnostic is render in editors.
+        </span><span class="kw">const </span>DEPRECATED_CODE = <span class="number">1 </span>&lt;&lt; DiagnosticTag::DeprecatedCode <span class="kw">as </span>u8;
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="doccomment">/// The severity to associate to a diagnostic.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Severity</span> {
-    <span class="doccomment">/// Reports a crash.</span>
-    <span class="ident">Fatal</span>,
-    <span class="doccomment">/// Reports an error.</span>
-    <span class="ident">Error</span>,
-    <span class="doccomment">/// Reports a warning.</span>
-    <span class="ident">Warning</span>,
-    <span class="doccomment">/// Reports an information.</span>
-    <span class="ident">Information</span>,
-    <span class="doccomment">/// Reports a hint.</span>
-    <span class="ident">Hint</span>,
-}
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>internal {
+    <span class="doccomment">//! The `AsDiagnostic` trait needs to be declared as public as its referred
+    //! to in the `where` clause of other public items, but as it&#39;s not part of
+    //! the public API it&#39;s declared in a private module so it&#39;s not accessible
+    //! outside of the crate
 
-<span class="doccomment">/// Internal enum used to automatically generate bit offsets for [DiagnosticTags]</span>
-<span class="doccomment">/// and help with the implementation of `serde` and `schemars` for tags.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum</span> <span class="ident">DiagnosticTag</span> {
-    <span class="ident">Fixable</span>,
-    <span class="ident">Internal</span>,
-    <span class="ident">UnnecessaryCode</span>,
-    <span class="ident">DeprecatedCode</span>,
-}
+    </span><span class="kw">use </span>std::fmt::Debug;
 
-<span class="macro">bitflags!</span> {
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DiagnosticTags</span>: <span class="ident">u8</span> {
-        <span class="doccomment">/// This diagnostic has a fix suggestion.</span>
-        <span class="kw">const</span> <span class="ident">FIXABLE</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">DiagnosticTag::Fixable</span> <span class="kw">as</span> <span class="ident">u8</span>;
-        <span class="doccomment">/// This diagnostic results from an internal error.</span>
-        <span class="kw">const</span> <span class="ident">INTERNAL</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">DiagnosticTag::Internal</span> <span class="kw">as</span> <span class="ident">u8</span>;
-        <span class="doccomment">/// This diagnostic tags unused or unnecessary code, this may change</span>
-        <span class="doccomment">/// how the diagnostic is render in editors.</span>
-        <span class="kw">const</span> <span class="ident">UNNECESSARY_CODE</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">DiagnosticTag::UnnecessaryCode</span> <span class="kw">as</span> <span class="ident">u8</span>;
-        <span class="doccomment">/// This diagnostic tags deprecated or obsolete code, this may change</span>
-        <span class="doccomment">/// how the diagnostic is render in editors.</span>
-        <span class="kw">const</span> <span class="ident">DEPRECATED_CODE</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">DiagnosticTag::DeprecatedCode</span> <span class="kw">as</span> <span class="ident">u8</span>;
-    }
-}
+    <span class="kw">use </span><span class="kw">crate</span>::v2::Diagnostic;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">internal</span> {
-    <span class="doccomment">//! The `AsDiagnostic` trait needs to be declared as public as its referred</span>
-    <span class="doccomment">//! to in the `where` clause of other public items, but as it&#39;s not part of</span>
-    <span class="doccomment">//! the public API it&#39;s declared in a private module so it&#39;s not accessible</span>
-    <span class="doccomment">//! outside of the crate</span>
-
-    <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::v2::Diagnostic</span>;
-
-    <span class="doccomment">/// Since [Error](crate::v2::Error) must implement `From&lt;T: Diagnostic&gt;` to</span>
-    <span class="doccomment">/// be used with the `?` operator, it cannot implement the [Diagnostic]</span>
-    <span class="doccomment">/// trait (as that would conflict with the implementation of `From&lt;T&gt; for T`</span>
-    <span class="doccomment">/// in the standard library). The [AsDiagnostic] exists as an internal</span>
-    <span class="doccomment">/// implementation detail to bridge this gap and allow various types and</span>
-    <span class="doccomment">/// functions in `rome_diagnostics` to be generic over all diagnostics +</span>
-    <span class="doccomment">/// `Error`.</span>
-    <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AsDiagnostic</span>: <span class="ident">Debug</span> {
-        <span class="kw">type</span> <span class="ident">Diagnostic</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>;
-        <span class="kw">fn</span> <span class="ident">as_diagnostic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Diagnostic</span>;
-        <span class="kw">fn</span> <span class="ident">as_dyn</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Diagnostic</span>;
+    <span class="doccomment">/// Since [Error](crate::v2::Error) must implement `From&lt;T: Diagnostic&gt;` to
+    /// be used with the `?` operator, it cannot implement the [Diagnostic]
+    /// trait (as that would conflict with the implementation of `From&lt;T&gt; for T`
+    /// in the standard library). The [AsDiagnostic] exists as an internal
+    /// implementation detail to bridge this gap and allow various types and
+    /// functions in `rome_diagnostics` to be generic over all diagnostics +
+    /// `Error`.
+    </span><span class="kw">pub trait </span>AsDiagnostic: Debug {
+        <span class="kw">type </span>Diagnostic: Diagnostic + <span class="question-mark">?</span>Sized;
+        <span class="kw">fn </span>as_diagnostic(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Diagnostic;
+        <span class="kw">fn </span>as_dyn(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Diagnostic;
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Diagnostic</span><span class="op">&gt;</span> <span class="ident">AsDiagnostic</span> <span class="kw">for</span> <span class="ident">D</span> {
-        <span class="kw">type</span> <span class="ident">Diagnostic</span> <span class="op">=</span> <span class="ident">D</span>;
+    <span class="kw">impl</span>&lt;D: Diagnostic&gt; AsDiagnostic <span class="kw">for </span>D {
+        <span class="kw">type </span>Diagnostic = D;
 
-        <span class="kw">fn</span> <span class="ident">as_diagnostic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Diagnostic</span> {
-            <span class="self">self</span>
-        }
+        <span class="kw">fn </span>as_diagnostic(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Diagnostic {
+            <span class="self">self
+        </span>}
 
-        <span class="kw">fn</span> <span class="ident">as_dyn</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Diagnostic</span> {
-            <span class="self">self</span>
-        }
+        <span class="kw">fn </span>as_dyn(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Diagnostic {
+            <span class="self">self
+        </span>}
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

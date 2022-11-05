@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/workspace/server.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/workspace/server.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -518,525 +518,525 @@
 <span id="518">518</span>
 <span id="519">519</span>
 <span id="520">520</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">ChangeFileParams</span>, <span class="ident">CloseFileParams</span>, <span class="ident">FeatureName</span>, <span class="ident">FixFileResult</span>, <span class="ident">FormatFileParams</span>,
-    <span class="ident">FormatOnTypeParams</span>, <span class="ident">FormatRangeParams</span>, <span class="ident">GetControlFlowGraphParams</span>, <span class="ident">GetFormatterIRParams</span>,
-    <span class="ident">GetSyntaxTreeParams</span>, <span class="ident">GetSyntaxTreeResult</span>, <span class="ident">OpenFileParams</span>, <span class="ident">PullActionsParams</span>, <span class="ident">PullActionsResult</span>,
-    <span class="ident">PullDiagnosticsParams</span>, <span class="ident">PullDiagnosticsResult</span>, <span class="ident">RenameResult</span>, <span class="ident">SupportsFeatureParams</span>,
-    <span class="ident">UpdateSettingsParams</span>,
+</pre><pre class="rust"><code><span class="kw">use super</span>::{
+    ChangeFileParams, CloseFileParams, FeatureName, FixFileResult, FormatFileParams,
+    FormatOnTypeParams, FormatRangeParams, GetControlFlowGraphParams, GetFormatterIRParams,
+    GetSyntaxTreeParams, GetSyntaxTreeResult, OpenFileParams, PullActionsParams, PullActionsResult,
+    PullDiagnosticsParams, PullDiagnosticsResult, RenameResult, SupportsFeatureParams,
+    UpdateSettingsParams,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::file_handlers</span>::{<span class="ident">Capabilities</span>, <span class="ident">FixAllParams</span>, <span class="ident">Language</span>, <span class="ident">LintParams</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::workspace</span>::{<span class="ident">RageEntry</span>, <span class="ident">RageParams</span>, <span class="ident">RageResult</span>, <span class="ident">ServerInfo</span>, <span class="ident">SupportsFeatureResult</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">file_handlers::Features</span>,
-    <span class="ident">settings</span>::{<span class="ident">SettingsHandle</span>, <span class="ident">WorkspaceSettings</span>},
-    <span class="ident">RomeError</span>, <span class="ident">Rules</span>, <span class="ident">Workspace</span>,
+<span class="kw">use </span><span class="kw">crate</span>::file_handlers::{Capabilities, FixAllParams, Language, LintParams};
+<span class="kw">use </span><span class="kw">crate</span>::workspace::{RageEntry, RageParams, RageResult, ServerInfo, SupportsFeatureResult};
+<span class="kw">use crate</span>::{
+    file_handlers::Features,
+    settings::{SettingsHandle, WorkspaceSettings},
+    RomeError, Rules, Workspace,
 };
-<span class="kw">use</span> <span class="ident">dashmap</span>::{<span class="ident">mapref::entry::Entry</span>, <span class="ident">DashMap</span>};
-<span class="kw">use</span> <span class="ident">indexmap::IndexSet</span>;
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">AnalysisFilter</span>, <span class="ident">RuleFilter</span>};
-<span class="kw">use</span> <span class="ident">rome_diagnostics::v2</span>::{<span class="ident">serde::Diagnostic</span>, <span class="ident">DiagnosticExt</span>};
-<span class="kw">use</span> <span class="ident">rome_formatter::Printed</span>;
-<span class="kw">use</span> <span class="ident">rome_fs::RomePath</span>;
-<span class="kw">use</span> <span class="ident">rome_js_parser::ParseDiagnostic</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">Language</span> <span class="kw">as</span> <span class="ident">RowanLanguage</span>, <span class="ident">SendNode</span>, <span class="ident">SyntaxNode</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::type_name</span>, <span class="ident">panic::RefUnwindSafe</span>, <span class="ident">sync::RwLock</span>};
+<span class="kw">use </span>dashmap::{mapref::entry::Entry, DashMap};
+<span class="kw">use </span>indexmap::IndexSet;
+<span class="kw">use </span>rome_analyze::{AnalysisFilter, RuleFilter};
+<span class="kw">use </span>rome_diagnostics::v2::{serde::Diagnostic, DiagnosticExt};
+<span class="kw">use </span>rome_formatter::Printed;
+<span class="kw">use </span>rome_fs::RomePath;
+<span class="kw">use </span>rome_js_parser::ParseDiagnostic;
+<span class="kw">use </span>rome_rowan::{AstNode, Language <span class="kw">as </span>RowanLanguage, SendNode, SyntaxNode};
+<span class="kw">use </span>std::{any::type_name, panic::RefUnwindSafe, sync::RwLock};
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">WorkspaceServer</span> {
-    <span class="doccomment">/// features available throughout the application</span>
-    <span class="ident">features</span>: <span class="ident">Features</span>,
-    <span class="doccomment">/// global settings object for this workspace</span>
-    <span class="ident">settings</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">WorkspaceSettings</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Stores the document (text content + version number) associated with a URL</span>
-    <span class="ident">documents</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">RomePath</span>, <span class="ident">Document</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Stores the result of the parser (syntax tree + diagnostics) for a given URL</span>
-    <span class="ident">syntax</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">RomePath</span>, <span class="ident">AnyParse</span><span class="op">&gt;</span>,
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>WorkspaceServer {
+    <span class="doccomment">/// features available throughout the application
+    </span>features: Features,
+    <span class="doccomment">/// global settings object for this workspace
+    </span>settings: RwLock&lt;WorkspaceSettings&gt;,
+    <span class="doccomment">/// Stores the document (text content + version number) associated with a URL
+    </span>documents: DashMap&lt;RomePath, Document&gt;,
+    <span class="doccomment">/// Stores the result of the parser (syntax tree + diagnostics) for a given URL
+    </span>syntax: DashMap&lt;RomePath, AnyParse&gt;,
 }
 
-<span class="doccomment">/// The `Workspace` object is long lived, so we want it to be able to cross</span>
-<span class="doccomment">/// unwind boundaries.</span>
-<span class="doccomment">/// In return we have to make sure operations on the workspace either do not</span>
-<span class="doccomment">/// panic, of that panicking will not result in any broken invariant (it would</span>
-<span class="doccomment">/// not result in any undefined behavior as catching an unwind is safe, but it</span>
-<span class="doccomment">/// could lead to hard to debug issues)</span>
-<span class="kw">impl</span> <span class="ident">RefUnwindSafe</span> <span class="kw">for</span> <span class="ident">WorkspaceServer</span> {}
+<span class="doccomment">/// The `Workspace` object is long lived, so we want it to be able to cross
+/// unwind boundaries.
+/// In return we have to make sure operations on the workspace either do not
+/// panic, of that panicking will not result in any broken invariant (it would
+/// not result in any undefined behavior as catching an unwind is safe, but it
+/// could lead to hard to debug issues)
+</span><span class="kw">impl </span>RefUnwindSafe <span class="kw">for </span>WorkspaceServer {}
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Document</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">content</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">version</span>: <span class="ident">i32</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">language_hint</span>: <span class="ident">Language</span>,
+<span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Document {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) content: String,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) version: i32,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) language_hint: Language,
 }
 
-<span class="doccomment">/// Language-independent cache entry for a parsed file</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This struct holds a handle to the root node of the parsed syntax tree,</span>
-<span class="doccomment">/// along with the list of diagnostics emitted by the parser while generating</span>
-<span class="doccomment">/// this entry.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It can be dynamically downcast into a concrete [SyntaxNode] or [AstNode] of</span>
-<span class="doccomment">/// the corresponding language, generally through a language-specific capability</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">AnyParse</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">root</span>: <span class="ident">SendNode</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">diagnostics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParseDiagnostic</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Language-independent cache entry for a parsed file
+///
+/// This struct holds a handle to the root node of the parsed syntax tree,
+/// along with the list of diagnostics emitted by the parser while generating
+/// this entry.
+///
+/// It can be dynamically downcast into a concrete [SyntaxNode] or [AstNode] of
+/// the corresponding language, generally through a language-specific capability
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AnyParse {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) root: SendNode,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) diagnostics: Vec&lt;ParseDiagnostic&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">AnyParse</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">syntax</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">L</span>: <span class="ident">RowanLanguage</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="kw">impl </span>AnyParse {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>syntax&lt;L&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxNode&lt;L&gt;
+    <span class="kw">where
+        </span>L: RowanLanguage + <span class="lifetime">&#39;static</span>,
     {
-        <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">clone</span>().<span class="ident">into_node</span>().<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+        <span class="self">self</span>.root.clone().into_node().unwrap_or_else(|| {
             <span class="macro">panic!</span>(
                 <span class="string">&quot;could not downcast root node to language {}&quot;</span>,
-                <span class="ident">type_name</span>::<span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>()
+                type_name::&lt;L&gt;()
             )
         })
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">tree</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">N</span>
-    <span class="kw">where</span>
-        <span class="ident">N</span>: <span class="ident">AstNode</span>,
-        <span class="ident">N::Language</span>: <span class="lifetime">&#39;static</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>tree&lt;N&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; N
+    <span class="kw">where
+        </span>N: AstNode,
+        N::Language: <span class="lifetime">&#39;static</span>,
     {
-        <span class="ident">N::unwrap_cast</span>(<span class="self">self</span>.<span class="ident">syntax</span>::<span class="op">&lt;</span><span class="ident">N::Language</span><span class="op">&gt;</span>())
+        N::unwrap_cast(<span class="self">self</span>.syntax::&lt;N::Language&gt;())
     }
 
-    <span class="doccomment">/// This function transforms diagnostics coming from the parser into serializable diagnostics</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_diagnostics</span>(<span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Diagnostic</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">diagnostics</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Diagnostic::new</span>).<span class="ident">collect</span>()
+    <span class="doccomment">/// This function transforms diagnostics coming from the parser into serializable diagnostics
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>into_diagnostics(<span class="self">self</span>) -&gt; Vec&lt;Diagnostic&gt; {
+        <span class="self">self</span>.diagnostics.into_iter().map(Diagnostic::new).collect()
     }
 
-    <span class="kw">fn</span> <span class="ident">has_errors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">diagnostics</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">diag</span><span class="op">|</span> <span class="ident">diag</span>.<span class="ident">is_error</span>())
+    <span class="kw">fn </span>has_errors(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.diagnostics.iter().any(|diag| diag.is_error())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">WorkspaceServer</span> {
-    <span class="doccomment">/// Create a new [Workspace]</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is implemented as a crate-private method instead of using</span>
-    <span class="doccomment">/// [Default] to disallow instances of [Workspace] from being created</span>
-    <span class="doccomment">/// outside of a [crate::App]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">features</span>: <span class="ident">Features::new</span>(),
-            <span class="ident">settings</span>: <span class="ident">RwLock::default</span>(),
-            <span class="ident">documents</span>: <span class="ident">DashMap::default</span>(),
-            <span class="ident">syntax</span>: <span class="ident">DashMap::default</span>(),
+<span class="kw">impl </span>WorkspaceServer {
+    <span class="doccomment">/// Create a new [Workspace]
+    ///
+    /// This is implemented as a crate-private method instead of using
+    /// [Default] to disallow instances of [Workspace] from being created
+    /// outside of a [crate::App]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            features: Features::new(),
+            settings: RwLock::default(),
+            documents: DashMap::default(),
+            syntax: DashMap::default(),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SettingsHandle</span> {
-        <span class="ident">SettingsHandle::new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">settings</span>)
+    <span class="kw">fn </span>settings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SettingsHandle {
+        SettingsHandle::new(<span class="kw-2">&amp;</span><span class="self">self</span>.settings)
     }
 
-    <span class="doccomment">/// Get the supported capabilities for a given file path</span>
-    <span class="kw">fn</span> <span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>) -&gt; <span class="ident">Capabilities</span> {
-        <span class="kw">let</span> <span class="ident">language</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">documents</span>
-            .<span class="ident">get</span>(<span class="ident">path</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">doc</span><span class="op">|</span> <span class="ident">doc</span>.<span class="ident">language_hint</span>)
-            .<span class="ident">unwrap_or_default</span>();
+    <span class="doccomment">/// Get the supported capabilities for a given file path
+    </span><span class="kw">fn </span>get_capabilities(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RomePath) -&gt; Capabilities {
+        <span class="kw">let </span>language = <span class="self">self
+            </span>.documents
+            .get(path)
+            .map(|doc| doc.language_hint)
+            .unwrap_or_default();
 
-        <span class="self">self</span>.<span class="ident">features</span>.<span class="ident">get_capabilities</span>(<span class="ident">path</span>, <span class="ident">language</span>)
+        <span class="self">self</span>.features.get_capabilities(path, language)
     }
 
-    <span class="doccomment">/// Return an error factory function for unsupported features at a given path</span>
-    <span class="kw">fn</span> <span class="ident">build_capability_error</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">RomePath</span>) -&gt; <span class="kw">impl</span> <span class="ident">FnOnce</span>() -&gt; <span class="ident">RomeError</span> <span class="op">+</span> <span class="lifetime">&#39;a</span> {
-        <span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">language_hint</span> <span class="op">=</span> <span class="self">self</span>
-                .<span class="ident">documents</span>
-                .<span class="ident">get</span>(<span class="ident">path</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">doc</span><span class="op">|</span> <span class="ident">doc</span>.<span class="ident">language_hint</span>)
-                .<span class="ident">unwrap_or_default</span>();
+    <span class="doccomment">/// Return an error factory function for unsupported features at a given path
+    </span><span class="kw">fn </span>build_capability_error&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, path: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>RomePath) -&gt; <span class="kw">impl </span>FnOnce() -&gt; RomeError + <span class="lifetime">&#39;a </span>{
+        <span class="kw">move </span>|| {
+            <span class="kw">let </span>language_hint = <span class="self">self
+                </span>.documents
+                .get(path)
+                .map(|doc| doc.language_hint)
+                .unwrap_or_default();
 
-            <span class="kw">let</span> <span class="ident">language</span> <span class="op">=</span> <span class="ident">Features::get_language</span>(<span class="ident">path</span>).<span class="ident">or</span>(<span class="ident">language_hint</span>);
-            <span class="ident">RomeError::SourceFileNotSupported</span>(<span class="ident">language</span>, <span class="ident">path</span>.<span class="ident">clone</span>())
+            <span class="kw">let </span>language = Features::get_language(path).or(language_hint);
+            RomeError::SourceFileNotSupported(language, path.clone())
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">build_rule_filter_list</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">rules</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Rules</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RuleFilter</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">rules</span>) <span class="op">=</span> <span class="ident">rules</span> {
-            <span class="kw">let</span> <span class="ident">enabled</span>: <span class="ident">IndexSet</span><span class="op">&lt;</span><span class="ident">RuleFilter</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">rules</span>.<span class="ident">as_enabled_rules</span>();
-            <span class="ident">enabled</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RuleFilter</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-        } <span class="kw">else</span> {
+    <span class="kw">fn </span>build_rule_filter_list&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, rules: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Rules&gt;) -&gt; Vec&lt;RuleFilter&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(rules) = rules {
+            <span class="kw">let </span>enabled: IndexSet&lt;RuleFilter&gt; = rules.as_enabled_rules();
+            enabled.into_iter().collect::&lt;Vec&lt;RuleFilter&gt;&gt;()
+        } <span class="kw">else </span>{
             <span class="macro">vec!</span>[]
         }
     }
 
-    <span class="doccomment">/// Get the parser result for a given file</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns and error if no file exists in the workspace with this path or</span>
-    <span class="doccomment">/// if the language associated with the file has no parser capability</span>
-    <span class="kw">fn</span> <span class="ident">get_parse</span>(
+    <span class="doccomment">/// Get the parser result for a given file
+    ///
+    /// Returns and error if no file exists in the workspace with this path or
+    /// if the language associated with the file has no parser capability
+    </span><span class="kw">fn </span>get_parse(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">rome_path</span>: <span class="ident">RomePath</span>,
-        <span class="ident">feature</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FeatureName</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AnyParse</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">ignored</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">feature</span>) <span class="op">=</span> <span class="ident">feature</span> {
-            <span class="self">self</span>.<span class="ident">is_file_ignored</span>(<span class="kw-2">&amp;</span><span class="ident">rome_path</span>, <span class="kw-2">&amp;</span><span class="ident">feature</span>)
-        } <span class="kw">else</span> {
-            <span class="bool-val">false</span>
-        };
+        rome_path: RomePath,
+        feature: <span class="prelude-ty">Option</span>&lt;FeatureName&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;AnyParse, RomeError&gt; {
+        <span class="kw">let </span>ignored = <span class="kw">if let </span><span class="prelude-val">Some</span>(feature) = feature {
+            <span class="self">self</span>.is_file_ignored(<span class="kw-2">&amp;</span>rome_path, <span class="kw-2">&amp;</span>feature)
+        } <span class="kw">else </span>{
+            <span class="bool-val">false
+        </span>};
 
-        <span class="kw">if</span> <span class="ident">ignored</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RomeError::FileIgnored</span>(<span class="ident">rome_path</span>.<span class="ident">to_path_buf</span>()));
+        <span class="kw">if </span>ignored {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(RomeError::FileIgnored(rome_path.to_path_buf()));
         }
 
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">syntax</span>.<span class="ident">entry</span>(<span class="ident">rome_path</span>) {
-            <span class="ident">Entry::Occupied</span>(<span class="ident">entry</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">entry</span>.<span class="ident">get</span>().<span class="ident">clone</span>()),
-            <span class="ident">Entry::Vacant</span>(<span class="ident">entry</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">rome_path</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">key</span>();
-                <span class="kw">let</span> <span class="ident">document</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">documents</span>.<span class="ident">get</span>(<span class="ident">rome_path</span>).<span class="ident">ok_or</span>(<span class="ident">RomeError::NotFound</span>)<span class="question-mark">?</span>;
+        <span class="kw">match </span><span class="self">self</span>.syntax.entry(rome_path) {
+            Entry::Occupied(entry) =&gt; <span class="prelude-val">Ok</span>(entry.get().clone()),
+            Entry::Vacant(entry) =&gt; {
+                <span class="kw">let </span>rome_path = entry.key();
+                <span class="kw">let </span>document = <span class="self">self</span>.documents.get(rome_path).ok_or(RomeError::NotFound)<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="ident">rome_path</span>);
-                <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="ident">capabilities</span>
-                    .<span class="ident">parser</span>
-                    .<span class="ident">parse</span>
-                    .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="ident">rome_path</span>))<span class="question-mark">?</span>;
+                <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(rome_path);
+                <span class="kw">let </span>parse = capabilities
+                    .parser
+                    .parse
+                    .ok_or_else(<span class="self">self</span>.build_capability_error(rome_path))<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">size_limit</span> <span class="op">=</span> {
-                    <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>();
-                    <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">as_ref</span>();
-                    <span class="kw">let</span> <span class="ident">limit</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">files</span>.<span class="ident">max_size</span>.<span class="ident">get</span>();
-                    <span class="ident">usize::try_from</span>(<span class="ident">limit</span>).<span class="ident">unwrap_or</span>(<span class="ident">usize::MAX</span>)
+                <span class="kw">let </span>size_limit = {
+                    <span class="kw">let </span>settings = <span class="self">self</span>.settings();
+                    <span class="kw">let </span>settings = settings.as_ref();
+                    <span class="kw">let </span>limit = settings.files.max_size.get();
+                    usize::try_from(limit).unwrap_or(usize::MAX)
                 };
 
-                <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">content</span>.<span class="ident">as_bytes</span>().<span class="ident">len</span>();
-                <span class="kw">if</span> <span class="ident">size</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">size_limit</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RomeError::FileTooLarge</span> {
-                        <span class="ident">path</span>: <span class="ident">rome_path</span>.<span class="ident">to_path_buf</span>(),
-                        <span class="ident">size</span>,
-                        <span class="ident">limit</span>: <span class="ident">size_limit</span>,
+                <span class="kw">let </span>size = document.content.as_bytes().len();
+                <span class="kw">if </span>size &gt;= size_limit {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(RomeError::FileTooLarge {
+                        path: rome_path.to_path_buf(),
+                        size,
+                        limit: size_limit,
                     });
                 }
 
-                <span class="kw">let</span> <span class="ident">parsed</span> <span class="op">=</span> <span class="ident">parse</span>(<span class="ident">rome_path</span>, <span class="ident">document</span>.<span class="ident">language_hint</span>, <span class="kw-2">&amp;</span><span class="ident">document</span>.<span class="ident">content</span>);
+                <span class="kw">let </span>parsed = parse(rome_path, document.language_hint, <span class="kw-2">&amp;</span>document.content);
 
-                <span class="prelude-val">Ok</span>(<span class="ident">entry</span>.<span class="ident">insert</span>(<span class="ident">parsed</span>).<span class="ident">clone</span>())
+                <span class="prelude-val">Ok</span>(entry.insert(parsed).clone())
             }
         }
     }
 
-    <span class="doccomment">/// Takes as input the path of the file that workspace is currently processing and</span>
-    <span class="doccomment">/// a list of paths to match against.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If the file path matches, than `true` is returned and it should be considered ignored.</span>
-    <span class="kw">fn</span> <span class="ident">is_file_ignored</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>, <span class="ident">feature</span>: <span class="kw-2">&amp;</span><span class="ident">FeatureName</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>();
-        <span class="kw">match</span> <span class="ident">feature</span> {
-            <span class="ident">FeatureName::Format</span> =&gt; <span class="ident">settings</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">formatter</span>
-                .<span class="ident">ignored_files</span>
-                .<span class="ident">matches_path</span>(<span class="ident">rome_path</span>.<span class="ident">as_path</span>()),
-            <span class="ident">FeatureName::Lint</span> =&gt; <span class="ident">settings</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">linter</span>
-                .<span class="ident">ignored_files</span>
-                .<span class="ident">matches_path</span>(<span class="ident">rome_path</span>.<span class="ident">as_path</span>()),
+    <span class="doccomment">/// Takes as input the path of the file that workspace is currently processing and
+    /// a list of paths to match against.
+    ///
+    /// If the file path matches, than `true` is returned and it should be considered ignored.
+    </span><span class="kw">fn </span>is_file_ignored(<span class="kw-2">&amp;</span><span class="self">self</span>, rome_path: <span class="kw-2">&amp;</span>RomePath, feature: <span class="kw-2">&amp;</span>FeatureName) -&gt; bool {
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings();
+        <span class="kw">match </span>feature {
+            FeatureName::Format =&gt; settings
+                .as_ref()
+                .formatter
+                .ignored_files
+                .matches_path(rome_path.as_path()),
+            FeatureName::Lint =&gt; settings
+                .as_ref()
+                .linter
+                .ignored_files
+                .matches_path(rome_path.as_path()),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Workspace</span> <span class="kw">for</span> <span class="ident">WorkspaceServer</span> {
-    <span class="kw">fn</span> <span class="ident">supports_feature</span>(
+<span class="kw">impl </span>Workspace <span class="kw">for </span>WorkspaceServer {
+    <span class="kw">fn </span>supports_feature(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">SupportsFeatureParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SupportsFeatureResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">is_ignored</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">is_file_ignored</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">feature</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">params</span>.<span class="ident">feature</span> {
-            <span class="ident">FeatureName::Format</span> =&gt; {
-                <span class="kw">if</span> <span class="ident">is_ignored</span> {
-                    <span class="ident">SupportsFeatureResult::ignored</span>()
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">capabilities</span>.<span class="ident">formatter</span>.<span class="ident">format</span>.<span class="ident">is_none</span>() {
-                    <span class="ident">SupportsFeatureResult::file_not_supported</span>()
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">settings</span>.<span class="ident">formatter</span>().<span class="ident">enabled</span> {
-                    <span class="ident">SupportsFeatureResult::disabled</span>()
-                } <span class="kw">else</span> {
-                    <span class="ident">SupportsFeatureResult</span> { <span class="ident">reason</span>: <span class="prelude-val">None</span> }
+        params: SupportsFeatureParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;SupportsFeatureResult, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings.read().unwrap();
+        <span class="kw">let </span>is_ignored = <span class="self">self</span>.is_file_ignored(<span class="kw-2">&amp;</span>params.path, <span class="kw-2">&amp;</span>params.feature);
+        <span class="kw">let </span>result = <span class="kw">match </span>params.feature {
+            FeatureName::Format =&gt; {
+                <span class="kw">if </span>is_ignored {
+                    SupportsFeatureResult::ignored()
+                } <span class="kw">else if </span>capabilities.formatter.format.is_none() {
+                    SupportsFeatureResult::file_not_supported()
+                } <span class="kw">else if </span>!settings.formatter().enabled {
+                    SupportsFeatureResult::disabled()
+                } <span class="kw">else </span>{
+                    SupportsFeatureResult { reason: <span class="prelude-val">None </span>}
                 }
             }
-            <span class="ident">FeatureName::Lint</span> =&gt; {
-                <span class="kw">if</span> <span class="ident">is_ignored</span> {
-                    <span class="ident">SupportsFeatureResult::ignored</span>()
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">capabilities</span>.<span class="ident">analyzer</span>.<span class="ident">lint</span>.<span class="ident">is_none</span>() {
-                    <span class="ident">SupportsFeatureResult::file_not_supported</span>()
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">settings</span>.<span class="ident">linter</span>().<span class="ident">enabled</span> {
-                    <span class="ident">SupportsFeatureResult::disabled</span>()
-                } <span class="kw">else</span> {
-                    <span class="ident">SupportsFeatureResult</span> { <span class="ident">reason</span>: <span class="prelude-val">None</span> }
+            FeatureName::Lint =&gt; {
+                <span class="kw">if </span>is_ignored {
+                    SupportsFeatureResult::ignored()
+                } <span class="kw">else if </span>capabilities.analyzer.lint.is_none() {
+                    SupportsFeatureResult::file_not_supported()
+                } <span class="kw">else if </span>!settings.linter().enabled {
+                    SupportsFeatureResult::disabled()
+                } <span class="kw">else </span>{
+                    SupportsFeatureResult { reason: <span class="prelude-val">None </span>}
                 }
             }
         };
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+        <span class="prelude-val">Ok</span>(result)
     }
 
-    <span class="doccomment">/// Update the global settings for this workspace</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Panics</span>
-    <span class="doccomment">/// This function may panic if the internal settings mutex has been poisoned</span>
-    <span class="doccomment">/// by another thread having previously panicked while holding the lock</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>, <span class="ident">skip</span>(<span class="self">self</span>))]</span>
-    <span class="kw">fn</span> <span class="ident">update_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">UpdateSettingsParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
-        <span class="ident">settings</span>.<span class="ident">merge_with_configuration</span>(<span class="ident">params</span>.<span class="ident">configuration</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Update the global settings for this workspace
+    ///
+    /// ## Panics
+    /// This function may panic if the internal settings mutex has been poisoned
+    /// by another thread having previously panicked while holding the lock
+    </span><span class="attribute">#[tracing::instrument(level = <span class="string">&quot;debug&quot;</span>, skip(<span class="self">self</span>))]
+    </span><span class="kw">fn </span>update_settings(<span class="kw-2">&amp;</span><span class="self">self</span>, params: UpdateSettingsParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>settings = <span class="self">self</span>.settings.write().unwrap();
+        settings.merge_with_configuration(params.configuration)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Add a new file to the workspace</span>
-    <span class="kw">fn</span> <span class="ident">open_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">OpenFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">syntax</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="self">self</span>.<span class="ident">documents</span>.<span class="ident">insert</span>(
-            <span class="ident">params</span>.<span class="ident">path</span>,
-            <span class="ident">Document</span> {
-                <span class="ident">content</span>: <span class="ident">params</span>.<span class="ident">content</span>,
-                <span class="ident">version</span>: <span class="ident">params</span>.<span class="ident">version</span>,
-                <span class="ident">language_hint</span>: <span class="ident">params</span>.<span class="ident">language_hint</span>,
+    <span class="doccomment">/// Add a new file to the workspace
+    </span><span class="kw">fn </span>open_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: OpenFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="self">self</span>.syntax.remove(<span class="kw-2">&amp;</span>params.path);
+        <span class="self">self</span>.documents.insert(
+            params.path,
+            Document {
+                content: params.content,
+                version: params.version,
+                language_hint: params.language_hint,
             },
         );
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">get_syntax_tree</span>(
+    <span class="kw">fn </span>get_syntax_tree(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">GetSyntaxTreeParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GetSyntaxTreeResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">debug_syntax_tree</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">debug</span>
-            .<span class="ident">debug_syntax_tree</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
+        params: GetSyntaxTreeParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;GetSyntaxTreeResult, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>debug_syntax_tree = capabilities
+            .debug
+            .debug_syntax_tree
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
 
-        <span class="comment">// The feature name here can be any feature, in theory</span>
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">printed</span> <span class="op">=</span> <span class="ident">debug_syntax_tree</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>, <span class="ident">parse</span>);
+        <span class="comment">// The feature name here can be any feature, in theory
+        </span><span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>printed = debug_syntax_tree(<span class="kw-2">&amp;</span>params.path, parse);
 
-        <span class="prelude-val">Ok</span>(<span class="ident">printed</span>)
+        <span class="prelude-val">Ok</span>(printed)
     }
 
-    <span class="kw">fn</span> <span class="ident">get_control_flow_graph</span>(
+    <span class="kw">fn </span>get_control_flow_graph(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">GetControlFlowGraphParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">debug_control_flow</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">debug</span>
-            .<span class="ident">debug_control_flow</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
+        params: GetControlFlowGraphParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;String, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>debug_control_flow = capabilities
+            .debug
+            .debug_control_flow
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">printed</span> <span class="op">=</span> <span class="ident">debug_control_flow</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>, <span class="ident">parse</span>, <span class="ident">params</span>.<span class="ident">cursor</span>);
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>printed = debug_control_flow(<span class="kw-2">&amp;</span>params.path, parse, params.cursor);
 
-        <span class="prelude-val">Ok</span>(<span class="ident">printed</span>)
+        <span class="prelude-val">Ok</span>(printed)
     }
 
-    <span class="kw">fn</span> <span class="ident">get_formatter_ir</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">GetFormatterIRParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">debug_formatter_ir</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">debug</span>
-            .<span class="ident">debug_formatter_ir</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>();
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">Some</span>(<span class="ident">FeatureName::Format</span>))<span class="question-mark">?</span>;
+    <span class="kw">fn </span>get_formatter_ir(<span class="kw-2">&amp;</span><span class="self">self</span>, params: GetFormatterIRParams) -&gt; <span class="prelude-ty">Result</span>&lt;String, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>debug_formatter_ir = capabilities
+            .debug
+            .debug_formatter_ir
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings();
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">Some</span>(FeatureName::Format))<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">settings</span>.<span class="ident">as_ref</span>().<span class="ident">formatter</span>().<span class="ident">format_with_errors</span> <span class="op">&amp;&amp;</span> <span class="ident">parse</span>.<span class="ident">has_errors</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RomeError::FormatWithErrorsDisabled</span>);
+        <span class="kw">if </span>!settings.as_ref().formatter().format_with_errors &amp;&amp; parse.has_errors() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(RomeError::FormatWithErrorsDisabled);
         }
 
-        <span class="ident">debug_formatter_ir</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>, <span class="ident">parse</span>, <span class="ident">settings</span>)
+        debug_formatter_ir(<span class="kw-2">&amp;</span>params.path, parse, settings)
     }
 
-    <span class="doccomment">/// Change the content of an open file</span>
-    <span class="kw">fn</span> <span class="ident">change_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">ChangeFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">document</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">documents</span>
-            .<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>)
-            .<span class="ident">ok_or</span>(<span class="ident">RomeError::NotFound</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Change the content of an open file
+    </span><span class="kw">fn </span>change_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: ChangeFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>document = <span class="self">self
+            </span>.documents
+            .get_mut(<span class="kw-2">&amp;</span>params.path)
+            .ok_or(RomeError::NotFound)<span class="question-mark">?</span>;
 
-        <span class="macro">debug_assert!</span>(<span class="ident">params</span>.<span class="ident">version</span> <span class="op">&gt;</span> <span class="ident">document</span>.<span class="ident">version</span>);
-        <span class="ident">document</span>.<span class="ident">version</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">version</span>;
-        <span class="ident">document</span>.<span class="ident">content</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">content</span>;
+        <span class="macro">debug_assert!</span>(params.version &gt; document.version);
+        document.version = params.version;
+        document.content = params.content;
 
-        <span class="self">self</span>.<span class="ident">syntax</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
+        <span class="self">self</span>.syntax.remove(<span class="kw-2">&amp;</span>params.path);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Remove a file from the workspace</span>
-    <span class="kw">fn</span> <span class="ident">close_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">CloseFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">documents</span>
-            .<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>)
-            .<span class="ident">ok_or</span>(<span class="ident">RomeError::NotFound</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Remove a file from the workspace
+    </span><span class="kw">fn </span>close_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: CloseFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="self">self</span>.documents
+            .remove(<span class="kw-2">&amp;</span>params.path)
+            .ok_or(RomeError::NotFound)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">syntax</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
+        <span class="self">self</span>.syntax.remove(<span class="kw-2">&amp;</span>params.path);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Retrieves the list of diagnostics associated with a file</span>
-    <span class="kw">fn</span> <span class="ident">pull_diagnostics</span>(
+    <span class="doccomment">/// Retrieves the list of diagnostics associated with a file
+    </span><span class="kw">fn </span>pull_diagnostics(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">PullDiagnosticsParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullDiagnosticsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">lint</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">analyzer</span>
-            .<span class="ident">lint</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
+        params: PullDiagnosticsParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;PullDiagnosticsResult, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>lint = capabilities
+            .analyzer
+            .lint
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">feature</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">params</span>.<span class="ident">categories</span>.<span class="ident">is_syntax</span>() {
-            <span class="ident">FeatureName::Format</span>
-        } <span class="kw">else</span> {
-            <span class="ident">FeatureName::Lint</span>
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings.read().unwrap();
+        <span class="kw">let </span>feature = <span class="kw">if </span>params.categories.is_syntax() {
+            FeatureName::Format
+        } <span class="kw">else </span>{
+            FeatureName::Lint
         };
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">Some</span>(<span class="ident">feature</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">linter</span>().<span class="ident">rules</span>.<span class="ident">as_ref</span>();
-        <span class="kw">let</span> <span class="ident">rule_filter_list</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_rule_filter_list</span>(<span class="ident">rules</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">filter</span> <span class="op">=</span> <span class="ident">AnalysisFilter::from_enabled_rules</span>(<span class="prelude-val">Some</span>(<span class="ident">rule_filter_list</span>.<span class="ident">as_slice</span>()));
-        <span class="ident">filter</span>.<span class="ident">categories</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">categories</span>;
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">Some</span>(feature))<span class="question-mark">?</span>;
+        <span class="kw">let </span>rules = settings.linter().rules.as_ref();
+        <span class="kw">let </span>rule_filter_list = <span class="self">self</span>.build_rule_filter_list(rules);
+        <span class="kw">let </span><span class="kw-2">mut </span>filter = AnalysisFilter::from_enabled_rules(<span class="prelude-val">Some</span>(rule_filter_list.as_slice()));
+        filter.categories = params.categories;
 
-        <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">lint</span>(<span class="ident">LintParams</span> {
-            <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>,
-            <span class="ident">parse</span>,
-            <span class="ident">filter</span>,
-            <span class="ident">rules</span>,
-            <span class="ident">settings</span>: <span class="self">self</span>.<span class="ident">settings</span>(),
-            <span class="ident">max_diagnostics</span>: <span class="ident">params</span>.<span class="ident">max_diagnostics</span>,
+        <span class="kw">let </span>results = lint(LintParams {
+            rome_path: <span class="kw-2">&amp;</span>params.path,
+            parse,
+            filter,
+            rules,
+            settings: <span class="self">self</span>.settings(),
+            max_diagnostics: params.max_diagnostics,
         });
 
-        <span class="prelude-val">Ok</span>(<span class="ident">PullDiagnosticsResult</span> {
-            <span class="ident">diagnostics</span>: <span class="ident">results</span>
-                .<span class="ident">diagnostics</span>
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">diag</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">with_file_path</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">as_path</span>().<span class="ident">display</span>().<span class="ident">to_string</span>());
-                    <span class="ident">Diagnostic::new</span>(<span class="ident">diag</span>)
+        <span class="prelude-val">Ok</span>(PullDiagnosticsResult {
+            diagnostics: results
+                .diagnostics
+                .into_iter()
+                .map(|diag| {
+                    <span class="kw">let </span>diag = diag.with_file_path(params.path.as_path().display().to_string());
+                    Diagnostic::new(diag)
                 })
-                .<span class="ident">collect</span>(),
-            <span class="ident">has_errors</span>: <span class="ident">results</span>.<span class="ident">has_errors</span>,
-            <span class="ident">skipped_diagnostics</span>: <span class="ident">results</span>.<span class="ident">skipped_diagnostics</span>,
+                .collect(),
+            has_errors: results.has_errors,
+            skipped_diagnostics: results.skipped_diagnostics,
         })
     }
 
-    <span class="doccomment">/// Retrieves the list of code actions available for a given cursor</span>
-    <span class="doccomment">/// position within a file</span>
-    <span class="kw">fn</span> <span class="ident">pull_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">PullActionsParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullActionsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">code_actions</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">analyzer</span>
-            .<span class="ident">code_actions</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
+    <span class="doccomment">/// Retrieves the list of code actions available for a given cursor
+    /// position within a file
+    </span><span class="kw">fn </span>pull_actions(<span class="kw-2">&amp;</span><span class="self">self</span>, params: PullActionsParams) -&gt; <span class="prelude-ty">Result</span>&lt;PullActionsResult, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>code_actions = capabilities
+            .analyzer
+            .code_actions
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">Some</span>(<span class="ident">FeatureName::Lint</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">linter</span>().<span class="ident">rules</span>.<span class="ident">as_ref</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">code_actions</span>(
-            <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>,
-            <span class="ident">parse</span>,
-            <span class="ident">params</span>.<span class="ident">range</span>,
-            <span class="ident">rules</span>,
-            <span class="self">self</span>.<span class="ident">settings</span>(),
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">Some</span>(FeatureName::Lint))<span class="question-mark">?</span>;
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings.read().unwrap();
+        <span class="kw">let </span>rules = settings.linter().rules.as_ref();
+        <span class="prelude-val">Ok</span>(code_actions(
+            <span class="kw-2">&amp;</span>params.path,
+            parse,
+            params.range,
+            rules,
+            <span class="self">self</span>.settings(),
         ))
     }
 
-    <span class="doccomment">/// Runs the given file through the formatter using the provided options</span>
-    <span class="doccomment">/// and returns the resulting source code</span>
-    <span class="kw">fn</span> <span class="ident">format_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">formatter</span>
-            .<span class="ident">format</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>();
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">Some</span>(<span class="ident">FeatureName::Format</span>))<span class="question-mark">?</span>;
+    <span class="doccomment">/// Runs the given file through the formatter using the provided options
+    /// and returns the resulting source code
+    </span><span class="kw">fn </span>format_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>format = capabilities
+            .formatter
+            .format
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings();
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">Some</span>(FeatureName::Format))<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">settings</span>.<span class="ident">as_ref</span>().<span class="ident">formatter</span>().<span class="ident">format_with_errors</span> <span class="op">&amp;&amp;</span> <span class="ident">parse</span>.<span class="ident">has_errors</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RomeError::FormatWithErrorsDisabled</span>);
+        <span class="kw">if </span>!settings.as_ref().formatter().format_with_errors &amp;&amp; parse.has_errors() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(RomeError::FormatWithErrorsDisabled);
         }
 
-        <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>, <span class="ident">parse</span>, <span class="ident">settings</span>)
+        format(<span class="kw-2">&amp;</span>params.path, parse, settings)
     }
 
-    <span class="kw">fn</span> <span class="ident">format_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatRangeParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">format_range</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">formatter</span>
-            .<span class="ident">format_range</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>();
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">Some</span>(<span class="ident">FeatureName::Format</span>))<span class="question-mark">?</span>;
+    <span class="kw">fn </span>format_range(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatRangeParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>format_range = capabilities
+            .formatter
+            .format_range
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings();
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">Some</span>(FeatureName::Format))<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">settings</span>.<span class="ident">as_ref</span>().<span class="ident">formatter</span>().<span class="ident">format_with_errors</span> <span class="op">&amp;&amp;</span> <span class="ident">parse</span>.<span class="ident">has_errors</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RomeError::FormatWithErrorsDisabled</span>);
+        <span class="kw">if </span>!settings.as_ref().formatter().format_with_errors &amp;&amp; parse.has_errors() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(RomeError::FormatWithErrorsDisabled);
         }
 
-        <span class="ident">format_range</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>, <span class="ident">parse</span>, <span class="ident">settings</span>, <span class="ident">params</span>.<span class="ident">range</span>)
+        format_range(<span class="kw-2">&amp;</span>params.path, parse, settings, params.range)
     }
 
-    <span class="kw">fn</span> <span class="ident">format_on_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatOnTypeParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">format_on_type</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">formatter</span>
-            .<span class="ident">format_on_type</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
+    <span class="kw">fn </span>format_on_type(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatOnTypeParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>format_on_type = capabilities
+            .formatter
+            .format_on_type
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>();
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">Some</span>(<span class="ident">FeatureName::Format</span>))<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">settings</span>.<span class="ident">as_ref</span>().<span class="ident">formatter</span>().<span class="ident">format_with_errors</span> <span class="op">&amp;&amp;</span> <span class="ident">parse</span>.<span class="ident">has_errors</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RomeError::FormatWithErrorsDisabled</span>);
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings();
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">Some</span>(FeatureName::Format))<span class="question-mark">?</span>;
+        <span class="kw">if </span>!settings.as_ref().formatter().format_with_errors &amp;&amp; parse.has_errors() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(RomeError::FormatWithErrorsDisabled);
         }
 
-        <span class="ident">format_on_type</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>, <span class="ident">parse</span>, <span class="ident">settings</span>, <span class="ident">params</span>.<span class="ident">offset</span>)
+        format_on_type(<span class="kw-2">&amp;</span>params.path, parse, settings, params.offset)
     }
 
-    <span class="kw">fn</span> <span class="ident">fix_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident"><span class="kw">super</span>::FixFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FixFileResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">fix_all</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">analyzer</span>
-            .<span class="ident">fix_all</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">Some</span>(<span class="ident">FeatureName::Lint</span>))<span class="question-mark">?</span>;
+    <span class="kw">fn </span>fix_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: <span class="kw">super</span>::FixFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;FixFileResult, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>fix_all = capabilities
+            .analyzer
+            .fix_all
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
+        <span class="kw">let </span>settings = <span class="self">self</span>.settings.read().unwrap();
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">Some</span>(FeatureName::Lint))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">linter</span>().<span class="ident">rules</span>.<span class="ident">as_ref</span>();
-        <span class="ident">fix_all</span>(<span class="ident">FixAllParams</span> {
-            <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>,
-            <span class="ident">parse</span>,
-            <span class="ident">rules</span>,
-            <span class="ident">fix_file_mode</span>: <span class="ident">params</span>.<span class="ident">fix_file_mode</span>,
-            <span class="ident">settings</span>: <span class="self">self</span>.<span class="ident">settings</span>(),
+        <span class="kw">let </span>rules = settings.linter().rules.as_ref();
+        fix_all(FixAllParams {
+            rome_path: <span class="kw-2">&amp;</span>params.path,
+            parse,
+            rules,
+            fix_file_mode: params.fix_file_mode,
+            settings: <span class="self">self</span>.settings(),
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">rename</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident"><span class="kw">super</span>::RenameParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RenameResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">capabilities</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_capabilities</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="ident">rename</span> <span class="op">=</span> <span class="ident">capabilities</span>
-            .<span class="ident">analyzer</span>
-            .<span class="ident">rename</span>
-            .<span class="ident">ok_or_else</span>(<span class="self">self</span>.<span class="ident">build_capability_error</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>))<span class="question-mark">?</span>;
+    <span class="kw">fn </span>rename(<span class="kw-2">&amp;</span><span class="self">self</span>, params: <span class="kw">super</span>::RenameParams) -&gt; <span class="prelude-ty">Result</span>&lt;RenameResult, RomeError&gt; {
+        <span class="kw">let </span>capabilities = <span class="self">self</span>.get_capabilities(<span class="kw-2">&amp;</span>params.path);
+        <span class="kw">let </span>rename = capabilities
+            .analyzer
+            .rename
+            .ok_or_else(<span class="self">self</span>.build_capability_error(<span class="kw-2">&amp;</span>params.path))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parse</span>(<span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">rename</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">path</span>, <span class="ident">parse</span>, <span class="ident">params</span>.<span class="ident">symbol_at</span>, <span class="ident">params</span>.<span class="ident">new_name</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>parse = <span class="self">self</span>.get_parse(params.path.clone(), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>result = rename(<span class="kw-2">&amp;</span>params.path, parse, params.symbol_at, params.new_name)<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+        <span class="prelude-val">Ok</span>(result)
     }
 
-    <span class="kw">fn</span> <span class="ident">rage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="ident">RageParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RageResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">entries</span> <span class="op">=</span> <span class="macro">vec!</span>[
-            <span class="ident">RageEntry::section</span>(<span class="string">&quot;Workspace&quot;</span>),
-            <span class="ident">RageEntry::pair</span>(<span class="string">&quot;Open Documents&quot;</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">documents</span>.<span class="ident">len</span>())),
+    <span class="kw">fn </span>rage(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: RageParams) -&gt; <span class="prelude-ty">Result</span>&lt;RageResult, RomeError&gt; {
+        <span class="kw">let </span>entries = <span class="macro">vec!</span>[
+            RageEntry::section(<span class="string">&quot;Workspace&quot;</span>),
+            RageEntry::pair(<span class="string">&quot;Open Documents&quot;</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.documents.len())),
         ];
 
-        <span class="prelude-val">Ok</span>(<span class="ident">RageResult</span> { <span class="ident">entries</span> })
+        <span class="prelude-val">Ok</span>(RageResult { entries })
     }
 
-    <span class="kw">fn</span> <span class="ident">server_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ServerInfo</span><span class="op">&gt;</span> {
-        <span class="prelude-val">None</span>
-    }
+    <span class="kw">fn </span>server_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>ServerInfo&gt; {
+        <span class="prelude-val">None
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

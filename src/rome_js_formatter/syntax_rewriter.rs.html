@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_formatter/src/syntax_rewriter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>syntax_rewriter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_formatter/src/syntax_rewriter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>syntax_rewriter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -1010,802 +1010,802 @@
 <span id="1010">1010</span>
 <span id="1011">1011</span>
 <span id="1012">1012</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::comments::is_type_comment</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parentheses::JsAnyParenthesized</span>;
-<span class="kw">use</span> <span class="ident">rome_formatter</span>::{<span class="ident">TransformSourceMap</span>, <span class="ident">TransformSourceMapBuilder</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsAnyAssignment</span>, <span class="ident">JsAnyExpression</span>, <span class="ident">JsLanguage</span>, <span class="ident">JsLogicalExpression</span>, <span class="ident">JsSyntaxKind</span>, <span class="ident">JsSyntaxNode</span>,
-    <span class="ident">TsType</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::comments::is_type_comment;
+<span class="kw">use </span><span class="kw">crate</span>::parentheses::JsAnyParenthesized;
+<span class="kw">use </span>rome_formatter::{TransformSourceMap, TransformSourceMapBuilder};
+<span class="kw">use </span>rome_js_syntax::{
+    JsAnyAssignment, JsAnyExpression, JsLanguage, JsLogicalExpression, JsSyntaxKind, JsSyntaxNode,
+    TsType,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan::syntax::SyntaxTrivia</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{
-    <span class="ident">AstNode</span>, <span class="ident">SyntaxKind</span>, <span class="ident">SyntaxRewriter</span>, <span class="ident">SyntaxToken</span>, <span class="ident">SyntaxTriviaPiece</span>, <span class="ident">TextSize</span>, <span class="ident">VisitNodeSignal</span>,
+<span class="kw">use </span>rome_rowan::syntax::SyntaxTrivia;
+<span class="kw">use </span>rome_rowan::{
+    AstNode, SyntaxKind, SyntaxRewriter, SyntaxToken, SyntaxTriviaPiece, TextSize, VisitNodeSignal,
 };
-<span class="kw">use</span> <span class="ident">std::collections::BTreeSet</span>;
-<span class="kw">use</span> <span class="ident">std::iter::FusedIterator</span>;
+<span class="kw">use </span>std::collections::BTreeSet;
+<span class="kw">use </span>std::iter::FusedIterator;
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">transform</span>(<span class="ident">root</span>: <span class="ident">JsSyntaxNode</span>) -&gt; (<span class="ident">JsSyntaxNode</span>, <span class="ident">TransformSourceMap</span>) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rewriter</span> <span class="op">=</span> <span class="ident">JsFormatSyntaxRewriter::default</span>();
-    <span class="kw">let</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">rewriter</span>.<span class="ident">transform</span>(<span class="ident">root</span>);
-    (<span class="ident">transformed</span>, <span class="ident">rewriter</span>.<span class="ident">finish</span>())
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>transform(root: JsSyntaxNode) -&gt; (JsSyntaxNode, TransformSourceMap) {
+    <span class="kw">let </span><span class="kw-2">mut </span>rewriter = JsFormatSyntaxRewriter::default();
+    <span class="kw">let </span>transformed = rewriter.transform(root);
+    (transformed, rewriter.finish())
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">struct</span> <span class="ident">JsFormatSyntaxRewriter</span> {
-    <span class="ident">source_map</span>: <span class="ident">TransformSourceMapBuilder</span>,
+<span class="attribute">#[derive(Default)]
+</span><span class="kw">struct </span>JsFormatSyntaxRewriter {
+    source_map: TransformSourceMapBuilder,
 
-    <span class="doccomment">/// Stores a map of the positions at which a `(` paren has been removed.</span>
-    <span class="doccomment">/// This is necessary for correctly computing the source offsets for nested parenthesized expressions with whitespace:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// function f() {</span>
-    <span class="doccomment">///     return (</span>
-    <span class="doccomment">///         (</span>
-    <span class="doccomment">///             // prettier-ignore</span>
-    <span class="doccomment">///             /* $FlowFixMe(&gt;=0.53.0) */</span>
-    <span class="doccomment">///             &lt;JSX /&gt;</span>
-    <span class="doccomment">///         )</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// The rewriter first removes any leading whitespace from the `JsxTagExpression`&#39;s leading trivia.</span>
-    <span class="doccomment">/// However, it then removes the leading/trailing whitespace of the inner `(` as well when handling the outer</span>
-    <span class="doccomment">/// parenthesized expressions but the ranges of the `(` trailing trivia pieces no longer match the source ranges because</span>
-    <span class="doccomment">/// they are now off by 1 because of the removed `(`.</span>
-    <span class="ident">l_paren_source_position</span>: <span class="ident">BTreeSet</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Stores a map of the positions at which a `(` paren has been removed.
+    /// This is necessary for correctly computing the source offsets for nested parenthesized expressions with whitespace:
+    ///
+    /// ```javascript
+    /// function f() {
+    ///     return (
+    ///         (
+    ///             // prettier-ignore
+    ///             /* $FlowFixMe(&gt;=0.53.0) */
+    ///             &lt;JSX /&gt;
+    ///         )
+    ///     );
+    /// }
+    /// ```
+    /// The rewriter first removes any leading whitespace from the `JsxTagExpression`&#39;s leading trivia.
+    /// However, it then removes the leading/trailing whitespace of the inner `(` as well when handling the outer
+    /// parenthesized expressions but the ranges of the `(` trailing trivia pieces no longer match the source ranges because
+    /// they are now off by 1 because of the removed `(`.
+    </span>l_paren_source_position: BTreeSet&lt;TextSize&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">JsFormatSyntaxRewriter</span> {
-    <span class="doccomment">/// Replaces parenthesized expression that:</span>
-    <span class="doccomment">/// * have no syntax error: has no missing required child or no skipped token trivia attached to the left or right paren</span>
-    <span class="doccomment">/// * inner expression isn&#39;t an unknown node</span>
-    <span class="doccomment">/// * no closure or type cast type cast comment</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// with the inner expression.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Trivia Overview</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// We have to spend extra attention on the handling of the trivia attached to the left and right parentheses:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// statement;</span>
-    <span class="doccomment">/// /* leading l-paren */ ( /* trailing l-paren */</span>
-    <span class="doccomment">///   /* leading a */ a + b /* trailing b */</span>
-    <span class="doccomment">///   /* leading r-paren */ ) /* trailing r-paren */</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The implementation pre-appends the left parenthesis&#39;s trivia to the leading trivia of the expression&#39;s first token,</span>
-    <span class="doccomment">/// and appends the right parenthesis&#39;s trivia to the trailing trivia of the expression&#39;s last token. So the trivia (ignoring whitespace)</span>
-    <span class="doccomment">/// after the transform for the above example is:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * `a`: `/* leading l-paren */ /* trailing l-paren */ /* leading a */`</span>
-    <span class="doccomment">/// * `b`: `/* trailing b */ /* leading r-paren */ /* trailing r-paren */`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The fact that the implementation appends the right parenthesis&#39;s leading trivia to the last token&#39;s trailing</span>
-    <span class="doccomment">/// trivia is slightly inconsistent with our [rome_rowan::SyntaxToken::trailing_trivia] definition as it can now happen that the</span>
-    <span class="doccomment">/// trailing trivia contains line breaks. In practice, this isn&#39;t a problem for the formatter.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Leading Whitespace Trivia</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The formatter counts the new lines in a node&#39;s leading trivia to determine if it should e.g. insert an</span>
-    <span class="doccomment">/// empty new line between two statements. This is why it is necessary to remove any whitespace</span>
-    <span class="doccomment">/// between the left parentheses and the token to avoid the insertion of additional new lines if there was a line break</span>
-    <span class="doccomment">/// after the left parentheses or</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// a</span>
-    <span class="doccomment">/// (</span>
-    <span class="doccomment">///   Long &amp;&amp;</span>
-    <span class="doccomment">///   Longer &amp;&amp;</span>
-    <span class="doccomment">/// )</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// would become</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// a</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// (</span>
-    <span class="doccomment">///   Long &amp;&amp;</span>
-    <span class="doccomment">///   Longer &amp;&amp;</span>
-    <span class="doccomment">/// )</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// because the `Long` has two leading new lines after removing parentheses, the one after `a` and the one after the opening `(`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// However, it is important to leave at least one leading new line in front of the token&#39;s leading trivia if there&#39;s a comment in the leading trivia because</span>
-    <span class="doccomment">/// because we want that leading comments that are preceded by a line break to be formatted on their own line.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// (</span>
-    <span class="doccomment">///   // comment</span>
-    <span class="doccomment">///   a</span>
-    <span class="doccomment">/// )</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Keep the line break before the `// comment` or the formatter will format the comment on the same line as the `(` token</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// ( // comment</span>
-    <span class="doccomment">/// a</span>
-    <span class="doccomment">/// )</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Which may turn `//comment` into a trailing comment that then gets formatted differently on the next formatting pass, resulting in instability issues.</span>
-    <span class="kw">fn</span> <span class="ident">visit_parenthesized</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">parenthesized</span>: <span class="ident">JsAnyParenthesized</span>,
-    ) -&gt; <span class="ident">VisitNodeSignal</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">l_paren</span>, <span class="ident">inner</span>, <span class="ident">r_paren</span>) <span class="op">=</span> <span class="kw">match</span> (
-            <span class="ident">parenthesized</span>.<span class="ident">l_paren_token</span>(),
-            <span class="ident">parenthesized</span>.<span class="ident">inner</span>(),
-            <span class="ident">parenthesized</span>.<span class="ident">r_paren_token</span>(),
+<span class="kw">impl </span>JsFormatSyntaxRewriter {
+    <span class="doccomment">/// Replaces parenthesized expression that:
+    /// * have no syntax error: has no missing required child or no skipped token trivia attached to the left or right paren
+    /// * inner expression isn&#39;t an unknown node
+    /// * no closure or type cast type cast comment
+    ///
+    /// with the inner expression.
+    ///
+    /// ## Trivia Overview
+    ///
+    /// We have to spend extra attention on the handling of the trivia attached to the left and right parentheses:
+    ///
+    /// ```javascript
+    /// statement;
+    /// /* leading l-paren */ ( /* trailing l-paren */
+    ///   /* leading a */ a + b /* trailing b */
+    ///   /* leading r-paren */ ) /* trailing r-paren */
+    /// ```
+    ///
+    /// The implementation pre-appends the left parenthesis&#39;s trivia to the leading trivia of the expression&#39;s first token,
+    /// and appends the right parenthesis&#39;s trivia to the trailing trivia of the expression&#39;s last token. So the trivia (ignoring whitespace)
+    /// after the transform for the above example is:
+    ///
+    /// * `a`: `/* leading l-paren */ /* trailing l-paren */ /* leading a */`
+    /// * `b`: `/* trailing b */ /* leading r-paren */ /* trailing r-paren */`
+    ///
+    /// The fact that the implementation appends the right parenthesis&#39;s leading trivia to the last token&#39;s trailing
+    /// trivia is slightly inconsistent with our [rome_rowan::SyntaxToken::trailing_trivia] definition as it can now happen that the
+    /// trailing trivia contains line breaks. In practice, this isn&#39;t a problem for the formatter.
+    ///
+    /// ## Leading Whitespace Trivia
+    ///
+    /// The formatter counts the new lines in a node&#39;s leading trivia to determine if it should e.g. insert an
+    /// empty new line between two statements. This is why it is necessary to remove any whitespace
+    /// between the left parentheses and the token to avoid the insertion of additional new lines if there was a line break
+    /// after the left parentheses or
+    ///
+    /// ```javascript
+    /// a
+    /// (
+    ///   Long &amp;&amp;
+    ///   Longer &amp;&amp;
+    /// )
+    /// ```
+    ///
+    /// would become
+    ///
+    /// ```javascript
+    /// a
+    ///
+    /// (
+    ///   Long &amp;&amp;
+    ///   Longer &amp;&amp;
+    /// )
+    /// ```
+    ///
+    /// because the `Long` has two leading new lines after removing parentheses, the one after `a` and the one after the opening `(`.
+    ///
+    /// However, it is important to leave at least one leading new line in front of the token&#39;s leading trivia if there&#39;s a comment in the leading trivia because
+    /// because we want that leading comments that are preceded by a line break to be formatted on their own line.
+    ///
+    /// ```javascript
+    /// (
+    ///   // comment
+    ///   a
+    /// )
+    /// ```
+    ///
+    /// Keep the line break before the `// comment` or the formatter will format the comment on the same line as the `(` token
+    ///
+    /// ```javascript
+    /// ( // comment
+    /// a
+    /// )
+    /// ```
+    ///
+    /// Which may turn `//comment` into a trailing comment that then gets formatted differently on the next formatting pass, resulting in instability issues.
+    </span><span class="kw">fn </span>visit_parenthesized(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        parenthesized: JsAnyParenthesized,
+    ) -&gt; VisitNodeSignal&lt;JsLanguage&gt; {
+        <span class="kw">let </span>(l_paren, inner, r_paren) = <span class="kw">match </span>(
+            parenthesized.l_paren_token(),
+            parenthesized.inner(),
+            parenthesized.r_paren_token(),
         ) {
-            (<span class="prelude-val">Ok</span>(<span class="ident">l_paren</span>), <span class="prelude-val">Ok</span>(<span class="ident">inner</span>), <span class="prelude-val">Ok</span>(<span class="ident">r_paren</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">prev_token</span> <span class="op">=</span> <span class="ident">l_paren</span>.<span class="ident">prev_token</span>();
+            (<span class="prelude-val">Ok</span>(l_paren), <span class="prelude-val">Ok</span>(inner), <span class="prelude-val">Ok</span>(r_paren)) =&gt; {
+                <span class="kw">let </span>prev_token = l_paren.prev_token();
 
-                <span class="comment">// Keep parentheses around unknown expressions. Rome can&#39;t know the precedence.</span>
-                <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">kind</span>().<span class="ident">is_unknown</span>()
-                    <span class="comment">// Don&#39;t remove parentheses if they have skipped trivia. We don&#39;t know for certain what the intended syntax is.</span>
-                    <span class="comment">// Nor if there&#39;s a leading type cast comment</span>
-                    <span class="op">|</span><span class="op">|</span> <span class="ident">has_type_cast_comment_or_skipped</span>(<span class="kw-2">&amp;</span><span class="ident">l_paren</span>.<span class="ident">leading_trivia</span>())
-                    <span class="op">|</span><span class="op">|</span> <span class="ident">prev_token</span>.<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">prev_token</span><span class="op">|</span> <span class="ident">has_type_cast_comment_or_skipped</span>(<span class="kw-2">&amp;</span><span class="ident">prev_token</span>.<span class="ident">trailing_trivia</span>()))
-                    <span class="op">|</span><span class="op">|</span> <span class="ident">r_paren</span>.<span class="ident">leading_trivia</span>().<span class="ident">has_skipped</span>()
+                <span class="comment">// Keep parentheses around unknown expressions. Rome can&#39;t know the precedence.
+                </span><span class="kw">if </span>inner.kind().is_unknown()
+                    <span class="comment">// Don&#39;t remove parentheses if they have skipped trivia. We don&#39;t know for certain what the intended syntax is.
+                    // Nor if there&#39;s a leading type cast comment
+                    </span>|| has_type_cast_comment_or_skipped(<span class="kw-2">&amp;</span>l_paren.leading_trivia())
+                    || prev_token.map_or(<span class="bool-val">false</span>, |prev_token| has_type_cast_comment_or_skipped(<span class="kw-2">&amp;</span>prev_token.trailing_trivia()))
+                    || r_paren.leading_trivia().has_skipped()
                 {
-                    <span class="kw">return</span> <span class="ident">VisitNodeSignal::Traverse</span>(<span class="ident">parenthesized</span>.<span class="ident">into_syntax</span>());
-                } <span class="kw">else</span> {
-                    (<span class="ident">l_paren</span>, <span class="ident">inner</span>, <span class="ident">r_paren</span>)
+                    <span class="kw">return </span>VisitNodeSignal::Traverse(parenthesized.into_syntax());
+                } <span class="kw">else </span>{
+                    (l_paren, inner, r_paren)
                 }
             }
-            <span class="kw">_</span> =&gt; {
-                <span class="comment">// At least one missing child, handle as a regular node</span>
-                <span class="kw">return</span> <span class="ident">VisitNodeSignal::Traverse</span>(<span class="ident">parenthesized</span>.<span class="ident">into_syntax</span>());
+            <span class="kw">_ </span>=&gt; {
+                <span class="comment">// At least one missing child, handle as a regular node
+                </span><span class="kw">return </span>VisitNodeSignal::Traverse(parenthesized.into_syntax());
             }
         };
 
-        <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">push_source_text</span>(<span class="ident">l_paren</span>.<span class="ident">text</span>());
+        <span class="self">self</span>.source_map.push_source_text(l_paren.text());
 
-        <span class="kw">let</span> <span class="ident">inner_trimmed_range</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">text_trimmed_range</span>();
-        <span class="comment">// Store away the inner offset because the new returned inner might be a detached node</span>
-        <span class="kw">let</span> <span class="ident">original_inner_offset</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">text_range</span>().<span class="ident">start</span>();
-        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform</span>(<span class="ident">inner</span>);
-        <span class="kw">let</span> <span class="ident">inner_offset</span> <span class="op">=</span> <span class="ident">original_inner_offset</span> <span class="op">-</span> <span class="ident">inner</span>.<span class="ident">text_range</span>().<span class="ident">start</span>();
+        <span class="kw">let </span>inner_trimmed_range = inner.text_trimmed_range();
+        <span class="comment">// Store away the inner offset because the new returned inner might be a detached node
+        </span><span class="kw">let </span>original_inner_offset = inner.text_range().start();
+        <span class="kw">let </span>inner = <span class="self">self</span>.transform(inner);
+        <span class="kw">let </span>inner_offset = original_inner_offset - inner.text_range().start();
 
-        <span class="kw">match</span> <span class="ident">inner</span>.<span class="ident">first_token</span>() {
-            <span class="comment">// This can only happen if we have `()` which is highly unlikely to ever be the case.</span>
-            <span class="comment">// Return the parenthesized expression as is. This will be formatted as verbatim</span>
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">updated</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">parenthesized</span> {
-                    <span class="ident">JsAnyParenthesized::JsParenthesizedExpression</span>(<span class="ident">expression</span>) =&gt; {
-                        <span class="comment">// SAFETY: Safe because the rewriter never rewrites an expression to a non expression.</span>
-                        <span class="ident">expression</span>
-                            .<span class="ident">with_expression</span>(<span class="ident">JsAnyExpression::unwrap_cast</span>(<span class="ident">inner</span>))
-                            .<span class="ident">into_syntax</span>()
+        <span class="kw">match </span>inner.first_token() {
+            <span class="comment">// This can only happen if we have `()` which is highly unlikely to ever be the case.
+            // Return the parenthesized expression as is. This will be formatted as verbatim
+            </span><span class="prelude-val">None </span>=&gt; {
+                <span class="kw">let </span>updated = <span class="kw">match </span>parenthesized {
+                    JsAnyParenthesized::JsParenthesizedExpression(expression) =&gt; {
+                        <span class="comment">// SAFETY: Safe because the rewriter never rewrites an expression to a non expression.
+                        </span>expression
+                            .with_expression(JsAnyExpression::unwrap_cast(inner))
+                            .into_syntax()
                     }
-                    <span class="ident">JsAnyParenthesized::JsParenthesizedAssignment</span>(<span class="ident">assignment</span>) =&gt; {
-                        <span class="comment">// SAFETY: Safe because the rewriter never rewrites an assignment to a non assignment.</span>
-                        <span class="ident">assignment</span>
-                            .<span class="ident">with_assignment</span>(<span class="ident">JsAnyAssignment::unwrap_cast</span>(<span class="ident">inner</span>))
-                            .<span class="ident">into_syntax</span>()
+                    JsAnyParenthesized::JsParenthesizedAssignment(assignment) =&gt; {
+                        <span class="comment">// SAFETY: Safe because the rewriter never rewrites an assignment to a non assignment.
+                        </span>assignment
+                            .with_assignment(JsAnyAssignment::unwrap_cast(inner))
+                            .into_syntax()
                     }
-                    <span class="ident">JsAnyParenthesized::TsParenthesizedType</span>(<span class="ident">ty</span>) =&gt; {
-                        <span class="ident">ty</span>.<span class="ident">with_ty</span>(<span class="ident">TsType::unwrap_cast</span>(<span class="ident">inner</span>)).<span class="ident">into_syntax</span>()
+                    JsAnyParenthesized::TsParenthesizedType(ty) =&gt; {
+                        ty.with_ty(TsType::unwrap_cast(inner)).into_syntax()
                     }
                 };
 
-                <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">push_source_text</span>(<span class="ident">r_paren</span>.<span class="ident">text</span>());
+                <span class="self">self</span>.source_map.push_source_text(r_paren.text());
 
-                <span class="ident">VisitNodeSignal::Replace</span>(<span class="ident">updated</span>)
+                VisitNodeSignal::Replace(updated)
             }
 
-            <span class="prelude-val">Some</span>(<span class="ident">first_token</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">extend_trimmed_node_range</span>(
-                    <span class="ident">inner_trimmed_range</span>,
-                    <span class="ident">parenthesized</span>.<span class="ident">syntax</span>().<span class="ident">text_trimmed_range</span>(),
+            <span class="prelude-val">Some</span>(first_token) =&gt; {
+                <span class="self">self</span>.source_map.extend_trimmed_node_range(
+                    inner_trimmed_range,
+                    parenthesized.syntax().text_trimmed_range(),
                 );
 
-                <span class="kw">let</span> <span class="ident">l_paren_trimmed_range</span> <span class="op">=</span> <span class="ident">l_paren</span>.<span class="ident">text_trimmed_range</span>();
-                <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">add_deleted_range</span>(<span class="ident">l_paren_trimmed_range</span>);
-                <span class="self">self</span>.<span class="ident">l_paren_source_position</span>
-                    .<span class="ident">insert</span>(<span class="ident">l_paren_trimmed_range</span>.<span class="ident">start</span>());
+                <span class="kw">let </span>l_paren_trimmed_range = l_paren.text_trimmed_range();
+                <span class="self">self</span>.source_map.add_deleted_range(l_paren_trimmed_range);
+                <span class="self">self</span>.l_paren_source_position
+                    .insert(l_paren_trimmed_range.start());
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">l_paren_trailing</span> <span class="op">=</span> <span class="ident">l_paren</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>().<span class="ident">peekable</span>();
+                <span class="kw">let </span><span class="kw-2">mut </span>l_paren_trailing = l_paren.trailing_trivia().pieces().peekable();
 
-                <span class="comment">// Skip over leading whitespace</span>
-                <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">piece</span>) <span class="op">=</span> <span class="ident">l_paren_trailing</span>.<span class="ident">peek</span>() {
-                    <span class="kw">if</span> <span class="ident">piece</span>.<span class="ident">is_whitespace</span>() {
-                        <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">add_deleted_range</span>(<span class="ident">piece</span>.<span class="ident">text_range</span>());
-                        <span class="ident">l_paren_trailing</span>.<span class="ident">next</span>();
-                    } <span class="kw">else</span> {
+                <span class="comment">// Skip over leading whitespace
+                </span><span class="kw">while let </span><span class="prelude-val">Some</span>(piece) = l_paren_trailing.peek() {
+                    <span class="kw">if </span>piece.is_whitespace() {
+                        <span class="self">self</span>.source_map.add_deleted_range(piece.text_range());
+                        l_paren_trailing.next();
+                    } <span class="kw">else </span>{
                         <span class="kw">break</span>;
                     }
                 }
 
-                <span class="kw">let</span> <span class="ident">l_paren_trailing_non_whitespace_trivia</span> <span class="op">=</span> <span class="ident">l_paren_trailing</span>
-                    .<span class="ident">peek</span>()
-                    .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_skipped</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_comments</span>());
+                <span class="kw">let </span>l_paren_trailing_non_whitespace_trivia = l_paren_trailing
+                    .peek()
+                    .map_or(<span class="bool-val">false</span>, |piece| piece.is_skipped() || piece.is_comments());
 
-                <span class="kw">let</span> <span class="ident">l_paren_trivia</span> <span class="op">=</span>
-                    <span class="ident">chain_pieces</span>(<span class="ident">l_paren</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>(), <span class="ident">l_paren_trailing</span>);
+                <span class="kw">let </span>l_paren_trivia =
+                    chain_pieces(l_paren.leading_trivia().pieces(), l_paren_trailing);
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leading_trivia</span> <span class="op">=</span> <span class="ident">first_token</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>().<span class="ident">peekable</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">first_new_line</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>leading_trivia = first_token.leading_trivia().pieces().peekable();
+                <span class="kw">let </span><span class="kw-2">mut </span>first_new_line = <span class="prelude-val">None</span>;
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner_offset</span> <span class="op">=</span> <span class="ident">inner_offset</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>inner_offset = inner_offset;
 
-                <span class="comment">// if !is_parent_parenthesized {</span>
-                <span class="comment">// The leading whitespace before the opening parens replaces the whitespace before the node.</span>
-                <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">trivia</span>) <span class="op">=</span> <span class="ident">leading_trivia</span>.<span class="ident">peek</span>() {
-                    <span class="kw">if</span> <span class="self">self</span>
-                        .<span class="ident">l_paren_source_position</span>
-                        .<span class="ident">contains</span>(<span class="kw-2">&amp;</span>(<span class="ident">trivia</span>.<span class="ident">text_range</span>().<span class="ident">start</span>() <span class="op">+</span> <span class="ident">inner_offset</span>))
+                <span class="comment">// if !is_parent_parenthesized {
+                // The leading whitespace before the opening parens replaces the whitespace before the node.
+                </span><span class="kw">while let </span><span class="prelude-val">Some</span>(trivia) = leading_trivia.peek() {
+                    <span class="kw">if </span><span class="self">self
+                        </span>.l_paren_source_position
+                        .contains(<span class="kw-2">&amp;</span>(trivia.text_range().start() + inner_offset))
                     {
-                        <span class="ident">inner_offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">TextSize::from</span>(<span class="number">1</span>);
+                        inner_offset += TextSize::from(<span class="number">1</span>);
                     }
 
-                    <span class="kw">if</span> <span class="ident">trivia</span>.<span class="ident">is_newline</span>() <span class="op">&amp;&amp;</span> <span class="ident">first_new_line</span>.<span class="ident">is_none</span>() {
-                        <span class="ident">first_new_line</span> <span class="op">=</span> <span class="prelude-val">Some</span>((
-                            <span class="ident">trivia</span>.<span class="ident">text_range</span>() <span class="op">+</span> <span class="ident">inner_offset</span>,
-                            <span class="ident">leading_trivia</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>(),
+                    <span class="kw">if </span>trivia.is_newline() &amp;&amp; first_new_line.is_none() {
+                        first_new_line = <span class="prelude-val">Some</span>((
+                            trivia.text_range() + inner_offset,
+                            leading_trivia.next().unwrap(),
                         ));
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">trivia</span>.<span class="ident">is_whitespace</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">trivia</span>.<span class="ident">is_newline</span>() {
-                        <span class="self">self</span>.<span class="ident">source_map</span>
-                            .<span class="ident">add_deleted_range</span>(<span class="ident">trivia</span>.<span class="ident">text_range</span>() <span class="op">+</span> <span class="ident">inner_offset</span>);
-                        <span class="ident">leading_trivia</span>.<span class="ident">next</span>();
-                    } <span class="kw">else</span> {
+                    } <span class="kw">else if </span>trivia.is_whitespace() || trivia.is_newline() {
+                        <span class="self">self</span>.source_map
+                            .add_deleted_range(trivia.text_range() + inner_offset);
+                        leading_trivia.next();
+                    } <span class="kw">else </span>{
                         <span class="kw">break</span>;
                     }
                 }
 
-                <span class="comment">// Remove all leading new lines directly in front of the token but keep the leading new-line if it precedes a skipped token trivia or a comment.</span>
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">l_paren_trailing_non_whitespace_trivia</span>
-                    <span class="op">&amp;&amp;</span> <span class="ident">leading_trivia</span>.<span class="ident">peek</span>().<span class="ident">is_none</span>()
-                    <span class="op">&amp;&amp;</span> <span class="ident">first_new_line</span>.<span class="ident">is_some</span>()
+                <span class="comment">// Remove all leading new lines directly in front of the token but keep the leading new-line if it precedes a skipped token trivia or a comment.
+                </span><span class="kw">if </span>!l_paren_trailing_non_whitespace_trivia
+                    &amp;&amp; leading_trivia.peek().is_none()
+                    &amp;&amp; first_new_line.is_some()
                 {
-                    <span class="kw">let</span> (<span class="ident">inner_offset</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">first_new_line</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
+                    <span class="kw">let </span>(inner_offset, <span class="kw">_</span>) = first_new_line.take().unwrap();
 
-                    <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">add_deleted_range</span>(<span class="ident">inner_offset</span>);
+                    <span class="self">self</span>.source_map.add_deleted_range(inner_offset);
                 }
-                <span class="comment">// }</span>
+                <span class="comment">// }
 
-                <span class="kw">let</span> <span class="ident">leading_trivia</span> <span class="op">=</span> <span class="ident">chain_pieces</span>(
-                    <span class="ident">first_new_line</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">trivia</span>)<span class="op">|</span> <span class="ident">trivia</span>).<span class="ident">into_iter</span>(),
-                    <span class="ident">leading_trivia</span>,
+                </span><span class="kw">let </span>leading_trivia = chain_pieces(
+                    first_new_line.map(|(<span class="kw">_</span>, trivia)| trivia).into_iter(),
+                    leading_trivia,
                 );
 
-                <span class="kw">let</span> <span class="ident">new_leading</span> <span class="op">=</span> <span class="ident">chain_pieces</span>(<span class="ident">l_paren_trivia</span>, <span class="ident">leading_trivia</span>);
-                <span class="kw">let</span> <span class="ident">new_first</span> <span class="op">=</span> <span class="ident">first_token</span>.<span class="ident">with_leading_trivia_pieces</span>(<span class="ident">new_leading</span>);
+                <span class="kw">let </span>new_leading = chain_pieces(l_paren_trivia, leading_trivia);
+                <span class="kw">let </span>new_first = first_token.with_leading_trivia_pieces(new_leading);
 
-                <span class="comment">// SAFETY: Calling `unwrap` is safe because we know that `inner_first` is part of the `inner` subtree.</span>
-                <span class="kw">let</span> <span class="ident">updated</span> <span class="op">=</span> <span class="ident">inner</span>
-                    .<span class="ident">replace_child</span>(<span class="ident">first_token</span>.<span class="ident">into</span>(), <span class="ident">new_first</span>.<span class="ident">into</span>())
-                    .<span class="ident">unwrap</span>();
+                <span class="comment">// SAFETY: Calling `unwrap` is safe because we know that `inner_first` is part of the `inner` subtree.
+                </span><span class="kw">let </span>updated = inner
+                    .replace_child(first_token.into(), new_first.into())
+                    .unwrap();
 
-                <span class="kw">let</span> <span class="ident">r_paren_trivia</span> <span class="op">=</span> <span class="ident">chain_pieces</span>(
-                    <span class="ident">r_paren</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>(),
-                    <span class="ident">r_paren</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>(),
+                <span class="kw">let </span>r_paren_trivia = chain_pieces(
+                    r_paren.leading_trivia().pieces(),
+                    r_paren.trailing_trivia().pieces(),
                 );
 
-                <span class="comment">// SAFETY: Calling `unwrap` is safe because `last_token` only returns `None` if a node&#39;s subtree</span>
-                <span class="comment">// doesn&#39;t contain ANY token, but we know that the subtree contains at least the first token.</span>
-                <span class="kw">let</span> <span class="ident">last_token</span> <span class="op">=</span> <span class="ident">updated</span>.<span class="ident">last_token</span>().<span class="ident">unwrap</span>();
+                <span class="comment">// SAFETY: Calling `unwrap` is safe because `last_token` only returns `None` if a node&#39;s subtree
+                // doesn&#39;t contain ANY token, but we know that the subtree contains at least the first token.
+                </span><span class="kw">let </span>last_token = updated.last_token().unwrap();
 
-                <span class="kw">let</span> <span class="ident">new_last</span> <span class="op">=</span> <span class="ident">last_token</span>.<span class="ident">with_trailing_trivia_pieces</span>(<span class="ident">chain_pieces</span>(
-                    <span class="ident">last_token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>(),
-                    <span class="ident">r_paren_trivia</span>,
+                <span class="kw">let </span>new_last = last_token.with_trailing_trivia_pieces(chain_pieces(
+                    last_token.trailing_trivia().pieces(),
+                    r_paren_trivia,
                 ));
 
-                <span class="self">self</span>.<span class="ident">source_map</span>
-                    .<span class="ident">add_deleted_range</span>(<span class="ident">r_paren</span>.<span class="ident">text_trimmed_range</span>());
+                <span class="self">self</span>.source_map
+                    .add_deleted_range(r_paren.text_trimmed_range());
 
-                <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">push_source_text</span>(<span class="ident">r_paren</span>.<span class="ident">text</span>());
+                <span class="self">self</span>.source_map.push_source_text(r_paren.text());
 
-                <span class="comment">// SAFETY: Calling `unwrap` is safe because we know that `last_token` is part of the `updated` subtree.</span>
-                <span class="ident">VisitNodeSignal::Replace</span>(
-                    <span class="ident">updated</span>
-                        .<span class="ident">replace_child</span>(<span class="ident">last_token</span>.<span class="ident">into</span>(), <span class="ident">new_last</span>.<span class="ident">into</span>())
-                        .<span class="ident">unwrap</span>(),
+                <span class="comment">// SAFETY: Calling `unwrap` is safe because we know that `last_token` is part of the `updated` subtree.
+                </span>VisitNodeSignal::Replace(
+                    updated
+                        .replace_child(last_token.into(), new_last.into())
+                        .unwrap(),
                 )
             }
         }
     }
 
-    <span class="doccomment">/// Re-balances right-recursive logical expressions with the same operator to be left recursive (relies on the parentheses removal)</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// a &amp;&amp; (b &amp;&amp; c)</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// has the tree (parentheses omitted)</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```text</span>
-    <span class="doccomment">///   &amp;&amp;</span>
-    <span class="doccomment">/// a    &amp;&amp;</span>
-    <span class="doccomment">///    b    c</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This transform re-balances the tree so that it becomes left-recursive</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```text</span>
-    <span class="doccomment">///     &amp;&amp;</span>
-    <span class="doccomment">///  &amp;&amp;    c</span>
-    <span class="doccomment">/// a  b</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is required so that the binary like expression formatting only has to resolve left recursive expressions.</span>
-    <span class="kw">fn</span> <span class="ident">visit_logical_expression</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">logical</span>: <span class="ident">JsLogicalExpression</span>,
-    ) -&gt; <span class="ident">VisitNodeSignal</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> (<span class="ident">logical</span>.<span class="ident">left</span>(), <span class="ident">logical</span>.<span class="ident">operator_token</span>(), <span class="ident">logical</span>.<span class="ident">right</span>()) {
-            (<span class="prelude-val">Ok</span>(<span class="ident">left</span>), <span class="prelude-val">Ok</span>(<span class="ident">operator</span>), <span class="prelude-val">Ok</span>(<span class="ident">right</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">left_key</span> <span class="op">=</span> <span class="ident">left</span>.<span class="ident">syntax</span>().<span class="ident">key</span>();
-                <span class="kw">let</span> <span class="ident">operator_key</span> <span class="op">=</span> <span class="ident">operator</span>.<span class="ident">key</span>();
-                <span class="kw">let</span> <span class="ident">right_key</span> <span class="op">=</span> <span class="ident">right</span>.<span class="ident">syntax</span>().<span class="ident">key</span>();
+    <span class="doccomment">/// Re-balances right-recursive logical expressions with the same operator to be left recursive (relies on the parentheses removal)
+    ///
+    /// ```javascript
+    /// a &amp;&amp; (b &amp;&amp; c)
+    /// ```
+    ///
+    /// has the tree (parentheses omitted)
+    ///
+    /// ```text
+    ///   &amp;&amp;
+    /// a    &amp;&amp;
+    ///    b    c
+    /// ```
+    ///
+    /// This transform re-balances the tree so that it becomes left-recursive
+    ///
+    /// ```text
+    ///     &amp;&amp;
+    ///  &amp;&amp;    c
+    /// a  b
+    /// ```
+    ///
+    /// This is required so that the binary like expression formatting only has to resolve left recursive expressions.
+    </span><span class="kw">fn </span>visit_logical_expression(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        logical: JsLogicalExpression,
+    ) -&gt; VisitNodeSignal&lt;JsLanguage&gt; {
+        <span class="kw">match </span>(logical.left(), logical.operator_token(), logical.right()) {
+            (<span class="prelude-val">Ok</span>(left), <span class="prelude-val">Ok</span>(operator), <span class="prelude-val">Ok</span>(right)) =&gt; {
+                <span class="kw">let </span>left_key = left.syntax().key();
+                <span class="kw">let </span>operator_key = operator.key();
+                <span class="kw">let </span>right_key = right.syntax().key();
 
-                <span class="comment">// SAFETY: Safe because the rewriter never rewrites an expression to a non expression.</span>
-                <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">JsAnyExpression::unwrap_cast</span>(<span class="self">self</span>.<span class="ident">transform</span>(<span class="ident">left</span>.<span class="ident">into_syntax</span>()));
-                <span class="kw">let</span> <span class="ident">operator</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">visit_token</span>(<span class="ident">operator</span>);
-                <span class="comment">// SAFETY: Safe because the rewriter never rewrites an expression to a non expression.</span>
-                <span class="kw">let</span> <span class="ident">right</span> <span class="op">=</span> <span class="ident">JsAnyExpression::unwrap_cast</span>(<span class="self">self</span>.<span class="ident">transform</span>(<span class="ident">right</span>.<span class="ident">into_syntax</span>()));
+                <span class="comment">// SAFETY: Safe because the rewriter never rewrites an expression to a non expression.
+                </span><span class="kw">let </span>left = JsAnyExpression::unwrap_cast(<span class="self">self</span>.transform(left.into_syntax()));
+                <span class="kw">let </span>operator = <span class="self">self</span>.visit_token(operator);
+                <span class="comment">// SAFETY: Safe because the rewriter never rewrites an expression to a non expression.
+                </span><span class="kw">let </span>right = JsAnyExpression::unwrap_cast(<span class="self">self</span>.transform(right.into_syntax()));
 
-                <span class="kw">let</span> <span class="ident">updated</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">right</span> {
-                    <span class="ident">JsAnyExpression::JsLogicalExpression</span>(<span class="ident">right_logical</span>) =&gt; {
-                        <span class="kw">match</span> (
-                            <span class="ident">right_logical</span>.<span class="ident">left</span>(),
-                            <span class="ident">right_logical</span>.<span class="ident">operator_token</span>(),
-                            <span class="ident">right_logical</span>.<span class="ident">right</span>(),
+                <span class="kw">let </span>updated = <span class="kw">match </span>right {
+                    JsAnyExpression::JsLogicalExpression(right_logical) =&gt; {
+                        <span class="kw">match </span>(
+                            right_logical.left(),
+                            right_logical.operator_token(),
+                            right_logical.right(),
                         ) {
-                            (<span class="prelude-val">Ok</span>(<span class="ident">right_left</span>), <span class="prelude-val">Ok</span>(<span class="ident">right_operator</span>), <span class="prelude-val">Ok</span>(<span class="ident">right_right</span>))
-                                <span class="kw">if</span> <span class="ident">right_operator</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">operator</span>.<span class="ident">kind</span>() =&gt;
+                            (<span class="prelude-val">Ok</span>(right_left), <span class="prelude-val">Ok</span>(right_operator), <span class="prelude-val">Ok</span>(right_right))
+                                <span class="kw">if </span>right_operator.kind() == operator.kind() =&gt;
                             {
-                                <span class="ident">logical</span>
-                                    .<span class="ident">with_left</span>(
-                                        <span class="ident">rome_js_factory::make::js_logical_expression</span>(
-                                            <span class="ident">left</span>, <span class="ident">operator</span>, <span class="ident">right_left</span>,
+                                logical
+                                    .with_left(
+                                        rome_js_factory::make::js_logical_expression(
+                                            left, operator, right_left,
                                         )
-                                        .<span class="ident">into</span>(),
+                                        .into(),
                                     )
-                                    .<span class="ident">with_operator_token_token</span>(<span class="ident">right_operator</span>)
-                                    .<span class="ident">with_right</span>(<span class="ident">right_right</span>)
+                                    .with_operator_token_token(right_operator)
+                                    .with_right(right_right)
                             }
 
-                            <span class="comment">// Don&#39;t re-balance a logical expression that has syntax errors</span>
-                            <span class="kw">_</span> =&gt; <span class="ident">logical</span>
-                                .<span class="ident">with_left</span>(<span class="ident">left</span>)
-                                .<span class="ident">with_operator_token_token</span>(<span class="ident">operator</span>)
-                                .<span class="ident">with_right</span>(<span class="ident">right_logical</span>.<span class="ident">into</span>()),
+                            <span class="comment">// Don&#39;t re-balance a logical expression that has syntax errors
+                            </span><span class="kw">_ </span>=&gt; logical
+                                .with_left(left)
+                                .with_operator_token_token(operator)
+                                .with_right(right_logical.into()),
                         }
                     }
 
-                    <span class="comment">// Don&#39;t re-balance logical expressions with different operators</span>
-                    <span class="comment">// Avoid updating the node if none of the children have changed to avoid</span>
-                    <span class="comment">// re-spinning all parents.</span>
-                    <span class="ident">right</span> =&gt; {
-                        <span class="kw">if</span> <span class="ident">left</span>.<span class="ident">syntax</span>().<span class="ident">key</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">left_key</span>
-                            <span class="op">|</span><span class="op">|</span> <span class="ident">operator</span>.<span class="ident">key</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">operator_key</span>
-                            <span class="op">|</span><span class="op">|</span> <span class="ident">right</span>.<span class="ident">syntax</span>().<span class="ident">key</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">right_key</span>
+                    <span class="comment">// Don&#39;t re-balance logical expressions with different operators
+                    // Avoid updating the node if none of the children have changed to avoid
+                    // re-spinning all parents.
+                    </span>right =&gt; {
+                        <span class="kw">if </span>left.syntax().key() != left_key
+                            || operator.key() != operator_key
+                            || right.syntax().key() != right_key
                         {
-                            <span class="ident">logical</span>
-                                .<span class="ident">with_left</span>(<span class="ident">left</span>)
-                                .<span class="ident">with_operator_token_token</span>(<span class="ident">operator</span>)
-                                .<span class="ident">with_right</span>(<span class="ident">right</span>)
-                        } <span class="kw">else</span> {
-                            <span class="ident">logical</span>
+                            logical
+                                .with_left(left)
+                                .with_operator_token_token(operator)
+                                .with_right(right)
+                        } <span class="kw">else </span>{
+                            logical
                         }
                     }
                 };
 
-                <span class="ident">VisitNodeSignal::Replace</span>(<span class="ident">updated</span>.<span class="ident">into_syntax</span>())
+                VisitNodeSignal::Replace(updated.into_syntax())
             }
-            <span class="kw">_</span> =&gt; <span class="ident">VisitNodeSignal::Traverse</span>(<span class="ident">logical</span>.<span class="ident">into_syntax</span>()),
+            <span class="kw">_ </span>=&gt; VisitNodeSignal::Traverse(logical.into_syntax()),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) -&gt; <span class="ident">TransformSourceMap</span> {
-        <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">finish</span>()
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>finish(<span class="self">self</span>) -&gt; TransformSourceMap {
+        <span class="self">self</span>.source_map.finish()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxRewriter</span> <span class="kw">for</span> <span class="ident">JsFormatSyntaxRewriter</span> {
-    <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">JsLanguage</span>;
+<span class="kw">impl </span>SyntaxRewriter <span class="kw">for </span>JsFormatSyntaxRewriter {
+    <span class="kw">type </span>Language = JsLanguage;
 
-    <span class="kw">fn</span> <span class="ident">visit_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident">JsSyntaxNode</span>) -&gt; <span class="ident">VisitNodeSignal</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">kind</span>() {
-            <span class="ident">kind</span> <span class="kw">if</span> <span class="ident">JsAnyParenthesized::can_cast</span>(<span class="ident">kind</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">parenthesized</span> <span class="op">=</span> <span class="ident">JsAnyParenthesized::unwrap_cast</span>(<span class="ident">node</span>);
+    <span class="kw">fn </span>visit_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: JsSyntaxNode) -&gt; VisitNodeSignal&lt;<span class="self">Self</span>::Language&gt; {
+        <span class="kw">match </span>node.kind() {
+            kind <span class="kw">if </span>JsAnyParenthesized::can_cast(kind) =&gt; {
+                <span class="kw">let </span>parenthesized = JsAnyParenthesized::unwrap_cast(node);
 
-                <span class="self">self</span>.<span class="ident">visit_parenthesized</span>(<span class="ident">parenthesized</span>)
+                <span class="self">self</span>.visit_parenthesized(parenthesized)
             }
-            <span class="ident">JsSyntaxKind::JS_LOGICAL_EXPRESSION</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">logical</span> <span class="op">=</span> <span class="ident">JsLogicalExpression::unwrap_cast</span>(<span class="ident">node</span>);
+            JsSyntaxKind::JS_LOGICAL_EXPRESSION =&gt; {
+                <span class="kw">let </span>logical = JsLogicalExpression::unwrap_cast(node);
 
-                <span class="self">self</span>.<span class="ident">visit_logical_expression</span>(<span class="ident">logical</span>)
+                <span class="self">self</span>.visit_logical_expression(logical)
             }
-            <span class="kw">_</span> =&gt; <span class="ident">VisitNodeSignal::Traverse</span>(<span class="ident">node</span>),
+            <span class="kw">_ </span>=&gt; VisitNodeSignal::Traverse(node),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">push_source_text</span>(<span class="ident">token</span>.<span class="ident">text</span>());
-        <span class="ident">token</span>
+    <span class="kw">fn </span>visit_token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;) -&gt; SyntaxToken&lt;<span class="self">Self</span>::Language&gt; {
+        <span class="self">self</span>.source_map.push_source_text(token.text());
+        token
     }
 }
 
-<span class="kw">fn</span> <span class="ident">has_type_cast_comment_or_skipped</span>(<span class="ident">trivia</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxTrivia</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-    <span class="ident">trivia</span>.<span class="ident">pieces</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comment</span>) <span class="op">=</span> <span class="ident">piece</span>.<span class="ident">as_comments</span>() {
-            <span class="ident">is_type_comment</span>(<span class="kw-2">&amp;</span><span class="ident">comment</span>)
-        } <span class="kw">else</span> {
-            <span class="ident">piece</span>.<span class="ident">is_skipped</span>()
+<span class="kw">fn </span>has_type_cast_comment_or_skipped(trivia: <span class="kw-2">&amp;</span>SyntaxTrivia&lt;JsLanguage&gt;) -&gt; bool {
+    trivia.pieces().any(|piece| {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(comment) = piece.as_comments() {
+            is_type_comment(<span class="kw-2">&amp;</span>comment)
+        } <span class="kw">else </span>{
+            piece.is_skipped()
         }
     })
 }
 
-<span class="kw">fn</span> <span class="ident">chain_pieces</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">first</span>: <span class="ident">F</span>, <span class="ident">second</span>: <span class="ident">S</span>) -&gt; <span class="ident">ChainTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">S</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">fn </span>chain_pieces&lt;F, S&gt;(first: F, second: S) -&gt; ChainTriviaPiecesIterator&lt;F, S&gt;
+<span class="kw">where
+    </span>F: Iterator&lt;Item = SyntaxTriviaPiece&lt;JsLanguage&gt;&gt;,
+    S: Iterator&lt;Item = SyntaxTriviaPiece&lt;JsLanguage&gt;&gt;,
 {
-    <span class="ident">ChainTriviaPiecesIterator::new</span>(<span class="ident">first</span>, <span class="ident">second</span>)
+    ChainTriviaPiecesIterator::new(first, second)
 }
 
-<span class="doccomment">/// Chain iterator that chains two iterators over syntax trivia together.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is the same as Rust&#39;s [Chain] iterator but implements [ExactSizeIterator].</span>
-<span class="doccomment">/// Rust doesn&#39;t implement [ExactSizeIterator] because adding the sizes of both pieces may overflow.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implementing [ExactSizeIterator] in our case is safe because this may only overflow if</span>
-<span class="doccomment">/// a source document has more than 2^32 trivia which isn&#39;t possible because our source documents are limited to 2^32</span>
-<span class="doccomment">/// length.</span>
-<span class="kw">struct</span> <span class="ident">ChainTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-    <span class="ident">first</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
-    <span class="ident">second</span>: <span class="ident">S</span>,
+<span class="doccomment">/// Chain iterator that chains two iterators over syntax trivia together.
+///
+/// This is the same as Rust&#39;s [Chain] iterator but implements [ExactSizeIterator].
+/// Rust doesn&#39;t implement [ExactSizeIterator] because adding the sizes of both pieces may overflow.
+///
+/// Implementing [ExactSizeIterator] in our case is safe because this may only overflow if
+/// a source document has more than 2^32 trivia which isn&#39;t possible because our source documents are limited to 2^32
+/// length.
+</span><span class="kw">struct </span>ChainTriviaPiecesIterator&lt;F, S&gt; {
+    first: <span class="prelude-ty">Option</span>&lt;F&gt;,
+    second: S,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span> <span class="ident">ChainTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">first</span>: <span class="ident">F</span>, <span class="ident">second</span>: <span class="ident">S</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">first</span>: <span class="prelude-val">Some</span>(<span class="ident">first</span>),
-            <span class="ident">second</span>,
+<span class="kw">impl</span>&lt;F, S&gt; ChainTriviaPiecesIterator&lt;F, S&gt; {
+    <span class="kw">fn </span>new(first: F, second: S) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            first: <span class="prelude-val">Some</span>(first),
+            second,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ChainTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">S</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;F, S&gt; Iterator <span class="kw">for </span>ChainTriviaPiecesIterator&lt;F, S&gt;
+<span class="kw">where
+    </span>F: Iterator&lt;Item = SyntaxTriviaPiece&lt;JsLanguage&gt;&gt;,
+    S: Iterator&lt;Item = SyntaxTriviaPiece&lt;JsLanguage&gt;&gt;,
 {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>;
+    <span class="kw">type </span>Item = SyntaxTriviaPiece&lt;JsLanguage&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">first</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">first</span>) =&gt; <span class="kw">match</span> <span class="ident">first</span>.<span class="ident">next</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">next</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">next</span>),
-                <span class="prelude-val">None</span> =&gt; {
-                    <span class="self">self</span>.<span class="ident">first</span>.<span class="ident">take</span>();
-                    <span class="self">self</span>.<span class="ident">second</span>.<span class="ident">next</span>()
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.first {
+            <span class="prelude-val">Some</span>(first) =&gt; <span class="kw">match </span>first.next() {
+                <span class="prelude-val">Some</span>(next) =&gt; <span class="prelude-val">Some</span>(next),
+                <span class="prelude-val">None </span>=&gt; {
+                    <span class="self">self</span>.first.take();
+                    <span class="self">self</span>.second.next()
                 }
             },
-            <span class="prelude-val">None</span> =&gt; <span class="self">self</span>.<span class="ident">second</span>.<span class="ident">next</span>(),
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.second.next(),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">first</span>) =&gt; {
-                <span class="kw">let</span> (<span class="ident">first_lower</span>, <span class="ident">first_upper</span>) <span class="op">=</span> <span class="ident">first</span>.<span class="ident">size_hint</span>();
-                <span class="kw">let</span> (<span class="ident">second_lower</span>, <span class="ident">second_upper</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">second</span>.<span class="ident">size_hint</span>();
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.first {
+            <span class="prelude-val">Some</span>(first) =&gt; {
+                <span class="kw">let </span>(first_lower, first_upper) = first.size_hint();
+                <span class="kw">let </span>(second_lower, second_upper) = <span class="self">self</span>.second.size_hint();
 
-                <span class="kw">let</span> <span class="ident">lower</span> <span class="op">=</span> <span class="ident">first_lower</span>.<span class="ident">saturating_add</span>(<span class="ident">second_lower</span>);
+                <span class="kw">let </span>lower = first_lower.saturating_add(second_lower);
 
-                <span class="kw">let</span> <span class="ident">upper</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">first_upper</span>, <span class="ident">second_upper</span>) {
-                    (<span class="prelude-val">Some</span>(<span class="ident">first</span>), <span class="prelude-val">Some</span>(<span class="ident">second</span>)) =&gt; <span class="ident">first</span>.<span class="ident">checked_add</span>(<span class="ident">second</span>),
-                    <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">let </span>upper = <span class="kw">match </span>(first_upper, second_upper) {
+                    (<span class="prelude-val">Some</span>(first), <span class="prelude-val">Some</span>(second)) =&gt; first.checked_add(second),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
                 };
 
-                (<span class="ident">lower</span>, <span class="ident">upper</span>)
+                (lower, upper)
             }
-            <span class="prelude-val">None</span> =&gt; <span class="self">self</span>.<span class="ident">second</span>.<span class="ident">size_hint</span>(),
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.second.size_hint(),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">ChainTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">S</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;F, S&gt; FusedIterator <span class="kw">for </span>ChainTriviaPiecesIterator&lt;F, S&gt;
+<span class="kw">where
+    </span>F: Iterator&lt;Item = SyntaxTriviaPiece&lt;JsLanguage&gt;&gt;,
+    S: Iterator&lt;Item = SyntaxTriviaPiece&lt;JsLanguage&gt;&gt;,
 {
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">ChainTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">S</span>: <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;F, S&gt; ExactSizeIterator <span class="kw">for </span>ChainTriviaPiecesIterator&lt;F, S&gt;
+<span class="kw">where
+    </span>F: ExactSizeIterator&lt;Item = SyntaxTriviaPiece&lt;JsLanguage&gt;&gt;,
+    S: ExactSizeIterator&lt;Item = SyntaxTriviaPiece&lt;JsLanguage&gt;&gt;,
 {
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">first</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">first_len</span> <span class="op">=</span> <span class="ident">first</span>.<span class="ident">len</span>();
-                <span class="kw">let</span> <span class="ident">second_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">second</span>.<span class="ident">len</span>();
+    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.first {
+            <span class="prelude-val">Some</span>(first) =&gt; {
+                <span class="kw">let </span>first_len = first.len();
+                <span class="kw">let </span>second_len = <span class="self">self</span>.second.len();
 
-                <span class="comment">// SAFETY: Should be safe because a program can never contain more than u32 pieces</span>
-                <span class="comment">// because the text ranges are represented as u32 (and each piece must at least contain a single character).</span>
-                <span class="ident">first_len</span> <span class="op">+</span> <span class="ident">second_len</span>
+                <span class="comment">// SAFETY: Should be safe because a program can never contain more than u32 pieces
+                // because the text ranges are represented as u32 (and each piece must at least contain a single character).
+                </span>first_len + second_len
             }
-            <span class="prelude-val">None</span> =&gt; <span class="self">self</span>.<span class="ident">second</span>.<span class="ident">len</span>(),
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.second.len(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::JsFormatSyntaxRewriter</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">format_node</span>, <span class="ident">JsFormatOptions</span>, <span class="ident">TextRange</span>};
-    <span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileId</span>;
-    <span class="kw">use</span> <span class="ident">rome_formatter</span>::{<span class="ident">SourceMarker</span>, <span class="ident">TransformSourceMap</span>};
-    <span class="kw">use</span> <span class="ident">rome_js_parser</span>::{<span class="ident">parse</span>, <span class="ident">parse_module</span>};
-    <span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-        <span class="ident">JsArrayExpression</span>, <span class="ident">JsBinaryExpression</span>, <span class="ident">JsExpressionStatement</span>, <span class="ident">JsIdentifierExpression</span>,
-        <span class="ident">JsLogicalExpression</span>, <span class="ident">JsSequenceExpression</span>, <span class="ident">JsStringLiteralExpression</span>, <span class="ident">JsSyntaxNode</span>,
-        <span class="ident">JsUnaryExpression</span>, <span class="ident">JsxTagExpression</span>, <span class="ident">SourceType</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::JsFormatSyntaxRewriter;
+    <span class="kw">use crate</span>::{format_node, JsFormatOptions, TextRange};
+    <span class="kw">use </span>rome_diagnostics::file::FileId;
+    <span class="kw">use </span>rome_formatter::{SourceMarker, TransformSourceMap};
+    <span class="kw">use </span>rome_js_parser::{parse, parse_module};
+    <span class="kw">use </span>rome_js_syntax::{
+        JsArrayExpression, JsBinaryExpression, JsExpressionStatement, JsIdentifierExpression,
+        JsLogicalExpression, JsSequenceExpression, JsStringLiteralExpression, JsSyntaxNode,
+        JsUnaryExpression, JsxTagExpression, SourceType,
     };
-    <span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">SyntaxRewriter</span>, <span class="ident">TextSize</span>};
+    <span class="kw">use </span>rome_rowan::{AstNode, SyntaxRewriter, TextSize};
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">rebalances_logical_expressions</span>() {
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">parse_module</span>(<span class="string">&quot;a &amp;&amp; (b &amp;&amp; c)&quot;</span>, <span class="ident">FileId::zero</span>()).<span class="ident">syntax</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>rebalances_logical_expressions() {
+        <span class="kw">let </span>root = parse_module(<span class="string">&quot;a &amp;&amp; (b &amp;&amp; c)&quot;</span>, FileId::zero()).syntax();
 
-        <span class="kw">let</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">JsFormatSyntaxRewriter::default</span>().<span class="ident">transform</span>(<span class="ident">root</span>.<span class="ident">clone</span>());
+        <span class="kw">let </span>transformed = JsFormatSyntaxRewriter::default().transform(root.clone());
 
-        <span class="comment">// Changed the root tree</span>
-        <span class="macro">assert_ne!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>, <span class="kw-2">&amp;</span><span class="ident">root</span>);
+        <span class="comment">// Changed the root tree
+        </span><span class="macro">assert_ne!</span>(<span class="kw-2">&amp;</span>transformed, <span class="kw-2">&amp;</span>root);
 
-        <span class="comment">// Removes parentheses</span>
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>().<span class="ident">to_string</span>(), <span class="string">&quot;a &amp;&amp; b &amp;&amp; c&quot;</span>);
+        <span class="comment">// Removes parentheses
+        </span><span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text().to_string(), <span class="string">&quot;a &amp;&amp; b &amp;&amp; c&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">logical_expressions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">filter_map</span>(<span class="ident">JsLogicalExpression::cast</span>)
-            .<span class="ident">collect</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>logical_expressions: Vec&lt;<span class="kw">_</span>&gt; = transformed
+            .descendants()
+            .filter_map(JsLogicalExpression::cast)
+            .collect();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">logical_expressions</span>.<span class="ident">len</span>(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(logical_expressions.len(), <span class="number">2</span>);
 
-        <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">logical_expressions</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">top</span> <span class="op">=</span> <span class="ident">logical_expressions</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>left = logical_expressions.pop().unwrap();
+        <span class="kw">let </span>top = logical_expressions.pop().unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">top</span>.<span class="ident">left</span>().<span class="ident">unwrap</span>().<span class="ident">syntax</span>(), <span class="ident">left</span>.<span class="ident">syntax</span>());
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">top</span>.<span class="ident">right</span>().<span class="ident">unwrap</span>().<span class="ident">text</span>(), <span class="string">&quot;c&quot;</span>);
+        <span class="macro">assert_eq!</span>(top.left().unwrap().syntax(), left.syntax());
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>top.right().unwrap().text(), <span class="string">&quot;c&quot;</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">left</span>.<span class="ident">left</span>().<span class="ident">unwrap</span>().<span class="ident">text</span>(), <span class="string">&quot;a&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">left</span>.<span class="ident">right</span>().<span class="ident">unwrap</span>().<span class="ident">text</span>(), <span class="string">&quot;b&quot;</span>);
+        <span class="macro">assert_eq!</span>(left.left().unwrap().text(), <span class="string">&quot;a&quot;</span>);
+        <span class="macro">assert_eq!</span>(left.right().unwrap().text(), <span class="string">&quot;b&quot;</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">only_rebalances_logical_expressions_with_same_operator</span>() {
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">parse_module</span>(<span class="string">&quot;a &amp;&amp; (b || c)&quot;</span>, <span class="ident">FileId::zero</span>()).<span class="ident">syntax</span>();
-        <span class="kw">let</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">JsFormatSyntaxRewriter::default</span>().<span class="ident">transform</span>(<span class="ident">root</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>only_rebalances_logical_expressions_with_same_operator() {
+        <span class="kw">let </span>root = parse_module(<span class="string">&quot;a &amp;&amp; (b || c)&quot;</span>, FileId::zero()).syntax();
+        <span class="kw">let </span>transformed = JsFormatSyntaxRewriter::default().transform(root);
 
-        <span class="comment">// Removes parentheses</span>
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>().<span class="ident">to_string</span>(), <span class="string">&quot;a &amp;&amp; b || c&quot;</span>);
+        <span class="comment">// Removes parentheses
+        </span><span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text().to_string(), <span class="string">&quot;a &amp;&amp; b || c&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">logical_expressions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">filter_map</span>(<span class="ident">JsLogicalExpression::cast</span>)
-            .<span class="ident">collect</span>();
+        <span class="kw">let </span>logical_expressions: Vec&lt;<span class="kw">_</span>&gt; = transformed
+            .descendants()
+            .filter_map(JsLogicalExpression::cast)
+            .collect();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">logical_expressions</span>.<span class="ident">len</span>(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(logical_expressions.len(), <span class="number">2</span>);
 
-        <span class="kw">let</span> <span class="ident">top</span> <span class="op">=</span> <span class="ident">logical_expressions</span>.<span class="ident">first</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">right</span> <span class="op">=</span> <span class="ident">logical_expressions</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>top = logical_expressions.first().unwrap();
+        <span class="kw">let </span>right = logical_expressions.last().unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">top</span>.<span class="ident">left</span>().<span class="ident">unwrap</span>().<span class="ident">text</span>(), <span class="string">&quot;a&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">top</span>.<span class="ident">right</span>().<span class="ident">unwrap</span>().<span class="ident">syntax</span>(), <span class="ident">right</span>.<span class="ident">syntax</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">right</span>.<span class="ident">left</span>().<span class="ident">unwrap</span>().<span class="ident">text</span>(), <span class="string">&quot;b&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">right</span>.<span class="ident">right</span>().<span class="ident">unwrap</span>().<span class="ident">text</span>(), <span class="string">&quot;c&quot;</span>);
+        <span class="macro">assert_eq!</span>(top.left().unwrap().text(), <span class="string">&quot;a&quot;</span>);
+        <span class="macro">assert_eq!</span>(top.right().unwrap().syntax(), right.syntax());
+        <span class="macro">assert_eq!</span>(right.left().unwrap().text(), <span class="string">&quot;b&quot;</span>);
+        <span class="macro">assert_eq!</span>(right.right().unwrap().text(), <span class="string">&quot;c&quot;</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">single_parentheses</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;(a)&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>single_parentheses() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(<span class="string">&quot;(a)&quot;</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(), <span class="string">&quot;a&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text(), <span class="string">&quot;a&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">identifier</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsIdentifierExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>identifier = transformed
+            .descendants()
+            .find_map(JsIdentifierExpression::cast)
+            .unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">identifier</span>.<span class="ident">syntax</span>()), <span class="string">&quot;(a)&quot;</span>);
+        <span class="macro">assert_eq!</span>(source_map.trimmed_source_text(identifier.syntax()), <span class="string">&quot;(a)&quot;</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">nested_parentheses</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;((a))&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>nested_parentheses() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(<span class="string">&quot;((a))&quot;</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(), <span class="string">&quot;a&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text(), <span class="string">&quot;a&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">identifier</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsIdentifierExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>identifier = transformed
+            .descendants()
+            .find_map(JsIdentifierExpression::cast)
+            .unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">identifier</span>.<span class="ident">syntax</span>()), <span class="string">&quot;((a))&quot;</span>);
+        <span class="macro">assert_eq!</span>(source_map.trimmed_source_text(identifier.syntax()), <span class="string">&quot;((a))&quot;</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_logical_expression_source_map</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;(a &amp;&amp; (b &amp;&amp; c))&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_logical_expression_source_map() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(<span class="string">&quot;(a &amp;&amp; (b &amp;&amp; c))&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">logical_expressions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">filter_map</span>(<span class="ident">JsLogicalExpression::cast</span>)
-            .<span class="ident">collect</span>();
+        <span class="kw">let </span>logical_expressions: Vec&lt;<span class="kw">_</span>&gt; = transformed
+            .descendants()
+            .filter_map(JsLogicalExpression::cast)
+            .collect();
 
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">logical_expressions</span>.<span class="ident">len</span>());
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, logical_expressions.len());
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">logical_expressions</span>[<span class="number">0</span>].<span class="ident">syntax</span>()),
-            <span class="string">&quot;(a &amp;&amp; (b &amp;&amp; c))&quot;</span>
-        );
+            source_map.trimmed_source_text(logical_expressions[<span class="number">0</span>].syntax()),
+            <span class="string">&quot;(a &amp;&amp; (b &amp;&amp; c))&quot;
+        </span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">logical_expressions</span>[<span class="number">1</span>].<span class="ident">syntax</span>()),
-            <span class="string">&quot;a &amp;&amp; (b&quot;</span>
-        );
+            source_map.trimmed_source_text(logical_expressions[<span class="number">1</span>].syntax()),
+            <span class="string">&quot;a &amp;&amp; (b&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">adjacent_nodes</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;(a + b)&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>adjacent_nodes() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(<span class="string">&quot;(a + b)&quot;</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(), <span class="string">&quot;a + b&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text(), <span class="string">&quot;a + b&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">identifiers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">filter_map</span>(<span class="ident">JsIdentifierExpression::cast</span>)
-            .<span class="ident">collect</span>();
+        <span class="kw">let </span>identifiers: Vec&lt;<span class="kw">_</span>&gt; = transformed
+            .descendants()
+            .filter_map(JsIdentifierExpression::cast)
+            .collect();
 
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">identifiers</span>.<span class="ident">len</span>());
-        <span class="comment">// Parentheses should be associated with the binary expression</span>
-        <span class="macro">assert_eq!</span>(<span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">identifiers</span>[<span class="number">0</span>].<span class="ident">syntax</span>()), <span class="string">&quot;a&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">identifiers</span>[<span class="number">1</span>].<span class="ident">syntax</span>()), <span class="string">&quot;b&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, identifiers.len());
+        <span class="comment">// Parentheses should be associated with the binary expression
+        </span><span class="macro">assert_eq!</span>(source_map.trimmed_source_text(identifiers[<span class="number">0</span>].syntax()), <span class="string">&quot;a&quot;</span>);
+        <span class="macro">assert_eq!</span>(source_map.trimmed_source_text(identifiers[<span class="number">1</span>].syntax()), <span class="string">&quot;b&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">binary</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsBinaryExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">binary</span>.<span class="ident">syntax</span>()), <span class="string">&quot;(a + b)&quot;</span>)
+        <span class="kw">let </span>binary = transformed
+            .descendants()
+            .find_map(JsBinaryExpression::cast)
+            .unwrap();
+        <span class="macro">assert_eq!</span>(source_map.trimmed_source_text(binary.syntax()), <span class="string">&quot;(a + b)&quot;</span>)
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">intersecting_ranges</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;(interface, \&quot;foo\&quot;);&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>intersecting_ranges() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(<span class="string">&quot;(interface, \&quot;foo\&quot;);&quot;</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(), <span class="string">&quot;interface, \&quot;foo\&quot;;&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text(), <span class="string">&quot;interface, \&quot;foo\&quot;;&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">string_literal</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsStringLiteralExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>string_literal = transformed
+            .descendants()
+            .find_map(JsStringLiteralExpression::cast)
+            .unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">string_literal</span>.<span class="ident">syntax</span>()),
-            <span class="string">&quot;\&quot;foo\&quot;&quot;</span>
-        );
+            source_map.trimmed_source_text(string_literal.syntax()),
+            <span class="string">&quot;\&quot;foo\&quot;&quot;
+        </span>);
 
-        <span class="kw">let</span> <span class="ident">sequence</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsSequenceExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>sequence = transformed
+            .descendants()
+            .find_map(JsSequenceExpression::cast)
+            .unwrap();
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">sequence</span>.<span class="ident">syntax</span>()),
-            <span class="string">&quot;(interface, \&quot;foo\&quot;)&quot;</span>
-        );
+            source_map.trimmed_source_text(sequence.syntax()),
+            <span class="string">&quot;(interface, \&quot;foo\&quot;)&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">deep</span>() {
-        <span class="kw">let</span> <span class="ident">src</span> <span class="op">=</span> <span class="string">r#&quot;[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>deep() {
+        <span class="kw">let </span>src = <span class="string">r#&quot;[
     (2*n)/(r-l), 0,            (r+l)/(r-l),  0,
     0,           (2*n)/(t-b),  (t+b)/(t-b),  0,
     0,           0,           -(f+n)/(f-n), -(2*f*n)/(f-n),
     0,           0,           -1,            0,
 ];&quot;#</span>;
 
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="ident">src</span>);
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(src);
 
-        <span class="kw">let</span> <span class="ident">array</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsArrayExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>array = transformed
+            .descendants()
+            .find_map(JsArrayExpression::cast)
+            .unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">array</span>.<span class="ident">syntax</span>()),
+            source_map.trimmed_source_text(array.syntax()),
             <span class="string">r#&quot;[
     (2*n)/(r-l), 0,            (r+l)/(r-l),  0,
     0,           (2*n)/(t-b),  (t+b)/(t-b),  0,
     0,           0,           -(f+n)/(f-n), -(2*f*n)/(f-n),
     0,           0,           -1,            0,
-]&quot;#</span>
-        );
+]&quot;#
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">enclosing_node</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;(a + b);&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>enclosing_node() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(<span class="string">&quot;(a + b);&quot;</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(), <span class="string">&quot;a + b;&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text(), <span class="string">&quot;a + b;&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">expression_statement</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsExpressionStatement::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>expression_statement = transformed
+            .descendants()
+            .find_map(JsExpressionStatement::cast)
+            .unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">expression_statement</span>.<span class="ident">syntax</span>()),
-            <span class="string">&quot;(a + b);&quot;</span>
-        );
+            source_map.trimmed_source_text(expression_statement.syntax()),
+            <span class="string">&quot;(a + b);&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">trailing_whitespace</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;(a + b   );&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>trailing_whitespace() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(<span class="string">&quot;(a + b   );&quot;</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(), <span class="string">&quot;a + b   ;&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text(), <span class="string">&quot;a + b   ;&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">binary</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsBinaryExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>binary = transformed
+            .descendants()
+            .find_map(JsBinaryExpression::cast)
+            .unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">binary</span>.<span class="ident">syntax</span>()),
-            <span class="string">&quot;(a + b   )&quot;</span>
-        );
+            source_map.trimmed_source_text(binary.syntax()),
+            <span class="string">&quot;(a + b   )&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">first_token_leading_whitespace</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;a;\n(\n a + b);&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>first_token_leading_whitespace() {
+        <span class="kw">let </span>(transformed, <span class="kw">_</span>) = source_map_test(<span class="string">&quot;a;\n(\n a + b);&quot;</span>);
 
-        <span class="comment">// Trims the leading whitespace in front of the expression&#39;s first token.</span>
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(), <span class="string">&quot;a;\na + b;&quot;</span>);
+        <span class="comment">// Trims the leading whitespace in front of the expression&#39;s first token.
+        </span><span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text(), <span class="string">&quot;a;\na + b;&quot;</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">first_token_leading_whitespace_before_comment</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;a;(\n\n/* comment */\n a + b);&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>first_token_leading_whitespace_before_comment() {
+        <span class="kw">let </span>(transformed, <span class="kw">_</span>) = source_map_test(<span class="string">&quot;a;(\n\n/* comment */\n a + b);&quot;</span>);
 
-        <span class="comment">// Keeps at least one new line before a leading comment.</span>
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(), <span class="string">&quot;a;\n/* comment */\n a + b;&quot;</span>);
+        <span class="comment">// Keeps at least one new line before a leading comment.
+        </span><span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>transformed.text(), <span class="string">&quot;a;\n/* comment */\n a + b;&quot;</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">comments</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span>
-            <span class="ident">source_map_test</span>(<span class="string">&quot;/* outer */ (/* left */ a + b /* right */) /* outer end */;&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>comments() {
+        <span class="kw">let </span>(transformed, source_map) =
+            source_map_test(<span class="string">&quot;/* outer */ (/* left */ a + b /* right */) /* outer end */;&quot;</span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="kw-2">&amp;</span><span class="ident">transformed</span>.<span class="ident">text</span>(),
-            <span class="string">&quot;/* outer */ /* left */ a + b /* right */ /* outer end */;&quot;</span>
-        );
+            <span class="kw-2">&amp;</span>transformed.text(),
+            <span class="string">&quot;/* outer */ /* left */ a + b /* right */ /* outer end */;&quot;
+        </span>);
 
-        <span class="kw">let</span> <span class="ident">binary</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsBinaryExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>binary = transformed
+            .descendants()
+            .find_map(JsBinaryExpression::cast)
+            .unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">binary</span>.<span class="ident">syntax</span>()),
-            <span class="string">&quot;(/* left */ a + b /* right */)&quot;</span>
-        );
+            source_map.trimmed_source_text(binary.syntax()),
+            <span class="string">&quot;(/* left */ a + b /* right */)&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parentheses</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>parentheses() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(
             <span class="string">r#&quot;!(
   /* foo */
   x
@@ -1826,59 +1826,59 @@
 );&quot;#</span>,
         );
 
-        <span class="kw">let</span> <span class="ident">unary_expressions</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">filter_map</span>(<span class="ident">JsUnaryExpression::cast</span>)
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">unary_expressions</span>.<span class="ident">len</span>(), <span class="number">5</span>);
+        <span class="kw">let </span>unary_expressions = transformed
+            .descendants()
+            .filter_map(JsUnaryExpression::cast)
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="macro">assert_eq!</span>(unary_expressions.len(), <span class="number">5</span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">unary_expressions</span>[<span class="number">0</span>].<span class="ident">syntax</span>()),
+            source_map.trimmed_source_text(unary_expressions[<span class="number">0</span>].syntax()),
             <span class="string">r#&quot;!(
   /* foo */
   x
-)&quot;#</span>
+)&quot;#
+        </span>);
+
+        <span class="macro">assert_eq!</span>(
+            source_map.source_range(unary_expressions[<span class="number">1</span>].syntax().text_range()),
+            TextRange::new(TextSize::from(<span class="number">21</span>), TextSize::from(<span class="number">36</span>))
         );
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">source_range</span>(<span class="ident">unary_expressions</span>[<span class="number">1</span>].<span class="ident">syntax</span>().<span class="ident">text_range</span>()),
-            <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">21</span>), <span class="ident">TextSize::from</span>(<span class="number">36</span>))
-        );
-
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">unary_expressions</span>[<span class="number">1</span>].<span class="ident">syntax</span>()),
+            source_map.trimmed_source_text(unary_expressions[<span class="number">1</span>].syntax()),
             <span class="string">r#&quot;!(
   x // foo
-)&quot;#</span>
-        );
+)&quot;#
+        </span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">unary_expressions</span>[<span class="number">2</span>].<span class="ident">syntax</span>()),
+            source_map.trimmed_source_text(unary_expressions[<span class="number">2</span>].syntax()),
             <span class="string">r#&quot;!(
   /* foo */
   x + y
-)&quot;#</span>
-        );
+)&quot;#
+        </span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">unary_expressions</span>[<span class="number">3</span>].<span class="ident">syntax</span>()),
+            source_map.trimmed_source_text(unary_expressions[<span class="number">3</span>].syntax()),
             <span class="string">r#&quot;!(
   x + y
   /* foo */
-)&quot;#</span>
-        );
+)&quot;#
+        </span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">unary_expressions</span>[<span class="number">4</span>].<span class="ident">syntax</span>()),
+            source_map.trimmed_source_text(unary_expressions[<span class="number">4</span>].syntax()),
             <span class="string">r#&quot;!(
   x + y // foo
-)&quot;#</span>
-        );
+)&quot;#
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">nested_parentheses_with_whitespace</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>nested_parentheses_with_whitespace() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(
             <span class="string">r#&quot;function f() {
 	return (
 		(
@@ -1890,137 +1890,137 @@
 }&quot;#</span>,
         );
 
-        <span class="kw">let</span> <span class="ident">tag_expression</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsxTagExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>tag_expression = transformed
+            .descendants()
+            .find_map(JsxTagExpression::cast)
+            .unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text</span>(<span class="ident">tag_expression</span>.<span class="ident">syntax</span>()),
+            source_map.trimmed_source_text(tag_expression.syntax()),
             <span class="string">r#&quot;(
 		(
 			// prettier-ignore
 			/* $FlowFixMe(&gt;=0.53.0) */
 			&lt;JSX /&gt;
 		)
-	)&quot;#</span>
-        );
+	)&quot;#
+        </span>);
     }
 
-    <span class="kw">fn</span> <span class="ident">source_map_test</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; (<span class="ident">JsSyntaxNode</span>, <span class="ident">TransformSourceMap</span>) {
-        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">parse</span>(<span class="ident">input</span>, <span class="ident">FileId::zero</span>(), <span class="ident">SourceType::jsx</span>()).<span class="ident">syntax</span>();
+    <span class="kw">fn </span>source_map_test(input: <span class="kw-2">&amp;</span>str) -&gt; (JsSyntaxNode, TransformSourceMap) {
+        <span class="kw">let </span>tree = parse(input, FileId::zero(), SourceType::jsx()).syntax();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rewriter</span> <span class="op">=</span> <span class="ident">JsFormatSyntaxRewriter::default</span>();
-        <span class="kw">let</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">rewriter</span>.<span class="ident">transform</span>(<span class="ident">tree</span>);
-        <span class="kw">let</span> <span class="ident">source_map</span> <span class="op">=</span> <span class="ident">rewriter</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>rewriter = JsFormatSyntaxRewriter::default();
+        <span class="kw">let </span>transformed = rewriter.transform(tree);
+        <span class="kw">let </span>source_map = rewriter.finish();
 
-        (<span class="ident">transformed</span>, <span class="ident">source_map</span>)
+        (transformed, source_map)
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">mappings</span>() {
-        <span class="kw">let</span> (<span class="ident">transformed</span>, <span class="ident">source_map</span>) <span class="op">=</span> <span class="ident">source_map_test</span>(<span class="string">&quot;(((a * b) * c)) / 3&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>mappings() {
+        <span class="kw">let </span>(transformed, source_map) = source_map_test(<span class="string">&quot;(((a * b) * c)) / 3&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">formatted</span> <span class="op">=</span>
-            <span class="ident">format_node</span>(<span class="ident">JsFormatOptions::new</span>(<span class="ident">SourceType::default</span>()), <span class="kw-2">&amp;</span><span class="ident">transformed</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">printed</span> <span class="op">=</span> <span class="ident">formatted</span>.<span class="ident">print</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>formatted =
+            format_node(JsFormatOptions::new(SourceType::default()), <span class="kw-2">&amp;</span>transformed).unwrap();
+        <span class="kw">let </span>printed = formatted.print().unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">printed</span>.<span class="ident">as_code</span>(), <span class="string">&quot;(a * b * c) / 3;\n&quot;</span>);
+        <span class="macro">assert_eq!</span>(printed.as_code(), <span class="string">&quot;(a * b * c) / 3;\n&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">mapped</span> <span class="op">=</span> <span class="ident">source_map</span>.<span class="ident">map_printed</span>(<span class="ident">printed</span>);
-        <span class="kw">let</span> <span class="ident">markers</span> <span class="op">=</span> <span class="ident">mapped</span>.<span class="ident">into_sourcemap</span>();
+        <span class="kw">let </span>mapped = source_map.map_printed(printed);
+        <span class="kw">let </span>markers = mapped.into_sourcemap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">markers</span>,
+            markers,
             <span class="macro">vec!</span>[
-                <span class="comment">// `(`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">3</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">0</span>)
+                <span class="comment">// `(`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">3</span>),
+                    dest: TextSize::from(<span class="number">0</span>)
                 },
-                <span class="comment">// `a`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">3</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">1</span>)
+                <span class="comment">// `a`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">3</span>),
+                    dest: TextSize::from(<span class="number">1</span>)
                 },
-                <span class="comment">// ` `</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">4</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">2</span>)
+                <span class="comment">// ` `
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">4</span>),
+                    dest: TextSize::from(<span class="number">2</span>)
                 },
-                <span class="comment">// `*`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">5</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">3</span>)
+                <span class="comment">// `*`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">5</span>),
+                    dest: TextSize::from(<span class="number">3</span>)
                 },
-                <span class="comment">// ` `</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">6</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">4</span>)
+                <span class="comment">// ` `
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">6</span>),
+                    dest: TextSize::from(<span class="number">4</span>)
                 },
-                <span class="comment">// `b`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">7</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">5</span>)
+                <span class="comment">// `b`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">7</span>),
+                    dest: TextSize::from(<span class="number">5</span>)
                 },
-                <span class="comment">// ` `</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">9</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">6</span>)
+                <span class="comment">// ` `
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">9</span>),
+                    dest: TextSize::from(<span class="number">6</span>)
                 },
-                <span class="comment">// `*`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">10</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">7</span>)
+                <span class="comment">// `*`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">10</span>),
+                    dest: TextSize::from(<span class="number">7</span>)
                 },
-                <span class="comment">// ` `</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">11</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">8</span>)
+                <span class="comment">// ` `
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">11</span>),
+                    dest: TextSize::from(<span class="number">8</span>)
                 },
-                <span class="comment">// `c`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">12</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">9</span>)
+                <span class="comment">// `c`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">12</span>),
+                    dest: TextSize::from(<span class="number">9</span>)
                 },
-                <span class="comment">// `)`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">15</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">10</span>),
+                <span class="comment">// `)`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">15</span>),
+                    dest: TextSize::from(<span class="number">10</span>),
                 },
-                <span class="comment">// ` `</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">15</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">11</span>),
+                <span class="comment">// ` `
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">15</span>),
+                    dest: TextSize::from(<span class="number">11</span>),
                 },
-                <span class="comment">// `/`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">16</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">12</span>),
+                <span class="comment">// `/`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">16</span>),
+                    dest: TextSize::from(<span class="number">12</span>),
                 },
-                <span class="comment">// ` `</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">17</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">13</span>),
+                <span class="comment">// ` `
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">17</span>),
+                    dest: TextSize::from(<span class="number">13</span>),
                 },
-                <span class="comment">// `3`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">18</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">14</span>),
+                <span class="comment">// `3`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">18</span>),
+                    dest: TextSize::from(<span class="number">14</span>),
                 },
-                <span class="comment">// `;`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">19</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">15</span>),
+                <span class="comment">// `;`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">19</span>),
+                    dest: TextSize::from(<span class="number">15</span>),
                 },
-                <span class="comment">// `\n`</span>
-                <span class="ident">SourceMarker</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">19</span>),
-                    <span class="ident">dest</span>: <span class="ident">TextSize::from</span>(<span class="number">16</span>),
+                <span class="comment">// `\n`
+                </span>SourceMarker {
+                    source: TextSize::from(<span class="number">19</span>),
+                    dest: TextSize::from(<span class="number">16</span>),
                 },
             ]
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

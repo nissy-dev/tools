@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/utils/rename.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rename.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/utils/rename.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rename.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -284,291 +284,291 @@
 <span id="284">284</span>
 <span id="285">285</span>
 <span id="286">286</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_js_semantic</span>::{<span class="ident">AllReferencesExtensions</span>, <span class="ident">SemanticModel</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsIdentifierAssignment</span>, <span class="ident">JsIdentifierBinding</span>, <span class="ident">JsLanguage</span>, <span class="ident">JsReferenceIdentifier</span>, <span class="ident">JsSyntaxKind</span>,
-    <span class="ident">JsSyntaxNode</span>, <span class="ident">JsSyntaxToken</span>,
+</pre><pre class="rust"><code><span class="kw">use </span>rome_js_semantic::{AllReferencesExtensions, SemanticModel};
+<span class="kw">use </span>rome_js_syntax::{
+    JsIdentifierAssignment, JsIdentifierBinding, JsLanguage, JsReferenceIdentifier, JsSyntaxKind,
+    JsSyntaxNode, JsSyntaxToken,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">BatchMutation</span>, <span class="ident">SyntaxNodeCast</span>, <span class="ident">TriviaPiece</span>};
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use </span>rome_rowan::{AstNode, BatchMutation, SyntaxNodeCast, TriviaPiece};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RenamableNode</span> {
-    <span class="kw">fn</span> <span class="ident">declaration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsSyntaxNode</span><span class="op">&gt;</span>;
+<span class="kw">pub trait </span>RenamableNode {
+    <span class="kw">fn </span>declaration(<span class="kw-2">&amp;</span><span class="self">self</span>, model: <span class="kw-2">&amp;</span>SemanticModel) -&gt; <span class="prelude-ty">Option</span>&lt;JsSyntaxNode&gt;;
 }
 
-<span class="kw">impl</span> <span class="ident">RenamableNode</span> <span class="kw">for</span> <span class="ident">JsIdentifierBinding</span> {
-    <span class="kw">fn</span> <span class="ident">declaration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsSyntaxNode</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">syntax</span>().<span class="ident">clone</span>())
+<span class="kw">impl </span>RenamableNode <span class="kw">for </span>JsIdentifierBinding {
+    <span class="kw">fn </span>declaration(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>SemanticModel) -&gt; <span class="prelude-ty">Option</span>&lt;JsSyntaxNode&gt; {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.syntax().clone())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">RenamableNode</span> <span class="kw">for</span> <span class="ident">JsReferenceIdentifier</span> {
-    <span class="kw">fn</span> <span class="ident">declaration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsSyntaxNode</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">model</span>.<span class="ident">declaration</span>(<span class="self">self</span>)<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">clone</span>())
+<span class="kw">impl </span>RenamableNode <span class="kw">for </span>JsReferenceIdentifier {
+    <span class="kw">fn </span>declaration(<span class="kw-2">&amp;</span><span class="self">self</span>, model: <span class="kw-2">&amp;</span>SemanticModel) -&gt; <span class="prelude-ty">Option</span>&lt;JsSyntaxNode&gt; {
+        <span class="prelude-val">Some</span>(model.declaration(<span class="self">self</span>)<span class="question-mark">?</span>.syntax().clone())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">RenamableNode</span> <span class="kw">for</span> <span class="ident">JsIdentifierAssignment</span> {
-    <span class="kw">fn</span> <span class="ident">declaration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsSyntaxNode</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">model</span>.<span class="ident">declaration</span>(<span class="self">self</span>)<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">clone</span>())
+<span class="kw">impl </span>RenamableNode <span class="kw">for </span>JsIdentifierAssignment {
+    <span class="kw">fn </span>declaration(<span class="kw-2">&amp;</span><span class="self">self</span>, model: <span class="kw-2">&amp;</span>SemanticModel) -&gt; <span class="prelude-ty">Option</span>&lt;JsSyntaxNode&gt; {
+        <span class="prelude-val">Some</span>(model.declaration(<span class="self">self</span>)<span class="question-mark">?</span>.syntax().clone())
     }
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">JsAnyRenamableDeclaration</span> {
-    <span class="ident">JsIdentifierBinding</span>(<span class="ident">JsIdentifierBinding</span>),
-    <span class="ident">JsReferenceIdentifier</span>(<span class="ident">JsReferenceIdentifier</span>),
-    <span class="ident">JsIdentifierAssignment</span>(<span class="ident">JsIdentifierAssignment</span>),
+<span class="kw">pub enum </span>JsAnyRenamableDeclaration {
+    JsIdentifierBinding(JsIdentifierBinding),
+    JsReferenceIdentifier(JsReferenceIdentifier),
+    JsIdentifierAssignment(JsIdentifierAssignment),
 }
 
-<span class="kw">impl</span> <span class="ident">RenamableNode</span> <span class="kw">for</span> <span class="ident">JsAnyRenamableDeclaration</span> {
-    <span class="kw">fn</span> <span class="ident">declaration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsSyntaxNode</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">JsAnyRenamableDeclaration::JsIdentifierBinding</span>(<span class="ident">node</span>) =&gt; {
-                <span class="ident">RenamableNode::declaration</span>(<span class="ident">node</span>, <span class="ident">model</span>)
+<span class="kw">impl </span>RenamableNode <span class="kw">for </span>JsAnyRenamableDeclaration {
+    <span class="kw">fn </span>declaration(<span class="kw-2">&amp;</span><span class="self">self</span>, model: <span class="kw-2">&amp;</span>SemanticModel) -&gt; <span class="prelude-ty">Option</span>&lt;JsSyntaxNode&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            JsAnyRenamableDeclaration::JsIdentifierBinding(node) =&gt; {
+                RenamableNode::declaration(node, model)
             }
-            <span class="ident">JsAnyRenamableDeclaration::JsReferenceIdentifier</span>(<span class="ident">node</span>) =&gt; {
-                <span class="ident">RenamableNode::declaration</span>(<span class="ident">node</span>, <span class="ident">model</span>)
+            JsAnyRenamableDeclaration::JsReferenceIdentifier(node) =&gt; {
+                RenamableNode::declaration(node, model)
             }
-            <span class="ident">JsAnyRenamableDeclaration::JsIdentifierAssignment</span>(<span class="ident">node</span>) =&gt; {
-                <span class="ident">RenamableNode::declaration</span>(<span class="ident">node</span>, <span class="ident">model</span>)
+            JsAnyRenamableDeclaration::JsIdentifierAssignment(node) =&gt; {
+                RenamableNode::declaration(node, model)
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RenameError</span> {
-    <span class="ident">CannotFindDeclaration</span>,
-    <span class="ident">CannotBeRenamed</span> {
-        <span class="ident">original_name</span>: <span class="ident">String</span>,
-        <span class="ident">new_name</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(Deserialize, Serialize)]
+</span><span class="kw">pub enum </span>RenameError {
+    CannotFindDeclaration,
+    CannotBeRenamed {
+        original_name: String,
+        new_name: String,
     },
 }
 
-<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">JsSyntaxNode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JsAnyRenamableDeclaration</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">RenameError</span>;
+<span class="kw">impl </span>TryFrom&lt;JsSyntaxNode&gt; <span class="kw">for </span>JsAnyRenamableDeclaration {
+    <span class="kw">type </span>Error = RenameError;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">node</span>: <span class="ident">JsSyntaxNode</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">kind</span>() {
-            <span class="ident">JsSyntaxKind::JS_IDENTIFIER_BINDING</span> =&gt; <span class="ident">node</span>
-                .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">JsIdentifierBinding</span><span class="op">&gt;</span>()
-                .<span class="ident">map</span>(<span class="ident">JsAnyRenamableDeclaration::JsIdentifierBinding</span>)
-                .<span class="ident">ok_or</span>(<span class="ident"><span class="self">Self</span>::Error::CannotFindDeclaration</span>),
-            <span class="ident">JsSyntaxKind::JS_REFERENCE_IDENTIFIER</span> =&gt; <span class="ident">node</span>
-                .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">JsReferenceIdentifier</span><span class="op">&gt;</span>()
-                .<span class="ident">map</span>(<span class="ident">JsAnyRenamableDeclaration::JsReferenceIdentifier</span>)
-                .<span class="ident">ok_or</span>(<span class="ident"><span class="self">Self</span>::Error::CannotFindDeclaration</span>),
-            <span class="ident">JsSyntaxKind::JS_IDENTIFIER_ASSIGNMENT</span> =&gt; <span class="ident">node</span>
-                .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">JsIdentifierAssignment</span><span class="op">&gt;</span>()
-                .<span class="ident">map</span>(<span class="ident">JsAnyRenamableDeclaration::JsIdentifierAssignment</span>)
-                .<span class="ident">ok_or</span>(<span class="ident"><span class="self">Self</span>::Error::CannotFindDeclaration</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="self">Self</span>::Error::CannotFindDeclaration</span>),
+    <span class="kw">fn </span>try_from(node: JsSyntaxNode) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">match </span>node.kind() {
+            JsSyntaxKind::JS_IDENTIFIER_BINDING =&gt; node
+                .cast::&lt;JsIdentifierBinding&gt;()
+                .map(JsAnyRenamableDeclaration::JsIdentifierBinding)
+                .ok_or(<span class="self">Self</span>::Error::CannotFindDeclaration),
+            JsSyntaxKind::JS_REFERENCE_IDENTIFIER =&gt; node
+                .cast::&lt;JsReferenceIdentifier&gt;()
+                .map(JsAnyRenamableDeclaration::JsReferenceIdentifier)
+                .ok_or(<span class="self">Self</span>::Error::CannotFindDeclaration),
+            JsSyntaxKind::JS_IDENTIFIER_ASSIGNMENT =&gt; node
+                .cast::&lt;JsIdentifierAssignment&gt;()
+                .map(JsAnyRenamableDeclaration::JsIdentifierAssignment)
+                .ok_or(<span class="self">Self</span>::Error::CannotFindDeclaration),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="self">Self</span>::Error::CannotFindDeclaration),
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RenameSymbolExtensions</span> {
-    <span class="doccomment">/// Rename the binding and all its references to &quot;new_name&quot;.</span>
-    <span class="kw">fn</span> <span class="ident">rename_node_declaration</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>,
-        <span class="ident">node</span>: <span class="kw">impl</span> <span class="ident">RenamableNode</span>,
-        <span class="ident">new_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">bool</span>;
+<span class="kw">pub trait </span>RenameSymbolExtensions {
+    <span class="doccomment">/// Rename the binding and all its references to &quot;new_name&quot;.
+    </span><span class="kw">fn </span>rename_node_declaration(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        model: <span class="kw-2">&amp;</span>SemanticModel,
+        node: <span class="kw">impl </span>RenamableNode,
+        new_name: <span class="kw-2">&amp;</span>str,
+    ) -&gt; bool;
 
-    <span class="doccomment">/// Rename a symbol using the new name from the candidates iterator</span>
-    <span class="doccomment">/// until the first success.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A usual use case is to append a suffix to a variable name.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// let new_name = &quot;new_name&quot;;</span>
-    <span class="doccomment">/// let candidates = (2..).map(|i| format!(&quot;{}{}&quot;, new_name, i).into());</span>
-    <span class="doccomment">/// let candidates = once(Cow::from(new_name)).chain(candidates);</span>
-    <span class="doccomment">/// batch.try_rename_node_declaration_until_success(model, node, candidates);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">rename_node_declaration_with_retry</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">I</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>,
-        <span class="ident">node</span>: <span class="kw">impl</span> <span class="ident">RenamableNode</span> <span class="op">+</span> <span class="ident">Clone</span>,
-        <span class="ident">candidates</span>: <span class="ident">I</span>,
-    ) -&gt; <span class="ident">bool</span>
-    <span class="kw">where</span>
-        <span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
-        <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">S</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Rename a symbol using the new name from the candidates iterator
+    /// until the first success.
+    ///
+    /// A usual use case is to append a suffix to a variable name.
+    ///
+    /// ```ignore
+    /// let new_name = &quot;new_name&quot;;
+    /// let candidates = (2..).map(|i| format!(&quot;{}{}&quot;, new_name, i).into());
+    /// let candidates = once(Cow::from(new_name)).chain(candidates);
+    /// batch.try_rename_node_declaration_until_success(model, node, candidates);
+    /// ```
+    </span><span class="kw">fn </span>rename_node_declaration_with_retry&lt;S, I&gt;(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        model: <span class="kw-2">&amp;</span>SemanticModel,
+        node: <span class="kw">impl </span>RenamableNode + Clone,
+        candidates: I,
+    ) -&gt; bool
+    <span class="kw">where
+        </span>S: AsRef&lt;str&gt;,
+        I: Iterator&lt;Item = S&gt;,
     {
-        <span class="kw">for</span> <span class="ident">candidate</span> <span class="kw">in</span> <span class="ident">candidates</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">rename_node_declaration</span>(<span class="ident">model</span>, <span class="ident">node</span>.<span class="ident">clone</span>(), <span class="ident">candidate</span>.<span class="ident">as_ref</span>()) {
-                <span class="kw">return</span> <span class="bool-val">true</span>;
+        <span class="kw">for </span>candidate <span class="kw">in </span>candidates {
+            <span class="kw">if </span><span class="self">self</span>.rename_node_declaration(model, node.clone(), candidate.as_ref()) {
+                <span class="kw">return </span><span class="bool-val">true</span>;
             }
         }
 
-        <span class="bool-val">false</span>
-    }
+        <span class="bool-val">false
+    </span>}
 
-    <span class="doccomment">/// Rename the binding and all its references to &quot;new_name&quot;.</span>
-    <span class="kw">fn</span> <span class="ident">rename_any_renamable_node</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>,
-        <span class="ident">node</span>: <span class="ident">JsAnyRenamableDeclaration</span>,
-        <span class="ident">new_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">rename_node_declaration</span>(<span class="ident">model</span>, <span class="ident">node</span>, <span class="ident">new_name</span>)
+    <span class="doccomment">/// Rename the binding and all its references to &quot;new_name&quot;.
+    </span><span class="kw">fn </span>rename_any_renamable_node(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        model: <span class="kw-2">&amp;</span>SemanticModel,
+        node: JsAnyRenamableDeclaration,
+        new_name: <span class="kw-2">&amp;</span>str,
+    ) -&gt; bool {
+        <span class="self">self</span>.rename_node_declaration(model, node, new_name)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">token_with_new_text</span>(<span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">JsSyntaxToken</span>, <span class="ident">new_text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">JsSyntaxToken</span> {
-    <span class="kw">let</span> <span class="ident">new_text</span> <span class="op">=</span> <span class="macro">format!</span>(
+<span class="kw">fn </span>token_with_new_text(token: <span class="kw-2">&amp;</span>JsSyntaxToken, new_text: <span class="kw-2">&amp;</span>str) -&gt; JsSyntaxToken {
+    <span class="kw">let </span>new_text = <span class="macro">format!</span>(
         <span class="string">&quot;{}{}{}&quot;</span>,
-        <span class="ident">token</span>.<span class="ident">leading_trivia</span>().<span class="ident">text</span>(),
-        <span class="ident">new_text</span>,
-        <span class="ident">token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">text</span>()
+        token.leading_trivia().text(),
+        new_text,
+        token.trailing_trivia().text()
     );
 
-    <span class="kw">let</span> <span class="ident">leading</span> <span class="op">=</span> <span class="ident">token</span>
-        .<span class="ident">leading_trivia</span>()
-        .<span class="ident">pieces</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="ident">TriviaPiece::new</span>(<span class="ident">item</span>.<span class="ident">kind</span>(), <span class="ident">item</span>.<span class="ident">text_len</span>()))
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="ident">token</span>
-        .<span class="ident">trailing_trivia</span>()
-        .<span class="ident">pieces</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="ident">TriviaPiece::new</span>(<span class="ident">item</span>.<span class="ident">kind</span>(), <span class="ident">item</span>.<span class="ident">text_len</span>()))
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+    <span class="kw">let </span>leading = token
+        .leading_trivia()
+        .pieces()
+        .map(|item| TriviaPiece::new(item.kind(), item.text_len()))
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>trailing = token
+        .trailing_trivia()
+        .pieces()
+        .map(|item| TriviaPiece::new(item.kind(), item.text_len()))
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-    <span class="ident">JsSyntaxToken::new_detached</span>(<span class="ident">JsSyntaxKind::IDENT</span>, <span class="ident">new_text</span>.<span class="ident">as_str</span>(), <span class="ident">leading</span>, <span class="ident">trailing</span>)
+    JsSyntaxToken::new_detached(JsSyntaxKind::IDENT, new_text.as_str(), leading, trailing)
 }
 
-<span class="kw">impl</span> <span class="ident">RenameSymbolExtensions</span> <span class="kw">for</span> <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Rename the binding and all its references to &quot;new_name&quot;.</span>
-    <span class="doccomment">/// If we can´t rename the binding, the [BatchMutation] is never changes and it is left</span>
-    <span class="doccomment">/// intact.</span>
-    <span class="kw">fn</span> <span class="ident">rename_node_declaration</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>,
-        <span class="ident">node</span>: <span class="kw">impl</span> <span class="ident">RenamableNode</span>,
-        <span class="ident">new_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">prev_binding</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">node</span>
-            .<span class="ident">declaration</span>(<span class="ident">model</span>)
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">JsIdentifierBinding</span><span class="op">&gt;</span>())
+<span class="kw">impl </span>RenameSymbolExtensions <span class="kw">for </span>BatchMutation&lt;JsLanguage&gt; {
+    <span class="doccomment">/// Rename the binding and all its references to &quot;new_name&quot;.
+    /// If we can´t rename the binding, the [BatchMutation] is never changes and it is left
+    /// intact.
+    </span><span class="kw">fn </span>rename_node_declaration(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        model: <span class="kw-2">&amp;</span>SemanticModel,
+        node: <span class="kw">impl </span>RenamableNode,
+        new_name: <span class="kw-2">&amp;</span>str,
+    ) -&gt; bool {
+        <span class="kw">let </span>prev_binding = <span class="kw">match </span>node
+            .declaration(model)
+            .and_then(|node| node.cast::&lt;JsIdentifierBinding&gt;())
         {
-            <span class="prelude-val">Some</span>(<span class="ident">prev_binding</span>) =&gt; <span class="ident">prev_binding</span>,
-            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="bool-val">false</span>,
+            <span class="prelude-val">Some</span>(prev_binding) =&gt; prev_binding,
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="bool-val">false</span>,
         };
 
-        <span class="comment">// We can rename a binding if there is no conflicts in the current scope.</span>
-        <span class="comment">// We can shadow parent scopes, so we don´t check them.</span>
+        <span class="comment">// We can rename a binding if there is no conflicts in the current scope.
+        // We can shadow parent scopes, so we don´t check them.
 
-        <span class="kw">let</span> <span class="ident">syntax</span> <span class="op">=</span> <span class="ident">prev_binding</span>.<span class="ident">syntax</span>();
-        <span class="kw">let</span> <span class="ident">scope</span> <span class="op">=</span> <span class="ident">model</span>
-            .<span class="ident">scope_hoisted_to</span>(<span class="ident">syntax</span>)
-            .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">model</span>.<span class="ident">scope</span>(<span class="ident">syntax</span>));
-        <span class="kw">if</span> <span class="ident">scope</span>.<span class="ident">get_binding</span>(<span class="ident">new_name</span>).<span class="ident">is_some</span>() {
-            <span class="kw">return</span> <span class="bool-val">false</span>;
+        </span><span class="kw">let </span>syntax = prev_binding.syntax();
+        <span class="kw">let </span>scope = model
+            .scope_hoisted_to(syntax)
+            .unwrap_or_else(|| model.scope(syntax));
+        <span class="kw">if </span>scope.get_binding(new_name).is_some() {
+            <span class="kw">return </span><span class="bool-val">false</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">name_token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prev_binding</span>.<span class="ident">name_token</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">name_token</span>) =&gt; <span class="ident">name_token</span>,
+        <span class="kw">let </span>name_token = <span class="kw">match </span>prev_binding.name_token() {
+            <span class="prelude-val">Ok</span>(name_token) =&gt; name_token,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                <span class="kw">return</span> <span class="bool-val">false</span>;
+                <span class="kw">return </span><span class="bool-val">false</span>;
             }
         };
 
-        <span class="comment">// We can rename references, if there is no conflicts in any scope</span>
-        <span class="comment">// until the root.</span>
+        <span class="comment">// We can rename references, if there is no conflicts in any scope
+        // until the root.
 
-        <span class="kw">let</span> <span class="ident">all_references</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">prev_binding</span>.<span class="ident">all_references</span>(<span class="ident">model</span>).<span class="ident">collect</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">changes</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">all_references</span>.<span class="ident">len</span>());
+        </span><span class="kw">let </span>all_references: Vec&lt;<span class="kw">_</span>&gt; = prev_binding.all_references(model).collect();
+        <span class="kw">let </span><span class="kw-2">mut </span>changes = Vec::with_capacity(all_references.len());
 
-        <span class="kw">for</span> <span class="ident">reference</span> <span class="kw">in</span> <span class="ident">all_references</span> {
-            <span class="kw">let</span> <span class="ident">scope</span> <span class="op">=</span> <span class="ident">reference</span>.<span class="ident">scope</span>();
-            <span class="kw">if</span> <span class="ident">scope</span>
-                .<span class="ident">ancestors</span>()
-                .<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">scope</span><span class="op">|</span> <span class="ident">scope</span>.<span class="ident">get_binding</span>(<span class="ident">new_name</span>))
-                .<span class="ident">is_some</span>()
+        <span class="kw">for </span>reference <span class="kw">in </span>all_references {
+            <span class="kw">let </span>scope = reference.scope();
+            <span class="kw">if </span>scope
+                .ancestors()
+                .find_map(|scope| scope.get_binding(new_name))
+                .is_some()
             {
-                <span class="kw">return</span> <span class="bool-val">false</span>;
+                <span class="kw">return </span><span class="bool-val">false</span>;
             }
 
-            <span class="kw">let</span> <span class="ident">prev_token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">reference</span>.<span class="ident">node</span>().<span class="ident">kind</span>() {
-                <span class="ident">JsSyntaxKind::JS_REFERENCE_IDENTIFIER</span> =&gt; <span class="ident">reference</span>
-                    .<span class="ident">node</span>()
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">JsReferenceIdentifier</span><span class="op">&gt;</span>()
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">value_token</span>().<span class="ident">ok</span>()),
-                <span class="ident">JsSyntaxKind::JS_IDENTIFIER_ASSIGNMENT</span> =&gt; <span class="ident">reference</span>
-                    .<span class="ident">node</span>()
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">JsIdentifierAssignment</span><span class="op">&gt;</span>()
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">name_token</span>().<span class="ident">ok</span>()),
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="kw">let </span>prev_token = <span class="kw">match </span>reference.node().kind() {
+                JsSyntaxKind::JS_REFERENCE_IDENTIFIER =&gt; reference
+                    .node()
+                    .clone()
+                    .cast::&lt;JsReferenceIdentifier&gt;()
+                    .and_then(|node| node.value_token().ok()),
+                JsSyntaxKind::JS_IDENTIFIER_ASSIGNMENT =&gt; reference
+                    .node()
+                    .clone()
+                    .cast::&lt;JsIdentifierAssignment&gt;()
+                    .and_then(|node| node.name_token().ok()),
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             };
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">prev_token</span>) <span class="op">=</span> <span class="ident">prev_token</span> {
-                <span class="kw">let</span> <span class="ident">next_token</span> <span class="op">=</span> <span class="ident">token_with_new_text</span>(<span class="kw-2">&amp;</span><span class="ident">prev_token</span>, <span class="ident">new_name</span>);
-                <span class="ident">changes</span>.<span class="ident">push</span>((<span class="ident">prev_token</span>, <span class="ident">next_token</span>));
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_token) = prev_token {
+                <span class="kw">let </span>next_token = token_with_new_text(<span class="kw-2">&amp;</span>prev_token, new_name);
+                changes.push((prev_token, next_token));
             }
         }
 
-        <span class="comment">// Now it is safe to push changes to the batch mutation</span>
-        <span class="comment">// Rename binding</span>
+        <span class="comment">// Now it is safe to push changes to the batch mutation
+        // Rename binding
 
-        <span class="kw">let</span> <span class="ident">next_name_token</span> <span class="op">=</span> <span class="ident">token_with_new_text</span>(<span class="kw-2">&amp;</span><span class="ident">name_token</span>, <span class="ident">new_name</span>);
-        <span class="kw">let</span> <span class="ident">next_binding</span> <span class="op">=</span> <span class="ident">prev_binding</span>.<span class="ident">clone</span>().<span class="ident">with_name_token</span>(<span class="ident">next_name_token</span>);
-        <span class="self">self</span>.<span class="ident">replace_node</span>(<span class="ident">prev_binding</span>, <span class="ident">next_binding</span>);
+        </span><span class="kw">let </span>next_name_token = token_with_new_text(<span class="kw-2">&amp;</span>name_token, new_name);
+        <span class="kw">let </span>next_binding = prev_binding.clone().with_name_token(next_name_token);
+        <span class="self">self</span>.replace_node(prev_binding, next_binding);
 
-        <span class="comment">// Rename all references</span>
+        <span class="comment">// Rename all references
 
-        <span class="kw">for</span> (<span class="ident">prev_token</span>, <span class="ident">next_token</span>) <span class="kw">in</span> <span class="ident">changes</span> {
-            <span class="self">self</span>.<span class="ident">replace_token</span>(<span class="ident">prev_token</span>, <span class="ident">next_token</span>);
+        </span><span class="kw">for </span>(prev_token, next_token) <span class="kw">in </span>changes {
+            <span class="self">self</span>.replace_token(prev_token, next_token);
         }
 
-        <span class="bool-val">true</span>
-    }
+        <span class="bool-val">true
+    </span>}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">assert_rename_nok</span>, <span class="ident">assert_rename_ok</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use crate</span>::{assert_rename_nok, assert_rename_ok};
 
-    <span class="macro">assert_rename_ok!</span> {
-        <span class="ident">ok_rename_declaration</span>,
+    <span class="macro">assert_rename_ok! </span>{
+        ok_rename_declaration,
             <span class="string">&quot;let a;&quot;</span>,
             <span class="string">&quot;let b;&quot;</span>,
-        <span class="ident">ok_rename_declaration_inner_scope</span>,
+        ok_rename_declaration_inner_scope,
             <span class="string">&quot;let b; if (true) { let a; }&quot;</span>,
             <span class="string">&quot;let b; if (true) { let b; }&quot;</span>,
-        <span class="ident">ok_rename_read_reference</span>,
+        ok_rename_read_reference,
             <span class="string">&quot;let a; a + 1;&quot;</span>,
             <span class="string">&quot;let b; b + 1;&quot;</span>,
-        <span class="ident">ok_rename_read_before_initit</span>,
+        ok_rename_read_before_initit,
             <span class="string">&quot;function f() { console.log(a); let a; }&quot;</span>,
             <span class="string">&quot;function f() { console.log(b); let b; }&quot;</span>,
-        <span class="ident">ok_rename_write_reference</span>,
+        ok_rename_write_reference,
             <span class="string">&quot;let a; a = 1;&quot;</span>,
             <span class="string">&quot;let b; b = 1;&quot;</span>,
-        <span class="ident">ok_rename_write_before_init</span>,
+        ok_rename_write_before_init,
             <span class="string">&quot;function f() { a = 1; let a; }&quot;</span>,
             <span class="string">&quot;function f() { b = 1; let b; }&quot;</span>,
-        <span class="ident">ok_rename_trivia_is_kept</span>,
+        ok_rename_trivia_is_kept,
             <span class="string">&quot;let /*1*/a/*2*/; /*3*/a/*4*/ = 1; /*5*/a/*6*/ + 1&quot;</span>,
             <span class="string">&quot;let /*1*/b/*2*/; /*3*/b/*4*/ = 1; /*5*/b/*6*/ + 1&quot;</span>,
-        <span class="ident">ok_rename_function_same_name</span>,
+        ok_rename_function_same_name,
             <span class="string">&quot;function a() { function b() {console.log(2)}; console.log(1); b(); } a();&quot;</span>,
             <span class="string">&quot;function b() { function b() {console.log(2)}; console.log(1); b(); } b();&quot;</span>,
     }
 
-    <span class="macro">assert_rename_nok!</span> {
-        <span class="ident">nok_rename_declaration_conflict_before</span>, <span class="string">&quot;let b; let a;&quot;</span>,
-        <span class="ident">nok_rename_declaration_conflict_after</span>, <span class="string">&quot;let a; let b;&quot;</span>,
-        <span class="ident">nok_rename_read_reference</span>, <span class="string">&quot;let a; if (true) { let b; a + 1 }&quot;</span>,
-        <span class="ident">nok_rename_read_reference_conflict_hoisting_same_scope</span>, <span class="string">&quot;let a; if (true) { a + 1; var b; }&quot;</span>,
-        <span class="ident">nok_rename_read_reference_conflict_hoisting_outer_scope</span>, <span class="string">&quot;let a; if (true) { a + 1; } var b;&quot;</span>,
-        <span class="ident">nok_rename_write_reference</span>, <span class="string">&quot;let a; if (true) { let b; a = 1 }&quot;</span>,
-        <span class="ident">nok_rename_read_reference_parent_scope_conflict</span>, <span class="string">&quot;function f() { let b; if(true) { console.log(a); } } var a;&quot;</span>,
-        <span class="ident">nok_rename_function_conflict</span>, <span class="string">&quot;function a() {} function b() {}&quot;</span>,
+    <span class="macro">assert_rename_nok! </span>{
+        nok_rename_declaration_conflict_before, <span class="string">&quot;let b; let a;&quot;</span>,
+        nok_rename_declaration_conflict_after, <span class="string">&quot;let a; let b;&quot;</span>,
+        nok_rename_read_reference, <span class="string">&quot;let a; if (true) { let b; a + 1 }&quot;</span>,
+        nok_rename_read_reference_conflict_hoisting_same_scope, <span class="string">&quot;let a; if (true) { a + 1; var b; }&quot;</span>,
+        nok_rename_read_reference_conflict_hoisting_outer_scope, <span class="string">&quot;let a; if (true) { a + 1; } var b;&quot;</span>,
+        nok_rename_write_reference, <span class="string">&quot;let a; if (true) { let b; a = 1 }&quot;</span>,
+        nok_rename_read_reference_parent_scope_conflict, <span class="string">&quot;function f() { let b; if(true) { console.log(a); } } var a;&quot;</span>,
+        nok_rename_function_conflict, <span class="string">&quot;function a() {} function b() {}&quot;</span>,
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

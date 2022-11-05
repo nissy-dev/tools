@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/syntax/object.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>object.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/syntax/object.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>object.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -451,458 +451,458 @@
 <span id="451">451</span>
 <span id="452">452</span>
 <span id="453">453</span>
-</pre><pre class="rust"><code><span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::single_token_parse_recovery::SingleTokenParseRecovery</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::ParsedSyntax</span>::{<span class="ident">Absent</span>, <span class="ident">Present</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">ParsedSyntax</span>, <span class="ident">RecoveryResult</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state</span>::{<span class="ident">EnterParameters</span>, <span class="ident">SignatureFlags</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::expr</span>::{
-    <span class="ident">is_nth_at_reference_identifier</span>, <span class="ident">parse_assignment_expression_or_higher</span>, <span class="ident">parse_expression</span>,
-    <span class="ident">parse_reference_identifier</span>, <span class="ident">ExpressionContext</span>,
+</pre><pre class="rust"><code><span class="attribute">#[allow(deprecated)]
+</span><span class="kw">use </span><span class="kw">crate</span>::parser::single_token_parse_recovery::SingleTokenParseRecovery;
+<span class="kw">use </span><span class="kw">crate</span>::parser::ParsedSyntax::{Absent, Present};
+<span class="kw">use </span><span class="kw">crate</span>::parser::{ParsedSyntax, RecoveryResult};
+<span class="kw">use </span><span class="kw">crate</span>::state::{EnterParameters, SignatureFlags};
+<span class="kw">use </span><span class="kw">crate</span>::syntax::expr::{
+    is_nth_at_reference_identifier, parse_assignment_expression_or_higher, parse_expression,
+    parse_reference_identifier, ExpressionContext,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::function</span>::{
-    <span class="ident">parse_formal_parameter</span>, <span class="ident">parse_function_body</span>, <span class="ident">parse_parameter_list</span>, <span class="ident">ParameterContext</span>,
+<span class="kw">use </span><span class="kw">crate</span>::syntax::function::{
+    parse_formal_parameter, parse_function_body, parse_parameter_list, ParameterContext,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::js_parse_error</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::typescript::ts_parse_error</span>::{
-    <span class="ident">ts_accessor_type_parameters_error</span>, <span class="ident">ts_only_syntax_error</span>, <span class="ident">ts_set_accessor_return_type_error</span>,
+<span class="kw">use </span><span class="kw">crate</span>::syntax::js_parse_error;
+<span class="kw">use </span><span class="kw">crate</span>::syntax::typescript::ts_parse_error::{
+    ts_accessor_type_parameters_error, ts_only_syntax_error, ts_set_accessor_return_type_error,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::typescript</span>::{
-    <span class="ident">parse_ts_return_type_annotation</span>, <span class="ident">parse_ts_type_annotation</span>, <span class="ident">parse_ts_type_parameters</span>,
+<span class="kw">use </span><span class="kw">crate</span>::syntax::typescript::{
+    parse_ts_return_type_annotation, parse_ts_type_annotation, parse_ts_type_parameters,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsSyntaxFeature::TypeScript</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ParseRecovery</span>, <span class="ident">ParseSeparatedList</span>, <span class="ident">Parser</span>, <span class="ident">SyntaxFeature</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>, <span class="ident">T</span>};
+<span class="kw">use </span><span class="kw">crate</span>::JsSyntaxFeature::TypeScript;
+<span class="kw">use crate</span>::{ParseRecovery, ParseSeparatedList, Parser, SyntaxFeature};
+<span class="kw">use </span>rome_js_syntax::JsSyntaxKind::<span class="kw-2">*</span>;
+<span class="kw">use </span>rome_js_syntax::{JsSyntaxKind, T};
 
-<span class="comment">// test object_expr</span>
-<span class="comment">// let a = {};</span>
-<span class="comment">// let b = {foo,}</span>
-<span class="comment">//</span>
-<span class="comment">// test_err object_expr_err</span>
-<span class="comment">// let a = {, foo}</span>
-<span class="comment">// let b = { foo bar }</span>
-<span class="comment">// let b = { foo</span>
+<span class="comment">// test object_expr
+// let a = {};
+// let b = {foo,}
+//
+// test_err object_expr_err
+// let a = {, foo}
+// let b = { foo bar }
+// let b = { foo
 
-<span class="kw">struct</span> <span class="ident">ObjectMembersList</span>;
+</span><span class="kw">struct </span>ObjectMembersList;
 
-<span class="kw">impl</span> <span class="ident">ParseSeparatedList</span> <span class="kw">for</span> <span class="ident">ObjectMembersList</span> {
-    <span class="kw">fn</span> <span class="ident">parse_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-        <span class="ident">parse_object_member</span>(<span class="ident">p</span>)
+<span class="kw">impl </span>ParseSeparatedList <span class="kw">for </span>ObjectMembersList {
+    <span class="kw">fn </span>parse_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+        parse_object_member(p)
     }
 
-    <span class="kw">fn</span> <span class="ident">is_at_list_end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>])
+    <span class="kw">fn </span>is_at_list_end(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool {
+        p.at(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>])
     }
 
-    <span class="kw">fn</span> <span class="ident">recover</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">parsed_element</span>: <span class="ident">ParsedSyntax</span>) -&gt; <span class="ident">RecoveryResult</span> {
-        <span class="ident">parsed_element</span>.<span class="ident">or_recover</span>(
-            <span class="ident">p</span>,
-            <span class="kw-2">&amp;</span><span class="ident">ParseRecovery::new</span>(<span class="ident">JS_UNKNOWN_MEMBER</span>, <span class="macro">token_set!</span>[<span class="macro">T!</span>[,], <span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>], <span class="macro">T!</span>[;], <span class="macro">T!</span>[:]])
-                .<span class="ident">enable_recovery_on_line_break</span>(),
-            <span class="ident">js_parse_error::expected_object_member</span>,
+    <span class="kw">fn </span>recover(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser, parsed_element: ParsedSyntax) -&gt; RecoveryResult {
+        parsed_element.or_recover(
+            p,
+            <span class="kw-2">&amp;</span>ParseRecovery::new(JS_UNKNOWN_MEMBER, <span class="macro">token_set!</span>[<span class="macro">T!</span>[,], <span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>], <span class="macro">T!</span>[;], <span class="macro">T!</span>[:]])
+                .enable_recovery_on_line_break(),
+            js_parse_error::expected_object_member,
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">list_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span> {
-        <span class="ident">JS_OBJECT_MEMBER_LIST</span>
+    <span class="kw">fn </span>list_kind() -&gt; JsSyntaxKind {
+        JS_OBJECT_MEMBER_LIST
     }
 
-    <span class="kw">fn</span> <span class="ident">separating_element_kind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">JsSyntaxKind</span> {
+    <span class="kw">fn </span>separating_element_kind(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; JsSyntaxKind {
         <span class="macro">T!</span>[,]
     }
 
-    <span class="kw">fn</span> <span class="ident">allow_trailing_separating_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="bool-val">true</span>
-    }
+    <span class="kw">fn </span>allow_trailing_separating_element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="bool-val">true
+    </span>}
 }
 
-<span class="doccomment">/// An object literal such as `{ a: b, &quot;b&quot;: 5 + 5 }`.</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse_object_expression</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="doccomment">/// An object literal such as `{ a: b, &quot;b&quot;: 5 + 5 }`.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>parse_object_expression(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]) {
+        <span class="kw">return </span>Absent;
     }
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]);
+    <span class="kw">let </span>m = p.start();
+    p.bump(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]);
 
-    <span class="ident">ObjectMembersList</span>.<span class="ident">parse_list</span>(<span class="ident">p</span>);
+    ObjectMembersList.parse_list(p);
 
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]);
-    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_OBJECT_EXPRESSION</span>))
+    p.expect(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]);
+    Present(m.complete(p, JS_OBJECT_EXPRESSION))
 }
 
-<span class="doccomment">/// An individual object property such as `&quot;a&quot;: b` or `5: 6 + 6`.</span>
-<span class="kw">fn</span> <span class="ident">parse_object_member</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">cur</span>() {
-        <span class="comment">// test getter_object_member</span>
-        <span class="comment">// let a = {</span>
-        <span class="comment">//   get foo() {</span>
-        <span class="comment">//     return foo;</span>
-        <span class="comment">//   },</span>
-        <span class="comment">//   get &quot;bar&quot;() {</span>
-        <span class="comment">//     return &quot;bar&quot;;</span>
-        <span class="comment">//   },</span>
-        <span class="comment">//   get [&quot;a&quot; + &quot;b&quot;]() {</span>
-        <span class="comment">//     return &quot;a&quot; + &quot;b&quot;</span>
-        <span class="comment">//   },</span>
-        <span class="comment">//   get 5() {</span>
-        <span class="comment">//     return 5;</span>
-        <span class="comment">//   },</span>
-        <span class="comment">//   get() {</span>
-        <span class="comment">//    return &quot;This is a method and not a getter&quot;;</span>
-        <span class="comment">//   }</span>
-        <span class="comment">// }</span>
-        <span class="macro">T!</span>[<span class="ident">get</span>] <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">has_nth_preceding_line_break</span>(<span class="number">1</span>) <span class="op">&amp;&amp;</span> <span class="ident">is_nth_at_type_member_name</span>(<span class="ident">p</span>, <span class="number">1</span>) =&gt; {
-            <span class="ident">parse_getter_object_member</span>(<span class="ident">p</span>)
+<span class="doccomment">/// An individual object property such as `&quot;a&quot;: b` or `5: 6 + 6`.
+</span><span class="kw">fn </span>parse_object_member(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">match </span>p.cur() {
+        <span class="comment">// test getter_object_member
+        // let a = {
+        //   get foo() {
+        //     return foo;
+        //   },
+        //   get &quot;bar&quot;() {
+        //     return &quot;bar&quot;;
+        //   },
+        //   get [&quot;a&quot; + &quot;b&quot;]() {
+        //     return &quot;a&quot; + &quot;b&quot;
+        //   },
+        //   get 5() {
+        //     return 5;
+        //   },
+        //   get() {
+        //    return &quot;This is a method and not a getter&quot;;
+        //   }
+        // }
+        </span><span class="macro">T!</span>[get] <span class="kw">if </span>!p.has_nth_preceding_line_break(<span class="number">1</span>) &amp;&amp; is_nth_at_type_member_name(p, <span class="number">1</span>) =&gt; {
+            parse_getter_object_member(p)
         }
 
-        <span class="comment">// test setter_object_member</span>
-        <span class="comment">// let a = {</span>
-        <span class="comment">//  set foo(value) {</span>
-        <span class="comment">//  },</span>
-        <span class="comment">//  set &quot;bar&quot;(value) {</span>
-        <span class="comment">//  },</span>
-        <span class="comment">//  set [&quot;a&quot; + &quot;b&quot;](value) {</span>
-        <span class="comment">//  },</span>
-        <span class="comment">//  set 5(value) {</span>
-        <span class="comment">//  },</span>
-        <span class="comment">//  set() {</span>
-        <span class="comment">//   return &quot;This is a method and not a setter&quot;;</span>
-        <span class="comment">//  }</span>
-        <span class="comment">// }</span>
+        <span class="comment">// test setter_object_member
+        // let a = {
+        //  set foo(value) {
+        //  },
+        //  set &quot;bar&quot;(value) {
+        //  },
+        //  set [&quot;a&quot; + &quot;b&quot;](value) {
+        //  },
+        //  set 5(value) {
+        //  },
+        //  set() {
+        //   return &quot;This is a method and not a setter&quot;;
+        //  }
+        // }
 
-        <span class="comment">// test_err object_expr_setter</span>
-        <span class="comment">// let b = {</span>
-        <span class="comment">//  set foo() {</span>
-        <span class="comment">//     return 5;</span>
-        <span class="comment">//  }</span>
-        <span class="comment">// }</span>
-        <span class="macro">T!</span>[<span class="ident">set</span>] <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">has_nth_preceding_line_break</span>(<span class="number">1</span>) <span class="op">&amp;&amp;</span> <span class="ident">is_nth_at_type_member_name</span>(<span class="ident">p</span>, <span class="number">1</span>) =&gt; {
-            <span class="ident">parse_setter_object_member</span>(<span class="ident">p</span>)
+        // test_err object_expr_setter
+        // let b = {
+        //  set foo() {
+        //     return 5;
+        //  }
+        // }
+        </span><span class="macro">T!</span>[set] <span class="kw">if </span>!p.has_nth_preceding_line_break(<span class="number">1</span>) &amp;&amp; is_nth_at_type_member_name(p, <span class="number">1</span>) =&gt; {
+            parse_setter_object_member(p)
         }
 
-        <span class="comment">// test object_expr_async_method</span>
-        <span class="comment">// let a = {</span>
-        <span class="comment">//   async foo() {},</span>
-        <span class="comment">//   async *foo() {}</span>
-        <span class="comment">// }</span>
-        <span class="macro">T!</span>[<span class="kw">async</span>] <span class="kw">if</span> <span class="ident">is_parser_at_async_method_member</span>(<span class="ident">p</span>) =&gt; <span class="ident">parse_method_object_member</span>(<span class="ident">p</span>),
+        <span class="comment">// test object_expr_async_method
+        // let a = {
+        //   async foo() {},
+        //   async *foo() {}
+        // }
+        </span><span class="macro">T!</span>[<span class="kw">async</span>] <span class="kw">if </span>is_parser_at_async_method_member(p) =&gt; parse_method_object_member(p),
 
-        <span class="comment">// test object_expr_spread_prop</span>
-        <span class="comment">// let a = {...foo}</span>
-        <span class="macro">T!</span>[...] =&gt; {
-            <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-            <span class="ident">p</span>.<span class="ident">bump_any</span>();
-            <span class="ident">parse_assignment_expression_or_higher</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>())
-                .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_expression_assignment</span>);
-            <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_SPREAD</span>))
+        <span class="comment">// test object_expr_spread_prop
+        // let a = {...foo}
+        </span><span class="macro">T!</span>[...] =&gt; {
+            <span class="kw">let </span>m = p.start();
+            p.bump_any();
+            parse_assignment_expression_or_higher(p, ExpressionContext::default())
+                .or_add_diagnostic(p, js_parse_error::expected_expression_assignment);
+            Present(m.complete(p, JS_SPREAD))
         }
 
         <span class="macro">T!</span>[<span class="kw-2">*</span>] =&gt; {
-            <span class="comment">// test object_expr_generator_method</span>
-            <span class="comment">// let b = { *foo() {} }</span>
-            <span class="ident">parse_method_object_member</span>(<span class="ident">p</span>)
+            <span class="comment">// test object_expr_generator_method
+            // let b = { *foo() {} }
+            </span>parse_method_object_member(p)
         }
 
-        <span class="kw">_</span> =&gt; {
-            <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
+        <span class="kw">_ </span>=&gt; {
+            <span class="kw">let </span>m = p.start();
 
-            <span class="kw">if</span> <span class="ident">is_nth_at_reference_identifier</span>(<span class="ident">p</span>, <span class="number">0</span>)
-                <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="macro">token_set!</span>[<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>], <span class="macro">T!</span>[<span class="op">&lt;</span>], <span class="macro">T!</span>[:]].<span class="ident">contains</span>(<span class="ident">p</span>.<span class="ident">nth</span>(<span class="number">1</span>))
+            <span class="kw">if </span>is_nth_at_reference_identifier(p, <span class="number">0</span>)
+                &amp;&amp; !<span class="macro">token_set!</span>[<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>], <span class="macro">T!</span>[&lt;], <span class="macro">T!</span>[:]].contains(p.nth(<span class="number">1</span>))
             {
-                <span class="comment">// test object_expr_ident_prop</span>
-                <span class="comment">// ({foo})</span>
-                <span class="ident">parse_reference_identifier</span>(<span class="ident">p</span>).<span class="ident">unwrap</span>();
+                <span class="comment">// test object_expr_ident_prop
+                // ({foo})
+                </span>parse_reference_identifier(p).unwrap();
 
-                <span class="comment">// There are multiple places where it&#39;s first needed to parse an expression to determine if</span>
-                <span class="comment">// it is an assignment target or not. This requires that parse expression is valid for any</span>
-                <span class="comment">// assignment expression. Thus, it&#39;s needed that the parser silently parses over a &quot;{ arrow = test }&quot;</span>
-                <span class="comment">// property</span>
-                <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="op">=</span>]) {
-                    <span class="comment">// test assignment_shorthand_prop_with_initializer</span>
-                    <span class="comment">// for ({ arrow = () =&gt; {} } of [{}]) {}</span>
-                    <span class="comment">//</span>
-                    <span class="comment">// test_err object_shorthand_with_initializer</span>
-                    <span class="comment">// ({ arrow = () =&gt; {} })</span>
-                    <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Did you mean to use a `:`? An `=` can only follow a property name when the containing object literal is part of a destructuring pattern.&quot;</span>,
-						<span class="ident">p</span>.<span class="ident">cur_range</span>()));
-                    <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="op">=</span>]);
-                    <span class="ident">parse_assignment_expression_or_higher</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>()).<span class="ident">ok</span>();
-                    <span class="kw">return</span> <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN_MEMBER</span>));
+                <span class="comment">// There are multiple places where it&#39;s first needed to parse an expression to determine if
+                // it is an assignment target or not. This requires that parse expression is valid for any
+                // assignment expression. Thus, it&#39;s needed that the parser silently parses over a &quot;{ arrow = test }&quot;
+                // property
+                </span><span class="kw">if </span>p.at(<span class="macro">T!</span>[=]) {
+                    <span class="comment">// test assignment_shorthand_prop_with_initializer
+                    // for ({ arrow = () =&gt; {} } of [{}]) {}
+                    //
+                    // test_err object_shorthand_with_initializer
+                    // ({ arrow = () =&gt; {} })
+                    </span>p.error(p.err_builder(<span class="string">&quot;Did you mean to use a `:`? An `=` can only follow a property name when the containing object literal is part of a destructuring pattern.&quot;</span>,
+						p.cur_range()));
+                    p.bump(<span class="macro">T!</span>[=]);
+                    parse_assignment_expression_or_higher(p, ExpressionContext::default()).ok();
+                    <span class="kw">return </span>Present(m.complete(p, JS_UNKNOWN_MEMBER));
                 }
 
-                <span class="kw">return</span> <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_SHORTHAND_PROPERTY_OBJECT_MEMBER</span>));
+                <span class="kw">return </span>Present(m.complete(p, JS_SHORTHAND_PROPERTY_OBJECT_MEMBER));
             }
 
-            <span class="kw">let</span> <span class="ident">checkpoint</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">checkpoint</span>();
-            <span class="kw">let</span> <span class="ident">member_name</span> <span class="op">=</span> <span class="ident">parse_object_member_name</span>(<span class="ident">p</span>)
-                .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_object_member</span>);
+            <span class="kw">let </span>checkpoint = p.checkpoint();
+            <span class="kw">let </span>member_name = parse_object_member_name(p)
+                .or_add_diagnostic(p, js_parse_error::expected_object_member);
 
-            <span class="comment">// test object_expr_method</span>
-            <span class="comment">// let b = {</span>
-            <span class="comment">//   foo() {},</span>
-            <span class="comment">//   &quot;bar&quot;(a, b, c) {},</span>
-            <span class="comment">//   [&quot;foo&quot; + &quot;bar&quot;](a) {},</span>
-            <span class="comment">//   5(...rest) {}</span>
-            <span class="comment">// }</span>
+            <span class="comment">// test object_expr_method
+            // let b = {
+            //   foo() {},
+            //   &quot;bar&quot;(a, b, c) {},
+            //   [&quot;foo&quot; + &quot;bar&quot;](a) {},
+            //   5(...rest) {}
+            // }
 
-            <span class="comment">// test_err object_expr_method</span>
-            <span class="comment">// let b = { foo) }</span>
-            <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]) <span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="op">&lt;</span>]) {
-                <span class="ident">parse_method_object_member_body</span>(<span class="ident">p</span>, <span class="ident">SignatureFlags::empty</span>());
-                <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_METHOD_OBJECT_MEMBER</span>))
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">member_name</span>.<span class="ident">is_some</span>() {
-                <span class="comment">// test object_prop_name</span>
-                <span class="comment">// let a = {&quot;foo&quot;: foo, [6 + 6]: foo, bar: foo, 7: foo}</span>
+            // test_err object_expr_method
+            // let b = { foo) }
+            </span><span class="kw">if </span>p.at(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]) || p.at(<span class="macro">T!</span>[&lt;]) {
+                parse_method_object_member_body(p, SignatureFlags::empty());
+                Present(m.complete(p, JS_METHOD_OBJECT_MEMBER))
+            } <span class="kw">else if </span>member_name.is_some() {
+                <span class="comment">// test object_prop_name
+                // let a = {&quot;foo&quot;: foo, [6 + 6]: foo, bar: foo, 7: foo}
 
-                <span class="comment">// test object_expr_ident_literal_prop</span>
-                <span class="comment">// let b = { a: true }</span>
+                // test object_expr_ident_literal_prop
+                // let b = { a: true }
 
-                <span class="comment">// If the member name was a literal OR we&#39;re at a colon</span>
-                <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[:]);
+                // If the member name was a literal OR we&#39;re at a colon
+                </span>p.expect(<span class="macro">T!</span>[:]);
 
-                <span class="comment">// test object_prop_in_rhs</span>
-                <span class="comment">// for ({ a: &quot;x&quot; in {} };;) {}</span>
-                <span class="ident">parse_assignment_expression_or_higher</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>())
-                    .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_expression_assignment</span>);
-                <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_PROPERTY_OBJECT_MEMBER</span>))
-            } <span class="kw">else</span> {
-                <span class="comment">// test_err object_expr_error_prop_name</span>
-                <span class="comment">// let a = { /: 6, /: /foo/ }</span>
-                <span class="comment">// let b = {{}}</span>
+                <span class="comment">// test object_prop_in_rhs
+                // for ({ a: &quot;x&quot; in {} };;) {}
+                </span>parse_assignment_expression_or_higher(p, ExpressionContext::default())
+                    .or_add_diagnostic(p, js_parse_error::expected_expression_assignment);
+                Present(m.complete(p, JS_PROPERTY_OBJECT_MEMBER))
+            } <span class="kw">else </span>{
+                <span class="comment">// test_err object_expr_error_prop_name
+                // let a = { /: 6, /: /foo/ }
+                // let b = {{}}
 
-                <span class="comment">// test_err object_expr_non_ident_literal_prop</span>
-                <span class="comment">// let d = {5}</span>
+                // test_err object_expr_non_ident_literal_prop
+                // let d = {5}
 
-                <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-                <span class="ident">SingleTokenParseRecovery::new</span>(<span class="macro">token_set!</span>[<span class="macro">T!</span>[:], <span class="macro">T!</span>[,]], <span class="ident">JS_UNKNOWN</span>).<span class="ident">recover</span>(<span class="ident">p</span>);
+                </span><span class="attribute">#[allow(deprecated)]
+                </span>SingleTokenParseRecovery::new(<span class="macro">token_set!</span>[<span class="macro">T!</span>[:], <span class="macro">T!</span>[,]], JS_UNKNOWN).recover(p);
 
-                <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[:]) {
-                    <span class="ident">parse_assignment_expression_or_higher</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>())
-                        .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_object_member</span>);
-                    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_PROPERTY_OBJECT_MEMBER</span>))
-                } <span class="kw">else</span> {
-                    <span class="comment">// It turns out that this isn&#39;t a valid member after all. Make sure to throw</span>
-                    <span class="comment">// away everything that has been parsed so far so that the caller can</span>
-                    <span class="comment">// do its error recovery</span>
-                    <span class="ident">p</span>.<span class="ident">rewind</span>(<span class="ident">checkpoint</span>);
-                    <span class="ident">m</span>.<span class="ident">abandon</span>(<span class="ident">p</span>);
-                    <span class="ident">Absent</span>
+                <span class="kw">if </span>p.eat(<span class="macro">T!</span>[:]) {
+                    parse_assignment_expression_or_higher(p, ExpressionContext::default())
+                        .or_add_diagnostic(p, js_parse_error::expected_object_member);
+                    Present(m.complete(p, JS_PROPERTY_OBJECT_MEMBER))
+                } <span class="kw">else </span>{
+                    <span class="comment">// It turns out that this isn&#39;t a valid member after all. Make sure to throw
+                    // away everything that has been parsed so far so that the caller can
+                    // do its error recovery
+                    </span>p.rewind(checkpoint);
+                    m.abandon(p);
+                    Absent
                 }
             }
         }
     }
 }
 
-<span class="doccomment">/// Parses a getter object member: `{ get a() { return &quot;a&quot;; } }`</span>
-<span class="kw">fn</span> <span class="ident">parse_getter_object_member</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="ident">get</span>]) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="doccomment">/// Parses a getter object member: `{ get a() { return &quot;a&quot;; } }`
+</span><span class="kw">fn </span>parse_getter_object_member(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!p.at(<span class="macro">T!</span>[get]) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
+    <span class="kw">let </span>m = p.start();
 
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="ident">get</span>]);
+    p.expect(<span class="macro">T!</span>[get]);
 
-    <span class="ident">parse_object_member_name</span>(<span class="ident">p</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_object_member_name</span>);
+    parse_object_member_name(p).or_add_diagnostic(p, js_parse_error::expected_object_member_name);
 
-    <span class="comment">// test_err ts ts_object_getter_type_parameters</span>
-    <span class="comment">// ({ get a&lt;A&gt;(): A {} });</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">type_parameters</span>) <span class="op">=</span> <span class="ident">parse_ts_type_parameters</span>(<span class="ident">p</span>) {
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">ts_accessor_type_parameters_error</span>(<span class="ident">p</span>, <span class="kw-2">&amp;</span><span class="ident">type_parameters</span>))
+    <span class="comment">// test_err ts ts_object_getter_type_parameters
+    // ({ get a&lt;A&gt;(): A {} });
+    </span><span class="kw">if let </span>Present(type_parameters) = parse_ts_type_parameters(p) {
+        p.error(ts_accessor_type_parameters_error(p, <span class="kw-2">&amp;</span>type_parameters))
     }
 
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]);
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]);
+    p.expect(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]);
+    p.expect(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]);
 
-    <span class="ident">TypeScript</span>
-        .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">annotation</span><span class="op">|</span> {
-            <span class="ident">ts_only_syntax_error</span>(<span class="ident">p</span>, <span class="string">&quot;type annotation&quot;</span>, <span class="ident">annotation</span>.<span class="ident">range</span>(<span class="ident">p</span>))
+    TypeScript
+        .parse_exclusive_syntax(p, parse_ts_type_annotation, |p, annotation| {
+            ts_only_syntax_error(p, <span class="string">&quot;type annotation&quot;</span>, annotation.range(p))
         })
-        .<span class="ident">ok</span>();
+        .ok();
 
-    <span class="ident">parse_function_body</span>(<span class="ident">p</span>, <span class="ident">SignatureFlags::empty</span>())
-        .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_function_body</span>);
+    parse_function_body(p, SignatureFlags::empty())
+        .or_add_diagnostic(p, js_parse_error::expected_function_body);
 
-    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_GETTER_OBJECT_MEMBER</span>))
+    Present(m.complete(p, JS_GETTER_OBJECT_MEMBER))
 }
 
-<span class="doccomment">/// Parses a setter object member like `{ set a(value) { .. } }`</span>
-<span class="kw">fn</span> <span class="ident">parse_setter_object_member</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="ident">set</span>]) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="doccomment">/// Parses a setter object member like `{ set a(value) { .. } }`
+</span><span class="kw">fn </span>parse_setter_object_member(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!p.at(<span class="macro">T!</span>[set]) {
+        <span class="kw">return </span>Absent;
     }
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
+    <span class="kw">let </span>m = p.start();
 
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="ident">set</span>]);
+    p.expect(<span class="macro">T!</span>[set]);
 
-    <span class="ident">parse_object_member_name</span>(<span class="ident">p</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_object_member_name</span>);
+    parse_object_member_name(p).or_add_diagnostic(p, js_parse_error::expected_object_member_name);
 
-    <span class="comment">// test_err ts ts_object_setter_type_parameters</span>
-    <span class="comment">// ({ set a&lt;A&gt;(value: A) {} });</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">type_parameters</span>) <span class="op">=</span> <span class="ident">parse_ts_type_parameters</span>(<span class="ident">p</span>) {
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">ts_accessor_type_parameters_error</span>(<span class="ident">p</span>, <span class="kw-2">&amp;</span><span class="ident">type_parameters</span>))
+    <span class="comment">// test_err ts ts_object_setter_type_parameters
+    // ({ set a&lt;A&gt;(value: A) {} });
+    </span><span class="kw">if let </span>Present(type_parameters) = parse_ts_type_parameters(p) {
+        p.error(ts_accessor_type_parameters_error(p, <span class="kw-2">&amp;</span>type_parameters))
     }
 
-    <span class="kw">let</span> <span class="ident">has_l_paren</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]);
+    <span class="kw">let </span>has_l_paren = p.expect(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]);
 
-    <span class="ident">p</span>.<span class="ident">with_state</span>(<span class="ident">EnterParameters</span>(<span class="ident">SignatureFlags::empty</span>()), <span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-        <span class="ident">parse_formal_parameter</span>(
-            <span class="ident">p</span>,
-            <span class="ident">ParameterContext::Setter</span>,
-            <span class="ident">ExpressionContext::default</span>().<span class="ident">and_object_expression_allowed</span>(<span class="ident">has_l_paren</span>),
+    p.with_state(EnterParameters(SignatureFlags::empty()), |p| {
+        parse_formal_parameter(
+            p,
+            ParameterContext::Setter,
+            ExpressionContext::default().and_object_expression_allowed(has_l_paren),
         )
-        .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_parameter</span>);
-        <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]);
+        .or_add_diagnostic(p, js_parse_error::expected_parameter);
+        p.expect(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]);
     });
 
-    <span class="comment">// test_err ts ts_object_setter_return_type</span>
-    <span class="comment">// ({ set a(value: string): void {} });</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">return_type_annotation</span>) <span class="op">=</span> <span class="ident">parse_ts_return_type_annotation</span>(<span class="ident">p</span>) {
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">ts_set_accessor_return_type_error</span>(
-            <span class="ident">p</span>,
-            <span class="kw-2">&amp;</span><span class="ident">return_type_annotation</span>,
+    <span class="comment">// test_err ts ts_object_setter_return_type
+    // ({ set a(value: string): void {} });
+    </span><span class="kw">if let </span>Present(return_type_annotation) = parse_ts_return_type_annotation(p) {
+        p.error(ts_set_accessor_return_type_error(
+            p,
+            <span class="kw-2">&amp;</span>return_type_annotation,
         ));
     }
 
-    <span class="ident">parse_function_body</span>(<span class="ident">p</span>, <span class="ident">SignatureFlags::empty</span>())
-        .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_function_body</span>);
+    parse_function_body(p, SignatureFlags::empty())
+        .or_add_diagnostic(p, js_parse_error::expected_function_body);
 
-    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_SETTER_OBJECT_MEMBER</span>))
+    Present(m.complete(p, JS_SETTER_OBJECT_MEMBER))
 }
 
-<span class="comment">// test object_member_name</span>
-<span class="comment">// let a = {&quot;foo&quot;: foo, [6 + 6]: foo, bar: foo, 7: foo}</span>
-<span class="doccomment">/// Parses a `JsAnyObjectMemberName` and returns its completion marker</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_object_member_name</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">cur</span>() {
-        <span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>] =&gt; <span class="ident">parse_computed_member_name</span>(<span class="ident">p</span>),
-        <span class="kw">_</span> =&gt; <span class="ident">parse_literal_member_name</span>(<span class="ident">p</span>),
+<span class="comment">// test object_member_name
+// let a = {&quot;foo&quot;: foo, [6 + 6]: foo, bar: foo, 7: foo}
+</span><span class="doccomment">/// Parses a `JsAnyObjectMemberName` and returns its completion marker
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_object_member_name(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">match </span>p.cur() {
+        <span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>] =&gt; parse_computed_member_name(p),
+        <span class="kw">_ </span>=&gt; parse_literal_member_name(p),
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_nth_at_type_member_name</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">offset</span>: <span class="ident">usize</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">let</span> <span class="ident">nth</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">offset</span>);
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_nth_at_type_member_name(p: <span class="kw-2">&amp;mut </span>Parser, offset: usize) -&gt; bool {
+    <span class="kw">let </span>nth = p.nth(offset);
 
-    <span class="kw">let</span> <span class="ident">start_names</span> <span class="op">=</span> <span class="macro">token_set!</span>[
-        <span class="ident">JS_STRING_LITERAL</span>,
-        <span class="ident">JS_NUMBER_LITERAL</span>,
-        <span class="macro">T!</span>[<span class="ident">ident</span>],
+    <span class="kw">let </span>start_names = <span class="macro">token_set!</span>[
+        JS_STRING_LITERAL,
+        JS_NUMBER_LITERAL,
+        <span class="macro">T!</span>[ident],
         <span class="macro">T!</span>[<span class="kw">await</span>],
         <span class="macro">T!</span>[<span class="kw">yield</span>],
         <span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]
     ];
 
-    <span class="ident">nth</span>.<span class="ident">is_keyword</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">start_names</span>.<span class="ident">contains</span>(<span class="ident">nth</span>)
+    nth.is_keyword() || start_names.contains(nth)
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_at_object_member_name</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span> {
-    <span class="ident">is_nth_at_type_member_name</span>(<span class="ident">p</span>, <span class="number">0</span>)
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_at_object_member_name(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool {
+    is_nth_at_type_member_name(p, <span class="number">0</span>)
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_computed_member_name</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_computed_member_name(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]);
+    <span class="kw">let </span>m = p.start();
+    p.expect(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]);
 
-    <span class="comment">// test computed_member_name_in</span>
-    <span class="comment">// for ({[&quot;x&quot; in {}]: 3} ;;) {}</span>
-    <span class="ident">parse_expression</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>())
-        .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_expression</span>);
+    <span class="comment">// test computed_member_name_in
+    // for ({[&quot;x&quot; in {}]: 3} ;;) {}
+    </span>parse_expression(p, ExpressionContext::default())
+        .or_add_diagnostic(p, js_parse_error::expected_expression);
 
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]);
-    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_COMPUTED_MEMBER_NAME</span>))
+    p.expect(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]);
+    Present(m.complete(p, JS_COMPUTED_MEMBER_NAME))
 }
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">is_at_literal_member_name</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">offset</span>: <span class="ident">usize</span>) -&gt; <span class="ident">bool</span> {
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>is_at_literal_member_name(p: <span class="kw-2">&amp;mut </span>Parser, offset: usize) -&gt; bool {
     <span class="macro">matches!</span>(
-        <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">offset</span>),
-        <span class="ident">JS_STRING_LITERAL</span> <span class="op">|</span> <span class="ident">JS_NUMBER_LITERAL</span> <span class="op">|</span> <span class="macro">T!</span>[<span class="ident">ident</span>]
-    ) <span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">offset</span>).<span class="ident">is_keyword</span>()
+        p.nth(offset),
+        JS_STRING_LITERAL | JS_NUMBER_LITERAL | <span class="macro">T!</span>[ident]
+    ) || p.nth(offset).is_keyword()
 }
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse_literal_member_name</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">cur</span>() {
-        <span class="ident">JS_STRING_LITERAL</span> <span class="op">|</span> <span class="ident">JS_NUMBER_LITERAL</span> <span class="op">|</span> <span class="macro">T!</span>[<span class="ident">ident</span>] =&gt; {
-            <span class="ident">p</span>.<span class="ident">bump_any</span>();
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>parse_literal_member_name(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">let </span>m = p.start();
+    <span class="kw">match </span>p.cur() {
+        JS_STRING_LITERAL | JS_NUMBER_LITERAL | <span class="macro">T!</span>[ident] =&gt; {
+            p.bump_any();
         }
-        <span class="ident">t</span> <span class="kw">if</span> <span class="ident">t</span>.<span class="ident">is_keyword</span>() =&gt; {
-            <span class="ident">p</span>.<span class="ident">bump_remap</span>(<span class="macro">T!</span>[<span class="ident">ident</span>]);
+        t <span class="kw">if </span>t.is_keyword() =&gt; {
+            p.bump_remap(<span class="macro">T!</span>[ident]);
         }
-        <span class="kw">_</span> =&gt; {
-            <span class="ident">m</span>.<span class="ident">abandon</span>(<span class="ident">p</span>);
-            <span class="kw">return</span> <span class="ident">Absent</span>;
+        <span class="kw">_ </span>=&gt; {
+            m.abandon(p);
+            <span class="kw">return </span>Absent;
         }
     }
-    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_LITERAL_MEMBER_NAME</span>))
+    Present(m.complete(p, JS_LITERAL_MEMBER_NAME))
 }
 
-<span class="doccomment">/// Parses a method object member</span>
-<span class="kw">fn</span> <span class="ident">parse_method_object_member</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">let</span> <span class="ident">is_async</span> <span class="op">=</span> <span class="ident">is_parser_at_async_method_member</span>(<span class="ident">p</span>);
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">is_async</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw-2">*</span>]) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">is_at_object_member_name</span>(<span class="ident">p</span>) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="doccomment">/// Parses a method object member
+</span><span class="kw">fn </span>parse_method_object_member(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">let </span>is_async = is_parser_at_async_method_member(p);
+    <span class="kw">if </span>!is_async &amp;&amp; !p.at(<span class="macro">T!</span>[<span class="kw-2">*</span>]) &amp;&amp; !is_at_object_member_name(p) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">SignatureFlags::empty</span>();
+    <span class="kw">let </span>m = p.start();
+    <span class="kw">let </span><span class="kw-2">mut </span>flags = SignatureFlags::empty();
 
-    <span class="comment">// test async_method</span>
-    <span class="comment">// class foo {</span>
-    <span class="comment">//  async foo() {}</span>
-    <span class="comment">//  async *foo() {}</span>
-    <span class="comment">// }</span>
-    <span class="kw">if</span> <span class="ident">is_async</span> {
-        <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[<span class="kw">async</span>]);
-        <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">SignatureFlags::ASYNC</span>;
+    <span class="comment">// test async_method
+    // class foo {
+    //  async foo() {}
+    //  async *foo() {}
+    // }
+    </span><span class="kw">if </span>is_async {
+        p.eat(<span class="macro">T!</span>[<span class="kw">async</span>]);
+        flags |= SignatureFlags::ASYNC;
     }
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[<span class="kw-2">*</span>]) {
-        <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">SignatureFlags::GENERATOR</span>;
+    <span class="kw">if </span>p.eat(<span class="macro">T!</span>[<span class="kw-2">*</span>]) {
+        flags |= SignatureFlags::GENERATOR;
     }
 
-    <span class="ident">parse_object_member_name</span>(<span class="ident">p</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_object_member_name</span>);
+    parse_object_member_name(p).or_add_diagnostic(p, js_parse_error::expected_object_member_name);
 
-    <span class="ident">parse_method_object_member_body</span>(<span class="ident">p</span>, <span class="ident">flags</span>);
+    parse_method_object_member_body(p, flags);
 
-    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_METHOD_OBJECT_MEMBER</span>))
+    Present(m.complete(p, JS_METHOD_OBJECT_MEMBER))
 }
 
-<span class="comment">// test ts ts_method_object_member_body</span>
-<span class="comment">// ({</span>
-<span class="comment">//     x&lt;A&gt;(maybeA: any): maybeA is A { return true },</span>
-<span class="comment">//     y(a: string): string { return &quot;string&quot;; },</span>
-<span class="comment">//     async *id&lt;R&gt;(param: Promise&lt;R&gt;): AsyncIterableIterator&lt;R&gt; { yield await param },</span>
-<span class="comment">// })</span>
+<span class="comment">// test ts ts_method_object_member_body
+// ({
+//     x&lt;A&gt;(maybeA: any): maybeA is A { return true },
+//     y(a: string): string { return &quot;string&quot;; },
+//     async *id&lt;R&gt;(param: Promise&lt;R&gt;): AsyncIterableIterator&lt;R&gt; { yield await param },
+// })
 
-<span class="doccomment">/// Parses the body of a method object member starting right after the member name.</span>
-<span class="kw">fn</span> <span class="ident">parse_method_object_member_body</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">flags</span>: <span class="ident">SignatureFlags</span>) {
-    <span class="ident">TypeScript</span>
-        .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_parameters</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">type_parameters</span><span class="op">|</span> {
-            <span class="ident">ts_only_syntax_error</span>(<span class="ident">p</span>, <span class="string">&quot;type parameters&quot;</span>, <span class="ident">type_parameters</span>.<span class="ident">range</span>(<span class="ident">p</span>))
+</span><span class="doccomment">/// Parses the body of a method object member starting right after the member name.
+</span><span class="kw">fn </span>parse_method_object_member_body(p: <span class="kw-2">&amp;mut </span>Parser, flags: SignatureFlags) {
+    TypeScript
+        .parse_exclusive_syntax(p, parse_ts_type_parameters, |p, type_parameters| {
+            ts_only_syntax_error(p, <span class="string">&quot;type parameters&quot;</span>, type_parameters.range(p))
         })
-        .<span class="ident">ok</span>();
+        .ok();
 
-    <span class="ident">parse_parameter_list</span>(<span class="ident">p</span>, <span class="ident">ParameterContext::Implementation</span>, <span class="ident">flags</span>)
-        .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_parameters</span>);
+    parse_parameter_list(p, ParameterContext::Implementation, flags)
+        .or_add_diagnostic(p, js_parse_error::expected_parameters);
 
-    <span class="ident">TypeScript</span>
-        .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_return_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">annotation</span><span class="op">|</span> {
-            <span class="ident">ts_only_syntax_error</span>(<span class="ident">p</span>, <span class="string">&quot;return type annotation&quot;</span>, <span class="ident">annotation</span>.<span class="ident">range</span>(<span class="ident">p</span>))
+    TypeScript
+        .parse_exclusive_syntax(p, parse_ts_return_type_annotation, |p, annotation| {
+            ts_only_syntax_error(p, <span class="string">&quot;return type annotation&quot;</span>, annotation.range(p))
         })
-        .<span class="ident">ok</span>();
+        .ok();
 
-    <span class="ident">parse_function_body</span>(<span class="ident">p</span>, <span class="ident">flags</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_function_body</span>);
+    parse_function_body(p, flags).or_add_diagnostic(p, js_parse_error::expected_function_body);
 }
 
-<span class="kw">fn</span> <span class="ident">is_parser_at_async_method_member</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span> {
-    <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw">async</span>])
-        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">has_nth_preceding_line_break</span>(<span class="number">1</span>)
-        <span class="op">&amp;&amp;</span> (<span class="ident">is_nth_at_type_member_name</span>(<span class="ident">p</span>, <span class="number">1</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">nth_at</span>(<span class="number">1</span>, <span class="macro">T!</span>[<span class="kw-2">*</span>]))
+<span class="kw">fn </span>is_parser_at_async_method_member(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool {
+    p.at(<span class="macro">T!</span>[<span class="kw">async</span>])
+        &amp;&amp; !p.has_nth_preceding_line_break(<span class="number">1</span>)
+        &amp;&amp; (is_nth_at_type_member_name(p, <span class="number">1</span>) || p.nth_at(<span class="number">1</span>, <span class="macro">T!</span>[<span class="kw-2">*</span>]))
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

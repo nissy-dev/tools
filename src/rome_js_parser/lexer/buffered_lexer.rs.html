@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/lexer/buffered_lexer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>buffered_lexer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/lexer/buffered_lexer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>buffered_lexer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -375,382 +375,382 @@
 <span id="375">375</span>
 <span id="376">376</span>
 <span id="377">377</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">LexContext</span>, <span class="ident">Lexer</span>, <span class="ident">LexerCheckpoint</span>, <span class="ident">ReLexContext</span>, <span class="ident">TextRange</span>, <span class="ident">TokenFlags</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ParseDiagnostic</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>, <span class="ident">JsSyntaxKind::EOF</span>};
-<span class="kw">use</span> <span class="ident">std::collections::VecDeque</span>;
-<span class="kw">use</span> <span class="ident">std::iter::FusedIterator</span>;
+</pre><pre class="rust"><code><span class="kw">use super</span>::{LexContext, Lexer, LexerCheckpoint, ReLexContext, TextRange, TokenFlags};
+<span class="kw">use </span><span class="kw">crate</span>::ParseDiagnostic;
+<span class="kw">use </span>rome_js_syntax::{JsSyntaxKind, JsSyntaxKind::EOF};
+<span class="kw">use </span>std::collections::VecDeque;
+<span class="kw">use </span>std::iter::FusedIterator;
 
-<span class="doccomment">/// Wrapper around a [Lexer] that supports lookahead.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The underlying [Lexer] only supports inspecting the current token and lexing the next token.</span>
-<span class="doccomment">/// However, the current token is often not enough for the Parser to decide what the next node is,</span>
-<span class="doccomment">/// it often needs information about the next non-trivia tokens.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The [BufferedLexer] adds support for lookahead by caching the lexed tokens and keeping track</span>
-<span class="doccomment">/// of the current position (and what the `nth` token is). This means, that every token</span>
-<span class="doccomment">/// only gets lexed once except if the buffer cached some lookahead tokens and:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// * `next_token` is called with a context other than [LexContext::default()].</span>
-<span class="doccomment">/// * the lexer gets rewinded to a previous position</span>
-<span class="doccomment">/// * re-lexing the current token changes the kind of the token. That means,</span>
-<span class="doccomment">///   that any following token may turn out to be different as well, thus, it&#39;s necessary to clear the</span>
-<span class="doccomment">///   lookahead cache.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">BufferedLexer</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Cache storing the lookahead tokens. That are, all tokens between the `current` token and</span>
-    <span class="doccomment">/// the &quot;current&quot; of the [Lexer]. This is because the [Lexer]&#39;s current token points to the</span>
-    <span class="doccomment">/// furthest requested lookahead token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For example for the following source `let a = 2;`. The `current` token of the inner [Lexer] and</span>
-    <span class="doccomment">/// of the [BufferedLexer] after one call to `next_token` is the `let` token. However, the `current`</span>
-    <span class="doccomment">/// token diverges if the [BufferedLexer] performs lookahead. Let&#39;s say you do a lookahead of 4 (`=` token).</span>
-    <span class="doccomment">/// Now, the [BufferedLexer] calls [Lexer::next_token] four times, moving the [Lexer]&#39;s `current`</span>
-    <span class="doccomment">/// token to the `=`. However, the `current` of the [BufferedLexer] still points to the `let` token.</span>
-    <span class="doccomment">/// That&#39;s why the [BufferedLexer] stores the following information:</span>
-    <span class="doccomment">/// * `current`: `let` (information about the `current` token from the consumer perspective)</span>
-    <span class="doccomment">/// * `lookahead`: [WHITESPACE, IDENT: &#39;a&#39;, WHITESPACE]. The tokens that have been lexed to</span>
-    <span class="doccomment">///    answer the &quot;lookahead 4&quot; request but haven&#39;t been returned yet.</span>
-    <span class="doccomment">/// * [Lexer::current]: Points to `=`</span>
-    <span class="ident">lookahead</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">LexerCheckpoint</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Wrapper around a [Lexer] that supports lookahead.
+///
+/// The underlying [Lexer] only supports inspecting the current token and lexing the next token.
+/// However, the current token is often not enough for the Parser to decide what the next node is,
+/// it often needs information about the next non-trivia tokens.
+///
+/// The [BufferedLexer] adds support for lookahead by caching the lexed tokens and keeping track
+/// of the current position (and what the `nth` token is). This means, that every token
+/// only gets lexed once except if the buffer cached some lookahead tokens and:
+///
+/// * `next_token` is called with a context other than [LexContext::default()].
+/// * the lexer gets rewinded to a previous position
+/// * re-lexing the current token changes the kind of the token. That means,
+///   that any following token may turn out to be different as well, thus, it&#39;s necessary to clear the
+///   lookahead cache.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>BufferedLexer&lt;<span class="lifetime">&#39;l</span>&gt; {
+    <span class="doccomment">/// Cache storing the lookahead tokens. That are, all tokens between the `current` token and
+    /// the &quot;current&quot; of the [Lexer]. This is because the [Lexer]&#39;s current token points to the
+    /// furthest requested lookahead token.
+    ///
+    /// For example for the following source `let a = 2;`. The `current` token of the inner [Lexer] and
+    /// of the [BufferedLexer] after one call to `next_token` is the `let` token. However, the `current`
+    /// token diverges if the [BufferedLexer] performs lookahead. Let&#39;s say you do a lookahead of 4 (`=` token).
+    /// Now, the [BufferedLexer] calls [Lexer::next_token] four times, moving the [Lexer]&#39;s `current`
+    /// token to the `=`. However, the `current` of the [BufferedLexer] still points to the `let` token.
+    /// That&#39;s why the [BufferedLexer] stores the following information:
+    /// * `current`: `let` (information about the `current` token from the consumer perspective)
+    /// * `lookahead`: [WHITESPACE, IDENT: &#39;a&#39;, WHITESPACE]. The tokens that have been lexed to
+    ///    answer the &quot;lookahead 4&quot; request but haven&#39;t been returned yet.
+    /// * [Lexer::current]: Points to `=`
+    </span>lookahead: VecDeque&lt;LexerCheckpoint&gt;,
 
-    <span class="doccomment">/// Stores the information of the current token in case the `lexer` is at least one token ahead.</span>
-    <span class="ident">current</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LexerCheckpoint</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Stores the information of the current token in case the `lexer` is at least one token ahead.
+    </span>current: <span class="prelude-ty">Option</span>&lt;LexerCheckpoint&gt;,
 
-    <span class="doccomment">/// Underlying lexer. May be ahead if iterated with lookahead</span>
-    <span class="ident">inner</span>: <span class="ident">Lexer</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Underlying lexer. May be ahead if iterated with lookahead
+    </span>inner: Lexer&lt;<span class="lifetime">&#39;l</span>&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span> <span class="ident">BufferedLexer</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new [BufferedLexer] wrapping the passed in [Lexer].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">lexer</span>: <span class="ident">Lexer</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">inner</span>: <span class="ident">lexer</span>,
-            <span class="ident">current</span>: <span class="prelude-val">None</span>,
-            <span class="ident">lookahead</span>: <span class="ident">VecDeque::new</span>(),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;l</span>&gt; BufferedLexer&lt;<span class="lifetime">&#39;l</span>&gt; {
+    <span class="doccomment">/// Creates a new [BufferedLexer] wrapping the passed in [Lexer].
+    </span><span class="kw">pub fn </span>new(lexer: Lexer&lt;<span class="lifetime">&#39;l</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            inner: lexer,
+            current: <span class="prelude-val">None</span>,
+            lookahead: VecDeque::new(),
         }
     }
 
-    <span class="doccomment">/// Returns the kind of the next token and any associated diagnostic.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [See `Lexer.next_token`](Lexer::next_token)</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">context</span>: <span class="ident">LexContext</span>) -&gt; <span class="ident">JsSyntaxKind</span> {
-        <span class="comment">// Reset the lookahead if the context isn&#39;t the regular context because it&#39;s highly likely</span>
-        <span class="comment">// that the lexer will return a different token.</span>
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">context</span>.<span class="ident">is_regular</span>() {
-            <span class="self">self</span>.<span class="ident">reset_lookahead</span>();
+    <span class="doccomment">/// Returns the kind of the next token and any associated diagnostic.
+    ///
+    /// [See `Lexer.next_token`](Lexer::next_token)
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>next_token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: LexContext) -&gt; JsSyntaxKind {
+        <span class="comment">// Reset the lookahead if the context isn&#39;t the regular context because it&#39;s highly likely
+        // that the lexer will return a different token.
+        </span><span class="kw">if </span>!context.is_regular() {
+            <span class="self">self</span>.reset_lookahead();
         }
-        <span class="comment">// Retrieve the next token from the lookahead cache if it isn&#39;t empty</span>
-        <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">next</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">lookahead</span>.<span class="ident">pop_front</span>() {
-            <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">next</span>.<span class="ident">current_kind</span>;
+        <span class="comment">// Retrieve the next token from the lookahead cache if it isn&#39;t empty
+        </span><span class="kw">else if let </span><span class="prelude-val">Some</span>(next) = <span class="self">self</span>.lookahead.pop_front() {
+            <span class="kw">let </span>kind = next.current_kind;
 
-            <span class="comment">// Store the lookahead as the current token if the lookahead isn&#39;t empty (in which case,</span>
-            <span class="comment">// the lexer is still at least one token ahead).</span>
+            <span class="comment">// Store the lookahead as the current token if the lookahead isn&#39;t empty (in which case,
+            // the lexer is still at least one token ahead).
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lookahead</span>.<span class="ident">is_empty</span>() {
-                <span class="self">self</span>.<span class="ident">current</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-            } <span class="kw">else</span> {
-                <span class="self">self</span>.<span class="ident">current</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">next</span>);
+            </span><span class="kw">if </span><span class="self">self</span>.lookahead.is_empty() {
+                <span class="self">self</span>.current = <span class="prelude-val">None</span>;
+            } <span class="kw">else </span>{
+                <span class="self">self</span>.current = <span class="prelude-val">Some</span>(next);
             }
 
-            <span class="kw">return</span> <span class="ident">kind</span>;
+            <span class="kw">return </span>kind;
         }
 
-        <span class="comment">// The [BufferedLexer] and [Lexer] are now both at the same position. Clear the cached</span>
-        <span class="comment">// current token and lex out the next token.</span>
-        <span class="self">self</span>.<span class="ident">current</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">next_token</span>(<span class="ident">context</span>)
+        <span class="comment">// The [BufferedLexer] and [Lexer] are now both at the same position. Clear the cached
+        // current token and lex out the next token.
+        </span><span class="self">self</span>.current = <span class="prelude-val">None</span>;
+        <span class="self">self</span>.inner.next_token(context)
     }
 
-    <span class="doccomment">/// Returns the kind of the current token</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JsSyntaxKind</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">current</span> {
-            <span class="ident">current</span>.<span class="ident">current_kind</span>
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">current</span>()
-        }
-    }
-
-    <span class="doccomment">/// Returns the range of the current token</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">current</span> {
-            <span class="ident">TextRange::new</span>(<span class="ident">current</span>.<span class="ident">current_start</span>, <span class="ident">current</span>.<span class="ident">position</span>)
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">current_range</span>()
+    <span class="doccomment">/// Returns the kind of the current token
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>current(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JsSyntaxKind {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(current) = <span class="kw-2">&amp;</span><span class="self">self</span>.current {
+            current.current_kind
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.inner.current()
         }
     }
 
-    <span class="doccomment">/// Tests if there&#39;s a line break before the current token.</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_preceding_line_break</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">current</span> {
-            <span class="ident">current</span>.<span class="ident">has_preceding_line_break</span>()
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">has_preceding_line_break</span>()
+    <span class="doccomment">/// Returns the range of the current token
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>current_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(current) = <span class="kw-2">&amp;</span><span class="self">self</span>.current {
+            TextRange::new(current.current_start, current.position)
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.inner.current_range()
         }
     }
 
-    <span class="doccomment">/// Returns true if the current token is an identifier, and it contains any unicode escape sequences</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_unicode_escape</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">current</span> {
-            <span class="ident">current</span>.<span class="ident">has_unicode_escape</span>()
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">has_unicode_escape</span>()
+    <span class="doccomment">/// Tests if there&#39;s a line break before the current token.
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>has_preceding_line_break(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(current) = <span class="kw-2">&amp;</span><span class="self">self</span>.current {
+            current.has_preceding_line_break()
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.inner.has_preceding_line_break()
         }
     }
 
-    <span class="doccomment">/// Returns the source text</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;l</span> <span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">source</span>()
-    }
-
-    <span class="doccomment">/// Creates a checkpoint representing the current lexer state. Allows rewinding</span>
-    <span class="doccomment">/// the lexer to this position later on.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">checkpoint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">LexerCheckpoint</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">current</span> {
-            <span class="ident">current</span>.<span class="ident">clone</span>()
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">checkpoint</span>()
+    <span class="doccomment">/// Returns true if the current token is an identifier, and it contains any unicode escape sequences
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>has_unicode_escape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(current) = <span class="kw-2">&amp;</span><span class="self">self</span>.current {
+            current.has_unicode_escape()
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.inner.has_unicode_escape()
         }
     }
 
-    <span class="doccomment">/// Rewinds the lexer to the state stored in the checkpoint.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rewind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">checkpoint</span>: <span class="ident">LexerCheckpoint</span>) {
-        <span class="comment">// test_err js_rewind_at_eof_token</span>
-        <span class="comment">// (([zAgRvz=[=(e{V{</span>
-
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">rewind</span>(<span class="ident">checkpoint</span>);
-        <span class="self">self</span>.<span class="ident">lookahead</span>.<span class="ident">clear</span>();
-        <span class="self">self</span>.<span class="ident">current</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="doccomment">/// Returns the source text
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;l </span>str {
+        <span class="self">self</span>.inner.source()
     }
 
-    <span class="kw">fn</span> <span class="ident">reset_lookahead</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>.<span class="ident">take</span>() {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">rewind</span>(<span class="ident">current</span>);
-            <span class="self">self</span>.<span class="ident">lookahead</span>.<span class="ident">clear</span>();
+    <span class="doccomment">/// Creates a checkpoint representing the current lexer state. Allows rewinding
+    /// the lexer to this position later on.
+    </span><span class="kw">pub fn </span>checkpoint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LexerCheckpoint {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(current) = <span class="kw-2">&amp;</span><span class="self">self</span>.current {
+            current.clone()
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.inner.checkpoint()
         }
     }
 
-    <span class="doccomment">/// Re-lex the current token in the given context</span>
-    <span class="doccomment">/// See [Lexer::re_lex]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">re_lex</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">context</span>: <span class="ident">ReLexContext</span>) -&gt; <span class="ident">JsSyntaxKind</span> {
-        <span class="kw">let</span> <span class="ident">current_kind</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>();
-        <span class="kw">let</span> <span class="ident">current_checkpoint</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">checkpoint</span>();
+    <span class="doccomment">/// Rewinds the lexer to the state stored in the checkpoint.
+    </span><span class="kw">pub fn </span>rewind(<span class="kw-2">&amp;mut </span><span class="self">self</span>, checkpoint: LexerCheckpoint) {
+        <span class="comment">// test_err js_rewind_at_eof_token
+        // (([zAgRvz=[=(e{V{
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>.<span class="ident">take</span>() {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">rewind</span>(<span class="ident">current</span>);
-        }
-
-        <span class="kw">let</span> <span class="ident">new_kind</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">re_lex</span>(<span class="ident">context</span>);
-
-        <span class="kw">if</span> <span class="ident">new_kind</span> <span class="op">!</span><span class="op">=</span> <span class="ident">current_kind</span> {
-            <span class="comment">// The token has changed, clear the lookahead</span>
-            <span class="self">self</span>.<span class="ident">lookahead</span>.<span class="ident">clear</span>();
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">lookahead</span>.<span class="ident">is_empty</span>() {
-            <span class="comment">// It&#39;s still the same kind. So let&#39;s move the lexer back to the position it was before re-lexing</span>
-            <span class="comment">// and keep the lookahead as is.</span>
-            <span class="self">self</span>.<span class="ident">current</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">checkpoint</span>());
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">rewind</span>(<span class="ident">current_checkpoint</span>);
-        }
-
-        <span class="ident">new_kind</span>
+        </span><span class="self">self</span>.inner.rewind(checkpoint);
+        <span class="self">self</span>.lookahead.clear();
+        <span class="self">self</span>.current = <span class="prelude-val">None</span>;
     }
 
-    <span class="doccomment">/// Returns an iterator over the tokens following the current token to perform lookahead.</span>
-    <span class="doccomment">/// For example, what&#39;s the 3rd token after the current token?</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lookahead</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">LookaheadIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="lifetime">&#39;l</span><span class="op">&gt;</span> {
-        <span class="ident">LookaheadIterator::new</span>(<span class="self">self</span>)
-    }
-
-    <span class="doccomment">/// Consumes the buffered lexer and returns the lexing diagnostics</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParseDiagnostic</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">finish</span>()
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">LookaheadIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span> {
-    <span class="ident">buffered</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;l</span> <span class="kw-2">mut</span> <span class="ident">BufferedLexer</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
-    <span class="ident">nth</span>: <span class="ident">usize</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span> <span class="ident">LookaheadIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">lexer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;l</span> <span class="kw-2">mut</span> <span class="ident">BufferedLexer</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">buffered</span>: <span class="ident">lexer</span>,
-            <span class="ident">nth</span>: <span class="number">0</span>,
+    <span class="kw">fn </span>reset_lookahead(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(current) = <span class="self">self</span>.current.take() {
+            <span class="self">self</span>.inner.rewind(current);
+            <span class="self">self</span>.lookahead.clear();
         }
+    }
+
+    <span class="doccomment">/// Re-lex the current token in the given context
+    /// See [Lexer::re_lex]
+    </span><span class="kw">pub fn </span>re_lex(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: ReLexContext) -&gt; JsSyntaxKind {
+        <span class="kw">let </span>current_kind = <span class="self">self</span>.current();
+        <span class="kw">let </span>current_checkpoint = <span class="self">self</span>.inner.checkpoint();
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(current) = <span class="self">self</span>.current.take() {
+            <span class="self">self</span>.inner.rewind(current);
+        }
+
+        <span class="kw">let </span>new_kind = <span class="self">self</span>.inner.re_lex(context);
+
+        <span class="kw">if </span>new_kind != current_kind {
+            <span class="comment">// The token has changed, clear the lookahead
+            </span><span class="self">self</span>.lookahead.clear();
+        } <span class="kw">else if </span>!<span class="self">self</span>.lookahead.is_empty() {
+            <span class="comment">// It&#39;s still the same kind. So let&#39;s move the lexer back to the position it was before re-lexing
+            // and keep the lookahead as is.
+            </span><span class="self">self</span>.current = <span class="prelude-val">Some</span>(<span class="self">self</span>.inner.checkpoint());
+            <span class="self">self</span>.inner.rewind(current_checkpoint);
+        }
+
+        new_kind
+    }
+
+    <span class="doccomment">/// Returns an iterator over the tokens following the current token to perform lookahead.
+    /// For example, what&#39;s the 3rd token after the current token?
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>lookahead&lt;<span class="lifetime">&#39;s</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s </span><span class="kw-2">mut </span><span class="self">self</span>) -&gt; LookaheadIterator&lt;<span class="lifetime">&#39;s</span>, <span class="lifetime">&#39;l</span>&gt; {
+        LookaheadIterator::new(<span class="self">self</span>)
+    }
+
+    <span class="doccomment">/// Consumes the buffered lexer and returns the lexing diagnostics
+    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; Vec&lt;ParseDiagnostic&gt; {
+        <span class="self">self</span>.inner.finish()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">LookaheadIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">LookaheadToken</span>;
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>LookaheadIterator&lt;<span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span>&gt; {
+    buffered: <span class="kw-2">&amp;</span><span class="lifetime">&#39;l </span><span class="kw-2">mut </span>BufferedLexer&lt;<span class="lifetime">&#39;t</span>&gt;,
+    nth: usize,
+}
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">lookbehind</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buffered</span>.<span class="ident">lookahead</span>;
-        <span class="self">self</span>.<span class="ident">nth</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span>&gt; LookaheadIterator&lt;<span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span>&gt; {
+    <span class="kw">fn </span>new(lexer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;l </span><span class="kw-2">mut </span>BufferedLexer&lt;<span class="lifetime">&#39;t</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            buffered: lexer,
+            nth: <span class="number">0</span>,
+        }
+    }
+}
 
-        <span class="comment">// Is the `nth` token already in the cache, then return it</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">lookbehind</span>) <span class="op">=</span> <span class="ident">lookbehind</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="ident">nth</span> <span class="op">-</span> <span class="number">1</span>) {
-            <span class="kw">let</span> <span class="ident">lookahead</span> <span class="op">=</span> <span class="ident">LookaheadToken::from</span>(<span class="ident">lookbehind</span>);
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">lookahead</span>);
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span>&gt; Iterator <span class="kw">for </span>LookaheadIterator&lt;<span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span>&gt; {
+    <span class="kw">type </span>Item = LookaheadToken;
+
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>lookbehind = <span class="kw-2">&amp;</span><span class="self">self</span>.buffered.lookahead;
+        <span class="self">self</span>.nth += <span class="number">1</span>;
+
+        <span class="comment">// Is the `nth` token already in the cache, then return it
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(lookbehind) = lookbehind.get(<span class="self">self</span>.nth - <span class="number">1</span>) {
+            <span class="kw">let </span>lookahead = LookaheadToken::from(lookbehind);
+            <span class="kw">return </span><span class="prelude-val">Some</span>(lookahead);
         }
 
-        <span class="kw">let</span> <span class="ident">lexer</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">buffered</span>.<span class="ident">inner</span>;
+        <span class="kw">let </span>lexer = <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffered.inner;
 
-        <span class="comment">// We&#39;re already at the end, calling next now only returns `EOF` again. End the iterator.</span>
-        <span class="kw">if</span> <span class="ident">lexer</span>.<span class="ident">current</span>() <span class="op">==</span> <span class="ident">EOF</span> {
-            <span class="kw">return</span> <span class="prelude-val">None</span>;
+        <span class="comment">// We&#39;re already at the end, calling next now only returns `EOF` again. End the iterator.
+        </span><span class="kw">if </span>lexer.current() == EOF {
+            <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="comment">// Store the current token before moving the inner lexer forward if we haven&#39;t done so.</span>
-        <span class="comment">// Necessary to prevent that [BufferedLexer::current] moves forward when performing lookahead.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">buffered</span>.<span class="ident">current</span>.<span class="ident">is_none</span>() {
-            <span class="self">self</span>.<span class="ident">buffered</span>.<span class="ident">current</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">lexer</span>.<span class="ident">checkpoint</span>());
+        <span class="comment">// Store the current token before moving the inner lexer forward if we haven&#39;t done so.
+        // Necessary to prevent that [BufferedLexer::current] moves forward when performing lookahead.
+        </span><span class="kw">if </span><span class="self">self</span>.buffered.current.is_none() {
+            <span class="self">self</span>.buffered.current = <span class="prelude-val">Some</span>(lexer.checkpoint());
         }
 
-        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">lexer</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>());
-        <span class="comment">// Lex the next token and cache it in the lookahead cache. Needed to cache it right away</span>
-        <span class="comment">// because of the diagnostic.</span>
-        <span class="kw">let</span> <span class="ident">checkpoint</span> <span class="op">=</span> <span class="ident">lexer</span>.<span class="ident">checkpoint</span>();
-        <span class="self">self</span>.<span class="ident">buffered</span>.<span class="ident">lookahead</span>.<span class="ident">push_back</span>(<span class="ident">checkpoint</span>);
+        <span class="kw">let </span>kind = lexer.next_token(LexContext::default());
+        <span class="comment">// Lex the next token and cache it in the lookahead cache. Needed to cache it right away
+        // because of the diagnostic.
+        </span><span class="kw">let </span>checkpoint = lexer.checkpoint();
+        <span class="self">self</span>.buffered.lookahead.push_back(checkpoint);
 
-        <span class="prelude-val">Some</span>(<span class="ident">LookaheadToken</span> {
-            <span class="ident">kind</span>,
-            <span class="ident">flags</span>: <span class="ident">lexer</span>.<span class="ident">current_flags</span>,
+        <span class="prelude-val">Some</span>(LookaheadToken {
+            kind,
+            flags: lexer.current_flags,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">LookaheadIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span>&gt; FusedIterator <span class="kw">for </span>LookaheadIterator&lt;<span class="lifetime">&#39;l</span>, <span class="lifetime">&#39;t</span>&gt; {}
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LookaheadToken</span> {
-    <span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>,
-    <span class="ident">flags</span>: <span class="ident">TokenFlags</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>LookaheadToken {
+    kind: JsSyntaxKind,
+    flags: TokenFlags,
 }
 
-<span class="kw">impl</span> <span class="ident">LookaheadToken</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JsSyntaxKind</span> {
-        <span class="self">self</span>.<span class="ident">kind</span>
+<span class="kw">impl </span>LookaheadToken {
+    <span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JsSyntaxKind {
+        <span class="self">self</span>.kind
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_preceding_line_break</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">flags</span>.<span class="ident">has_preceding_line_break</span>()
+    <span class="kw">pub fn </span>has_preceding_line_break(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.flags.has_preceding_line_break()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">LexerCheckpoint</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">LookaheadToken</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">checkpoint</span>: <span class="kw-2">&amp;</span><span class="ident">LexerCheckpoint</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">LookaheadToken</span> {
-            <span class="ident">kind</span>: <span class="ident">checkpoint</span>.<span class="ident">current_kind</span>,
-            <span class="ident">flags</span>: <span class="ident">checkpoint</span>.<span class="ident">current_flags</span>,
+<span class="kw">impl </span>From&lt;<span class="kw-2">&amp;</span>LexerCheckpoint&gt; <span class="kw">for </span>LookaheadToken {
+    <span class="kw">fn </span>from(checkpoint: <span class="kw-2">&amp;</span>LexerCheckpoint) -&gt; <span class="self">Self </span>{
+        LookaheadToken {
+            kind: checkpoint.current_kind,
+            flags: checkpoint.current_flags,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::BufferedLexer</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::lexer</span>::{<span class="ident">LexContext</span>, <span class="ident">Lexer</span>, <span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-    <span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileId</span>;
-    <span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>::{<span class="ident">JS_NUMBER_LITERAL</span>, <span class="ident">NEWLINE</span>, <span class="ident">WHITESPACE</span>};
-    <span class="kw">use</span> <span class="ident">rome_js_syntax::T</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::BufferedLexer;
+    <span class="kw">use </span><span class="kw">crate</span>::lexer::{LexContext, Lexer, TextRange, TextSize};
+    <span class="kw">use </span>rome_diagnostics::file::FileId;
+    <span class="kw">use </span>rome_js_syntax::JsSyntaxKind::{JS_NUMBER_LITERAL, NEWLINE, WHITESPACE};
+    <span class="kw">use </span>rome_js_syntax::T;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">without_lookahead</span>() {
-        <span class="kw">let</span> <span class="ident">lexer</span> <span class="op">=</span> <span class="ident">Lexer::from_str</span>(<span class="string">&quot;let a\n = 5&quot;</span>, <span class="ident">FileId::zero</span>());
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffered</span> <span class="op">=</span> <span class="ident">BufferedLexer::new</span>(<span class="ident">lexer</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>without_lookahead() {
+        <span class="kw">let </span>lexer = Lexer::from_str(<span class="string">&quot;let a\n = 5&quot;</span>, FileId::zero());
+        <span class="kw">let </span><span class="kw-2">mut </span>buffered = BufferedLexer::new(lexer);
 
-        <span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">current</span>(), <span class="macro">T!</span>[<span class="kw">let</span>]);
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">buffered</span>.<span class="ident">has_preceding_line_break</span>());
+        buffered.next_token(LexContext::default());
+        <span class="macro">assert_eq!</span>(buffered.current(), <span class="macro">T!</span>[<span class="kw">let</span>]);
+        <span class="macro">assert!</span>(!buffered.has_preceding_line_break());
         <span class="macro">assert_eq!</span>(
-            <span class="ident">buffered</span>.<span class="ident">current_range</span>(),
-            <span class="ident">TextRange::at</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">TextSize::from</span>(<span class="number">3</span>))
+            buffered.current_range(),
+            TextRange::at(TextSize::from(<span class="number">0</span>), TextSize::from(<span class="number">3</span>))
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="ident">WHITESPACE</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="macro">T!</span>[<span class="ident">ident</span>]);
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="ident">NEWLINE</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="ident">WHITESPACE</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="macro">T!</span>[<span class="op">=</span>]);
-        <span class="macro">assert!</span>(<span class="ident">buffered</span>.<span class="ident">has_preceding_line_break</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="ident">WHITESPACE</span>);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), WHITESPACE);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), <span class="macro">T!</span>[ident]);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), NEWLINE);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), WHITESPACE);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), <span class="macro">T!</span>[=]);
+        <span class="macro">assert!</span>(buffered.has_preceding_line_break());
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), WHITESPACE);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()),
-            <span class="ident">JS_NUMBER_LITERAL</span>
+            buffered.next_token(LexContext::default()),
+            JS_NUMBER_LITERAL
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="macro">T!</span>[<span class="ident">EOF</span>]);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), <span class="macro">T!</span>[EOF]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">lookahead</span>() {
-        <span class="kw">let</span> <span class="ident">lexer</span> <span class="op">=</span> <span class="ident">Lexer::from_str</span>(<span class="string">&quot;let a\n = 5&quot;</span>, <span class="ident">FileId::zero</span>());
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffered</span> <span class="op">=</span> <span class="ident">BufferedLexer::new</span>(<span class="ident">lexer</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>lookahead() {
+        <span class="kw">let </span>lexer = Lexer::from_str(<span class="string">&quot;let a\n = 5&quot;</span>, FileId::zero());
+        <span class="kw">let </span><span class="kw-2">mut </span>buffered = BufferedLexer::new(lexer);
 
-        <span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">current</span>(), <span class="macro">T!</span>[<span class="kw">let</span>]);
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">buffered</span>.<span class="ident">has_preceding_line_break</span>());
+        buffered.next_token(LexContext::default());
+        <span class="macro">assert_eq!</span>(buffered.current(), <span class="macro">T!</span>[<span class="kw">let</span>]);
+        <span class="macro">assert!</span>(!buffered.has_preceding_line_break());
         <span class="macro">assert_eq!</span>(
-            <span class="ident">buffered</span>.<span class="ident">current_range</span>(),
-            <span class="ident">TextRange::at</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">TextSize::from</span>(<span class="number">3</span>))
+            buffered.current_range(),
+            TextRange::at(TextSize::from(<span class="number">0</span>), TextSize::from(<span class="number">3</span>))
         );
 
         {
-            <span class="kw">let</span> <span class="ident">lookahead</span> <span class="op">=</span> <span class="ident">buffered</span>.<span class="ident">lookahead</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>.<span class="ident">kind</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+            <span class="kw">let </span>lookahead = buffered.lookahead().map(|l| l.kind).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
             <span class="macro">assert_eq!</span>(
-                <span class="ident">lookahead</span>,
+                lookahead,
                 <span class="macro">vec!</span>[
-                    <span class="ident">WHITESPACE</span>,
-                    <span class="macro">T!</span>[<span class="ident">ident</span>],
-                    <span class="ident">NEWLINE</span>,
-                    <span class="ident">WHITESPACE</span>,
-                    <span class="macro">T!</span>[<span class="op">=</span>],
-                    <span class="ident">WHITESPACE</span>,
-                    <span class="ident">JS_NUMBER_LITERAL</span>,
-                    <span class="macro">T!</span>[<span class="ident">EOF</span>]
+                    WHITESPACE,
+                    <span class="macro">T!</span>[ident],
+                    NEWLINE,
+                    WHITESPACE,
+                    <span class="macro">T!</span>[=],
+                    WHITESPACE,
+                    JS_NUMBER_LITERAL,
+                    <span class="macro">T!</span>[EOF]
                 ]
             );
         }
 
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">current</span>(), <span class="macro">T!</span>[<span class="kw">let</span>]);
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="ident">WHITESPACE</span>);
+        <span class="macro">assert_eq!</span>(buffered.current(), <span class="macro">T!</span>[<span class="kw">let</span>]);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), WHITESPACE);
 
         {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lookahead</span> <span class="op">=</span> <span class="ident">buffered</span>.<span class="ident">lookahead</span>();
-            <span class="kw">let</span> <span class="ident">nth1</span> <span class="op">=</span> <span class="ident">lookahead</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">nth2</span> <span class="op">=</span> <span class="ident">lookahead</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">nth3</span> <span class="op">=</span> <span class="ident">lookahead</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">nth4</span> <span class="op">=</span> <span class="ident">lookahead</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
+            <span class="kw">let </span><span class="kw-2">mut </span>lookahead = buffered.lookahead();
+            <span class="kw">let </span>nth1 = lookahead.next().unwrap();
+            <span class="kw">let </span>nth2 = lookahead.next().unwrap();
+            <span class="kw">let </span>nth3 = lookahead.next().unwrap();
+            <span class="kw">let </span>nth4 = lookahead.next().unwrap();
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nth1</span>.<span class="ident">kind</span>(), <span class="macro">T!</span>[<span class="ident">ident</span>]);
-            <span class="macro">assert_eq!</span>(<span class="ident">nth2</span>.<span class="ident">kind</span>(), <span class="ident">NEWLINE</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">nth3</span>.<span class="ident">kind</span>(), <span class="ident">WHITESPACE</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">nth4</span>.<span class="ident">kind</span>(), <span class="macro">T!</span>[<span class="op">=</span>]);
-            <span class="macro">assert!</span>(<span class="ident">nth4</span>.<span class="ident">has_preceding_line_break</span>());
+            <span class="macro">assert_eq!</span>(nth1.kind(), <span class="macro">T!</span>[ident]);
+            <span class="macro">assert_eq!</span>(nth2.kind(), NEWLINE);
+            <span class="macro">assert_eq!</span>(nth3.kind(), WHITESPACE);
+            <span class="macro">assert_eq!</span>(nth4.kind(), <span class="macro">T!</span>[=]);
+            <span class="macro">assert!</span>(nth4.has_preceding_line_break());
         }
 
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="macro">T!</span>[<span class="ident">ident</span>]);
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="ident">NEWLINE</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="ident">WHITESPACE</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="macro">T!</span>[<span class="op">=</span>]);
-        <span class="macro">assert!</span>(<span class="ident">buffered</span>.<span class="ident">has_preceding_line_break</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="ident">WHITESPACE</span>);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), <span class="macro">T!</span>[ident]);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), NEWLINE);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), WHITESPACE);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), <span class="macro">T!</span>[=]);
+        <span class="macro">assert!</span>(buffered.has_preceding_line_break());
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), WHITESPACE);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()),
-            <span class="ident">JS_NUMBER_LITERAL</span>
+            buffered.next_token(LexContext::default()),
+            JS_NUMBER_LITERAL
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">buffered</span>.<span class="ident">next_token</span>(<span class="ident">LexContext::default</span>()), <span class="macro">T!</span>[<span class="ident">EOF</span>]);
+        <span class="macro">assert_eq!</span>(buffered.next_token(LexContext::default()), <span class="macro">T!</span>[EOF]);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

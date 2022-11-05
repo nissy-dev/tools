@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/control_flow/nodes/try_catch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>try_catch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/control_flow/nodes/try_catch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>try_catch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -154,161 +154,161 @@
 <span id="154">154</span>
 <span id="155">155</span>
 <span id="156">156</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_control_flow</span>::{<span class="ident">builder::BlockId</span>, <span class="ident">ExceptionHandlerKind</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsCatchClause</span>, <span class="ident">JsFinallyClause</span>, <span class="ident">JsTryFinallyStatement</span>, <span class="ident">JsTryStatement</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">declare_node_union</span>, <span class="ident">SyntaxResult</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>rome_control_flow::{builder::BlockId, ExceptionHandlerKind};
+<span class="kw">use </span>rome_js_syntax::{JsCatchClause, JsFinallyClause, JsTryFinallyStatement, JsTryStatement};
+<span class="kw">use </span>rome_rowan::{declare_node_union, SyntaxResult};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>::{
-    <span class="ident">visitor</span>::{<span class="ident">NodeVisitor</span>, <span class="ident">StatementStack</span>},
-    <span class="ident">FunctionBuilder</span>,
+<span class="kw">use </span><span class="kw">crate</span>::control_flow::{
+    visitor::{NodeVisitor, StatementStack},
+    FunctionBuilder,
 };
 
-<span class="macro">declare_node_union!</span> {
-    <span class="kw">pub</span>(<span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>) <span class="ident">JsAnyTryStatement</span> <span class="op">=</span> <span class="ident">JsTryStatement</span> <span class="op">|</span> <span class="ident">JsTryFinallyStatement</span>
+<span class="macro">declare_node_union! </span>{
+    <span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::control_flow) JsAnyTryStatement = JsTryStatement | JsTryFinallyStatement
 }
 
-<span class="kw">pub</span>(<span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>) <span class="kw">struct</span> <span class="ident">TryVisitor</span> {
-    <span class="ident">catch_block</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockId</span><span class="op">&gt;</span>,
-    <span class="ident">finally_block</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockId</span><span class="op">&gt;</span>,
-    <span class="ident">next_block</span>: <span class="ident">BlockId</span>,
+<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::control_flow) <span class="kw">struct </span>TryVisitor {
+    catch_block: <span class="prelude-ty">Option</span>&lt;BlockId&gt;,
+    finally_block: <span class="prelude-ty">Option</span>&lt;BlockId&gt;,
+    next_block: BlockId,
 }
 
-<span class="kw">impl</span> <span class="ident">NodeVisitor</span> <span class="kw">for</span> <span class="ident">TryVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Node</span> <span class="op">=</span> <span class="ident">JsAnyTryStatement</span>;
+<span class="kw">impl </span>NodeVisitor <span class="kw">for </span>TryVisitor {
+    <span class="kw">type </span>Node = JsAnyTryStatement;
 
-    <span class="kw">fn</span> <span class="ident">enter</span>(
-        <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="kw">_</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">has_catch</span>, <span class="ident">has_finally</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">node</span> {
-            <span class="ident">JsAnyTryStatement::JsTryStatement</span>(<span class="kw">_</span>) =&gt; (<span class="bool-val">true</span>, <span class="bool-val">false</span>),
-            <span class="ident">JsAnyTryStatement::JsTryFinallyStatement</span>(<span class="ident">node</span>) =&gt; (<span class="ident">node</span>.<span class="ident">catch_clause</span>().<span class="ident">is_some</span>(), <span class="bool-val">true</span>),
+    <span class="kw">fn </span>enter(
+        node: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        <span class="kw">_</span>: StatementStack,
+    ) -&gt; SyntaxResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>(has_catch, has_finally) = <span class="kw">match </span>node {
+            JsAnyTryStatement::JsTryStatement(<span class="kw">_</span>) =&gt; (<span class="bool-val">true</span>, <span class="bool-val">false</span>),
+            JsAnyTryStatement::JsTryFinallyStatement(node) =&gt; (node.catch_clause().is_some(), <span class="bool-val">true</span>),
         };
 
-        <span class="kw">let</span> <span class="ident">next_block</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">append_block</span>();
+        <span class="kw">let </span>next_block = builder.append_block();
 
-        <span class="kw">let</span> <span class="ident">finally_block</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">has_finally</span> {
-            <span class="kw">let</span> <span class="ident">finally_block</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">append_block</span>();
-            <span class="ident">builder</span>.<span class="ident">push_exception_target</span>(<span class="ident">ExceptionHandlerKind::Finally</span>, <span class="ident">finally_block</span>);
-            <span class="prelude-val">Some</span>(<span class="ident">finally_block</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        };
+        <span class="kw">let </span>finally_block = <span class="kw">if </span>has_finally {
+            <span class="kw">let </span>finally_block = builder.append_block();
+            builder.push_exception_target(ExceptionHandlerKind::Finally, finally_block);
+            <span class="prelude-val">Some</span>(finally_block)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>};
 
-        <span class="kw">let</span> <span class="ident">catch_block</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">has_catch</span> {
-            <span class="kw">let</span> <span class="ident">catch_block</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">append_block</span>();
-            <span class="ident">builder</span>.<span class="ident">push_exception_target</span>(<span class="ident">ExceptionHandlerKind::Catch</span>, <span class="ident">catch_block</span>);
-            <span class="prelude-val">Some</span>(<span class="ident">catch_block</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        };
+        <span class="kw">let </span>catch_block = <span class="kw">if </span>has_catch {
+            <span class="kw">let </span>catch_block = builder.append_block();
+            builder.push_exception_target(ExceptionHandlerKind::Catch, catch_block);
+            <span class="prelude-val">Some</span>(catch_block)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>};
 
-        <span class="comment">// Create the actual try block (with the exception target set), append</span>
-        <span class="comment">// an implicit jump to it and move the cursor there</span>
-        <span class="kw">let</span> <span class="ident">try_block</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">append_block</span>();
-        <span class="ident">builder</span>.<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">try_block</span>);
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">try_block</span>);
+        <span class="comment">// Create the actual try block (with the exception target set), append
+        // an implicit jump to it and move the cursor there
+        </span><span class="kw">let </span>try_block = builder.append_block();
+        builder.append_jump(<span class="bool-val">false</span>, try_block);
+        builder.set_cursor(try_block);
 
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">catch_block</span>,
-            <span class="ident">finally_block</span>,
-            <span class="ident">next_block</span>,
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            catch_block,
+            finally_block,
+            next_block,
         })
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>) <span class="kw">struct</span> <span class="ident">CatchVisitor</span>;
+<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::control_flow) <span class="kw">struct </span>CatchVisitor;
 
-<span class="kw">impl</span> <span class="ident">NodeVisitor</span> <span class="kw">for</span> <span class="ident">CatchVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Node</span> <span class="op">=</span> <span class="ident">JsCatchClause</span>;
+<span class="kw">impl </span>NodeVisitor <span class="kw">for </span>CatchVisitor {
+    <span class="kw">type </span>Node = JsCatchClause;
 
-    <span class="kw">fn</span> <span class="ident">enter</span>(
-        <span class="kw">_</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="ident">stack</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">try_stmt</span> <span class="op">=</span> <span class="ident">stack</span>.<span class="ident">read_top</span>::<span class="op">&lt;</span><span class="ident">TryVisitor</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>enter(
+        <span class="kw">_</span>: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        stack: StatementStack,
+    ) -&gt; SyntaxResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>try_stmt = stack.read_top::&lt;TryVisitor&gt;()<span class="question-mark">?</span>;
 
-        <span class="comment">// Insert an implicit jump from the end of the `try` block to the</span>
-        <span class="comment">// `finally` block if it exists, or to the `next` block otherwise</span>
-        <span class="ident">builder</span>.<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">try_stmt</span>.<span class="ident">finally_block</span>.<span class="ident">unwrap_or</span>(<span class="ident">try_stmt</span>.<span class="ident">next_block</span>));
+        <span class="comment">// Insert an implicit jump from the end of the `try` block to the
+        // `finally` block if it exists, or to the `next` block otherwise
+        </span>builder.append_jump(<span class="bool-val">false</span>, try_stmt.finally_block.unwrap_or(try_stmt.next_block));
 
-        <span class="comment">// Pop the catch block from the exception stack</span>
-        <span class="ident">builder</span>.<span class="ident">pop_exception_target</span>();
+        <span class="comment">// Pop the catch block from the exception stack
+        </span>builder.pop_exception_target();
 
-        <span class="comment">// SAFETY: This block should have been created by the `TryVisitor`</span>
-        <span class="kw">let</span> <span class="ident">catch_block</span> <span class="op">=</span> <span class="ident">try_stmt</span>.<span class="ident">catch_block</span>.<span class="ident">unwrap</span>();
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">catch_block</span>);
+        <span class="comment">// SAFETY: This block should have been created by the `TryVisitor`
+        </span><span class="kw">let </span>catch_block = try_stmt.catch_block.unwrap();
+        builder.set_cursor(catch_block);
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">exit</span>(
+    <span class="kw">fn </span>exit(
         <span class="self">self</span>,
-        <span class="kw">_</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="ident">stack</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">try_stmt</span> <span class="op">=</span> <span class="ident">stack</span>.<span class="ident">read_top</span>::<span class="op">&lt;</span><span class="ident">TryVisitor</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+        <span class="kw">_</span>: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        stack: StatementStack,
+    ) -&gt; SyntaxResult&lt;()&gt; {
+        <span class="kw">let </span>try_stmt = stack.read_top::&lt;TryVisitor&gt;()<span class="question-mark">?</span>;
 
-        <span class="comment">// Implicit jump from the end of the catch block to the finally block</span>
-        <span class="comment">// (if it exists), or to the next block otherwise</span>
-        <span class="kw">let</span> <span class="ident">next_block</span> <span class="op">=</span> <span class="ident">try_stmt</span>.<span class="ident">finally_block</span>.<span class="ident">unwrap_or</span>(<span class="ident">try_stmt</span>.<span class="ident">next_block</span>);
-        <span class="ident">builder</span>.<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">next_block</span>);
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">next_block</span>);
+        <span class="comment">// Implicit jump from the end of the catch block to the finally block
+        // (if it exists), or to the next block otherwise
+        </span><span class="kw">let </span>next_block = try_stmt.finally_block.unwrap_or(try_stmt.next_block);
+        builder.append_jump(<span class="bool-val">false</span>, next_block);
+        builder.set_cursor(next_block);
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>) <span class="kw">struct</span> <span class="ident">FinallyVisitor</span>;
+<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::control_flow) <span class="kw">struct </span>FinallyVisitor;
 
-<span class="kw">impl</span> <span class="ident">NodeVisitor</span> <span class="kw">for</span> <span class="ident">FinallyVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Node</span> <span class="op">=</span> <span class="ident">JsFinallyClause</span>;
+<span class="kw">impl </span>NodeVisitor <span class="kw">for </span>FinallyVisitor {
+    <span class="kw">type </span>Node = JsFinallyClause;
 
-    <span class="kw">fn</span> <span class="ident">enter</span>(
-        <span class="kw">_</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="ident">stack</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">try_stmt</span> <span class="op">=</span> <span class="ident">stack</span>.<span class="ident">read_top</span>::<span class="op">&lt;</span><span class="ident">TryVisitor</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>enter(
+        <span class="kw">_</span>: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        stack: StatementStack,
+    ) -&gt; SyntaxResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>try_stmt = stack.read_top::&lt;TryVisitor&gt;()<span class="question-mark">?</span>;
 
-        <span class="comment">// SAFETY: This block should have been created by the `TryVisitor`</span>
-        <span class="kw">let</span> <span class="ident">finally_block</span> <span class="op">=</span> <span class="ident">try_stmt</span>.<span class="ident">finally_block</span>.<span class="ident">unwrap</span>();
+        <span class="comment">// SAFETY: This block should have been created by the `TryVisitor`
+        </span><span class="kw">let </span>finally_block = try_stmt.finally_block.unwrap();
 
-        <span class="comment">// If the try statement has no catch clause</span>
-        <span class="kw">if</span> <span class="ident">try_stmt</span>.<span class="ident">catch_block</span>.<span class="ident">is_none</span>() {
-            <span class="comment">// Insert an implicit jump from the end of the try block to the</span>
-            <span class="comment">// `finally` block</span>
-            <span class="ident">builder</span>.<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">finally_block</span>);
+        <span class="comment">// If the try statement has no catch clause
+        </span><span class="kw">if </span>try_stmt.catch_block.is_none() {
+            <span class="comment">// Insert an implicit jump from the end of the try block to the
+            // `finally` block
+            </span>builder.append_jump(<span class="bool-val">false</span>, finally_block);
 
-            <span class="comment">// Move the cursor to the finally block (this has already been done</span>
-            <span class="comment">// by the `CatchVisitor` if the try statement has a catch clause)</span>
-            <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">finally_block</span>);
+            <span class="comment">// Move the cursor to the finally block (this has already been done
+            // by the `CatchVisitor` if the try statement has a catch clause)
+            </span>builder.set_cursor(finally_block);
         }
 
-        <span class="comment">// Pop the finally block from the exception stack</span>
-        <span class="ident">builder</span>.<span class="ident">pop_exception_target</span>();
+        <span class="comment">// Pop the finally block from the exception stack
+        </span>builder.pop_exception_target();
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">exit</span>(
+    <span class="kw">fn </span>exit(
         <span class="self">self</span>,
-        <span class="kw">_</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="ident">stack</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">try_stmt</span> <span class="op">=</span> <span class="ident">stack</span>.<span class="ident">read_top</span>::<span class="op">&lt;</span><span class="ident">TryVisitor</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+        <span class="kw">_</span>: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        stack: StatementStack,
+    ) -&gt; SyntaxResult&lt;()&gt; {
+        <span class="kw">let </span>try_stmt = stack.read_top::&lt;TryVisitor&gt;()<span class="question-mark">?</span>;
 
-        <span class="comment">// Implicit jump from the end of the finally block to the next block</span>
-        <span class="ident">builder</span>.<span class="ident">append_finally_fallthrough</span>(<span class="ident">try_stmt</span>.<span class="ident">next_block</span>);
+        <span class="comment">// Implicit jump from the end of the finally block to the next block
+        </span>builder.append_finally_fallthrough(try_stmt.next_block);
 
-        <span class="ident">builder</span>.<span class="ident">set_cursor</span>(<span class="ident">try_stmt</span>.<span class="ident">next_block</span>);
+        builder.set_cursor(try_stmt.next_block);
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/semantic_analyzers/style/use_fragment_syntax.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_fragment_syntax.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/semantic_analyzers/style/use_fragment_syntax.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_fragment_syntax.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -114,121 +114,121 @@
 <span id="114">114</span>
 <span id="115">115</span>
 <span id="116">116</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::react</span>::{<span class="ident">jsx_member_name_is_react_fragment</span>, <span class="ident">jsx_reference_identifier_is_fragment</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::semantic_services::Semantic</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsRuleAction</span>;
-<span class="kw">use</span> <span class="ident">rome_analyze::context::RuleContext</span>;
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_factory::make</span>::{
-    <span class="ident">jsx_child_list</span>, <span class="ident">jsx_closing_fragment</span>, <span class="ident">jsx_fragment</span>, <span class="ident">jsx_opening_fragment</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::react::{jsx_member_name_is_react_fragment, jsx_reference_identifier_is_fragment};
+<span class="kw">use </span><span class="kw">crate</span>::semantic_services::Semantic;
+<span class="kw">use </span><span class="kw">crate</span>::JsRuleAction;
+<span class="kw">use </span>rome_analyze::context::RuleContext;
+<span class="kw">use </span>rome_analyze::{declare_rule, ActionCategory, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_factory::make::{
+    jsx_child_list, jsx_closing_fragment, jsx_fragment, jsx_opening_fragment,
 };
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsxAnyElementName</span>, <span class="ident">JsxElement</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">AstNodeList</span>, <span class="ident">BatchMutationExt</span>};
+<span class="kw">use </span>rome_js_syntax::{JsxAnyElementName, JsxElement};
+<span class="kw">use </span>rome_rowan::{AstNode, AstNodeList, BatchMutationExt};
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// This rule enforces the use of `&lt;&gt;...&lt;/&gt;` over `&lt;Fragment&gt;...&lt;/Fragment&gt;`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The shorthand fragment syntax saves keystrokes and is only inapplicable when keys are required.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// &lt;Fragment&gt;child&lt;/Fragment&gt;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// &lt;React.Fragment&gt;child&lt;/React.Fragment&gt;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseFragmentSyntax</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.10.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;useFragmentSyntax&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">false</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// This rule enforces the use of `&lt;&gt;...&lt;/&gt;` over `&lt;Fragment&gt;...&lt;/Fragment&gt;`.
+    ///
+    /// The shorthand fragment syntax saves keystrokes and is only inapplicable when keys are required.
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    /// &lt;Fragment&gt;child&lt;/Fragment&gt;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// &lt;React.Fragment&gt;child&lt;/React.Fragment&gt;
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) UseFragmentSyntax {
+        version: <span class="string">&quot;0.10.0&quot;</span>,
+        name: <span class="string">&quot;useFragmentSyntax&quot;</span>,
+        recommended: <span class="bool-val">false</span>,
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseFragmentSyntax</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Semantic</span><span class="op">&lt;</span><span class="ident">JsxElement</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> ();
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>UseFragmentSyntax {
+    <span class="kw">type </span>Query = Semantic&lt;JsxElement&gt;;
+    <span class="kw">type </span>State = ();
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::Signals</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">model</span>();
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="self">Self</span>::Signals {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="kw">let </span>model = ctx.model();
 
-        <span class="kw">let</span> <span class="ident">opening_element</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">opening_element</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">opening_element</span>.<span class="ident">name</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">maybe_invalid</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">name</span> {
-            <span class="ident">JsxAnyElementName::JsxMemberName</span>(<span class="ident">member_name</span>) =&gt; {
-                <span class="ident">jsx_member_name_is_react_fragment</span>(<span class="kw-2">&amp;</span><span class="ident">member_name</span>, <span class="ident">model</span>)<span class="question-mark">?</span>
-            }
-            <span class="ident">JsxAnyElementName::JsxReferenceIdentifier</span>(<span class="ident">identifier</span>) =&gt; {
-                <span class="ident">jsx_reference_identifier_is_fragment</span>(<span class="kw-2">&amp;</span><span class="ident">identifier</span>, <span class="ident">model</span>)<span class="question-mark">?</span>
-            }
-            <span class="ident">JsxAnyElementName::JsxName</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">JsxAnyElementName::JsxNamespaceName</span>(<span class="kw">_</span>) =&gt; <span class="bool-val">false</span>,
+        <span class="kw">let </span>opening_element = node.opening_element().ok()<span class="question-mark">?</span>;
+        <span class="kw">let </span>name = opening_element.name().ok()<span class="question-mark">?</span>;
+        <span class="kw">let </span>maybe_invalid = <span class="kw">match </span>name {
+            JsxAnyElementName::JsxMemberName(member_name) =&gt; {
+                jsx_member_name_is_react_fragment(<span class="kw-2">&amp;</span>member_name, model)<span class="question-mark">?
+            </span>}
+            JsxAnyElementName::JsxReferenceIdentifier(identifier) =&gt; {
+                jsx_reference_identifier_is_fragment(<span class="kw-2">&amp;</span>identifier, model)<span class="question-mark">?
+            </span>}
+            JsxAnyElementName::JsxName(<span class="kw">_</span>) | JsxAnyElementName::JsxNamespaceName(<span class="kw">_</span>) =&gt; <span class="bool-val">false</span>,
         };
 
-        <span class="kw">if</span> <span class="ident">maybe_invalid</span> <span class="op">&amp;&amp;</span> <span class="ident">opening_element</span>.<span class="ident">attributes</span>().<span class="ident">is_empty</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(());
+        <span class="kw">if </span>maybe_invalid &amp;&amp; opening_element.attributes().is_empty() {
+            <span class="kw">return </span><span class="prelude-val">Some</span>(());
         }
 
-        <span class="prelude-val">None</span>
-    }
+        <span class="prelude-val">None
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">action</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
-        <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">jsx_child_list</span>(<span class="ident">node</span>.<span class="ident">children</span>());
-        <span class="kw">let</span> <span class="ident">opening_element</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">opening_element</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">closing_element</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">closing_element</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">fragment</span> <span class="op">=</span> <span class="ident">jsx_fragment</span>(
-            <span class="ident">jsx_opening_fragment</span>(
-                <span class="ident">opening_element</span>.<span class="ident">l_angle_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                <span class="ident">opening_element</span>.<span class="ident">r_angle_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
+    <span class="kw">fn </span>action(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, _state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
+        <span class="kw">let </span>list = jsx_child_list(node.children());
+        <span class="kw">let </span>opening_element = node.opening_element().ok()<span class="question-mark">?</span>;
+        <span class="kw">let </span>closing_element = node.closing_element().ok()<span class="question-mark">?</span>;
+        <span class="kw">let </span>fragment = jsx_fragment(
+            jsx_opening_fragment(
+                opening_element.l_angle_token().ok()<span class="question-mark">?</span>,
+                opening_element.r_angle_token().ok()<span class="question-mark">?</span>,
             ),
-            <span class="ident">list</span>,
-            <span class="ident">jsx_closing_fragment</span>(
-                <span class="ident">closing_element</span>.<span class="ident">l_angle_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                <span class="ident">closing_element</span>.<span class="ident">slash_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                <span class="ident">closing_element</span>.<span class="ident">r_angle_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
+            list,
+            jsx_closing_fragment(
+                closing_element.l_angle_token().ok()<span class="question-mark">?</span>,
+                closing_element.slash_token().ok()<span class="question-mark">?</span>,
+                closing_element.r_angle_token().ok()<span class="question-mark">?</span>,
             ),
         );
 
-        <span class="ident">mutation</span>.<span class="ident">replace_element</span>(
-            <span class="ident">node</span>.<span class="ident">clone</span>().<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
-            <span class="ident">fragment</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
+        mutation.replace_element(
+            node.clone().into_syntax().into(),
+            fragment.into_syntax().into(),
         );
 
-        <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-            <span class="ident">mutation</span>,
-            <span class="ident">message</span>:
-                (<span class="macro">markup!</span> { <span class="string">&quot;Replace &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;&lt;Fragment&gt;&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; with the fragment syntax&quot;</span> })
-                    .<span class="ident">to_owned</span>(),
-            <span class="ident">applicability</span>: <span class="ident">Applicability::MaybeIncorrect</span>,
-            <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
+        <span class="prelude-val">Some</span>(JsRuleAction {
+            mutation,
+            message:
+                (<span class="macro">markup! </span>{ <span class="string">&quot;Replace &quot;</span>&lt;Emphasis&gt;<span class="string">&quot;&lt;Fragment&gt;&quot;</span>&lt;/Emphasis&gt;<span class="string">&quot; with the fragment syntax&quot; </span>})
+                    .to_owned(),
+            applicability: Applicability::MaybeIncorrect,
+            category: ActionCategory::QuickFix,
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+    <span class="kw">fn </span>diagnostic(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, _state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>node = ctx.query();
 
         <span class="prelude-val">Some</span>(
-            <span class="ident">RuleDiagnostic::new</span>(
+            RuleDiagnostic::new(
                 <span class="macro">rule_category!</span>(),
-                <span class="ident">node</span>.<span class="ident">syntax</span>().<span class="ident">text_trimmed_range</span>(),
-                <span class="macro">markup!</span> {
-                    <span class="string">&quot;Use shorthand syntax for Fragment elements instead of standard syntax.&quot;</span>
-                },
+                node.syntax().text_trimmed_range(),
+                <span class="macro">markup! </span>{
+                    <span class="string">&quot;Use shorthand syntax for Fragment elements instead of standard syntax.&quot;
+                </span>},
             )
-            .<span class="ident">note</span>(<span class="macro">markup!</span> {
-                <span class="string">&quot;Shorthand fragment syntax saves keystrokes and is only inapplicable when keys are required.&quot;</span>
-            }),
+            .note(<span class="macro">markup! </span>{
+                <span class="string">&quot;Shorthand fragment syntax saves keystrokes and is only inapplicable when keys are required.&quot;
+            </span>}),
         )
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

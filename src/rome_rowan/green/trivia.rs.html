@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/green/trivia.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>trivia.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/green/trivia.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>trivia.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -146,153 +146,153 @@
 <span id="146">146</span>
 <span id="147">147</span>
 <span id="148">148</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::arc</span>::{<span class="ident">HeaderSlice</span>, <span class="ident">ThinArc</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::TriviaPiece</span>;
-<span class="kw">use</span> <span class="ident">countme::Count</span>;
-<span class="kw">use</span> <span class="ident">rome_text_size::TextSize</span>;
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Formatter</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::arc::{HeaderSlice, ThinArc};
+<span class="kw">use </span><span class="kw">crate</span>::TriviaPiece;
+<span class="kw">use </span>countme::Count;
+<span class="kw">use </span>rome_text_size::TextSize;
+<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>std::fmt::Formatter;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">GreenTriviaHead</span> {
-    <span class="ident">_c</span>: <span class="ident">Count</span><span class="op">&lt;</span><span class="ident">GreenTrivia</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(PartialEq, Eq, Hash)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>GreenTriviaHead {
+    _c: Count&lt;GreenTrivia&gt;,
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">has_live</span>() -&gt; <span class="ident">bool</span> {
-    <span class="ident">countme::get</span>::<span class="op">&lt;</span><span class="ident">GreenTrivia</span><span class="op">&gt;</span>().<span class="ident">live</span> <span class="op">&gt;</span> <span class="number">0</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>has_live() -&gt; bool {
+    countme::get::&lt;GreenTrivia&gt;().live &gt; <span class="number">0
+</span>}
+
+<span class="kw">type </span>ReprThin = HeaderSlice&lt;GreenTriviaHead, [TriviaPiece; <span class="number">0</span>]&gt;;
+
+<span class="attribute">#[repr(transparent)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>GreenTriviaData {
+    data: ReprThin,
 }
 
-<span class="kw">type</span> <span class="ident">ReprThin</span> <span class="op">=</span> <span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">GreenTriviaHead</span>, [<span class="ident">TriviaPiece</span>; <span class="number">0</span>]<span class="op">&gt;</span>;
-
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">GreenTriviaData</span> {
-    <span class="ident">data</span>: <span class="ident">ReprThin</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">GreenTriviaData</span> {
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GreenTriviaHead</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">header</span>
+<span class="kw">impl </span>GreenTriviaData {
+    <span class="attribute">#[allow(unused)]
+    #[inline]
+    </span><span class="kw">pub fn </span>header(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>GreenTriviaHead {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.data.header
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pieces</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece</span>] {
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">slice</span>()
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">GreenTriviaData</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">pieces</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">pieces</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>pieces(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[TriviaPiece] {
+        <span class="self">self</span>.data.slice()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">GreenTriviaData</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_list</span>().<span class="ident">entries</span>(<span class="self">self</span>.<span class="ident">pieces</span>().<span class="ident">iter</span>()).<span class="ident">finish</span>()
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>GreenTriviaData {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="self">self</span>.pieces() == other.pieces()
     }
 }
 
-<span class="doccomment">/// List of trivia. Used to store either the leading or trailing trivia of a token.</span>
-<span class="doccomment">/// The identity of a trivia is defined by the kinds and lengths of its items but not by</span>
-<span class="doccomment">/// the texts of an individual piece. That means, that `\r` and `\n` can both be represented</span>
-<span class="doccomment">/// by the same trivia, a trivia with a single `LINEBREAK` piece with the length 1.</span>
-<span class="doccomment">/// This is safe because the text is stored on the token to which the trivia belongs and</span>
-<span class="doccomment">/// `a\n` and `a\r` never resolve to the same tokens. Thus, they only share the trivia but are</span>
-<span class="doccomment">/// otherwise two different tokens.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Hash</span>, <span class="ident">Clone</span>)]</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">GreenTrivia</span> {
-    <span class="ident">ptr</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">GreenTriviaHead</span>, <span class="ident">TriviaPiece</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">GreenTrivia</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">fmt::Debug::fmt</span>(<span class="self">self</span>.<span class="ident">pieces</span>(), <span class="ident">f</span>)
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>GreenTriviaData {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        f.debug_list().entries(<span class="self">self</span>.pieces().iter()).finish()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">GreenTrivia</span> {
-    <span class="doccomment">/// Creates a new trivia containing the passed in pieces</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">pieces</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">TriviaPiece</span><span class="op">&gt;</span>,
-        <span class="ident">I::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
+<span class="doccomment">/// List of trivia. Used to store either the leading or trailing trivia of a token.
+/// The identity of a trivia is defined by the kinds and lengths of its items but not by
+/// the texts of an individual piece. That means, that `\r` and `\n` can both be represented
+/// by the same trivia, a trivia with a single `LINEBREAK` piece with the length 1.
+/// This is safe because the text is stored on the token to which the trivia belongs and
+/// `a\n` and `a\r` never resolve to the same tokens. Thus, they only share the trivia but are
+/// otherwise two different tokens.
+</span><span class="attribute">#[derive(Eq, PartialEq, Hash, Clone)]
+#[repr(transparent)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>GreenTrivia {
+    ptr: <span class="prelude-ty">Option</span>&lt;ThinArc&lt;GreenTriviaHead, TriviaPiece&gt;&gt;,
+}
+
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>GreenTrivia {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        fmt::Debug::fmt(<span class="self">self</span>.pieces(), f)
+    }
+}
+
+<span class="kw">impl </span>GreenTrivia {
+    <span class="doccomment">/// Creates a new trivia containing the passed in pieces
+    </span><span class="kw">pub fn </span>new&lt;I&gt;(pieces: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>I: IntoIterator&lt;Item = TriviaPiece&gt;,
+        I::IntoIter: ExactSizeIterator,
     {
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span>
-            <span class="ident">ThinArc::from_header_and_iter</span>(<span class="ident">GreenTriviaHead</span> { <span class="ident">_c</span>: <span class="ident">Count::new</span>() }, <span class="ident">pieces</span>.<span class="ident">into_iter</span>());
+        <span class="kw">let </span>data =
+            ThinArc::from_header_and_iter(GreenTriviaHead { _c: Count::new() }, pieces.into_iter());
 
-        <span class="ident">GreenTrivia</span> { <span class="ident">ptr</span>: <span class="prelude-val">Some</span>(<span class="ident">data</span>) }
+        GreenTrivia { ptr: <span class="prelude-val">Some</span>(data) }
     }
 
-    <span class="doccomment">/// Creates an empty trivia</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">empty</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">GreenTrivia</span> { <span class="ident">ptr</span>: <span class="prelude-val">None</span> }
+    <span class="doccomment">/// Creates an empty trivia
+    </span><span class="kw">pub fn </span>empty() -&gt; <span class="self">Self </span>{
+        GreenTrivia { ptr: <span class="prelude-val">None </span>}
     }
 
-    <span class="doccomment">/// Returns the total length of all pieces</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">TextSize::default</span>();
+    <span class="doccomment">/// Returns the total length of all pieces
+    </span><span class="kw">pub fn </span>text_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="kw">let </span><span class="kw-2">mut </span>len = TextSize::default();
 
-        <span class="kw">for</span> <span class="ident">piece</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">pieces</span>() {
-            <span class="ident">len</span> <span class="op">+</span><span class="op">=</span> <span class="ident">piece</span>.<span class="ident">length</span>
+        <span class="kw">for </span>piece <span class="kw">in </span><span class="self">self</span>.pieces() {
+            len += piece.length
         }
 
-        <span class="ident">len</span>
+        len
     }
 
-    <span class="doccomment">/// Returns the pieces count</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ptr</span> {
-            <span class="prelude-val">None</span> =&gt; <span class="number">0</span>,
-            <span class="prelude-val">Some</span>(<span class="ident">ptr</span>) =&gt; <span class="ident">ptr</span>.<span class="ident">len</span>(),
-        }
-    }
-
-    <span class="doccomment">/// Returns the pieces of the trivia</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pieces</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece</span>] {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ptr</span> {
-            <span class="prelude-val">None</span> =&gt; <span class="kw-2">&amp;</span>[],
-            <span class="prelude-val">Some</span>(<span class="ident">ptr</span>) =&gt; <span class="ident">ptr</span>.<span class="ident">slice</span>(),
+    <span class="doccomment">/// Returns the pieces count
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.ptr {
+            <span class="prelude-val">None </span>=&gt; <span class="number">0</span>,
+            <span class="prelude-val">Some</span>(ptr) =&gt; ptr.len(),
         }
     }
 
-    <span class="doccomment">/// Returns the piece at the given index.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_piece</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TriviaPiece</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">pieces</span>().<span class="ident">get</span>(<span class="ident">index</span>)
+    <span class="doccomment">/// Returns the pieces of the trivia
+    </span><span class="kw">pub fn </span>pieces(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[TriviaPiece] {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.ptr {
+            <span class="prelude-val">None </span>=&gt; <span class="kw-2">&amp;</span>[],
+            <span class="prelude-val">Some</span>(ptr) =&gt; ptr.slice(),
+        }
+    }
+
+    <span class="doccomment">/// Returns the piece at the given index.
+    </span><span class="kw">pub fn </span>get_piece(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TriviaPiece&gt; {
+        <span class="self">self</span>.pieces().get(index)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green::trivia</span>::{<span class="ident">GreenTrivia</span>, <span class="ident">GreenTriviaHead</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::TriviaPieceKind</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::TriviaPiece</span>;
-    <span class="kw">use</span> <span class="ident">rome_text_size::TextSize</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::green::trivia::{GreenTrivia, GreenTriviaHead};
+    <span class="kw">use </span><span class="kw">crate</span>::syntax::TriviaPieceKind;
+    <span class="kw">use </span><span class="kw">crate</span>::TriviaPiece;
+    <span class="kw">use </span>rome_text_size::TextSize;
 
-    <span class="kw">impl</span> <span class="ident">GreenTrivia</span> {
-        <span class="doccomment">/// Creates a trivia with a single whitespace piece</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">whitespace</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">len</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-            <span class="ident"><span class="self">Self</span>::single</span>(<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="ident">len</span>.<span class="ident">into</span>())
+    <span class="kw">impl </span>GreenTrivia {
+        <span class="doccomment">/// Creates a trivia with a single whitespace piece
+        </span><span class="kw">pub fn </span>whitespace&lt;L: Into&lt;TextSize&gt;&gt;(len: L) -&gt; <span class="self">Self </span>{
+            <span class="self">Self</span>::single(TriviaPieceKind::Whitespace, len.into())
         }
 
-        <span class="doccomment">/// Creates a trivia with one single line comment piece</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">single_line_comment</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">len</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-            <span class="ident"><span class="self">Self</span>::single</span>(<span class="ident">TriviaPieceKind::SingleLineComment</span>, <span class="ident">len</span>.<span class="ident">into</span>())
+        <span class="doccomment">/// Creates a trivia with one single line comment piece
+        </span><span class="kw">pub fn </span>single_line_comment&lt;L: Into&lt;TextSize&gt;&gt;(len: L) -&gt; <span class="self">Self </span>{
+            <span class="self">Self</span>::single(TriviaPieceKind::SingleLineComment, len.into())
         }
 
-        <span class="doccomment">/// Creates a trivia containing a single piece</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">single</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">kind</span>: <span class="ident">TriviaPieceKind</span>, <span class="ident">len</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-            <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">std::iter::once</span>(<span class="ident">TriviaPiece::new</span>(<span class="ident">kind</span>, <span class="ident">len</span>)))
+        <span class="doccomment">/// Creates a trivia containing a single piece
+        </span><span class="kw">pub fn </span>single&lt;L: Into&lt;TextSize&gt;&gt;(kind: TriviaPieceKind, len: L) -&gt; <span class="self">Self </span>{
+            <span class="self">Self</span>::new(std::iter::once(TriviaPiece::new(kind, len)))
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">sizes</span>() {
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GreenTriviaHead</span><span class="op">&gt;</span>());
-        <span class="macro">assert_eq!</span>(<span class="number">8</span>, <span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GreenTrivia</span><span class="op">&gt;</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>sizes() {
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, std::mem::size_of::&lt;GreenTriviaHead&gt;());
+        <span class="macro">assert_eq!</span>(<span class="number">8</span>, std::mem::size_of::&lt;GreenTrivia&gt;());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

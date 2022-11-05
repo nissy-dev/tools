@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_analyze/src/matcher.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>matcher.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_analyze/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_analyze/src/matcher.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>matcher.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_analyze/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -360,367 +360,367 @@
 <span id="360">360</span>
 <span id="361">361</span>
 <span id="362">362</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp::Ordering</span>, <span class="ident">collections::BinaryHeap</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::{cmp::Ordering, collections::BinaryHeap};
 
-<span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileId</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">Language</span>, <span class="ident">TextRange</span>};
+<span class="kw">use </span>rome_diagnostics::file::FileId;
+<span class="kw">use </span>rome_rowan::{Language, TextRange};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">AnalyzerOptions</span>, <span class="ident">AnalyzerSignal</span>, <span class="ident">Phases</span>, <span class="ident">QueryMatch</span>, <span class="ident">Rule</span>, <span class="ident">RuleFilter</span>, <span class="ident">RuleGroup</span>, <span class="ident">ServiceBag</span>,
+<span class="kw">use crate</span>::{
+    AnalyzerOptions, AnalyzerSignal, Phases, QueryMatch, Rule, RuleFilter, RuleGroup, ServiceBag,
 };
 
-<span class="doccomment">/// The [QueryMatcher] trait is responsible of running lint rules on</span>
-<span class="doccomment">/// [QueryMatch] instances emitted by the various [Visitor](crate::Visitor)</span>
-<span class="doccomment">/// and push signals wrapped in [SignalEntry] to the signal queue</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">QueryMatcher</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Execute a single query match</span>
-    <span class="kw">fn</span> <span class="ident">match_query</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">params</span>: <span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>);
+<span class="doccomment">/// The [QueryMatcher] trait is responsible of running lint rules on
+/// [QueryMatch] instances emitted by the various [Visitor](crate::Visitor)
+/// and push signals wrapped in [SignalEntry] to the signal queue
+</span><span class="kw">pub trait </span>QueryMatcher&lt;L: Language&gt; {
+    <span class="doccomment">/// Execute a single query match
+    </span><span class="kw">fn </span>match_query(<span class="kw-2">&amp;mut </span><span class="self">self</span>, params: MatchQueryParams&lt;L&gt;);
 }
 
-<span class="doccomment">/// Parameters provided to [QueryMatcher::match_query] and require to run lint rules</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="lifetime">&#39;query</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">phase</span>: <span class="ident">Phases</span>,
-    <span class="kw">pub</span> <span class="ident">file_id</span>: <span class="ident">FileId</span>,
-    <span class="kw">pub</span> <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;phase</span> <span class="ident">L::Root</span>,
-    <span class="kw">pub</span> <span class="ident">query</span>: <span class="ident">QueryMatch</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">services</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;phase</span> <span class="ident">ServiceBag</span>,
-    <span class="kw">pub</span> <span class="ident">signal_queue</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query</span> <span class="kw-2">mut</span> <span class="ident">BinaryHeap</span><span class="op">&lt;</span><span class="ident">SignalEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query</span> <span class="ident">AnalyzerOptions</span>,
+<span class="doccomment">/// Parameters provided to [QueryMatcher::match_query] and require to run lint rules
+</span><span class="kw">pub struct </span>MatchQueryParams&lt;<span class="lifetime">&#39;phase</span>, <span class="lifetime">&#39;query</span>, L: Language&gt; {
+    <span class="kw">pub </span>phase: Phases,
+    <span class="kw">pub </span>file_id: FileId,
+    <span class="kw">pub </span>root: <span class="kw-2">&amp;</span><span class="lifetime">&#39;phase </span>L::Root,
+    <span class="kw">pub </span>query: QueryMatch&lt;L&gt;,
+    <span class="kw">pub </span>services: <span class="kw-2">&amp;</span><span class="lifetime">&#39;phase </span>ServiceBag,
+    <span class="kw">pub </span>signal_queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query </span><span class="kw-2">mut </span>BinaryHeap&lt;SignalEntry&lt;<span class="lifetime">&#39;phase</span>, L&gt;&gt;,
+    <span class="kw">pub </span>options: <span class="kw-2">&amp;</span><span class="lifetime">&#39;query </span>AnalyzerOptions,
 }
 
-<span class="doccomment">/// Opaque identifier for a group of rule</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GroupKey</span> {
-    <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+<span class="doccomment">/// Opaque identifier for a group of rule
+</span><span class="attribute">#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>GroupKey {
+    group: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
 }
 
-<span class="kw">impl</span> <span class="ident">GroupKey</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">group</span> }
+<span class="kw">impl </span>GroupKey {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(group: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ group }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">group</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">RuleGroup</span><span class="op">&gt;</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">G::NAME</span>)
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GroupKey</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RuleFilter</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">key</span>: <span class="ident">GroupKey</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">RuleFilter::Group</span>(<span class="ident">key</span>.<span class="ident">group</span>)
+    <span class="kw">pub fn </span>group&lt;G: RuleGroup&gt;() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(G::NAME)
     }
 }
 
-<span class="doccomment">/// Opaque identifier for a single rule</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuleKey</span> {
-    <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
-    <span class="ident">rule</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">RuleKey</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">rule</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">group</span>, <span class="ident">rule</span> }
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rule</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Rule</span><span class="op">&gt;</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="op">&lt;</span><span class="ident">R::Group</span> <span class="kw">as</span> <span class="ident">RuleGroup</span><span class="op">&gt;</span><span class="ident">::NAME</span>, <span class="ident">R::METADATA</span>.<span class="ident">name</span>)
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">group</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">group</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rule_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">rule</span>
+<span class="kw">impl </span>From&lt;GroupKey&gt; <span class="kw">for </span>RuleFilter&lt;<span class="lifetime">&#39;static</span>&gt; {
+    <span class="kw">fn </span>from(key: GroupKey) -&gt; <span class="self">Self </span>{
+        RuleFilter::Group(key.group)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">RuleKey</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RuleFilter</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">key</span>: <span class="ident">RuleKey</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">RuleFilter::Rule</span>(<span class="ident">key</span>.<span class="ident">group</span>, <span class="ident">key</span>.<span class="ident">rule</span>)
+<span class="doccomment">/// Opaque identifier for a single rule
+</span><span class="attribute">#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub struct </span>RuleKey {
+    group: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
+    rule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
+}
+
+<span class="kw">impl </span>RuleKey {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(group: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str, rule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ group, rule }
+    }
+
+    <span class="kw">pub fn </span>rule&lt;R: Rule&gt;() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(&lt;R::Group <span class="kw">as </span>RuleGroup&gt;::NAME, R::METADATA.name)
+    }
+
+    <span class="kw">pub fn </span>group(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+        <span class="self">self</span>.group
+    }
+
+    <span class="kw">pub fn </span>rule_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+        <span class="self">self</span>.rule
     }
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">RuleKey</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RuleFilter</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">RuleKey</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">RuleFilter::Group</span>(<span class="ident">group</span>) =&gt; <span class="ident">group</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">group</span>,
-            <span class="ident">RuleFilter::Rule</span>(<span class="ident">group</span>, <span class="ident">rule</span>) =&gt; <span class="ident">group</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">group</span> <span class="op">&amp;&amp;</span> <span class="ident">rule</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">rule</span>,
+<span class="kw">impl </span>From&lt;RuleKey&gt; <span class="kw">for </span>RuleFilter&lt;<span class="lifetime">&#39;static</span>&gt; {
+    <span class="kw">fn </span>from(key: RuleKey) -&gt; <span class="self">Self </span>{
+        RuleFilter::Rule(key.group, key.rule)
+    }
+}
+
+<span class="kw">impl </span>PartialEq&lt;RuleKey&gt; <span class="kw">for </span>RuleFilter&lt;<span class="lifetime">&#39;static</span>&gt; {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>RuleKey) -&gt; bool {
+        <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+            RuleFilter::Group(group) =&gt; group == other.group,
+            RuleFilter::Rule(group, rule) =&gt; group == other.group &amp;&amp; rule == other.rule,
         }
     }
 }
 
-<span class="doccomment">/// Entry for a pending signal in the `signal_queue`</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SignalEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Boxed analyzer signal to be emitted</span>
-    <span class="kw">pub</span> <span class="ident">signal</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">AnalyzerSignal</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;phase</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Unique identifier for the rule that emitted this signal</span>
-    <span class="kw">pub</span> <span class="ident">rule</span>: <span class="ident">RuleKey</span>,
-    <span class="doccomment">/// Text range in the document this signal covers</span>
-    <span class="kw">pub</span> <span class="ident">text_range</span>: <span class="ident">TextRange</span>,
+<span class="doccomment">/// Entry for a pending signal in the `signal_queue`
+</span><span class="kw">pub struct </span>SignalEntry&lt;<span class="lifetime">&#39;phase</span>, L: Language&gt; {
+    <span class="doccomment">/// Boxed analyzer signal to be emitted
+    </span><span class="kw">pub </span>signal: Box&lt;<span class="kw">dyn </span>AnalyzerSignal&lt;L&gt; + <span class="lifetime">&#39;phase</span>&gt;,
+    <span class="doccomment">/// Unique identifier for the rule that emitted this signal
+    </span><span class="kw">pub </span>rule: RuleKey,
+    <span class="doccomment">/// Text range in the document this signal covers
+    </span><span class="kw">pub </span>text_range: TextRange,
 }
 
-<span class="comment">// SignalEntry is ordered based on the starting point of its `text_range`</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Ord</span> <span class="kw">for</span> <span class="ident">SignalEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">Ordering</span> {
-        <span class="ident">other</span>.<span class="ident">text_range</span>.<span class="ident">start</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text_range</span>.<span class="ident">start</span>())
+<span class="comment">// SignalEntry is ordered based on the starting point of its `text_range`
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;phase</span>, L: Language&gt; Ord <span class="kw">for </span>SignalEntry&lt;<span class="lifetime">&#39;phase</span>, L&gt; {
+    <span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; Ordering {
+        other.text_range.start().cmp(<span class="kw-2">&amp;</span><span class="self">self</span>.text_range.start())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">PartialOrd</span> <span class="kw">for</span> <span class="ident">SignalEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ordering</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">cmp</span>(<span class="ident">other</span>))
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;phase</span>, L: Language&gt; PartialOrd <span class="kw">for </span>SignalEntry&lt;<span class="lifetime">&#39;phase</span>, L&gt; {
+    <span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Ordering&gt; {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.cmp(other))
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">SignalEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;phase</span>, L: Language&gt; Eq <span class="kw">for </span>SignalEntry&lt;<span class="lifetime">&#39;phase</span>, L&gt; {}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">SignalEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;phase</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">text_range</span>.<span class="ident">start</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">text_range</span>.<span class="ident">start</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;phase</span>, L: Language&gt; PartialEq <span class="kw">for </span>SignalEntry&lt;<span class="lifetime">&#39;phase</span>, L&gt; {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="self">self</span>.text_range.start() == other.text_range.start()
     }
 }
 
-<span class="doccomment">/// Adapter type wrapping a [QueryMatcher] type with a function that can be</span>
-<span class="doccomment">/// used to inspect the query matches emitted by the analyzer</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InspectMatcher</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">I</span><span class="op">&gt;</span> {
-    <span class="ident">func</span>: <span class="ident">F</span>,
-    <span class="ident">inner</span>: <span class="ident">I</span>,
+<span class="doccomment">/// Adapter type wrapping a [QueryMatcher] type with a function that can be
+/// used to inspect the query matches emitted by the analyzer
+</span><span class="kw">pub struct </span>InspectMatcher&lt;F, I&gt; {
+    func: F,
+    inner: I,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="ident">InspectMatcher</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">I</span><span class="op">&gt;</span> {
-    <span class="doccomment">///  Create a new instance of [InspectMatcher] from an existing [QueryMatcher]</span>
-    <span class="doccomment">/// object and an inspection function</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">inner</span>: <span class="ident">I</span>, <span class="ident">func</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">L</span>: <span class="ident">Language</span>,
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>),
-        <span class="ident">I</span>: <span class="ident">QueryMatcher</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;F, I&gt; InspectMatcher&lt;F, I&gt; {
+    <span class="doccomment">///  Create a new instance of [InspectMatcher] from an existing [QueryMatcher]
+    /// object and an inspection function
+    </span><span class="kw">pub fn </span>new&lt;L&gt;(inner: I, func: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>L: Language,
+        F: FnMut(<span class="kw-2">&amp;</span>MatchQueryParams&lt;L&gt;),
+        I: QueryMatcher&lt;L&gt;,
     {
-        <span class="self">Self</span> { <span class="ident">func</span>, <span class="ident">inner</span> }
+        <span class="self">Self </span>{ func, inner }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">F</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="ident">QueryMatcher</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">InspectMatcher</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">I</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Language</span>,
-    <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>),
-    <span class="ident">I</span>: <span class="ident">QueryMatcher</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;L, F, I&gt; QueryMatcher&lt;L&gt; <span class="kw">for </span>InspectMatcher&lt;F, I&gt;
+<span class="kw">where
+    </span>L: Language,
+    F: FnMut(<span class="kw-2">&amp;</span>MatchQueryParams&lt;L&gt;),
+    I: QueryMatcher&lt;L&gt;,
 {
-    <span class="kw">fn</span> <span class="ident">match_query</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">params</span>: <span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        (<span class="self">self</span>.<span class="ident">func</span>)(<span class="kw-2">&amp;</span><span class="ident">params</span>);
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">match_query</span>(<span class="ident">params</span>);
+    <span class="kw">fn </span>match_query(<span class="kw-2">&amp;mut </span><span class="self">self</span>, params: MatchQueryParams&lt;L&gt;) {
+        (<span class="self">self</span>.func)(<span class="kw-2">&amp;</span>params);
+        <span class="self">self</span>.inner.match_query(params);
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">rome_diagnostics::v2</span>::{<span class="ident">Diagnostic</span>, <span class="ident">Error</span>, <span class="ident">Severity</span>};
-    <span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">file::FileId</span>, <span class="ident">v2::category</span>};
-    <span class="kw">use</span> <span class="ident">rome_rowan</span>::{
-        <span class="ident">raw_language</span>::{<span class="ident">RawLanguage</span>, <span class="ident">RawLanguageKind</span>, <span class="ident">RawLanguageRoot</span>, <span class="ident">RawSyntaxTreeBuilder</span>},
-        <span class="ident">AstNode</span>, <span class="ident">TextRange</span>, <span class="ident">TextSize</span>, <span class="ident">TriviaPiece</span>, <span class="ident">TriviaPieceKind</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>rome_diagnostics::v2::{Diagnostic, Error, Severity};
+    <span class="kw">use </span>rome_diagnostics::{file::FileId, v2::category};
+    <span class="kw">use </span>rome_rowan::{
+        raw_language::{RawLanguage, RawLanguageKind, RawLanguageRoot, RawSyntaxTreeBuilder},
+        AstNode, TextRange, TextSize, TriviaPiece, TriviaPieceKind,
     };
 
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">signals::DiagnosticSignal</span>, <span class="ident">Analyzer</span>, <span class="ident">AnalyzerContext</span>, <span class="ident">AnalyzerDiagnostic</span>, <span class="ident">AnalyzerOptions</span>,
-        <span class="ident">AnalyzerSignal</span>, <span class="ident">ControlFlow</span>, <span class="ident">MetadataRegistry</span>, <span class="ident">Never</span>, <span class="ident">Phases</span>, <span class="ident">QueryMatch</span>, <span class="ident">QueryMatcher</span>,
-        <span class="ident">RuleKey</span>, <span class="ident">ServiceBag</span>, <span class="ident">SignalEntry</span>, <span class="ident">SyntaxVisitor</span>,
+    <span class="kw">use crate</span>::{
+        signals::DiagnosticSignal, Analyzer, AnalyzerContext, AnalyzerDiagnostic, AnalyzerOptions,
+        AnalyzerSignal, ControlFlow, MetadataRegistry, Never, Phases, QueryMatch, QueryMatcher,
+        RuleKey, ServiceBag, SignalEntry, SyntaxVisitor,
     };
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::MatchQueryParams</span>;
+    <span class="kw">use </span><span class="kw">super</span>::MatchQueryParams;
 
-    <span class="kw">struct</span> <span class="ident">SuppressionMatcher</span>;
+    <span class="kw">struct </span>SuppressionMatcher;
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Diagnostic</span>)]</span>
-    <span class="attribute">#[<span class="ident">diagnostic</span>(<span class="ident">category</span> <span class="op">=</span> <span class="string">&quot;args/fileNotFound&quot;</span>, <span class="ident">message</span> <span class="op">=</span> <span class="string">&quot;test_suppression&quot;</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">TestDiagnostic</span> {
-        <span class="attribute">#[<span class="ident">location</span>(<span class="ident">resource</span>)]</span>
-        <span class="ident">location</span>: <span class="ident">FileId</span>,
-        <span class="attribute">#[<span class="ident">location</span>(<span class="ident">span</span>)]</span>
-        <span class="ident">span</span>: <span class="ident">TextRange</span>,
+    <span class="attribute">#[derive(Debug, Diagnostic)]
+    #[diagnostic(category = <span class="string">&quot;args/fileNotFound&quot;</span>, message = <span class="string">&quot;test_suppression&quot;</span>)]
+    </span><span class="kw">struct </span>TestDiagnostic {
+        <span class="attribute">#[location(resource)]
+        </span>location: FileId,
+        <span class="attribute">#[location(span)]
+        </span>span: TextRange,
     }
 
-    <span class="kw">impl</span> <span class="ident">QueryMatcher</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SuppressionMatcher</span> {
-        <span class="doccomment">/// Emits a warning diagnostic for all literal expressions</span>
-        <span class="kw">fn</span> <span class="ident">match_query</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">params</span>: <span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span>) {
-            <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">params</span>.<span class="ident">query</span> {
-                <span class="ident">QueryMatch::Syntax</span>(<span class="ident">node</span>) =&gt; <span class="ident">node</span>,
-                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+    <span class="kw">impl </span>QueryMatcher&lt;RawLanguage&gt; <span class="kw">for </span>SuppressionMatcher {
+        <span class="doccomment">/// Emits a warning diagnostic for all literal expressions
+        </span><span class="kw">fn </span>match_query(<span class="kw-2">&amp;mut </span><span class="self">self</span>, params: MatchQueryParams&lt;RawLanguage&gt;) {
+            <span class="kw">let </span>node = <span class="kw">match </span>params.query {
+                QueryMatch::Syntax(node) =&gt; node,
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
             };
 
-            <span class="kw">if</span> <span class="ident">node</span>.<span class="ident">kind</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span> {
+            <span class="kw">if </span>node.kind() != RawLanguageKind::LITERAL_EXPRESSION {
                 <span class="kw">return</span>;
             }
 
-            <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">text_trimmed_range</span>();
-            <span class="ident">params</span>.<span class="ident">signal_queue</span>.<span class="ident">push</span>(<span class="ident">SignalEntry</span> {
-                <span class="ident">signal</span>: <span class="ident">Box::new</span>(<span class="ident">DiagnosticSignal::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-                    <span class="ident">AnalyzerDiagnostic::from_error</span>(<span class="ident">Error::from</span>(<span class="ident">TestDiagnostic</span> {
-                        <span class="ident">span</span>,
-                        <span class="ident">location</span>: <span class="ident">FileId::zero</span>(),
+            <span class="kw">let </span>span = node.text_trimmed_range();
+            params.signal_queue.push(SignalEntry {
+                signal: Box::new(DiagnosticSignal::new(<span class="kw">move </span>|| {
+                    AnalyzerDiagnostic::from_error(Error::from(TestDiagnostic {
+                        span,
+                        location: FileId::zero(),
                     }))
                 })),
-                <span class="ident">rule</span>: <span class="ident">RuleKey::new</span>(<span class="string">&quot;group&quot;</span>, <span class="string">&quot;rule&quot;</span>),
-                <span class="ident">text_range</span>: <span class="ident">span</span>,
+                rule: RuleKey::new(<span class="string">&quot;group&quot;</span>, <span class="string">&quot;rule&quot;</span>),
+                text_range: span,
             });
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">suppressions</span>() {
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>suppressions() {
+        <span class="kw">let </span>root = {
+            <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
 
-            <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-            <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::EXPRESSION_LIST</span>);
+            builder.start_node(RawLanguageKind::ROOT);
+            builder.start_node(RawLanguageKind::EXPRESSION_LIST);
 
-            <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::STRING_TOKEN</span>,
+            builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+            builder.token_with_trivia(
+                RawLanguageKind::STRING_TOKEN,
                 <span class="string">&quot;//group\n\&quot;warn_here\&quot;&quot;</span>,
                 <span class="kw-2">&amp;</span>[
-                    <span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::SingleLineComment</span>, <span class="number">7</span>),
-                    <span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="number">1</span>),
+                    TriviaPiece::new(TriviaPieceKind::SingleLineComment, <span class="number">7</span>),
+                    TriviaPiece::new(TriviaPieceKind::Newline, <span class="number">1</span>),
                 ],
                 <span class="kw-2">&amp;</span>[],
             );
-            <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+            builder.finish_node();
 
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::SEMICOLON_TOKEN</span>,
+            builder.token_with_trivia(
+                RawLanguageKind::SEMICOLON_TOKEN,
                 <span class="string">&quot;;\n&quot;</span>,
                 <span class="kw-2">&amp;</span>[],
-                <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="number">1</span>)],
+                <span class="kw-2">&amp;</span>[TriviaPiece::new(TriviaPieceKind::Newline, <span class="number">1</span>)],
             );
 
-            <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::STRING_TOKEN</span>,
+            builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+            builder.token_with_trivia(
+                RawLanguageKind::STRING_TOKEN,
                 <span class="string">&quot;//group/rule\n\&quot;warn_here\&quot;&quot;</span>,
                 <span class="kw-2">&amp;</span>[
-                    <span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::SingleLineComment</span>, <span class="number">12</span>),
-                    <span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="number">1</span>),
+                    TriviaPiece::new(TriviaPieceKind::SingleLineComment, <span class="number">12</span>),
+                    TriviaPiece::new(TriviaPieceKind::Newline, <span class="number">1</span>),
                 ],
                 <span class="kw-2">&amp;</span>[],
             );
-            <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+            builder.finish_node();
 
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::SEMICOLON_TOKEN</span>,
+            builder.token_with_trivia(
+                RawLanguageKind::SEMICOLON_TOKEN,
                 <span class="string">&quot;;\n&quot;</span>,
                 <span class="kw-2">&amp;</span>[],
-                <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="number">1</span>)],
+                <span class="kw-2">&amp;</span>[TriviaPiece::new(TriviaPieceKind::Newline, <span class="number">1</span>)],
             );
 
-            <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::STRING_TOKEN</span>,
+            builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+            builder.token_with_trivia(
+                RawLanguageKind::STRING_TOKEN,
                 <span class="string">&quot;//unknown_group\n\&quot;warn_here\&quot;&quot;</span>,
                 <span class="kw-2">&amp;</span>[
-                    <span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::SingleLineComment</span>, <span class="number">15</span>),
-                    <span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="number">1</span>),
+                    TriviaPiece::new(TriviaPieceKind::SingleLineComment, <span class="number">15</span>),
+                    TriviaPiece::new(TriviaPieceKind::Newline, <span class="number">1</span>),
                 ],
                 <span class="kw-2">&amp;</span>[],
             );
-            <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+            builder.finish_node();
 
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::SEMICOLON_TOKEN</span>,
+            builder.token_with_trivia(
+                RawLanguageKind::SEMICOLON_TOKEN,
                 <span class="string">&quot;;\n&quot;</span>,
                 <span class="kw-2">&amp;</span>[],
-                <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="number">1</span>)],
+                <span class="kw-2">&amp;</span>[TriviaPiece::new(TriviaPieceKind::Newline, <span class="number">1</span>)],
             );
 
-            <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::STRING_TOKEN</span>,
+            builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+            builder.token_with_trivia(
+                RawLanguageKind::STRING_TOKEN,
                 <span class="string">&quot;//group/unknown_rule\n\&quot;warn_here\&quot;&quot;</span>,
                 <span class="kw-2">&amp;</span>[
-                    <span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::SingleLineComment</span>, <span class="number">20</span>),
-                    <span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="number">1</span>),
+                    TriviaPiece::new(TriviaPieceKind::SingleLineComment, <span class="number">20</span>),
+                    TriviaPiece::new(TriviaPieceKind::Newline, <span class="number">1</span>),
                 ],
                 <span class="kw-2">&amp;</span>[],
             );
-            <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+            builder.finish_node();
 
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::SEMICOLON_TOKEN</span>,
+            builder.token_with_trivia(
+                RawLanguageKind::SEMICOLON_TOKEN,
                 <span class="string">&quot;;\n&quot;</span>,
                 <span class="kw-2">&amp;</span>[],
-                <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="number">1</span>)],
+                <span class="kw-2">&amp;</span>[TriviaPiece::new(TriviaPieceKind::Newline, <span class="number">1</span>)],
             );
 
-            <span class="ident">builder</span>.<span class="ident">finish_node</span>();
-            <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+            builder.finish_node();
+            builder.finish_node();
 
-            <span class="ident">RawLanguageRoot::unwrap_cast</span>(<span class="ident">builder</span>.<span class="ident">finish</span>())
+            RawLanguageRoot::unwrap_cast(builder.finish())
         };
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostics</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">emit_signal</span> <span class="op">=</span> <span class="op">|</span><span class="ident">signal</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">AnalyzerSignal</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ControlFlow</span><span class="op">&lt;</span><span class="ident">Never</span><span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">diagnostic</span>().<span class="ident">expect</span>(<span class="string">&quot;diagnostic&quot;</span>);
-            <span class="ident">diag</span>.<span class="ident">set_severity</span>(<span class="ident">Severity::Warning</span>);
-            <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">category</span>().<span class="ident">expect</span>(<span class="string">&quot;code&quot;</span>);
-            <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">get_span</span>().<span class="ident">expect</span>(<span class="string">&quot;range&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>diagnostics = Vec::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>emit_signal = |signal: <span class="kw-2">&amp;</span><span class="kw">dyn </span>AnalyzerSignal&lt;RawLanguage&gt;| -&gt; ControlFlow&lt;Never&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>diag = signal.diagnostic().expect(<span class="string">&quot;diagnostic&quot;</span>);
+            diag.set_severity(Severity::Warning);
+            <span class="kw">let </span>code = diag.category().expect(<span class="string">&quot;code&quot;</span>);
+            <span class="kw">let </span>range = diag.get_span().expect(<span class="string">&quot;range&quot;</span>);
 
-            <span class="ident">diagnostics</span>.<span class="ident">push</span>((<span class="ident">code</span>, <span class="ident">range</span>));
-            <span class="ident">ControlFlow::Continue</span>(())
+            diagnostics.push((code, range));
+            ControlFlow::Continue(())
         };
 
-        <span class="kw">fn</span> <span class="ident">parse_suppression_comment</span>(<span class="ident">comment</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-            <span class="ident">comment</span>
-                .<span class="ident">trim_start_matches</span>(<span class="string">&quot;//&quot;</span>)
-                .<span class="ident">split</span>(<span class="string">&#39; &#39;</span>)
-                .<span class="ident">map</span>(<span class="prelude-val">Some</span>)
-                .<span class="ident">collect</span>()
+        <span class="kw">fn </span>parse_suppression_comment(comment: <span class="kw-2">&amp;</span>str) -&gt; Vec&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;&gt; {
+            comment
+                .trim_start_matches(<span class="string">&quot;//&quot;</span>)
+                .split(<span class="string">&#39; &#39;</span>)
+                .map(<span class="prelude-val">Some</span>)
+                .collect()
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">MetadataRegistry::default</span>();
-        <span class="ident">metadata</span>.<span class="ident">insert_rule</span>(<span class="string">&quot;group&quot;</span>, <span class="string">&quot;rule&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>metadata = MetadataRegistry::default();
+        metadata.insert_rule(<span class="string">&quot;group&quot;</span>, <span class="string">&quot;rule&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">analyzer</span> <span class="op">=</span> <span class="ident">Analyzer::new</span>(
-            <span class="kw-2">&amp;</span><span class="ident">metadata</span>,
-            <span class="ident">SuppressionMatcher</span>,
-            <span class="ident">parse_suppression_comment</span>,
-            <span class="kw-2">&amp;mut</span> <span class="ident">emit_signal</span>,
+        <span class="kw">let </span><span class="kw-2">mut </span>analyzer = Analyzer::new(
+            <span class="kw-2">&amp;</span>metadata,
+            SuppressionMatcher,
+            parse_suppression_comment,
+            <span class="kw-2">&amp;mut </span>emit_signal,
         );
 
-        <span class="ident">analyzer</span>.<span class="ident">add_visitor</span>(<span class="ident">Phases::Syntax</span>, <span class="ident">SyntaxVisitor::default</span>());
+        analyzer.add_visitor(Phases::Syntax, SyntaxVisitor::default());
 
-        <span class="kw">let</span> <span class="ident">ctx</span>: <span class="ident">AnalyzerContext</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">AnalyzerContext</span> {
-            <span class="ident">file_id</span>: <span class="ident">FileId::zero</span>(),
-            <span class="ident">root</span>,
-            <span class="ident">range</span>: <span class="prelude-val">None</span>,
-            <span class="ident">services</span>: <span class="ident">ServiceBag::default</span>(),
-            <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">AnalyzerOptions::default</span>(),
+        <span class="kw">let </span>ctx: AnalyzerContext&lt;RawLanguage&gt; = AnalyzerContext {
+            file_id: FileId::zero(),
+            root,
+            range: <span class="prelude-val">None</span>,
+            services: ServiceBag::default(),
+            options: <span class="kw-2">&amp;</span>AnalyzerOptions::default(),
         };
 
-        <span class="kw">let</span> <span class="ident">result</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Never</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">analyzer</span>.<span class="ident">run</span>(<span class="ident">ctx</span>);
-        <span class="macro">assert!</span>(<span class="ident">result</span>.<span class="ident">is_none</span>());
+        <span class="kw">let </span>result: <span class="prelude-ty">Option</span>&lt;Never&gt; = analyzer.run(ctx);
+        <span class="macro">assert!</span>(result.is_none());
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diagnostics</span>.<span class="ident">as_slice</span>(),
+            diagnostics.as_slice(),
             <span class="kw-2">&amp;</span>[
                 (
                     <span class="macro">category!</span>(<span class="string">&quot;suppressions/unknownGroup&quot;</span>),
-                    <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">47</span>), <span class="ident">TextSize::from</span>(<span class="number">62</span>))
+                    TextRange::new(TextSize::from(<span class="number">47</span>), TextSize::from(<span class="number">62</span>))
                 ),
                 (
                     <span class="macro">category!</span>(<span class="string">&quot;args/fileNotFound&quot;</span>),
-                    <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">63</span>), <span class="ident">TextSize::from</span>(<span class="number">74</span>))
+                    TextRange::new(TextSize::from(<span class="number">63</span>), TextSize::from(<span class="number">74</span>))
                 ),
                 (
                     <span class="macro">category!</span>(<span class="string">&quot;suppressions/unknownRule&quot;</span>),
-                    <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">76</span>), <span class="ident">TextSize::from</span>(<span class="number">96</span>))
+                    TextRange::new(TextSize::from(<span class="number">76</span>), TextSize::from(<span class="number">96</span>))
                 ),
                 (
                     <span class="macro">category!</span>(<span class="string">&quot;args/fileNotFound&quot;</span>),
-                    <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">97</span>), <span class="ident">TextSize::from</span>(<span class="number">108</span>))
+                    TextRange::new(TextSize::from(<span class="number">97</span>), TextSize::from(<span class="number">108</span>))
                 ),
             ]
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

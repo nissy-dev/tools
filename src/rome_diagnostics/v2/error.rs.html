@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -271,278 +271,278 @@
 <span id="271">271</span>
 <span id="272">272</span>
 <span id="273">273</span>
-</pre><pre class="rust"><code><span class="doccomment">//! The `error` module contains the implementation of [Error], a dynamic</span>
-<span class="doccomment">//! container struct for any type implementing [Diagnostic].</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The `Error` struct is essentially a manual implementation of</span>
-<span class="doccomment">//! `Box&lt;dyn Diagnostic&gt;` that is only a single word in size (thin pointer)</span>
-<span class="doccomment">//! instead of two for Rust&#39;s `dyn` types (wide pointer). This is done by</span>
-<span class="doccomment">//! manually managing how the &quot;vtable&quot; (the function pointer table used for</span>
-<span class="doccomment">//! dynamic dispatch) for the type is laid out and accessed in memory, at the</span>
-<span class="doccomment">//! cost of requiring the use of unsafe code.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! While reducing the size of `Error` is the main reason this type is using</span>
-<span class="doccomment">//! unsafe code (as it makes returning a `Result&lt;T, Error&gt;` more efficient),</span>
-<span class="doccomment">//! manually managing the vtable for `Error` opens additional possibilities for</span>
-<span class="doccomment">//! future extensions to the type like requiring disjoint trait bounds or</span>
-<span class="doccomment">//! implementing dynamic dispatch to traits that require handling owned</span>
-<span class="doccomment">//! instances of an object (the main use case for this would be implementing</span>
-<span class="doccomment">//! `Clone` for `Error` since `dyn Clone` is not allowed in Rust)</span>
+</pre><pre class="rust"><code><span class="doccomment">//! The `error` module contains the implementation of [Error], a dynamic
+//! container struct for any type implementing [Diagnostic].
+//!
+//! The `Error` struct is essentially a manual implementation of
+//! `Box&lt;dyn Diagnostic&gt;` that is only a single word in size (thin pointer)
+//! instead of two for Rust&#39;s `dyn` types (wide pointer). This is done by
+//! manually managing how the &quot;vtable&quot; (the function pointer table used for
+//! dynamic dispatch) for the type is laid out and accessed in memory, at the
+//! cost of requiring the use of unsafe code.
+//!
+//! While reducing the size of `Error` is the main reason this type is using
+//! unsafe code (as it makes returning a `Result&lt;T, Error&gt;` more efficient),
+//! manually managing the vtable for `Error` opens additional possibilities for
+//! future extensions to the type like requiring disjoint trait bounds or
+//! implementing dynamic dispatch to traits that require handling owned
+//! instances of an object (the main use case for this would be implementing
+//! `Clone` for `Error` since `dyn Clone` is not allowed in Rust)
 
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Formatter</span>},
-    <span class="ident">io</span>,
-    <span class="ident">marker::PhantomData</span>,
-    <span class="ident">ptr::NonNull</span>,
+</span><span class="kw">use </span>std::{
+    fmt::{Debug, Formatter},
+    io,
+    marker::PhantomData,
+    ptr::NonNull,
 };
 
-<span class="kw">use</span> <span class="ident">rome_console::fmt</span>;
+<span class="kw">use </span>rome_console::fmt;
 
-<span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">diagnostic::internal::AsDiagnostic</span>, <span class="ident">Category</span>, <span class="ident">Diagnostic</span>, <span class="ident">DiagnosticTags</span>, <span class="ident">Location</span>, <span class="ident">Severity</span>,
-    <span class="ident">Visit</span>,
+<span class="kw">use super</span>::{
+    diagnostic::internal::AsDiagnostic, Category, Diagnostic, DiagnosticTags, Location, Severity,
+    Visit,
 };
 
-<span class="doccomment">/// The `Error` struct wraps any type implementing [Diagnostic] into a single</span>
-<span class="doccomment">/// dynamic type.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span> {
-    <span class="ident">inner</span>: <span class="ident">NonNull</span><span class="op">&lt;</span><span class="ident">ErrorImpl</span><span class="op">&gt;</span>,
+<span class="doccomment">/// The `Error` struct wraps any type implementing [Diagnostic] into a single
+/// dynamic type.
+</span><span class="kw">pub struct </span>Error {
+    inner: NonNull&lt;ErrorImpl&gt;,
 }
 
-<span class="doccomment">/// Implement the [Diagnostic] trait as inherent methods on the [Error] type.</span>
-<span class="kw">impl</span> <span class="ident">Error</span> {
-    <span class="doccomment">/// Calls [Diagnostic::category] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">category</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">category</span>()
+<span class="doccomment">/// Implement the [Diagnostic] trait as inherent methods on the [Error] type.
+</span><span class="kw">impl </span>Error {
+    <span class="doccomment">/// Calls [Diagnostic::category] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>category(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category&gt; {
+        <span class="self">self</span>.as_diagnostic().category()
     }
 
-    <span class="doccomment">/// Calls [Diagnostic::severity] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">severity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Severity</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">severity</span>()
+    <span class="doccomment">/// Calls [Diagnostic::severity] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>severity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Severity {
+        <span class="self">self</span>.as_diagnostic().severity()
     }
 
-    <span class="doccomment">/// Calls [Diagnostic::description] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">description</span>(<span class="ident">fmt</span>)
+    <span class="doccomment">/// Calls [Diagnostic::description] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="self">self</span>.as_diagnostic().description(fmt)
     }
 
-    <span class="doccomment">/// Calls [Diagnostic::message] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">message</span>(<span class="ident">fmt</span>)
+    <span class="doccomment">/// Calls [Diagnostic::message] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>message(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.as_diagnostic().message(fmt)
     }
 
-    <span class="doccomment">/// Calls [Diagnostic::advices] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">advices</span>(<span class="ident">visitor</span>)
+    <span class="doccomment">/// Calls [Diagnostic::advices] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>advices(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.as_diagnostic().advices(visitor)
     }
 
-    <span class="doccomment">/// Calls [Diagnostic::verbose_advices] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">verbose_advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">verbose_advices</span>(<span class="ident">visitor</span>)
+    <span class="doccomment">/// Calls [Diagnostic::verbose_advices] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>verbose_advices(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.as_diagnostic().verbose_advices(visitor)
     }
 
-    <span class="doccomment">/// Calls [Diagnostic::location] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">location</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">location</span>()
+    <span class="doccomment">/// Calls [Diagnostic::location] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>location(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Location&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+        <span class="self">self</span>.as_diagnostic().location()
     }
 
-    <span class="doccomment">/// Calls [Diagnostic::tags] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">DiagnosticTags</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">tags</span>()
+    <span class="doccomment">/// Calls [Diagnostic::tags] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>tags(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DiagnosticTags {
+        <span class="self">self</span>.as_diagnostic().tags()
     }
 
-    <span class="doccomment">/// Calls [Diagnostic::source] on the [Diagnostic] wrapped by this [Error].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Diagnostic</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>().<span class="ident">source</span>()
+    <span class="doccomment">/// Calls [Diagnostic::source] on the [Diagnostic] wrapped by this [Error].
+    </span><span class="kw">pub fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">dyn </span>Diagnostic&gt; {
+        <span class="self">self</span>.as_diagnostic().source()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> {
-    <span class="doccomment">/// Returns the vtable for an error instance.</span>
-    <span class="kw">fn</span> <span class="ident">vtable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">ErrorVTable</span> {
-        <span class="comment">// SAFETY: This assumes `inner` is a valid pointer to an `ErrorImpl`</span>
-        <span class="kw">unsafe</span> { <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">as_ref</span>().<span class="ident">vtable</span> }
+<span class="kw">impl </span>Error {
+    <span class="doccomment">/// Returns the vtable for an error instance.
+    </span><span class="kw">fn </span>vtable(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>ErrorVTable {
+        <span class="comment">// SAFETY: This assumes `inner` is a valid pointer to an `ErrorImpl`
+        </span><span class="kw">unsafe </span>{ <span class="self">self</span>.inner.as_ref().vtable }
     }
 
-    <span class="doccomment">/// Returns a [Ref] to the wrapped error.</span>
-    <span class="kw">fn</span> <span class="ident">inner</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>) -&gt; <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">ErrorImpl</span><span class="op">&gt;</span> {
-        <span class="ident">Ref</span> {
-            <span class="ident">ptr</span>: <span class="self">self</span>.<span class="ident">inner</span>,
-            <span class="ident">_lt</span>: <span class="ident">PhantomData</span>,
+    <span class="doccomment">/// Returns a [Ref] to the wrapped error.
+    </span><span class="kw">fn </span>inner(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, ErrorImpl&gt; {
+        Ref {
+            ptr: <span class="self">self</span>.inner,
+            _lt: PhantomData,
         }
     }
 }
 
-<span class="comment">// SAFETY: `ErrorImpl::new` requires `Send + Sync`, and `inner` cannot be</span>
-<span class="comment">// cloned or moved out of `Error`</span>
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Error</span> {}
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">Error</span> {}
+<span class="comment">// SAFETY: `ErrorImpl::new` requires `Send + Sync`, and `inner` cannot be
+// cloned or moved out of `Error`
+</span><span class="kw">unsafe impl </span>Send <span class="kw">for </span>Error {}
+<span class="kw">unsafe impl </span>Sync <span class="kw">for </span>Error {}
 
-<span class="doccomment">/// Implement [From] for all types implementing [Diagnostic], [Send], [Sync]</span>
-<span class="doccomment">/// and outlives the `&#39;static` lifetime.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="doccomment">/// Implement [From] for all types implementing [Diagnostic], [Send], [Sync]
+/// and outlives the `&#39;static` lifetime.
+</span><span class="kw">impl</span>&lt;T&gt; From&lt;T&gt; <span class="kw">for </span>Error
+<span class="kw">where
+    </span>T: Diagnostic + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">diag</span>: <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">inner</span>: <span class="ident">ErrorImpl::new</span>(<span class="ident">diag</span>),
+    <span class="kw">fn </span>from(diag: T) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            inner: ErrorImpl::new(diag),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsDiagnostic</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">type</span> <span class="ident">Diagnostic</span> <span class="op">=</span> <span class="kw">dyn</span> <span class="ident">Diagnostic</span>;
+<span class="kw">impl </span>AsDiagnostic <span class="kw">for </span>Error {
+    <span class="kw">type </span>Diagnostic = <span class="kw">dyn </span>Diagnostic;
 
-    <span class="kw">fn</span> <span class="ident">as_diagnostic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Diagnostic</span> {
-        (<span class="self">self</span>.<span class="ident">vtable</span>().<span class="ident">as_diagnostic</span>)(<span class="self">self</span>.<span class="ident">inner</span>())
+    <span class="kw">fn </span>as_diagnostic(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Diagnostic {
+        (<span class="self">self</span>.vtable().as_diagnostic)(<span class="self">self</span>.inner())
     }
 
-    <span class="kw">fn</span> <span class="ident">as_dyn</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Diagnostic</span> {
-        <span class="self">self</span>.<span class="ident">as_diagnostic</span>()
-    }
-}
-
-<span class="comment">// Defer the implementation of `Debug` and `Drop` to the wrapped type</span>
-<span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="ident">Debug::fmt</span>(<span class="self">self</span>.<span class="ident">as_diagnostic</span>(), <span class="ident">f</span>)
+    <span class="kw">fn </span>as_dyn(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Diagnostic {
+        <span class="self">self</span>.as_diagnostic()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        (<span class="self">self</span>.<span class="ident">vtable</span>().<span class="ident">drop</span>)(<span class="self">self</span>.<span class="ident">inner</span>);
+<span class="comment">// Defer the implementation of `Debug` and `Drop` to the wrapped type
+</span><span class="kw">impl </span>Debug <span class="kw">for </span>Error {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        Debug::fmt(<span class="self">self</span>.as_diagnostic(), f)
     }
 }
 
-<span class="doccomment">/// VTable struct for the [Error] type, contains function pointers used to</span>
-<span class="doccomment">/// manually implement dynamic dispatch.</span>
-<span class="kw">struct</span> <span class="ident">ErrorVTable</span> {
-    <span class="ident">as_diagnostic</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">fn</span>(<span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">ErrorImpl</span><span class="op">&gt;</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="kw">dyn</span> <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>),
-    <span class="ident">drop</span>: <span class="kw">fn</span>(<span class="ident">NonNull</span><span class="op">&lt;</span><span class="ident">ErrorImpl</span><span class="op">&gt;</span>),
+<span class="kw">impl </span>Drop <span class="kw">for </span>Error {
+    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        (<span class="self">self</span>.vtable().drop)(<span class="self">self</span>.inner);
+    }
 }
 
-<span class="doccomment">/// Internal storage struct used to pack a vtable instance along with a</span>
-<span class="doccomment">/// diagnostic object.</span>
-<span class="kw">struct</span> <span class="ident">ErrorImpl</span><span class="op">&lt;</span><span class="ident">D</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
-    <span class="ident">vtable</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">ErrorVTable</span>,
-    <span class="ident">diag</span>: <span class="ident">D</span>,
+<span class="doccomment">/// VTable struct for the [Error] type, contains function pointers used to
+/// manually implement dynamic dispatch.
+</span><span class="kw">struct </span>ErrorVTable {
+    as_diagnostic: <span class="kw">for</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">fn</span>(Ref&lt;<span class="lifetime">&#39;a</span>, ErrorImpl&gt;) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>(<span class="kw">dyn </span>Diagnostic + <span class="lifetime">&#39;static</span>),
+    drop: <span class="kw">fn</span>(NonNull&lt;ErrorImpl&gt;),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="ident">ErrorImpl</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">D</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="doccomment">/// Internal storage struct used to pack a vtable instance along with a
+/// diagnostic object.
+</span><span class="kw">struct </span>ErrorImpl&lt;D = ()&gt; {
+    vtable: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>ErrorVTable,
+    diag: D,
+}
+
+<span class="kw">impl</span>&lt;D&gt; ErrorImpl&lt;D&gt;
+<span class="kw">where
+    </span>D: Diagnostic + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
-    <span class="doccomment">/// Create a new instance of [ErrorImpl] containing the provided diagnostic</span>
-    <span class="doccomment">/// and a reference to the corresponding vtable, allocate it on the heap</span>
-    <span class="doccomment">/// using [Box] and returns the corresponding raw pointer.</span>
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">diag</span>: <span class="ident">D</span>) -&gt; <span class="ident">NonNull</span><span class="op">&lt;</span><span class="ident">ErrorImpl</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">vtable</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">ErrorVTable</span> {
-            <span class="ident">as_diagnostic</span>: <span class="ident">as_diagnostic</span>::<span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,
-            <span class="ident">drop</span>: <span class="ident">drop_error</span>::<span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Create a new instance of [ErrorImpl] containing the provided diagnostic
+    /// and a reference to the corresponding vtable, allocate it on the heap
+    /// using [Box] and returns the corresponding raw pointer.
+    </span><span class="kw">fn </span>new(diag: D) -&gt; NonNull&lt;ErrorImpl&gt; {
+        <span class="kw">let </span>vtable = <span class="kw-2">&amp;</span>ErrorVTable {
+            as_diagnostic: as_diagnostic::&lt;D&gt;,
+            drop: drop_error::&lt;D&gt;,
         };
 
-        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="self">Self</span> { <span class="ident">vtable</span>, <span class="ident">diag</span> });
-        <span class="comment">// SAFETY: The pointer returned by `Box::into_raw` is guaranteed to be</span>
-        <span class="comment">// valid, so calling `NonNull::new_unchecked` on it is safe</span>
-        <span class="kw">unsafe</span> { <span class="ident">NonNull::new_unchecked</span>(<span class="ident">Box::into_raw</span>(<span class="ident">inner</span>)).<span class="ident">cast</span>() }
+        <span class="kw">let </span>inner = Box::new(<span class="self">Self </span>{ vtable, diag });
+        <span class="comment">// SAFETY: The pointer returned by `Box::into_raw` is guaranteed to be
+        // valid, so calling `NonNull::new_unchecked` on it is safe
+        </span><span class="kw">unsafe </span>{ NonNull::new_unchecked(Box::into_raw(inner)).cast() }
     }
 }
 
-<span class="doccomment">/// This type is used to manually represent a reference as a raw pointer + an</span>
-<span class="doccomment">/// associated lifetime, in order to decouple the underlying type of the</span>
-<span class="doccomment">/// reference and allow it to be cast while retaining lifetime informations.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">ptr</span>: <span class="ident">NonNull</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-    <span class="ident">_lt</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span><span class="op">&gt;</span>,
+<span class="doccomment">/// This type is used to manually represent a reference as a raw pointer + an
+/// associated lifetime, in order to decouple the underlying type of the
+/// reference and allow it to be cast while retaining lifetime informations.
+</span><span class="attribute">#[derive(Copy, Clone)]
+</span><span class="kw">struct </span>Ref&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    ptr: NonNull&lt;T&gt;,
+    _lt: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>T&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="comment">// Cast this reference to a different type</span>
-    <span class="kw">fn</span> <span class="ident">downcast</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span> {
-        <span class="ident">Ref</span> {
-            <span class="ident">ptr</span>: <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">cast</span>(),
-            <span class="ident">_lt</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Ref&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="comment">// Cast this reference to a different type
+    </span><span class="kw">fn </span>downcast&lt;R&gt;(<span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;a</span>, R&gt; {
+        Ref {
+            ptr: <span class="self">self</span>.ptr.cast(),
+            _lt: PhantomData,
         }
     }
 
-    <span class="comment">// Returns a reference to the value pointed to by this reference</span>
-    <span class="kw">fn</span> <span class="ident">into_ref</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
-        <span class="comment">// SAFETY: This assumes `ptr` is a valid pointer to `T`</span>
-        <span class="kw">unsafe</span> { <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">as_ref</span>() }
+    <span class="comment">// Returns a reference to the value pointed to by this reference
+    </span><span class="kw">fn </span>into_ref(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>T {
+        <span class="comment">// SAFETY: This assumes `ptr` is a valid pointer to `T`
+        </span><span class="kw">unsafe </span>{ <span class="self">self</span>.ptr.as_ref() }
     }
 }
 
-<span class="doccomment">/// Generic implementation of `as_diagnostic` for the `Error` type.</span>
-<span class="kw">fn</span> <span class="ident">as_diagnostic</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
-    <span class="ident">this</span>: <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">ErrorImpl</span><span class="op">&gt;</span>,
-) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> (<span class="kw">dyn</span> <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>) {
-    <span class="kw">let</span> <span class="ident">this</span> <span class="op">=</span> <span class="ident">this</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">ErrorImpl</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">this</span> <span class="op">=</span> <span class="ident">this</span>.<span class="ident">into_ref</span>();
-    <span class="kw-2">&amp;</span><span class="ident">this</span>.<span class="ident">diag</span>
+<span class="doccomment">/// Generic implementation of `as_diagnostic` for the `Error` type.
+</span><span class="kw">fn </span>as_diagnostic&lt;D: Diagnostic + <span class="lifetime">&#39;static</span>&gt;(
+    this: Ref&lt;<span class="lifetime">&#39;_</span>, ErrorImpl&gt;,
+) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>(<span class="kw">dyn </span>Diagnostic + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">let </span>this = this.downcast::&lt;ErrorImpl&lt;D&gt;&gt;();
+    <span class="kw">let </span>this = this.into_ref();
+    <span class="kw-2">&amp;</span>this.diag
 }
 
-<span class="doccomment">/// Generic implementation of `drop` for the `Error` type.</span>
-<span class="kw">fn</span> <span class="ident">drop_error</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Diagnostic</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="ident">NonNull</span><span class="op">&lt;</span><span class="ident">ErrorImpl</span><span class="op">&gt;</span>) {
-    <span class="kw">let</span> <span class="ident">this</span> <span class="op">=</span> <span class="ident">this</span>.<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">ErrorImpl</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="comment">// SAFETY: This assumes `this` is a valid pointer to an `ErrorImpl&lt;D&gt;` that</span>
-    <span class="comment">// was allocated with `Box::new`</span>
-    <span class="kw">unsafe</span> {
-        <span class="ident">drop</span>(<span class="ident">Box::from_raw</span>(<span class="ident">this</span>.<span class="ident">as_ptr</span>()));
+<span class="doccomment">/// Generic implementation of `drop` for the `Error` type.
+</span><span class="kw">fn </span>drop_error&lt;D: Diagnostic&gt;(this: NonNull&lt;ErrorImpl&gt;) {
+    <span class="kw">let </span>this = this.cast::&lt;ErrorImpl&lt;D&gt;&gt;();
+    <span class="comment">// SAFETY: This assumes `this` is a valid pointer to an `ErrorImpl&lt;D&gt;` that
+    // was allocated with `Box::new`
+    </span><span class="kw">unsafe </span>{
+        drop(Box::from_raw(this.as_ptr()));
     }
 }
 
-<span class="doccomment">/// Alias of [std::result::Result] with the `Err` type defaulting to [Error].</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span> <span class="op">=</span> <span class="ident">Error</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Alias of [std::result::Result] with the `Err` type defaulting to [Error].
+</span><span class="kw">pub type </span><span class="prelude-ty">Result</span>&lt;T, E = Error&gt; = std::result::Result&lt;T, E&gt;;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::{
-        <span class="ident">mem::size_of</span>,
-        <span class="ident">sync</span>::{
-            <span class="ident">atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>},
-            <span class="ident">Arc</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>std::{
+        mem::size_of,
+        sync::{
+            atomic::{AtomicBool, Ordering},
+            Arc,
         },
     };
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::v2</span>::{<span class="ident">Diagnostic</span>, <span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
+    <span class="kw">use </span><span class="kw">crate</span>::v2::{Diagnostic, Error, <span class="prelude-ty">Result</span>};
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">TestDiagnostic</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span>);
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>TestDiagnostic(Arc&lt;AtomicBool&gt;);
 
-    <span class="kw">impl</span> <span class="ident">Diagnostic</span> <span class="kw">for</span> <span class="ident">TestDiagnostic</span> {}
+    <span class="kw">impl </span>Diagnostic <span class="kw">for </span>TestDiagnostic {}
 
-    <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">TestDiagnostic</span> {
-        <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-            <span class="kw">let</span> <span class="ident">was_dropped</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">swap</span>(<span class="bool-val">true</span>, <span class="ident">Ordering::Relaxed</span>);
-            <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">was_dropped</span>);
+    <span class="kw">impl </span>Drop <span class="kw">for </span>TestDiagnostic {
+        <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+            <span class="kw">let </span>was_dropped = <span class="self">self</span>.<span class="number">0</span>.swap(<span class="bool-val">true</span>, Ordering::Relaxed);
+            <span class="macro">assert!</span>(!was_dropped);
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_drop</span>() {
-        <span class="kw">let</span> <span class="ident">drop_flag</span> <span class="op">=</span> <span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>);
-        <span class="kw">let</span> <span class="ident">drop_flag</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">drop_flag</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_drop() {
+        <span class="kw">let </span>drop_flag = AtomicBool::new(<span class="bool-val">false</span>);
+        <span class="kw">let </span>drop_flag = Arc::new(drop_flag);
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span>(<span class="ident">drop_flag</span>.<span class="ident">clone</span>());
+        <span class="kw">let </span>diag = TestDiagnostic(drop_flag.clone());
 
-        <span class="kw">let</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">Error::from</span>(<span class="ident">diag</span>);
-        <span class="ident">drop</span>(<span class="ident">error</span>);
+        <span class="kw">let </span>error = Error::from(diag);
+        drop(error);
 
-        <span class="macro">assert!</span>(<span class="ident">drop_flag</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>));
+        <span class="macro">assert!</span>(drop_flag.load(Ordering::Relaxed));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_error_size</span>() {
-        <span class="macro">assert_eq!</span>(<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>(), <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_error_size() {
+        <span class="macro">assert_eq!</span>(size_of::&lt;Error&gt;(), size_of::&lt;usize&gt;());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_result_size</span>() {
-        <span class="macro">assert_eq!</span>(<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_result_size() {
+        <span class="macro">assert_eq!</span>(size_of::&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;(), size_of::&lt;usize&gt;());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

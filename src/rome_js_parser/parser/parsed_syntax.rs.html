@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/parser/parsed_syntax.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>parsed_syntax.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/parser/parsed_syntax.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>parsed_syntax.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -286,293 +286,293 @@
 <span id="286">286</span>
 <span id="287">287</span>
 <span id="288">288</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::parse_recovery::RecoveryResult</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::ParsedSyntax</span>::{<span class="ident">Absent</span>, <span class="ident">Present</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">ParseRecovery</span>, <span class="ident">ToDiagnostic</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CompletedMarker</span>, <span class="ident">Marker</span>, <span class="ident">ParseDiagnostic</span>, <span class="ident">Parser</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan::TextRange</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::parser::parse_recovery::RecoveryResult;
+<span class="kw">use </span><span class="kw">crate</span>::parser::ParsedSyntax::{Absent, Present};
+<span class="kw">use </span><span class="kw">crate</span>::parser::{ParseRecovery, ToDiagnostic};
+<span class="kw">use crate</span>::{CompletedMarker, Marker, ParseDiagnostic, Parser};
+<span class="kw">use </span>rome_js_syntax::JsSyntaxKind;
+<span class="kw">use </span>rome_rowan::TextRange;
 
-<span class="doccomment">/// Syntax that is either present in the source tree or absent.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type is commonly used as the return type of parse functions with the following types</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Parse Rule conventions</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// * A parse rule must return [ParsedSyntax::Present] if it is able to parse a node or at least parts of it. For example,</span>
-<span class="doccomment">/// the `parse_for_statement` should return [ParsedSyntax::Present] for `for (` even tough many of the required children are missing</span>
-<span class="doccomment">/// because it is still able to parse parts of the for statement.</span>
-<span class="doccomment">/// * A parse rule must return [ParsedSyntax::Absent] if the expected node isn&#39;t present in the source code.</span>
-<span class="doccomment">/// In most cases, this means if the first expected token isn&#39;t present, for example,</span>
-<span class="doccomment">/// if the `for` keyword isn&#39;t present when parsing a for statement.</span>
-<span class="doccomment">/// However, it can be possible for rules to recover even if the first token doesn&#39;t match. One example</span>
-<span class="doccomment">/// is when parsing an assignment target that has an optional default. The rule can recover even</span>
-<span class="doccomment">/// if the assignment target is missing as long as the cursor is then positioned at an `=` token.</span>
-<span class="doccomment">/// The rule must then return [ParsedSyntax::Present] with the partial parsed node.</span>
-<span class="doccomment">/// * A parse rule must not eat any tokens when it returns [ParsedSyntax::Absent]</span>
-<span class="doccomment">/// * A parse rule must not add any errors when it returns [ParsedSyntax::Absent]</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is a custom enum over using `Option` because [ParsedSyntax::Absent] values must be handled by the caller.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;this `ParsedSyntax` may be an `Absent` variant, which should be handled&quot;</span>]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">ParsedSyntax</span> {
-    <span class="doccomment">/// A syntax that isn&#39;t present in the source code. Used when a parse rule can&#39;t match the current</span>
-    <span class="doccomment">/// token of the parser.</span>
-    <span class="ident">Absent</span>,
+<span class="doccomment">/// Syntax that is either present in the source tree or absent.
+///
+/// This type is commonly used as the return type of parse functions with the following types
+///
+///
+/// ## Parse Rule conventions
+///
+/// * A parse rule must return [ParsedSyntax::Present] if it is able to parse a node or at least parts of it. For example,
+/// the `parse_for_statement` should return [ParsedSyntax::Present] for `for (` even tough many of the required children are missing
+/// because it is still able to parse parts of the for statement.
+/// * A parse rule must return [ParsedSyntax::Absent] if the expected node isn&#39;t present in the source code.
+/// In most cases, this means if the first expected token isn&#39;t present, for example,
+/// if the `for` keyword isn&#39;t present when parsing a for statement.
+/// However, it can be possible for rules to recover even if the first token doesn&#39;t match. One example
+/// is when parsing an assignment target that has an optional default. The rule can recover even
+/// if the assignment target is missing as long as the cursor is then positioned at an `=` token.
+/// The rule must then return [ParsedSyntax::Present] with the partial parsed node.
+/// * A parse rule must not eat any tokens when it returns [ParsedSyntax::Absent]
+/// * A parse rule must not add any errors when it returns [ParsedSyntax::Absent]
+///
+/// This is a custom enum over using `Option` because [ParsedSyntax::Absent] values must be handled by the caller.
+</span><span class="attribute">#[derive(Debug, PartialEq, Eq)]
+#[must_use = <span class="string">&quot;this `ParsedSyntax` may be an `Absent` variant, which should be handled&quot;</span>]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>ParsedSyntax {
+    <span class="doccomment">/// A syntax that isn&#39;t present in the source code. Used when a parse rule can&#39;t match the current
+    /// token of the parser.
+    </span>Absent,
 
-    <span class="doccomment">/// A completed syntax node with all or some of its children.</span>
-    <span class="ident">Present</span>(<span class="ident">CompletedMarker</span>),
+    <span class="doccomment">/// A completed syntax node with all or some of its children.
+    </span>Present(CompletedMarker),
 }
 
-<span class="kw">impl</span> <span class="ident">ParsedSyntax</span> {
-    <span class="doccomment">/// Converts from `ParsedSyntax` to `Option&lt;CompletedMarker&gt;`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Converts `self` into an `Option&lt;CompletedMarker&gt;`, consuming `self`</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ok</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CompletedMarker</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Absent</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">Present</span>(<span class="ident">marker</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">marker</span>),
+<span class="kw">impl </span>ParsedSyntax {
+    <span class="doccomment">/// Converts from `ParsedSyntax` to `Option&lt;CompletedMarker&gt;`.
+    ///
+    /// Converts `self` into an `Option&lt;CompletedMarker&gt;`, consuming `self`
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>ok(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;CompletedMarker&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Absent =&gt; <span class="prelude-val">None</span>,
+            Present(marker) =&gt; <span class="prelude-val">Some</span>(marker),
         }
     }
 
-    <span class="doccomment">/// Calls `op` if the syntax is present and otherwise returns [ParsedSyntax::Absent]</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">and_then</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">op</span>: <span class="ident">F</span>) -&gt; <span class="ident">ParsedSyntax</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">CompletedMarker</span>) -&gt; <span class="ident">ParsedSyntax</span>,
+    <span class="doccomment">/// Calls `op` if the syntax is present and otherwise returns [ParsedSyntax::Absent]
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>and_then&lt;F&gt;(<span class="self">self</span>, op: F) -&gt; ParsedSyntax
+    <span class="kw">where
+        </span>F: FnOnce(CompletedMarker) -&gt; ParsedSyntax,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Absent</span> =&gt; <span class="ident">Absent</span>,
-            <span class="ident">Present</span>(<span class="ident">marker</span>) =&gt; <span class="ident">op</span>(<span class="ident">marker</span>),
+        <span class="kw">match </span><span class="self">self </span>{
+            Absent =&gt; Absent,
+            Present(marker) =&gt; op(marker),
         }
     }
 
-    <span class="doccomment">/// Calls `op` if the syntax is absent ond otherwise returns [ParsedSyntax::Present]</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">or_else</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">op</span>: <span class="ident">F</span>) -&gt; <span class="ident">ParsedSyntax</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">ParsedSyntax</span>,
+    <span class="doccomment">/// Calls `op` if the syntax is absent ond otherwise returns [ParsedSyntax::Present]
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>or_else&lt;F&gt;(<span class="self">self</span>, op: F) -&gt; ParsedSyntax
+    <span class="kw">where
+        </span>F: FnOnce() -&gt; ParsedSyntax,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Absent</span> =&gt; <span class="ident">op</span>(),
-            <span class="ident">t</span> =&gt; <span class="ident">t</span>,
+        <span class="kw">match </span><span class="self">self </span>{
+            Absent =&gt; op(),
+            t =&gt; t,
         }
     }
 
-    <span class="doccomment">/// Returns `true` if the parsed syntax is [ParsedSyntax::Present]</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_present</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">Present</span>(<span class="kw">_</span>))
+    <span class="doccomment">/// Returns `true` if the parsed syntax is [ParsedSyntax::Present]
+    </span><span class="attribute">#[inline]
+    #[must_use]
+    </span><span class="kw">pub fn </span>is_present(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, Present(<span class="kw">_</span>))
     }
 
-    <span class="doccomment">/// Returns `true` if the parsed syntax is [ParsedSyntax::Absent]</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_absent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">Absent</span>)
+    <span class="doccomment">/// Returns `true` if the parsed syntax is [ParsedSyntax::Absent]
+    </span><span class="attribute">#[inline]
+    #[must_use]
+    </span><span class="kw">pub fn </span>is_absent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, Absent)
     }
 
-    <span class="doccomment">/// It returns the contained [ParsedSyntax::Present] value, consuming the `self` value</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Panics</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///  Panics if the current syntax is [ParsedSyntax::Absent]</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">track_caller</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap</span>(<span class="self">self</span>) -&gt; <span class="ident">CompletedMarker</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Absent</span> =&gt; {
+    <span class="doccomment">/// It returns the contained [ParsedSyntax::Present] value, consuming the `self` value
+    ///
+    /// # Panics
+    ///
+    ///  Panics if the current syntax is [ParsedSyntax::Absent]
+    </span><span class="attribute">#[inline]
+    #[track_caller]
+    </span><span class="kw">pub fn </span>unwrap(<span class="self">self</span>) -&gt; CompletedMarker {
+        <span class="kw">match </span><span class="self">self </span>{
+            Absent =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;Called `unwrap` on an `Absent` syntax&quot;</span>);
             }
-            <span class="ident">Present</span>(<span class="ident">marker</span>) =&gt; <span class="ident">marker</span>,
+            Present(marker) =&gt; marker,
         }
     }
 
-    <span class="doccomment">/// Returns the contained [ParsedSyntax::Present] value or passed default</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_or</span>(<span class="self">self</span>, <span class="ident">default</span>: <span class="ident">CompletedMarker</span>) -&gt; <span class="ident">CompletedMarker</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Absent</span> =&gt; <span class="ident">default</span>,
-            <span class="ident">Present</span>(<span class="ident">marker</span>) =&gt; <span class="ident">marker</span>,
+    <span class="doccomment">/// Returns the contained [ParsedSyntax::Present] value or passed default
+    </span><span class="attribute">#[allow(unused)]
+    #[inline]
+    </span><span class="kw">pub fn </span>unwrap_or(<span class="self">self</span>, default: CompletedMarker) -&gt; CompletedMarker {
+        <span class="kw">match </span><span class="self">self </span>{
+            Absent =&gt; default,
+            Present(marker) =&gt; marker,
         }
     }
 
-    <span class="doccomment">/// Returns the contained [ParsedSyntax::Present] value or computes it from a clojure.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_or_else</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">default</span>: <span class="ident">F</span>) -&gt; <span class="ident">CompletedMarker</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">CompletedMarker</span>,
+    <span class="doccomment">/// Returns the contained [ParsedSyntax::Present] value or computes it from a clojure.
+    </span><span class="attribute">#[inline]
+    #[allow(unused)]
+    </span><span class="kw">pub fn </span>unwrap_or_else&lt;F&gt;(<span class="self">self</span>, default: F) -&gt; CompletedMarker
+    <span class="kw">where
+        </span>F: FnOnce() -&gt; CompletedMarker,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Absent</span> =&gt; <span class="ident">default</span>(),
-            <span class="ident">Present</span>(<span class="ident">marker</span>) =&gt; <span class="ident">marker</span>,
+        <span class="kw">match </span><span class="self">self </span>{
+            Absent =&gt; default(),
+            Present(marker) =&gt; marker,
         }
     }
 
-    <span class="doccomment">/// Returns the contained [ParsedSyntax::Present] value, consuming the self value.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Panics</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Panics if the value is an [ParsedSyntax::Absent] with a custom panic message provided by msg.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">track_caller</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expect</span>(<span class="self">self</span>, <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">CompletedMarker</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Present</span>(<span class="ident">marker</span>) =&gt; <span class="ident">marker</span>,
-            <span class="ident">Absent</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">msg</span>),
+    <span class="doccomment">/// Returns the contained [ParsedSyntax::Present] value, consuming the self value.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the value is an [ParsedSyntax::Absent] with a custom panic message provided by msg.
+    </span><span class="attribute">#[inline]
+    #[track_caller]
+    </span><span class="kw">pub fn </span>expect(<span class="self">self</span>, msg: <span class="kw-2">&amp;</span>str) -&gt; CompletedMarker {
+        <span class="kw">match </span><span class="self">self </span>{
+            Present(marker) =&gt; marker,
+            Absent =&gt; <span class="macro">panic!</span>(<span class="string">&quot;{}&quot;</span>, msg),
         }
     }
 
-    <span class="doccomment">/// Maps a [ParsedSyntax::Present] `ParsedSyntax` by applying a function to a contained [ParsedSyntax::Present] value,</span>
-    <span class="doccomment">/// leaving an [ParsedSyntax::Absent] value untouched.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This function can be used to compose the results of two functions.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">mapper</span>: <span class="ident">F</span>) -&gt; <span class="ident">ParsedSyntax</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">CompletedMarker</span>) -&gt; <span class="ident">CompletedMarker</span>,
+    <span class="doccomment">/// Maps a [ParsedSyntax::Present] `ParsedSyntax` by applying a function to a contained [ParsedSyntax::Present] value,
+    /// leaving an [ParsedSyntax::Absent] value untouched.
+    ///
+    /// This function can be used to compose the results of two functions.
+    </span><span class="kw">pub fn </span>map&lt;F&gt;(<span class="self">self</span>, mapper: F) -&gt; ParsedSyntax
+    <span class="kw">where
+        </span>F: FnOnce(CompletedMarker) -&gt; CompletedMarker,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Absent</span> =&gt; <span class="ident">Absent</span>,
-            <span class="ident">Present</span>(<span class="ident">element</span>) =&gt; <span class="ident">Present</span>(<span class="ident">mapper</span>(<span class="ident">element</span>)),
+        <span class="kw">match </span><span class="self">self </span>{
+            Absent =&gt; Absent,
+            Present(element) =&gt; Present(mapper(element)),
         }
     }
 
-    <span class="doccomment">/// Returns the kind of the syntax if it is present or [None] otherwise</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsSyntaxKind</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Absent</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">Present</span>(<span class="ident">marker</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">marker</span>.<span class="ident">kind</span>()),
+    <span class="doccomment">/// Returns the kind of the syntax if it is present or [None] otherwise
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;JsSyntaxKind&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Absent =&gt; <span class="prelude-val">None</span>,
+            Present(marker) =&gt; <span class="prelude-val">Some</span>(marker.kind()),
         }
     }
 
-    <span class="doccomment">/// Adds a diagnostic at the current parser position if the syntax is present and return its marker.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_diagnostic_if_present</span><span class="op">&lt;</span><span class="ident">E</span>, <span class="ident">D</span><span class="op">&gt;</span>(
+    <span class="doccomment">/// Adds a diagnostic at the current parser position if the syntax is present and return its marker.
+    </span><span class="attribute">#[allow(unused)]
+    </span><span class="kw">pub fn </span>add_diagnostic_if_present&lt;E, D&gt;(
         <span class="self">self</span>,
-        <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-        <span class="ident">error_builder</span>: <span class="ident">E</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CompletedMarker</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">E</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">TextRange</span>) -&gt; <span class="ident">D</span>,
-        <span class="ident">D</span>: <span class="ident">ToDiagnostic</span>,
+        p: <span class="kw-2">&amp;mut </span>Parser,
+        error_builder: E,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;CompletedMarker&gt;
+    <span class="kw">where
+        </span>E: FnOnce(<span class="kw-2">&amp;</span>Parser, TextRange) -&gt; D,
+        D: ToDiagnostic,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Present</span>(<span class="ident">syntax</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">syntax</span>.<span class="ident">range</span>(<span class="ident">p</span>);
-                <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">range</span>.<span class="ident">start</span>(), <span class="ident">range</span>.<span class="ident">end</span>());
-                <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">error_builder</span>(<span class="ident">p</span>, <span class="ident">range</span>);
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">diagnostic</span>);
-                <span class="prelude-val">Some</span>(<span class="ident">syntax</span>)
+        <span class="kw">match </span><span class="self">self </span>{
+            Present(syntax) =&gt; {
+                <span class="kw">let </span>range = syntax.range(p);
+                <span class="kw">let </span>range = TextRange::new(range.start(), range.end());
+                <span class="kw">let </span>diagnostic = error_builder(p, range);
+                p.error(diagnostic);
+                <span class="prelude-val">Some</span>(syntax)
             }
-            <span class="ident">Absent</span> =&gt; <span class="prelude-val">None</span>,
+            Absent =&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// It returns the syntax if present or adds a diagnostic at the current parser position.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">or_add_diagnostic</span><span class="op">&lt;</span><span class="ident">E</span>, <span class="ident">D</span><span class="op">&gt;</span>(
+    <span class="doccomment">/// It returns the syntax if present or adds a diagnostic at the current parser position.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>or_add_diagnostic&lt;E, D&gt;(
         <span class="self">self</span>,
-        <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-        <span class="ident">error_builder</span>: <span class="ident">E</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CompletedMarker</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">E</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">TextRange</span>) -&gt; <span class="ident">D</span>,
-        <span class="ident">D</span>: <span class="ident">ToDiagnostic</span>,
+        p: <span class="kw-2">&amp;mut </span>Parser,
+        error_builder: E,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;CompletedMarker&gt;
+    <span class="kw">where
+        </span>E: FnOnce(<span class="kw-2">&amp;</span>Parser, TextRange) -&gt; D,
+        D: ToDiagnostic,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Present</span>(<span class="ident">syntax</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">syntax</span>),
-            <span class="ident">Absent</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">error_builder</span>(<span class="ident">p</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>());
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">diagnostic</span>);
-                <span class="prelude-val">None</span>
+        <span class="kw">match </span><span class="self">self </span>{
+            Present(syntax) =&gt; <span class="prelude-val">Some</span>(syntax),
+            Absent =&gt; {
+                <span class="kw">let </span>diagnostic = error_builder(p, p.cur_range());
+                p.error(diagnostic);
+                <span class="prelude-val">None
+            </span>}
+        }
+    }
+
+    <span class="doccomment">/// It creates and returns a marker preceding this parsed syntax if it is present or starts
+    /// a new marker and adds an error to the current parser position.
+    /// See [CompletedMarker.precede]
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>precede_or_add_diagnostic&lt;E, D&gt;(<span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser, error_builder: E) -&gt; Marker
+    <span class="kw">where
+        </span>E: FnOnce(<span class="kw-2">&amp;</span>Parser, TextRange) -&gt; D,
+        D: ToDiagnostic,
+    {
+        <span class="kw">match </span><span class="self">self </span>{
+            Present(completed) =&gt; completed.precede(p),
+            Absent =&gt; {
+                <span class="kw">let </span>diagnostic = error_builder(p, p.cur_range());
+                p.error(diagnostic);
+                p.start()
             }
         }
     }
 
-    <span class="doccomment">/// It creates and returns a marker preceding this parsed syntax if it is present or starts</span>
-    <span class="doccomment">/// a new marker and adds an error to the current parser position.</span>
-    <span class="doccomment">/// See [CompletedMarker.precede]</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">precede_or_add_diagnostic</span><span class="op">&lt;</span><span class="ident">E</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">error_builder</span>: <span class="ident">E</span>) -&gt; <span class="ident">Marker</span>
-    <span class="kw">where</span>
-        <span class="ident">E</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">TextRange</span>) -&gt; <span class="ident">D</span>,
-        <span class="ident">D</span>: <span class="ident">ToDiagnostic</span>,
-    {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Present</span>(<span class="ident">completed</span>) =&gt; <span class="ident">completed</span>.<span class="ident">precede</span>(<span class="ident">p</span>),
-            <span class="ident">Absent</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">error_builder</span>(<span class="ident">p</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>());
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">diagnostic</span>);
-                <span class="ident">p</span>.<span class="ident">start</span>()
-            }
+    <span class="doccomment">/// Creates a new marker that precedes this syntax or starts a new marker
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>precede(<span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; Marker {
+        <span class="kw">match </span><span class="self">self </span>{
+            Present(marker) =&gt; marker.precede(p),
+            Absent =&gt; p.start(),
         }
     }
 
-    <span class="doccomment">/// Creates a new marker that precedes this syntax or starts a new marker</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">precede</span>(<span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">Marker</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Present</span>(<span class="ident">marker</span>) =&gt; <span class="ident">marker</span>.<span class="ident">precede</span>(<span class="ident">p</span>),
-            <span class="ident">Absent</span> =&gt; <span class="ident">p</span>.<span class="ident">start</span>(),
-        }
-    }
-
-    <span class="doccomment">/// Returns this Syntax if it is present in the source text or tries to recover the</span>
-    <span class="doccomment">/// parser if the syntax is absent. The recovery...</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * eats all unexpected tokens into an `Unknown*` node until the parser reaches one</span>
-    <span class="doccomment">///   of the &quot;safe tokens&quot; configured in the [ParseRecovery].</span>
-    <span class="doccomment">/// * creates an error using the passed in error builder and adds it to the parsing diagnostics.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The error recovery can fail if the parser is located at the EOF token or if the parser</span>
-    <span class="doccomment">/// is already at a valid position according to the [ParseRecovery].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">or_recover</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(
+    <span class="doccomment">/// Returns this Syntax if it is present in the source text or tries to recover the
+    /// parser if the syntax is absent. The recovery...
+    ///
+    /// * eats all unexpected tokens into an `Unknown*` node until the parser reaches one
+    ///   of the &quot;safe tokens&quot; configured in the [ParseRecovery].
+    /// * creates an error using the passed in error builder and adds it to the parsing diagnostics.
+    ///
+    /// The error recovery can fail if the parser is located at the EOF token or if the parser
+    /// is already at a valid position according to the [ParseRecovery].
+    </span><span class="kw">pub fn </span>or_recover&lt;E&gt;(
         <span class="self">self</span>,
-        <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-        <span class="ident">recovery</span>: <span class="kw-2">&amp;</span><span class="ident">ParseRecovery</span>,
-        <span class="ident">error_builder</span>: <span class="ident">E</span>,
-    ) -&gt; <span class="ident">RecoveryResult</span>
-    <span class="kw">where</span>
-        <span class="ident">E</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span>,
+        p: <span class="kw-2">&amp;mut </span>Parser,
+        recovery: <span class="kw-2">&amp;</span>ParseRecovery,
+        error_builder: E,
+    ) -&gt; RecoveryResult
+    <span class="kw">where
+        </span>E: FnOnce(<span class="kw-2">&amp;</span>Parser, TextRange) -&gt; ParseDiagnostic,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Present</span>(<span class="ident">syntax</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">syntax</span>),
-            <span class="ident">Absent</span> =&gt; <span class="kw">match</span> <span class="ident">recovery</span>.<span class="ident">recover</span>(<span class="ident">p</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">recovered</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">error_builder</span>(<span class="ident">p</span>, <span class="ident">recovered</span>.<span class="ident">range</span>(<span class="ident">p</span>));
-                    <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">diagnostic</span>);
-                    <span class="prelude-val">Ok</span>(<span class="ident">recovered</span>)
+        <span class="kw">match </span><span class="self">self </span>{
+            Present(syntax) =&gt; <span class="prelude-val">Ok</span>(syntax),
+            Absent =&gt; <span class="kw">match </span>recovery.recover(p) {
+                <span class="prelude-val">Ok</span>(recovered) =&gt; {
+                    <span class="kw">let </span>diagnostic = error_builder(p, recovered.range(p));
+                    p.error(diagnostic);
+                    <span class="prelude-val">Ok</span>(recovered)
                 }
 
-                <span class="prelude-val">Err</span>(<span class="ident">recovery_error</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">error_builder</span>(<span class="ident">p</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>());
-                    <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">diagnostic</span>);
-                    <span class="prelude-val">Err</span>(<span class="ident">recovery_error</span>)
+                <span class="prelude-val">Err</span>(recovery_error) =&gt; {
+                    <span class="kw">let </span>diagnostic = error_builder(p, p.cur_range());
+                    p.error(diagnostic);
+                    <span class="prelude-val">Err</span>(recovery_error)
                 }
             },
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">CompletedMarker</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ParsedSyntax</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">marker</span>: <span class="ident">CompletedMarker</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Present</span>(<span class="ident">marker</span>)
+<span class="kw">impl </span>From&lt;CompletedMarker&gt; <span class="kw">for </span>ParsedSyntax {
+    <span class="kw">fn </span>from(marker: CompletedMarker) -&gt; <span class="self">Self </span>{
+        Present(marker)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CompletedMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ParsedSyntax</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">option</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CompletedMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">option</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">completed</span>) =&gt; <span class="ident">Present</span>(<span class="ident">completed</span>),
-            <span class="prelude-val">None</span> =&gt; <span class="ident">Absent</span>,
+<span class="kw">impl </span>From&lt;<span class="prelude-ty">Option</span>&lt;CompletedMarker&gt;&gt; <span class="kw">for </span>ParsedSyntax {
+    <span class="kw">fn </span>from(option: <span class="prelude-ty">Option</span>&lt;CompletedMarker&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>option {
+            <span class="prelude-val">Some</span>(completed) =&gt; Present(completed),
+            <span class="prelude-val">None </span>=&gt; Absent,
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

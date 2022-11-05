@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/tree_builder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tree_builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/tree_builder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tree_builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -280,287 +280,287 @@
 <span id="280">280</span>
 <span id="281">281</span>
 <span id="282">282</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green::NodeCacheNodeEntryMut</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">cow_mut::CowMut</span>,
-    <span class="ident">green</span>::{<span class="ident">GreenElement</span>, <span class="ident">NodeCache</span>},
-    <span class="ident">syntax::TriviaPiece</span>,
-    <span class="ident">GreenNode</span>, <span class="ident">Language</span>, <span class="ident">NodeOrToken</span>, <span class="ident">ParsedChildren</span>, <span class="ident">SyntaxFactory</span>, <span class="ident">SyntaxKind</span>, <span class="ident">SyntaxNode</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::green::NodeCacheNodeEntryMut;
+<span class="kw">use crate</span>::{
+    cow_mut::CowMut,
+    green::{GreenElement, NodeCache},
+    syntax::TriviaPiece,
+    GreenNode, Language, NodeOrToken, ParsedChildren, SyntaxFactory, SyntaxKind, SyntaxNode,
 };
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
+<span class="kw">use </span>std::marker::PhantomData;
 
-<span class="doccomment">/// A checkpoint for maybe wrapping a node. See `GreenNodeBuilder::checkpoint` for details.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Checkpoint</span>(<span class="ident">usize</span>);
+<span class="doccomment">/// A checkpoint for maybe wrapping a node. See `GreenNodeBuilder::checkpoint` for details.
+</span><span class="attribute">#[derive(Clone, Copy, Debug)]
+</span><span class="kw">pub struct </span>Checkpoint(usize);
 
-<span class="doccomment">/// A builder for a syntax tree.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TreeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;cache</span>, <span class="ident">L</span>: <span class="ident">Language</span>, <span class="ident">S</span>: <span class="ident">SyntaxFactory</span><span class="op">&lt;</span><span class="ident">Kind</span> <span class="op">=</span> <span class="ident">L::Kind</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">cache</span>: <span class="ident">CowMut</span><span class="op">&lt;</span><span class="lifetime">&#39;cache</span>, <span class="ident">NodeCache</span><span class="op">&gt;</span>,
-    <span class="ident">parents</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">L::Kind</span>, <span class="ident">usize</span>)<span class="op">&gt;</span>,
-    <span class="ident">children</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">GreenElement</span>)<span class="op">&gt;</span>,
-    <span class="ident">ph</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A builder for a syntax tree.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>TreeBuilder&lt;<span class="lifetime">&#39;cache</span>, L: Language, S: SyntaxFactory&lt;Kind = L::Kind&gt;&gt; {
+    cache: CowMut&lt;<span class="lifetime">&#39;cache</span>, NodeCache&gt;,
+    parents: Vec&lt;(L::Kind, usize)&gt;,
+    children: Vec&lt;(u64, GreenElement)&gt;,
+    ph: PhantomData&lt;S&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span>, <span class="ident">S</span>: <span class="ident">SyntaxFactory</span><span class="op">&lt;</span><span class="ident">Kind</span> <span class="op">=</span> <span class="ident">L::Kind</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">TreeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">L</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">cache</span>: <span class="ident">CowMut::default</span>(),
-            <span class="ident">parents</span>: <span class="ident">Vec::default</span>(),
-            <span class="ident">children</span>: <span class="ident">Vec::default</span>(),
-            <span class="ident">ph</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;L: Language, S: SyntaxFactory&lt;Kind = L::Kind&gt;&gt; Default <span class="kw">for </span>TreeBuilder&lt;<span class="lifetime">&#39;_</span>, L, S&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            cache: CowMut::default(),
+            parents: Vec::default(),
+            children: Vec::default(),
+            ph: PhantomData,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span>, <span class="ident">S</span>: <span class="ident">SyntaxFactory</span><span class="op">&lt;</span><span class="ident">Kind</span> <span class="op">=</span> <span class="ident">L::Kind</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">TreeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">L</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates new builder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="ident">TreeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">L</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-        <span class="ident">TreeBuilder::default</span>()
+<span class="kw">impl</span>&lt;L: Language, S: SyntaxFactory&lt;Kind = L::Kind&gt;&gt; TreeBuilder&lt;<span class="lifetime">&#39;_</span>, L, S&gt; {
+    <span class="doccomment">/// Creates new builder.
+    </span><span class="kw">pub fn </span>new() -&gt; TreeBuilder&lt;<span class="lifetime">&#39;static</span>, L, S&gt; {
+        TreeBuilder::default()
     }
 
-    <span class="doccomment">/// Reusing `NodeCache` between different [TreeBuilder]`s saves memory.</span>
-    <span class="doccomment">/// It allows to structurally share underlying trees.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_cache</span>(<span class="ident">cache</span>: <span class="kw-2">&amp;mut</span> <span class="ident">NodeCache</span>) -&gt; <span class="ident">TreeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">L</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-        <span class="ident">TreeBuilder</span> {
-            <span class="ident">cache</span>: <span class="ident">CowMut::Borrowed</span>(<span class="ident">cache</span>),
-            <span class="ident">parents</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">children</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">ph</span>: <span class="ident">PhantomData</span>,
+    <span class="doccomment">/// Reusing `NodeCache` between different [TreeBuilder]`s saves memory.
+    /// It allows to structurally share underlying trees.
+    </span><span class="kw">pub fn </span>with_cache(cache: <span class="kw-2">&amp;mut </span>NodeCache) -&gt; TreeBuilder&lt;<span class="lifetime">&#39;_</span>, L, S&gt; {
+        TreeBuilder {
+            cache: CowMut::Borrowed(cache),
+            parents: Vec::new(),
+            children: Vec::new(),
+            ph: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Method to quickly wrap a tree with a node.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// TreeBuilder::&lt;RawLanguage&gt;::wrap_with_node(RawSyntaxKind(0), |builder| {</span>
-    <span class="doccomment">///     builder.token(RawSyntaxKind(1), &quot;let&quot;);</span>
-    <span class="doccomment">/// });</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap_with_node</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">kind</span>: <span class="ident">L::Kind</span>, <span class="ident">build</span>: <span class="ident">F</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="self">Self</span>),
+    <span class="doccomment">/// Method to quickly wrap a tree with a node.
+    ///
+    /// TreeBuilder::&lt;RawLanguage&gt;::wrap_with_node(RawSyntaxKind(0), |builder| {
+    ///     builder.token(RawSyntaxKind(1), &quot;let&quot;);
+    /// });
+    </span><span class="kw">pub fn </span>wrap_with_node&lt;F&gt;(kind: L::Kind, build: F) -&gt; SyntaxNode&lt;L&gt;
+    <span class="kw">where
+        </span>F: Fn(<span class="kw-2">&amp;mut </span><span class="self">Self</span>),
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">TreeBuilder</span>::<span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">S</span><span class="op">&gt;</span><span class="ident">::new</span>();
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">kind</span>);
-        <span class="ident">build</span>(<span class="kw-2">&amp;mut</span> <span class="ident">builder</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
-        <span class="ident">builder</span>.<span class="ident">finish</span>()
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = TreeBuilder::&lt;L, S&gt;::new();
+        builder.start_node(kind);
+        build(<span class="kw-2">&amp;mut </span>builder);
+        builder.finish_node();
+        builder.finish()
     }
 
-    <span class="doccomment">/// Adds new token to the current branch.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">L::Kind</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="kw">let</span> (<span class="ident">hash</span>, <span class="ident">token</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">token</span>(<span class="ident">kind</span>.<span class="ident">to_raw</span>(), <span class="ident">text</span>);
-        <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">push</span>((<span class="ident">hash</span>, <span class="ident">token</span>.<span class="ident">into</span>()));
-        <span class="self">self</span>
-    }
+    <span class="doccomment">/// Adds new token to the current branch.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: L::Kind, text: <span class="kw-2">&amp;</span>str) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="kw">let </span>(hash, token) = <span class="self">self</span>.cache.token(kind.to_raw(), text);
+        <span class="self">self</span>.children.push((hash, token.into()));
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds new token to the current branch.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_with_trivia</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">kind</span>: <span class="ident">L::Kind</span>,
-        <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">leading</span>: <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece</span>],
-        <span class="ident">trailing</span>: <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece</span>],
+    <span class="doccomment">/// Adds new token to the current branch.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>token_with_trivia(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        kind: L::Kind,
+        text: <span class="kw-2">&amp;</span>str,
+        leading: <span class="kw-2">&amp;</span>[TriviaPiece],
+        trailing: <span class="kw-2">&amp;</span>[TriviaPiece],
     ) {
-        <span class="kw">let</span> (<span class="ident">hash</span>, <span class="ident">token</span>) <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">cache</span>
-            .<span class="ident">token_with_trivia</span>(<span class="ident">kind</span>.<span class="ident">to_raw</span>(), <span class="ident">text</span>, <span class="ident">leading</span>, <span class="ident">trailing</span>);
-        <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">push</span>((<span class="ident">hash</span>, <span class="ident">token</span>.<span class="ident">into</span>()));
+        <span class="kw">let </span>(hash, token) = <span class="self">self
+            </span>.cache
+            .token_with_trivia(kind.to_raw(), text, leading, trailing);
+        <span class="self">self</span>.children.push((hash, token.into()));
     }
 
-    <span class="doccomment">/// Start new node and make it current.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">L::Kind</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">len</span>();
-        <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">push</span>((<span class="ident">kind</span>, <span class="ident">len</span>));
-        <span class="self">self</span>
-    }
+    <span class="doccomment">/// Start new node and make it current.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>start_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: L::Kind) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="kw">let </span>len = <span class="self">self</span>.children.len();
+        <span class="self">self</span>.parents.push((kind, len));
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Finish current branch and restore previous</span>
-    <span class="doccomment">/// branch as current.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">first_child</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">raw_kind</span> <span class="op">=</span> <span class="ident">kind</span>.<span class="ident">to_raw</span>();
+    <span class="doccomment">/// Finish current branch and restore previous
+    /// branch as current.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>finish_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="kw">let </span>(kind, first_child) = <span class="self">self</span>.parents.pop().unwrap();
+        <span class="kw">let </span>raw_kind = kind.to_raw();
 
-        <span class="kw">let</span> <span class="ident">slots</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">children</span>[<span class="ident">first_child</span>..];
-        <span class="kw">let</span> <span class="ident">node_entry</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">node</span>(<span class="ident">raw_kind</span>, <span class="ident">slots</span>);
+        <span class="kw">let </span>slots = <span class="kw-2">&amp;</span><span class="self">self</span>.children[first_child..];
+        <span class="kw">let </span>node_entry = <span class="self">self</span>.cache.node(raw_kind, slots);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">build_node</span> <span class="op">=</span> <span class="op">|</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">children</span> <span class="op">=</span> <span class="ident">ParsedChildren::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">children</span>, <span class="ident">first_child</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>build_node = || {
+            <span class="kw">let </span>children = ParsedChildren::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.children, first_child);
 
-            <span class="ident">S::make_syntax</span>(<span class="ident">kind</span>, <span class="ident">children</span>).<span class="ident">into_green</span>()
+            S::make_syntax(kind, children).into_green()
         };
 
-        <span class="kw">let</span> (<span class="ident">hash</span>, <span class="ident">node</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">node_entry</span> {
-            <span class="ident">NodeCacheNodeEntryMut::NoCache</span>(<span class="ident">hash</span>) =&gt; (<span class="ident">hash</span>, <span class="ident">build_node</span>()),
-            <span class="ident">NodeCacheNodeEntryMut::Vacant</span>(<span class="ident">entry</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">build_node</span>();
+        <span class="kw">let </span>(hash, node) = <span class="kw">match </span>node_entry {
+            NodeCacheNodeEntryMut::NoCache(hash) =&gt; (hash, build_node()),
+            NodeCacheNodeEntryMut::Vacant(entry) =&gt; {
+                <span class="kw">let </span>node = build_node();
 
-                <span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">cache</span>(<span class="ident">node</span>.<span class="ident">clone</span>());
-                (<span class="ident">hash</span>, <span class="ident">node</span>)
+                <span class="kw">let </span>hash = entry.cache(node.clone());
+                (hash, node)
             }
-            <span class="ident">NodeCacheNodeEntryMut::Cached</span>(<span class="ident">cached</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">truncate</span>(<span class="ident">first_child</span>);
-                (<span class="ident">cached</span>.<span class="ident">hash</span>(), <span class="ident">cached</span>.<span class="ident">node</span>().<span class="ident">clone</span>())
+            NodeCacheNodeEntryMut::Cached(cached) =&gt; {
+                <span class="self">self</span>.children.truncate(first_child);
+                (cached.hash(), cached.node().clone())
             }
         };
 
-        <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">push</span>((<span class="ident">hash</span>, <span class="ident">node</span>.<span class="ident">into</span>()));
-        <span class="self">self</span>
+        <span class="self">self</span>.children.push((hash, node.into()));
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Prepare for maybe wrapping the next node.
+    /// The way wrapping works is that you first of all get a checkpoint,
+    /// then you place all tokens you want to wrap, and then *maybe* call
+    /// `start_node_at`.
+    /// Example:
+    /// ```rust
+    /// # use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// # const PLUS: RawLanguageKind = RawLanguageKind::PLUS_TOKEN;
+    /// # const OPERATION: RawLanguageKind = RawLanguageKind::ROOT;
+    /// # struct Parser;
+    /// # impl Parser {
+    /// #     fn peek(&amp;self) -&gt; Option&lt;RawLanguageKind&gt; { None }
+    /// #     fn parse_expr(&amp;mut self) {}
+    /// # }
+    /// # let mut builder = RawSyntaxTreeBuilder::new();
+    /// # let mut parser = Parser;
+    /// let checkpoint = builder.checkpoint();
+    /// parser.parse_expr();
+    /// if parser.peek() == Some(PLUS) {
+    ///     // 1 + 2 = Add(1, 2)
+    ///     builder.start_node_at(checkpoint, OPERATION);
+    ///     parser.parse_expr();
+    ///     builder.finish_node();
+    /// }
+    /// ```
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>checkpoint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Checkpoint {
+        Checkpoint(<span class="self">self</span>.children.len())
     }
 
-    <span class="doccomment">/// Prepare for maybe wrapping the next node.</span>
-    <span class="doccomment">/// The way wrapping works is that you first of all get a checkpoint,</span>
-    <span class="doccomment">/// then you place all tokens you want to wrap, and then *maybe* call</span>
-    <span class="doccomment">/// `start_node_at`.</span>
-    <span class="doccomment">/// Example:</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// # use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// # const PLUS: RawLanguageKind = RawLanguageKind::PLUS_TOKEN;</span>
-    <span class="doccomment">/// # const OPERATION: RawLanguageKind = RawLanguageKind::ROOT;</span>
-    <span class="doccomment">/// # struct Parser;</span>
-    <span class="doccomment">/// # impl Parser {</span>
-    <span class="doccomment">/// #     fn peek(&amp;self) -&gt; Option&lt;RawLanguageKind&gt; { None }</span>
-    <span class="doccomment">/// #     fn parse_expr(&amp;mut self) {}</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// # let mut builder = RawSyntaxTreeBuilder::new();</span>
-    <span class="doccomment">/// # let mut parser = Parser;</span>
-    <span class="doccomment">/// let checkpoint = builder.checkpoint();</span>
-    <span class="doccomment">/// parser.parse_expr();</span>
-    <span class="doccomment">/// if parser.peek() == Some(PLUS) {</span>
-    <span class="doccomment">///     // 1 + 2 = Add(1, 2)</span>
-    <span class="doccomment">///     builder.start_node_at(checkpoint, OPERATION);</span>
-    <span class="doccomment">///     parser.parse_expr();</span>
-    <span class="doccomment">///     builder.finish_node();</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">checkpoint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Checkpoint</span> {
-        <span class="ident">Checkpoint</span>(<span class="self">self</span>.<span class="ident">children</span>.<span class="ident">len</span>())
-    }
-
-    <span class="doccomment">/// Wrap the previous branch marked by `checkpoint` in a new branch and</span>
-    <span class="doccomment">/// make it current.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_node_at</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">checkpoint</span>: <span class="ident">Checkpoint</span>, <span class="ident">kind</span>: <span class="ident">L::Kind</span>) {
-        <span class="kw">let</span> <span class="ident">Checkpoint</span>(<span class="ident">checkpoint</span>) <span class="op">=</span> <span class="ident">checkpoint</span>;
+    <span class="doccomment">/// Wrap the previous branch marked by `checkpoint` in a new branch and
+    /// make it current.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>start_node_at(<span class="kw-2">&amp;mut </span><span class="self">self</span>, checkpoint: Checkpoint, kind: L::Kind) {
+        <span class="kw">let </span>Checkpoint(checkpoint) = checkpoint;
         <span class="macro">assert!</span>(
-            <span class="ident">checkpoint</span> <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">len</span>(),
-            <span class="string">&quot;checkpoint no longer valid, was finish_node called early?&quot;</span>
-        );
+            checkpoint &lt;= <span class="self">self</span>.children.len(),
+            <span class="string">&quot;checkpoint no longer valid, was finish_node called early?&quot;
+        </span>);
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="ident">first_child</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">last</span>() {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw">_</span>, first_child)) = <span class="self">self</span>.parents.last() {
             <span class="macro">assert!</span>(
-                <span class="ident">checkpoint</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">first_child</span>,
-                <span class="string">&quot;checkpoint no longer valid, was an unmatched start_node_at called?&quot;</span>
-            );
+                checkpoint &gt;= first_child,
+                <span class="string">&quot;checkpoint no longer valid, was an unmatched start_node_at called?&quot;
+            </span>);
         }
 
-        <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">push</span>((<span class="ident">kind</span>, <span class="ident">checkpoint</span>));
+        <span class="self">self</span>.parents.push((kind, checkpoint));
     }
 
-    <span class="doccomment">/// Complete tree building. Make sure that</span>
-    <span class="doccomment">/// `start_node_at` and `finish_node` calls</span>
-    <span class="doccomment">/// are paired!</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">SyntaxNode::new_root</span>(<span class="self">self</span>.<span class="ident">finish_green</span>())
+    <span class="doccomment">/// Complete tree building. Make sure that
+    /// `start_node_at` and `finish_node` calls
+    /// are paired!
+    </span><span class="attribute">#[inline]
+    #[must_use]
+    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; SyntaxNode&lt;L&gt; {
+        SyntaxNode::new_root(<span class="self">self</span>.finish_green())
     }
 
-    <span class="comment">// For tests</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">finish_green</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">GreenNode</span> {
-        <span class="macro">assert_eq!</span>(<span class="self">self</span>.<span class="ident">children</span>.<span class="ident">len</span>(), <span class="number">1</span>);
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>().<span class="number">1</span> {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">node</span>,
-            <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(),
+    <span class="comment">// For tests
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>finish_green(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; GreenNode {
+        <span class="macro">assert_eq!</span>(<span class="self">self</span>.children.len(), <span class="number">1</span>);
+        <span class="kw">match </span><span class="self">self</span>.children.pop().unwrap().<span class="number">1 </span>{
+            NodeOrToken::Node(node) =&gt; node,
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green::GreenElementRef</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::raw_language</span>::{<span class="ident">RawLanguageKind</span>, <span class="ident">RawSyntaxTreeBuilder</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">GreenNodeData</span>, <span class="ident">GreenTokenData</span>, <span class="ident">NodeOrToken</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::green::GreenElementRef;
+    <span class="kw">use </span><span class="kw">crate</span>::raw_language::{RawLanguageKind, RawSyntaxTreeBuilder};
+    <span class="kw">use crate</span>::{GreenNodeData, GreenTokenData, NodeOrToken};
 
-    <span class="comment">// Builds a &quot;Condition&quot; like structure where the closing ) is missing</span>
-    <span class="kw">fn</span> <span class="ident">build_condition_with_missing_closing_parenthesis</span>(<span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">RawSyntaxTreeBuilder</span>) {
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::CONDITION</span>);
+    <span class="comment">// Builds a &quot;Condition&quot; like structure where the closing ) is missing
+    </span><span class="kw">fn </span>build_condition_with_missing_closing_parenthesis(builder: <span class="kw-2">&amp;mut </span>RawSyntaxTreeBuilder) {
+        builder.start_node(RawLanguageKind::CONDITION);
 
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::L_PAREN_TOKEN</span>, <span class="string">&quot;(&quot;</span>);
+        builder.token(RawLanguageKind::L_PAREN_TOKEN, <span class="string">&quot;(&quot;</span>);
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="string">&quot;a&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::STRING_TOKEN, <span class="string">&quot;a&quot;</span>);
+        builder.finish_node();
 
-        <span class="comment">// missing )</span>
+        <span class="comment">// missing )
 
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        </span>builder.finish_node();
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">caches_identical_nodes_with_empty_slots</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>caches_identical_nodes_with_empty_slots() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>); <span class="comment">// Root</span>
-        <span class="ident">build_condition_with_missing_closing_parenthesis</span>(<span class="kw-2">&amp;mut</span> <span class="ident">builder</span>);
-        <span class="ident">build_condition_with_missing_closing_parenthesis</span>(<span class="kw-2">&amp;mut</span> <span class="ident">builder</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::ROOT); <span class="comment">// Root
+        </span>build_condition_with_missing_closing_parenthesis(<span class="kw-2">&amp;mut </span>builder);
+        build_condition_with_missing_closing_parenthesis(<span class="kw-2">&amp;mut </span>builder);
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish_green</span>();
+        <span class="kw">let </span>root = builder.finish_green();
 
-        <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">children</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">children</span>().<span class="ident">last</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>first = root.children().next().unwrap();
+        <span class="kw">let </span>last = root.children().last().unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">element</span>(), <span class="ident">last</span>.<span class="ident">element</span>());
-        <span class="ident">assert_same_elements</span>(<span class="ident">first</span>.<span class="ident">element</span>(), <span class="ident">last</span>.<span class="ident">element</span>());
+        <span class="macro">assert_eq!</span>(first.element(), last.element());
+        assert_same_elements(first.element(), last.element());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">doesnt_cache_node_if_empty_slots_differ</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>doesnt_cache_node_if_empty_slots_differ() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>); <span class="comment">// Root</span>
-        <span class="ident">build_condition_with_missing_closing_parenthesis</span>(<span class="kw-2">&amp;mut</span> <span class="ident">builder</span>); <span class="comment">// misses the &#39;)&#39;</span>
+        builder.start_node(RawLanguageKind::ROOT); <span class="comment">// Root
+        </span>build_condition_with_missing_closing_parenthesis(<span class="kw-2">&amp;mut </span>builder); <span class="comment">// misses the &#39;)&#39;
 
-        <span class="comment">// Create a well formed condition</span>
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::CONDITION</span>);
+        // Create a well formed condition
+        </span>builder.start_node(RawLanguageKind::CONDITION);
 
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::L_PAREN_TOKEN</span>, <span class="string">&quot;(&quot;</span>);
+        builder.token(RawLanguageKind::L_PAREN_TOKEN, <span class="string">&quot;(&quot;</span>);
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="string">&quot;a&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::STRING_TOKEN, <span class="string">&quot;a&quot;</span>);
+        builder.finish_node();
 
-        <span class="comment">// missing )</span>
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::R_PAREN_TOKEN</span>, <span class="string">&quot;)&quot;</span>);
+        <span class="comment">// missing )
+        </span>builder.token(RawLanguageKind::R_PAREN_TOKEN, <span class="string">&quot;)&quot;</span>);
 
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="comment">// finish root</span>
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        <span class="comment">// finish root
+        </span>builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish_green</span>();
-        <span class="kw">let</span> <span class="ident">first_condition</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">children</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">last_condition</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">children</span>().<span class="ident">last</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>root = builder.finish_green();
+        <span class="kw">let </span>first_condition = root.children().next().unwrap();
+        <span class="kw">let </span>last_condition = root.children().last().unwrap();
 
-        <span class="macro">assert_ne!</span>(<span class="ident">first_condition</span>.<span class="ident">element</span>(), <span class="ident">last_condition</span>.<span class="ident">element</span>());
+        <span class="macro">assert_ne!</span>(first_condition.element(), last_condition.element());
     }
 
-    <span class="kw">fn</span> <span class="ident">assert_same_elements</span>(<span class="ident">left</span>: <span class="ident">GreenElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">right</span>: <span class="ident">GreenElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) {
-        <span class="kw">fn</span> <span class="ident">element_id</span>(<span class="ident">element</span>: <span class="ident">GreenElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="kw-2">*const</span> () {
-            <span class="kw">match</span> <span class="ident">element</span> {
-                <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">node</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">GreenNodeData</span> <span class="kw">as</span> <span class="kw-2">*const</span> (),
-                <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">token</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">GreenTokenData</span> <span class="kw">as</span> <span class="kw-2">*const</span> (),
+    <span class="kw">fn </span>assert_same_elements(left: GreenElementRef&lt;<span class="lifetime">&#39;_</span>&gt;, right: GreenElementRef&lt;<span class="lifetime">&#39;_</span>&gt;) {
+        <span class="kw">fn </span>element_id(element: GreenElementRef&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="kw-2">*const </span>() {
+            <span class="kw">match </span>element {
+                NodeOrToken::Node(node) =&gt; node <span class="kw">as </span><span class="kw-2">*const </span>GreenNodeData <span class="kw">as </span><span class="kw-2">*const </span>(),
+                NodeOrToken::Token(token) =&gt; token <span class="kw">as </span><span class="kw-2">*const </span>GreenTokenData <span class="kw">as </span><span class="kw-2">*const </span>(),
             }
         }
 
-        <span class="macro">assert_eq!</span>(<span class="ident">element_id</span>(<span class="ident">left</span>), <span class="ident">element_id</span>(<span class="ident">right</span>),);
+        <span class="macro">assert_eq!</span>(element_id(left), element_id(right),);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

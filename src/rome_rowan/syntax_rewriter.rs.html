@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax_rewriter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>syntax_rewriter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax_rewriter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>syntax_rewriter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -255,262 +255,262 @@
 <span id="255">255</span>
 <span id="256">256</span>
 <span id="257">257</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Language</span>, <span class="ident">SyntaxNode</span>, <span class="ident">SyntaxSlot</span>, <span class="ident">SyntaxToken</span>};
-<span class="kw">use</span> <span class="ident">std::iter::once</span>;
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{Language, SyntaxNode, SyntaxSlot, SyntaxToken};
+<span class="kw">use </span>std::iter::once;
 
-<span class="doccomment">/// A visitor that re-writes a syntax tree while visiting the nodes.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The rewriter visits the nodes in pre-order from top-down.</span>
-<span class="doccomment">/// Meaning, it first visits the `root`, and then visits the children of the root from left to right,</span>
-<span class="doccomment">/// recursively traversing into child nodes and calling [`visit_node`](SyntaxRewriter) for every node.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Inspired by Roslyn&#39;s [`CSharpSyntaxRewriter`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.csharpsyntaxrewriter?view=roslyn-dotnet-4.2.0)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Unsupported</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The current implementation does not yet support node removal.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implementation of a rewritter that replaces all literal expression nodes that contain a number token</span>
-<span class="doccomment">/// with an unknown node.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use std::iter::once;</span>
-<span class="doccomment">/// # use rome_rowan::{AstNode, SyntaxNode, SyntaxRewriter, VisitNodeSignal};</span>
-<span class="doccomment">/// # use rome_rowan::raw_language::{LiteralExpression, RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// struct ReplaceNumberLiteralRewriter;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// impl SyntaxRewriter for ReplaceNumberLiteralRewriter {</span>
-<span class="doccomment">///     type Language = RawLanguage;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     fn visit_node(</span>
-<span class="doccomment">///         &amp;mut self,</span>
-<span class="doccomment">///         node: SyntaxNode&lt;Self::Language&gt;,</span>
-<span class="doccomment">///     ) -&gt; VisitNodeSignal&lt;Self::Language&gt; {</span>
-<span class="doccomment">///         match node.kind() {</span>
-<span class="doccomment">///             RawLanguageKind::LITERAL_EXPRESSION =&gt; {</span>
-<span class="doccomment">///                 let expression = LiteralExpression::unwrap_cast(node);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///                 let mut token = expression</span>
-<span class="doccomment">///                     .syntax()</span>
-<span class="doccomment">///                     .slots()</span>
-<span class="doccomment">///                     .nth(0)</span>
-<span class="doccomment">///                     .unwrap()</span>
-<span class="doccomment">///                     .into_token()</span>
-<span class="doccomment">///                     .unwrap();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///                 match token.kind() {</span>
-<span class="doccomment">///                     RawLanguageKind::NUMBER_TOKEN =&gt; {</span>
-<span class="doccomment">///                         // Use your language&#39;s syntax factory instead</span>
-<span class="doccomment">///                         let unknown_node = SyntaxNode::new_detached(</span>
-<span class="doccomment">///                             RawLanguageKind::UNKNOWN,</span>
-<span class="doccomment">///                             once(Some(token.into())),</span>
-<span class="doccomment">///                         );</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///                         VisitNodeSignal::Replace(unknown_node)</span>
-<span class="doccomment">///                     }</span>
-<span class="doccomment">///                     // Not interested in string literal expressions, continue traversal</span>
-<span class="doccomment">///                     _ =&gt; VisitNodeSignal::Traverse(expression.into_syntax()),</span>
-<span class="doccomment">///                 }</span>
-<span class="doccomment">///             }</span>
-<span class="doccomment">///             _ =&gt; {</span>
-<span class="doccomment">///                 // Traverse into the childrens of node</span>
-<span class="doccomment">///                 VisitNodeSignal::Traverse(node)</span>
-<span class="doccomment">///             }</span>
-<span class="doccomment">///         }</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let mut builder = RawSyntaxTreeBuilder::new();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// builder.start_node(RawLanguageKind::ROOT);</span>
-<span class="doccomment">/// builder.start_node(RawLanguageKind::SEPARATED_EXPRESSION_LIST);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);</span>
-<span class="doccomment">/// builder.token(RawLanguageKind::NUMBER_TOKEN, &quot;5&quot;);</span>
-<span class="doccomment">/// builder.finish_node();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);</span>
-<span class="doccomment">/// builder.token(RawLanguageKind::STRING_TOKEN, &quot;&#39;abcd&#39;&quot;);</span>
-<span class="doccomment">/// builder.finish_node();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// builder.finish_node();</span>
-<span class="doccomment">/// builder.finish_node();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let root = builder.finish();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let transformed = ReplaceNumberLiteralRewriter.transform(root.clone());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let original_literal_expressions: Vec&lt;_&gt; = root</span>
-<span class="doccomment">///     .descendants()</span>
-<span class="doccomment">///     .filter(|p| p.kind() == RawLanguageKind::LITERAL_EXPRESSION)</span>
-<span class="doccomment">///     .collect();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_ne!(</span>
-<span class="doccomment">///     &amp;root, &amp;transformed,</span>
-<span class="doccomment">///     &quot;It returns a new root with the updated children&quot;</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let literal_expressions: Vec&lt;_&gt; = transformed</span>
-<span class="doccomment">///     .descendants()</span>
-<span class="doccomment">///     .filter(|p| p.kind() == RawLanguageKind::LITERAL_EXPRESSION)</span>
-<span class="doccomment">///     .collect();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///  // The literal expression containing a string token should be unchanged</span>
-<span class="doccomment">///  assert_eq!(&amp;literal_expressions, &amp;original_literal_expressions[1..]);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///  let mut unknowns: Vec&lt;_&gt; = transformed</span>
-<span class="doccomment">///     .descendants()</span>
-<span class="doccomment">///     .filter(|p| p.kind() == RawLanguageKind::UNKNOWN)</span>
-<span class="doccomment">///     .collect();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // It replaced the number literal expression with an unknown node.</span>
-<span class="doccomment">/// assert_eq!(unknowns.len(), 1);</span>
-<span class="doccomment">/// assert_eq!(unknowns.pop().unwrap().text(), &quot;5&quot;);</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SyntaxRewriter</span> {
-    <span class="kw">type</span> <span class="ident">Language</span>: <span class="ident">Language</span>;
+<span class="doccomment">/// A visitor that re-writes a syntax tree while visiting the nodes.
+///
+/// The rewriter visits the nodes in pre-order from top-down.
+/// Meaning, it first visits the `root`, and then visits the children of the root from left to right,
+/// recursively traversing into child nodes and calling [`visit_node`](SyntaxRewriter) for every node.
+///
+/// Inspired by Roslyn&#39;s [`CSharpSyntaxRewriter`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.csharpsyntaxrewriter?view=roslyn-dotnet-4.2.0)
+///
+/// # Unsupported
+///
+/// The current implementation does not yet support node removal.
+///
+/// # Examples
+///
+/// Implementation of a rewritter that replaces all literal expression nodes that contain a number token
+/// with an unknown node.
+///
+/// ```
+/// # use std::iter::once;
+/// # use rome_rowan::{AstNode, SyntaxNode, SyntaxRewriter, VisitNodeSignal};
+/// # use rome_rowan::raw_language::{LiteralExpression, RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+///
+/// struct ReplaceNumberLiteralRewriter;
+///
+/// impl SyntaxRewriter for ReplaceNumberLiteralRewriter {
+///     type Language = RawLanguage;
+///
+///     fn visit_node(
+///         &amp;mut self,
+///         node: SyntaxNode&lt;Self::Language&gt;,
+///     ) -&gt; VisitNodeSignal&lt;Self::Language&gt; {
+///         match node.kind() {
+///             RawLanguageKind::LITERAL_EXPRESSION =&gt; {
+///                 let expression = LiteralExpression::unwrap_cast(node);
+///
+///                 let mut token = expression
+///                     .syntax()
+///                     .slots()
+///                     .nth(0)
+///                     .unwrap()
+///                     .into_token()
+///                     .unwrap();
+///
+///                 match token.kind() {
+///                     RawLanguageKind::NUMBER_TOKEN =&gt; {
+///                         // Use your language&#39;s syntax factory instead
+///                         let unknown_node = SyntaxNode::new_detached(
+///                             RawLanguageKind::UNKNOWN,
+///                             once(Some(token.into())),
+///                         );
+///
+///                         VisitNodeSignal::Replace(unknown_node)
+///                     }
+///                     // Not interested in string literal expressions, continue traversal
+///                     _ =&gt; VisitNodeSignal::Traverse(expression.into_syntax()),
+///                 }
+///             }
+///             _ =&gt; {
+///                 // Traverse into the childrens of node
+///                 VisitNodeSignal::Traverse(node)
+///             }
+///         }
+///     }
+/// }
+///
+/// let mut builder = RawSyntaxTreeBuilder::new();
+///
+/// builder.start_node(RawLanguageKind::ROOT);
+/// builder.start_node(RawLanguageKind::SEPARATED_EXPRESSION_LIST);
+///
+/// builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+/// builder.token(RawLanguageKind::NUMBER_TOKEN, &quot;5&quot;);
+/// builder.finish_node();
+///
+/// builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+/// builder.token(RawLanguageKind::STRING_TOKEN, &quot;&#39;abcd&#39;&quot;);
+/// builder.finish_node();
+///
+/// builder.finish_node();
+/// builder.finish_node();
+///
+/// let root = builder.finish();
+///
+/// let transformed = ReplaceNumberLiteralRewriter.transform(root.clone());
+///
+/// let original_literal_expressions: Vec&lt;_&gt; = root
+///     .descendants()
+///     .filter(|p| p.kind() == RawLanguageKind::LITERAL_EXPRESSION)
+///     .collect();
+///
+/// assert_ne!(
+///     &amp;root, &amp;transformed,
+///     &quot;It returns a new root with the updated children&quot;
+/// );
+///
+/// let literal_expressions: Vec&lt;_&gt; = transformed
+///     .descendants()
+///     .filter(|p| p.kind() == RawLanguageKind::LITERAL_EXPRESSION)
+///     .collect();
+///
+///  // The literal expression containing a string token should be unchanged
+///  assert_eq!(&amp;literal_expressions, &amp;original_literal_expressions[1..]);
+///
+///  let mut unknowns: Vec&lt;_&gt; = transformed
+///     .descendants()
+///     .filter(|p| p.kind() == RawLanguageKind::UNKNOWN)
+///     .collect();
+///
+/// // It replaced the number literal expression with an unknown node.
+/// assert_eq!(unknowns.len(), 1);
+/// assert_eq!(unknowns.pop().unwrap().text(), &quot;5&quot;);
+/// ```
+</span><span class="kw">pub trait </span>SyntaxRewriter {
+    <span class="kw">type </span>Language: Language;
 
-    <span class="doccomment">/// Recursively transforms the subtree of `node` by calling [`visit_node`](SyntaxRewriter::visit_node)</span>
-    <span class="doccomment">/// for every token and [`visit_token`](SyntaxRewriter::visit_token) for every token in the subtree.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a new syntax tree reflecting the changes by the rewriter if it replaced any node and</span>
-    <span class="doccomment">/// returns `node` if no changes were made.</span>
-    <span class="kw">fn</span> <span class="ident">transform</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="doccomment">/// Recursively transforms the subtree of `node` by calling [`visit_node`](SyntaxRewriter::visit_node)
+    /// for every token and [`visit_token`](SyntaxRewriter::visit_token) for every token in the subtree.
+    ///
+    /// Returns a new syntax tree reflecting the changes by the rewriter if it replaced any node and
+    /// returns `node` if no changes were made.
+    </span><span class="kw">fn </span>transform(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: SyntaxNode&lt;<span class="self">Self</span>::Language&gt;) -&gt; SyntaxNode&lt;<span class="self">Self</span>::Language&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">visit_node</span>(<span class="ident">node</span>) {
-            <span class="ident">VisitNodeSignal::Replace</span>(<span class="ident">updated</span>) =&gt; <span class="ident">updated</span>,
-            <span class="ident">VisitNodeSignal::Traverse</span>(<span class="ident">node</span>) =&gt; <span class="ident">traverse</span>(<span class="ident">node</span>, <span class="self">self</span>),
+        <span class="kw">match </span><span class="self">self</span>.visit_node(node) {
+            VisitNodeSignal::Replace(updated) =&gt; updated,
+            VisitNodeSignal::Traverse(node) =&gt; traverse(node, <span class="self">self</span>),
         }
     }
 
-    <span class="doccomment">/// Called for every node in the tree. The method should return a signal specifying what should be done with the node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * [VisitNodeSignal::Traverse]: Recourse into `node` so that [`visit_node`](SyntaxRewriter::visit_node)</span>
-    <span class="doccomment">/// gets called for all children of `node`. The `node` will only be replaced if any node in its subtree changes.</span>
-    <span class="doccomment">/// * [VisitNodeSignal::Replace]: Replaces `node` with the node specified in the [`Replace`](VisitNodeSignal::Replace) variant.</span>
-    <span class="doccomment">///  It&#39;s your responsibility to call [`traverse`](SyntaxRewriter::transform) for any child of `node` for which you want the rewritter</span>
-    <span class="doccomment">///  to recurse into its content.</span>
-    <span class="kw">fn</span> <span class="ident">visit_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident">VisitNodeSignal</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> {
-        <span class="ident">VisitNodeSignal::Traverse</span>(<span class="ident">node</span>)
+    <span class="doccomment">/// Called for every node in the tree. The method should return a signal specifying what should be done with the node
+    ///
+    /// * [VisitNodeSignal::Traverse]: Recourse into `node` so that [`visit_node`](SyntaxRewriter::visit_node)
+    /// gets called for all children of `node`. The `node` will only be replaced if any node in its subtree changes.
+    /// * [VisitNodeSignal::Replace]: Replaces `node` with the node specified in the [`Replace`](VisitNodeSignal::Replace) variant.
+    ///  It&#39;s your responsibility to call [`traverse`](SyntaxRewriter::transform) for any child of `node` for which you want the rewritter
+    ///  to recurse into its content.
+    </span><span class="kw">fn </span>visit_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: SyntaxNode&lt;<span class="self">Self</span>::Language&gt;) -&gt; VisitNodeSignal&lt;<span class="self">Self</span>::Language&gt; {
+        VisitNodeSignal::Traverse(node)
     }
 
-    <span class="doccomment">/// Called for every token in the tree. Returning a new token changes the token in the parent node.</span>
-    <span class="kw">fn</span> <span class="ident">visit_token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> {
-        <span class="ident">token</span>
+    <span class="doccomment">/// Called for every token in the tree. Returning a new token changes the token in the parent node.
+    </span><span class="kw">fn </span>visit_token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;) -&gt; SyntaxToken&lt;<span class="self">Self</span>::Language&gt; {
+        token
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VisitNodeSignal</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Signals the [SyntaxRewriter] to replace the current node with the specified node.</span>
-    <span class="ident">Replace</span>(<span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>),
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub enum </span>VisitNodeSignal&lt;L: Language&gt; {
+    <span class="doccomment">/// Signals the [SyntaxRewriter] to replace the current node with the specified node.
+    </span>Replace(SyntaxNode&lt;L&gt;),
 
-    <span class="doccomment">/// Signals the [SyntaxRewriter] to traverse into the children of the specified node.</span>
-    <span class="ident">Traverse</span>(<span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// Signals the [SyntaxRewriter] to traverse into the children of the specified node.
+    </span>Traverse(SyntaxNode&lt;L&gt;),
 }
 
-<span class="kw">fn</span> <span class="ident">traverse</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">parent</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">R::Language</span><span class="op">&gt;</span>, <span class="ident">rewriter</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">R::Language</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">SyntaxRewriter</span>,
+<span class="kw">fn </span>traverse&lt;R&gt;(<span class="kw-2">mut </span>parent: SyntaxNode&lt;R::Language&gt;, rewriter: <span class="kw-2">&amp;mut </span>R) -&gt; SyntaxNode&lt;R::Language&gt;
+<span class="kw">where
+    </span>R: SyntaxRewriter,
 {
-    <span class="kw">for</span> <span class="ident">slot</span> <span class="kw">in</span> <span class="ident">parent</span>.<span class="ident">slots</span>() {
-        <span class="kw">match</span> <span class="ident">slot</span> {
-            <span class="ident">SyntaxSlot::Node</span>(<span class="ident">node</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">original_key</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">key</span>();
-                <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">index</span>();
+    <span class="kw">for </span>slot <span class="kw">in </span>parent.slots() {
+        <span class="kw">match </span>slot {
+            SyntaxSlot::Node(node) =&gt; {
+                <span class="kw">let </span>original_key = node.key();
+                <span class="kw">let </span>index = node.index();
 
-                <span class="kw">let</span> <span class="ident">updated</span> <span class="op">=</span> <span class="ident">rewriter</span>.<span class="ident">transform</span>(<span class="ident">node</span>);
+                <span class="kw">let </span>updated = rewriter.transform(node);
 
-                <span class="kw">if</span> <span class="ident">updated</span>.<span class="ident">key</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">original_key</span> {
-                    <span class="ident">parent</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">splice_slots</span>(<span class="ident">index</span>..<span class="op">=</span><span class="ident">index</span>, <span class="ident">once</span>(<span class="prelude-val">Some</span>(<span class="ident">updated</span>.<span class="ident">into</span>())));
+                <span class="kw">if </span>updated.key() != original_key {
+                    parent = parent.splice_slots(index..=index, once(<span class="prelude-val">Some</span>(updated.into())));
                 }
             }
-            <span class="ident">SyntaxSlot::Token</span>(<span class="ident">token</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">original_key</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">key</span>();
-                <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">index</span>();
+            SyntaxSlot::Token(token) =&gt; {
+                <span class="kw">let </span>original_key = token.key();
+                <span class="kw">let </span>index = token.index();
 
-                <span class="kw">let</span> <span class="ident">updated</span> <span class="op">=</span> <span class="ident">rewriter</span>.<span class="ident">visit_token</span>(<span class="ident">token</span>);
+                <span class="kw">let </span>updated = rewriter.visit_token(token);
 
-                <span class="kw">if</span> <span class="ident">updated</span>.<span class="ident">key</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">original_key</span> {
-                    <span class="ident">parent</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">splice_slots</span>(<span class="ident">index</span>..<span class="op">=</span><span class="ident">index</span>, <span class="ident">once</span>(<span class="prelude-val">Some</span>(<span class="ident">updated</span>.<span class="ident">into</span>())));
+                <span class="kw">if </span>updated.key() != original_key {
+                    parent = parent.splice_slots(index..=index, once(<span class="prelude-val">Some</span>(updated.into())));
                 }
             }
-            <span class="ident">SyntaxSlot::Empty</span> =&gt; {
-                <span class="comment">// Nothing to visit</span>
-            }
+            SyntaxSlot::Empty =&gt; {
+                <span class="comment">// Nothing to visit
+            </span>}
         }
     }
 
-    <span class="ident">parent</span>
+    parent
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::raw_language</span>::{<span class="ident">RawLanguage</span>, <span class="ident">RawLanguageKind</span>, <span class="ident">RawSyntaxTreeBuilder</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">SyntaxNode</span>, <span class="ident">SyntaxRewriter</span>, <span class="ident">SyntaxToken</span>, <span class="ident">VisitNodeSignal</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    <span class="kw">use crate</span>::{SyntaxNode, SyntaxRewriter, SyntaxToken, VisitNodeSignal};
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_visits_each_node</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">pub fn </span>test_visits_each_node() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;5&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::ROOT);
+        builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;5&quot;</span>);
+        builder.finish_node();
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span>root = builder.finish();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">recorder</span> <span class="op">=</span> <span class="ident">RecordRewritter::default</span>();
-        <span class="kw">let</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">recorder</span>.<span class="ident">transform</span>(<span class="ident">root</span>.<span class="ident">clone</span>());
+        <span class="kw">let </span><span class="kw-2">mut </span>recorder = RecordRewritter::default();
+        <span class="kw">let </span>transformed = recorder.transform(root.clone());
 
         <span class="macro">assert_eq!</span>(
-            <span class="kw-2">&amp;</span><span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">transformed</span>,
-            <span class="string">&quot;It should return the same node if the rewritter doesn&#39;t replace a node.&quot;</span>
-        );
+            <span class="kw-2">&amp;</span>root, <span class="kw-2">&amp;</span>transformed,
+            <span class="string">&quot;It should return the same node if the rewritter doesn&#39;t replace a node.&quot;
+        </span>);
 
-        <span class="kw">let</span> <span class="ident">literal_expression</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>literal_expression = root
+            .descendants()
+            .find(|node| node.kind() == RawLanguageKind::LITERAL_EXPRESSION)
+            .unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">recorder</span>.<span class="ident">nodes</span>, <span class="kw-2">&amp;</span>[<span class="ident">root</span>.<span class="ident">clone</span>(), <span class="ident">literal_expression</span>]);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>recorder.nodes, <span class="kw-2">&amp;</span>[root.clone(), literal_expression]);
 
-        <span class="kw">let</span> <span class="ident">number_literal</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">first_token</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">recorder</span>.<span class="ident">tokens</span>, <span class="kw-2">&amp;</span>[<span class="ident">number_literal</span>]);
+        <span class="kw">let </span>number_literal = root.first_token().unwrap();
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>recorder.tokens, <span class="kw-2">&amp;</span>[number_literal]);
     }
 
-    <span class="doccomment">/// Visitor that records every `visit_node` and `visit_token` call.</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">RecordRewritter</span> {
-        <span class="ident">nodes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">tokens</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Visitor that records every `visit_node` and `visit_token` call.
+    </span><span class="attribute">#[derive(Default)]
+    </span><span class="kw">struct </span>RecordRewritter {
+        nodes: Vec&lt;SyntaxNode&lt;RawLanguage&gt;&gt;,
+        tokens: Vec&lt;SyntaxToken&lt;RawLanguage&gt;&gt;,
     }
 
-    <span class="kw">impl</span> <span class="ident">SyntaxRewriter</span> <span class="kw">for</span> <span class="ident">RecordRewritter</span> {
-        <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">RawLanguage</span>;
+    <span class="kw">impl </span>SyntaxRewriter <span class="kw">for </span>RecordRewritter {
+        <span class="kw">type </span>Language = RawLanguage;
 
-        <span class="kw">fn</span> <span class="ident">visit_node</span>(
-            <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-            <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        ) -&gt; <span class="ident">VisitNodeSignal</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> {
-            <span class="self">self</span>.<span class="ident">nodes</span>.<span class="ident">push</span>(<span class="ident">node</span>.<span class="ident">clone</span>());
-            <span class="ident">VisitNodeSignal::Traverse</span>(<span class="ident">node</span>)
+        <span class="kw">fn </span>visit_node(
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+            node: SyntaxNode&lt;<span class="self">Self</span>::Language&gt;,
+        ) -&gt; VisitNodeSignal&lt;<span class="self">Self</span>::Language&gt; {
+            <span class="self">self</span>.nodes.push(node.clone());
+            VisitNodeSignal::Traverse(node)
         }
 
-        <span class="kw">fn</span> <span class="ident">visit_token</span>(
-            <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-            <span class="ident">token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        ) -&gt; <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> {
-            <span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">push</span>(<span class="ident">token</span>.<span class="ident">clone</span>());
-            <span class="ident">token</span>
+        <span class="kw">fn </span>visit_token(
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+            token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+        ) -&gt; SyntaxToken&lt;<span class="self">Self</span>::Language&gt; {
+            <span class="self">self</span>.tokens.push(token.clone());
+            token
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/buffer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>buffer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/buffer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>buffer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -721,133 +721,133 @@
 <span id="721">721</span>
 <span id="722">722</span>
 <span id="723">723</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">write</span>, <span class="ident">Arguments</span>, <span class="ident">FormatElement</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::format_element::Interned</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude::LineMode</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Format</span>, <span class="ident">FormatResult</span>, <span class="ident">FormatState</span>};
-<span class="kw">use</span> <span class="ident">rustc_hash::FxHashMap</span>;
-<span class="kw">use</span> <span class="ident">std::any</span>::{<span class="ident">Any</span>, <span class="ident">TypeId</span>};
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">std::ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>};
+</pre><pre class="rust"><code><span class="kw">use super</span>::{write, Arguments, FormatElement};
+<span class="kw">use </span><span class="kw">crate</span>::format_element::Interned;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::LineMode;
+<span class="kw">use crate</span>::{Format, FormatResult, FormatState};
+<span class="kw">use </span>rustc_hash::FxHashMap;
+<span class="kw">use </span>std::any::{Any, TypeId};
+<span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>std::ops::{Deref, DerefMut};
 
-<span class="doccomment">/// A trait for writing or formatting into [FormatElement]-accepting buffers or streams.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Buffer</span> {
-    <span class="doccomment">/// The context used during formatting</span>
-    <span class="kw">type</span> <span class="ident">Context</span>;
+<span class="doccomment">/// A trait for writing or formatting into [FormatElement]-accepting buffers or streams.
+</span><span class="kw">pub trait </span>Buffer {
+    <span class="doccomment">/// The context used during formatting
+    </span><span class="kw">type </span>Context;
 
-    <span class="doccomment">/// Writes a [crate::FormatElement] into this buffer, returning whether the write succeeded.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">/// This function will return an instance of [crate::FormatError] on error.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_formatter::{Buffer, FormatElement, FormatState, SimpleFormatContext, VecBuffer};</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let mut state = FormatState::new(SimpleFormatContext::default());</span>
-    <span class="doccomment">/// let mut buffer = VecBuffer::new(&amp;mut state);</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// buffer.write_element(FormatElement::StaticText { text: &quot;test&quot;}).unwrap();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(buffer.into_vec(), vec![FormatElement::StaticText { text: &quot;test&quot; }]);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="kw">fn</span> <span class="ident">write_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="ident">FormatElement</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="doccomment">/// Writes a [crate::FormatElement] into this buffer, returning whether the write succeeded.
+    ///
+    /// # Errors
+    /// This function will return an instance of [crate::FormatError] on error.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rome_formatter::{Buffer, FormatElement, FormatState, SimpleFormatContext, VecBuffer};
+    ///
+    /// let mut state = FormatState::new(SimpleFormatContext::default());
+    /// let mut buffer = VecBuffer::new(&amp;mut state);
+    ///
+    /// buffer.write_element(FormatElement::StaticText { text: &quot;test&quot;}).unwrap();
+    ///
+    /// assert_eq!(buffer.into_vec(), vec![FormatElement::StaticText { text: &quot;test&quot; }]);
+    /// ```
+    ///
+    </span><span class="kw">fn </span>write_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: FormatElement) -&gt; FormatResult&lt;()&gt;;
 
-    <span class="doccomment">/// Returns a slice containing all elements written into this buffer.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Prefer using [BufferExtensions::start_recording] over accessing [Buffer::elements] directly.</span>
-    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>];
+    <span class="doccomment">/// Returns a slice containing all elements written into this buffer.
+    ///
+    /// Prefer using [BufferExtensions::start_recording] over accessing [Buffer::elements] directly.
+    </span><span class="attribute">#[doc(hidden)]
+    </span><span class="kw">fn </span>elements(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement];
 
-    <span class="doccomment">/// Glue for usage of the [`write!`] macro with implementors of this trait.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This method should generally not be invoked manually, but rather through the [`write!`] macro itself.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_formatter::prelude::*;</span>
-    <span class="doccomment">/// use rome_formatter::{Buffer, FormatState, SimpleFormatContext, VecBuffer, format_args};</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let mut state = FormatState::new(SimpleFormatContext::default());</span>
-    <span class="doccomment">/// let mut buffer = VecBuffer::new(&amp;mut state);</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// buffer.write_fmt(format_args!(text(&quot;Hello World&quot;))).unwrap();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(buffer.into_vec(), vec![FormatElement::StaticText{ text: &quot;Hello World&quot; }]);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">write_fmt</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="kw-2">&amp;mut</span> <span class="self">Self</span>, <span class="ident">arguments</span>: <span class="ident">Arguments</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">write</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">arguments</span>)
+    <span class="doccomment">/// Glue for usage of the [`write!`] macro with implementors of this trait.
+    ///
+    /// This method should generally not be invoked manually, but rather through the [`write!`] macro itself.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rome_formatter::prelude::*;
+    /// use rome_formatter::{Buffer, FormatState, SimpleFormatContext, VecBuffer, format_args};
+    ///
+    /// let mut state = FormatState::new(SimpleFormatContext::default());
+    /// let mut buffer = VecBuffer::new(&amp;mut state);
+    ///
+    /// buffer.write_fmt(format_args!(text(&quot;Hello World&quot;))).unwrap();
+    ///
+    /// assert_eq!(buffer.into_vec(), vec![FormatElement::StaticText{ text: &quot;Hello World&quot; }]);
+    /// ```
+    </span><span class="kw">fn </span>write_fmt(<span class="kw-2">mut </span><span class="self">self</span>: <span class="kw-2">&amp;mut </span><span class="self">Self</span>, arguments: Arguments&lt;<span class="self">Self</span>::Context&gt;) -&gt; FormatResult&lt;()&gt; {
+        write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, arguments)
     }
 
-    <span class="doccomment">/// Returns the formatting state relevant for this formatting session.</span>
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Returns the formatting state relevant for this formatting session.
+    </span><span class="kw">fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FormatState&lt;<span class="self">Self</span>::Context&gt;;
 
-    <span class="doccomment">/// Returns the mutable formatting state relevant for this formatting session.</span>
-    <span class="kw">fn</span> <span class="ident">state_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Returns the mutable formatting state relevant for this formatting session.
+    </span><span class="kw">fn </span>state_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FormatState&lt;<span class="self">Self</span>::Context&gt;;
 
-    <span class="doccomment">/// Takes a snapshot of the Buffers state, excluding the formatter state.</span>
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BufferSnapshot</span>;
+    <span class="doccomment">/// Takes a snapshot of the Buffers state, excluding the formatter state.
+    </span><span class="kw">fn </span>snapshot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BufferSnapshot;
 
-    <span class="doccomment">/// Restores the snapshot buffer</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Panics</span>
-    <span class="doccomment">/// If the passed snapshot id is a snapshot of another buffer OR</span>
-    <span class="doccomment">/// if the snapshot is restored out of order</span>
-    <span class="kw">fn</span> <span class="ident">restore_snapshot</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">snapshot</span>: <span class="ident">BufferSnapshot</span>);
+    <span class="doccomment">/// Restores the snapshot buffer
+    ///
+    /// ## Panics
+    /// If the passed snapshot id is a snapshot of another buffer OR
+    /// if the snapshot is restored out of order
+    </span><span class="kw">fn </span>restore_snapshot(<span class="kw-2">&amp;mut </span><span class="self">self</span>, snapshot: BufferSnapshot);
 }
 
-<span class="doccomment">/// Snapshot of a buffer state that can be restored at a later point.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Used in cases where the formatting of an object fails but a parent formatter knows an alternative</span>
-<span class="doccomment">/// strategy on how to format the object that might succeed.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BufferSnapshot</span> {
-    <span class="doccomment">/// Stores an absolute position of a buffers state, for example, the offset of the last written element.</span>
-    <span class="ident">Position</span>(<span class="ident">usize</span>),
+<span class="doccomment">/// Snapshot of a buffer state that can be restored at a later point.
+///
+/// Used in cases where the formatting of an object fails but a parent formatter knows an alternative
+/// strategy on how to format the object that might succeed.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub enum </span>BufferSnapshot {
+    <span class="doccomment">/// Stores an absolute position of a buffers state, for example, the offset of the last written element.
+    </span>Position(usize),
 
-    <span class="doccomment">/// Generic structure for custom buffers that need to store more complex data. Slightly more</span>
-    <span class="doccomment">/// expensive because it requires allocating the buffer state on the heap.</span>
-    <span class="ident">Any</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// Generic structure for custom buffers that need to store more complex data. Slightly more
+    /// expensive because it requires allocating the buffer state on the heap.
+    </span>Any(Box&lt;<span class="kw">dyn </span>Any&gt;),
 }
 
-<span class="kw">impl</span> <span class="ident">BufferSnapshot</span> {
-    <span class="doccomment">/// Creates a new buffer snapshot that points to the specified position.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">position</span>(<span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Position</span>(<span class="ident">index</span>)
+<span class="kw">impl </span>BufferSnapshot {
+    <span class="doccomment">/// Creates a new buffer snapshot that points to the specified position.
+    </span><span class="kw">pub const fn </span>position(index: usize) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Position(index)
     }
 
-    <span class="doccomment">/// Unwraps the position value.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Panics</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If self is not a [`BufferSnapshot::Position`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">BufferSnapshot::Position</span>(<span class="ident">index</span>) =&gt; <span class="kw-2">*</span><span class="ident">index</span>,
-            <span class="ident">BufferSnapshot::Any</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Tried to unwrap Any snapshot as a position.&quot;</span>),
+    <span class="doccomment">/// Unwraps the position value.
+    ///
+    /// # Panics
+    ///
+    /// If self is not a [`BufferSnapshot::Position`]
+    </span><span class="kw">pub fn </span>unwrap_position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="kw">match </span><span class="self">self </span>{
+            BufferSnapshot::Position(index) =&gt; <span class="kw-2">*</span>index,
+            BufferSnapshot::Any(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Tried to unwrap Any snapshot as a position.&quot;</span>),
         }
     }
 
-    <span class="doccomment">/// Unwraps the any value.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Panics</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If `self` is not a [`BufferSnapshot::Any`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_any</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">T</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">BufferSnapshot::Position</span>(<span class="kw">_</span>) =&gt; {
+    <span class="doccomment">/// Unwraps the any value.
+    ///
+    /// # Panics
+    ///
+    /// If `self` is not a [`BufferSnapshot::Any`].
+    </span><span class="kw">pub fn </span>unwrap_any&lt;T: <span class="lifetime">&#39;static</span>&gt;(<span class="self">self</span>) -&gt; T {
+        <span class="kw">match </span><span class="self">self </span>{
+            BufferSnapshot::Position(<span class="kw">_</span>) =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;Tried to unwrap Position snapshot as Any snapshot.&quot;</span>)
             }
-            <span class="ident">BufferSnapshot::Any</span>(<span class="ident">value</span>) =&gt; <span class="kw">match</span> <span class="ident">value</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() {
-                <span class="prelude-val">Ok</span>(<span class="ident">snapshot</span>) =&gt; <span class="kw-2">*</span><span class="ident">snapshot</span>,
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
+            BufferSnapshot::Any(value) =&gt; <span class="kw">match </span>value.downcast::&lt;T&gt;() {
+                <span class="prelude-val">Ok</span>(snapshot) =&gt; <span class="kw-2">*</span>snapshot,
+                <span class="prelude-val">Err</span>(err) =&gt; {
                     <span class="macro">panic!</span>(
                         <span class="string">&quot;Tried to unwrap snapshot of type {:?} as {:?}&quot;</span>,
-                        <span class="ident">err</span>.<span class="ident">type_id</span>(),
-                        <span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()
+                        err.type_id(),
+                        TypeId::of::&lt;T&gt;()
                     )
                 }
             },
@@ -855,594 +855,594 @@
     }
 }
 
-<span class="doccomment">/// Implements the `[Buffer]` trait for all mutable references of objects implementing [Buffer].</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>, <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="kw-2">&amp;mut</span> <span class="ident">W</span> {
-    <span class="kw">type</span> <span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span>;
+<span class="doccomment">/// Implements the `[Buffer]` trait for all mutable references of objects implementing [Buffer].
+</span><span class="kw">impl</span>&lt;W: Buffer&lt;Context = Context&gt; + <span class="question-mark">?</span>Sized, Context&gt; Buffer <span class="kw">for </span><span class="kw-2">&amp;mut </span>W {
+    <span class="kw">type </span>Context = Context;
 
-    <span class="kw">fn</span> <span class="ident">write_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="ident">FormatElement</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">write_element</span>(<span class="ident">element</span>)
+    <span class="kw">fn </span>write_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: FormatElement) -&gt; FormatResult&lt;()&gt; {
+        (<span class="kw-2">**</span><span class="self">self</span>).write_element(element)
     }
 
-    <span class="kw">fn</span> <span class="ident">elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>] {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">elements</span>()
+    <span class="kw">fn </span>elements(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement] {
+        (<span class="kw-2">**</span><span class="self">self</span>).elements()
     }
 
-    <span class="kw">fn</span> <span class="ident">write_fmt</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">args</span>: <span class="ident">Arguments</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">write_fmt</span>(<span class="ident">args</span>)
+    <span class="kw">fn </span>write_fmt(<span class="kw-2">&amp;mut </span><span class="self">self</span>, args: Arguments&lt;Context&gt;) -&gt; FormatResult&lt;()&gt; {
+        (<span class="kw-2">**</span><span class="self">self</span>).write_fmt(args)
     }
 
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">state</span>()
+    <span class="kw">fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        (<span class="kw-2">**</span><span class="self">self</span>).state()
     }
 
-    <span class="kw">fn</span> <span class="ident">state_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">state_mut</span>()
+    <span class="kw">fn </span>state_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        (<span class="kw-2">**</span><span class="self">self</span>).state_mut()
     }
 
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BufferSnapshot</span> {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">snapshot</span>()
+    <span class="kw">fn </span>snapshot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BufferSnapshot {
+        (<span class="kw-2">**</span><span class="self">self</span>).snapshot()
     }
 
-    <span class="kw">fn</span> <span class="ident">restore_snapshot</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">snapshot</span>: <span class="ident">BufferSnapshot</span>) {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">restore_snapshot</span>(<span class="ident">snapshot</span>)
+    <span class="kw">fn </span>restore_snapshot(<span class="kw-2">&amp;mut </span><span class="self">self</span>, snapshot: BufferSnapshot) {
+        (<span class="kw-2">**</span><span class="self">self</span>).restore_snapshot(snapshot)
     }
 }
 
-<span class="doccomment">/// Vector backed [`Buffer`] implementation.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The buffer writes all elements into the internal elements buffer.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">VecBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>,
-    <span class="ident">elements</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Vector backed [`Buffer`] implementation.
+///
+/// The buffer writes all elements into the internal elements buffer.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>VecBuffer&lt;<span class="lifetime">&#39;a</span>, Context&gt; {
+    state: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FormatState&lt;Context&gt;,
+    elements: Vec&lt;FormatElement&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">VecBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_with_vec</span>(<span class="ident">state</span>, <span class="ident">Vec::new</span>())
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, Context&gt; VecBuffer&lt;<span class="lifetime">&#39;a</span>, Context&gt; {
+    <span class="kw">pub fn </span>new(state: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FormatState&lt;Context&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_with_vec(state, Vec::new())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_vec</span>(<span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>, <span class="ident">elements</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">state</span>, <span class="ident">elements</span> }
+    <span class="kw">pub fn </span>new_with_vec(state: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FormatState&lt;Context&gt;, elements: Vec&lt;FormatElement&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ state, elements }
     }
 
-    <span class="doccomment">/// Creates a buffer with the specified capacity</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_capacity</span>(<span class="ident">capacity</span>: <span class="ident">usize</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">state</span>,
-            <span class="ident">elements</span>: <span class="ident">Vec::with_capacity</span>(<span class="ident">capacity</span>),
+    <span class="doccomment">/// Creates a buffer with the specified capacity
+    </span><span class="kw">pub fn </span>with_capacity(capacity: usize, state: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FormatState&lt;Context&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            state,
+            elements: Vec::with_capacity(capacity),
         }
     }
 
-    <span class="doccomment">/// Consumes the buffer and returns the written [`FormatElement]`s as a vector.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">elements</span>
+    <span class="doccomment">/// Consumes the buffer and returns the written [`FormatElement]`s as a vector.
+    </span><span class="kw">pub fn </span>into_vec(<span class="self">self</span>) -&gt; Vec&lt;FormatElement&gt; {
+        <span class="self">self</span>.elements
     }
 
-    <span class="doccomment">/// Takes the elements without consuming self</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take_vec</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span> {
-        <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">elements</span>)
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">VecBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> [<span class="ident">FormatElement</span>];
-
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">elements</span>
+    <span class="doccomment">/// Takes the elements without consuming self
+    </span><span class="kw">pub fn </span>take_vec(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Vec&lt;FormatElement&gt; {
+        std::mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.elements)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">DerefMut</span> <span class="kw">for</span> <span class="ident">VecBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">elements</span>
+<span class="kw">impl</span>&lt;Context&gt; Deref <span class="kw">for </span>VecBuffer&lt;<span class="lifetime">&#39;_</span>, Context&gt; {
+    <span class="kw">type </span>Target = [FormatElement];
+
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.elements
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="ident">VecBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span>;
+<span class="kw">impl</span>&lt;Context&gt; DerefMut <span class="kw">for </span>VecBuffer&lt;<span class="lifetime">&#39;_</span>, Context&gt; {
+    <span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.elements
+    }
+}
 
-    <span class="kw">fn</span> <span class="ident">write_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="ident">FormatElement</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">elements</span>.<span class="ident">push</span>(<span class="ident">element</span>);
+<span class="kw">impl</span>&lt;Context&gt; Buffer <span class="kw">for </span>VecBuffer&lt;<span class="lifetime">&#39;_</span>, Context&gt; {
+    <span class="kw">type </span>Context = Context;
+
+    <span class="kw">fn </span>write_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: FormatElement) -&gt; FormatResult&lt;()&gt; {
+        <span class="self">self</span>.elements.push(element);
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>] {
-        <span class="self">self</span>
+    <span class="kw">fn </span>elements(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement] {
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.state
     }
 
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">state</span>
+    <span class="kw">fn </span>state_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.state
     }
 
-    <span class="kw">fn</span> <span class="ident">state_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">state</span>
+    <span class="kw">fn </span>snapshot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BufferSnapshot {
+        BufferSnapshot::position(<span class="self">self</span>.elements.len())
     }
 
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BufferSnapshot</span> {
-        <span class="ident">BufferSnapshot::position</span>(<span class="self">self</span>.<span class="ident">elements</span>.<span class="ident">len</span>())
-    }
-
-    <span class="kw">fn</span> <span class="ident">restore_snapshot</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">snapshot</span>: <span class="ident">BufferSnapshot</span>) {
-        <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">snapshot</span>.<span class="ident">unwrap_position</span>();
+    <span class="kw">fn </span>restore_snapshot(<span class="kw-2">&amp;mut </span><span class="self">self</span>, snapshot: BufferSnapshot) {
+        <span class="kw">let </span>position = snapshot.unwrap_position();
         <span class="macro">assert!</span>(
-            <span class="self">self</span>.<span class="ident">elements</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">position</span>,
+            <span class="self">self</span>.elements.len() &gt;= position,
             <span class="string">r#&quot;Outdated snapshot. This buffer contains fewer elements than at the time the snapshot was taken.
-Make sure that you take and restore the snapshot in order and that this snapshot belongs to the current buffer.&quot;#</span>
-        );
+Make sure that you take and restore the snapshot in order and that this snapshot belongs to the current buffer.&quot;#
+        </span>);
 
-        <span class="self">self</span>.<span class="ident">elements</span>.<span class="ident">truncate</span>(<span class="ident">position</span>);
+        <span class="self">self</span>.elements.truncate(position);
     }
 }
 
-<span class="doccomment">/// This struct wraps an existing buffer and emits a preamble text when the first text is written.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This can be useful if you, for example, want to write some content if what gets written next isn&#39;t empty.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use rome_formatter::{FormatState, Formatted, PreambleBuffer, SimpleFormatContext, VecBuffer, write};</span>
-<span class="doccomment">/// use rome_formatter::prelude::*;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// struct Preamble;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// impl Format&lt;SimpleFormatContext&gt; for Preamble {</span>
-<span class="doccomment">///     fn fmt(&amp;self, f: &amp;mut Formatter&lt;SimpleFormatContext&gt;) -&gt; FormatResult&lt;()&gt; {</span>
-<span class="doccomment">///         write!(f, [text(&quot;# heading&quot;), hard_line_break()])</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # fn main() -&gt; FormatResult&lt;()&gt; {</span>
-<span class="doccomment">/// let mut state = FormatState::new(SimpleFormatContext::default());</span>
-<span class="doccomment">/// let mut buffer = VecBuffer::new(&amp;mut state);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// {</span>
-<span class="doccomment">///     let mut with_preamble = PreambleBuffer::new(&amp;mut buffer, Preamble);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     write!(&amp;mut with_preamble, [text(&quot;this text will be on a new line&quot;)])?;</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let formatted = Formatted::new(Document::from(buffer.into_vec()), SimpleFormatContext::default());</span>
-<span class="doccomment">/// assert_eq!(&quot;# heading\nthis text will be on a new line&quot;, formatted.print()?.as_code());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Ok(())</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The pre-amble does not get written if no content is written to the buffer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use rome_formatter::{FormatState, Formatted, PreambleBuffer, SimpleFormatContext, VecBuffer, write};</span>
-<span class="doccomment">/// use rome_formatter::prelude::*;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// struct Preamble;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// impl Format&lt;SimpleFormatContext&gt; for Preamble {</span>
-<span class="doccomment">///     fn fmt(&amp;self, f: &amp;mut Formatter&lt;SimpleFormatContext&gt;) -&gt; FormatResult&lt;()&gt; {</span>
-<span class="doccomment">///         write!(f, [text(&quot;# heading&quot;), hard_line_break()])</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # fn main() -&gt; FormatResult&lt;()&gt; {</span>
-<span class="doccomment">/// let mut state = FormatState::new(SimpleFormatContext::default());</span>
-<span class="doccomment">/// let mut buffer = VecBuffer::new(&amp;mut state);</span>
-<span class="doccomment">/// {</span>
-<span class="doccomment">///     let mut with_preamble = PreambleBuffer::new(&amp;mut buffer, Preamble);</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let formatted = Formatted::new(Document::from(buffer.into_vec()), SimpleFormatContext::default());</span>
-<span class="doccomment">/// assert_eq!(&quot;&quot;, formatted.print()?.as_code());</span>
-<span class="doccomment">/// # Ok(())</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PreambleBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">Preamble</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The wrapped buffer</span>
-    <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span>,
+<span class="doccomment">/// This struct wraps an existing buffer and emits a preamble text when the first text is written.
+///
+/// This can be useful if you, for example, want to write some content if what gets written next isn&#39;t empty.
+///
+/// # Examples
+///
+/// ```
+/// use rome_formatter::{FormatState, Formatted, PreambleBuffer, SimpleFormatContext, VecBuffer, write};
+/// use rome_formatter::prelude::*;
+///
+/// struct Preamble;
+///
+/// impl Format&lt;SimpleFormatContext&gt; for Preamble {
+///     fn fmt(&amp;self, f: &amp;mut Formatter&lt;SimpleFormatContext&gt;) -&gt; FormatResult&lt;()&gt; {
+///         write!(f, [text(&quot;# heading&quot;), hard_line_break()])
+///     }
+/// }
+///
+/// # fn main() -&gt; FormatResult&lt;()&gt; {
+/// let mut state = FormatState::new(SimpleFormatContext::default());
+/// let mut buffer = VecBuffer::new(&amp;mut state);
+///
+/// {
+///     let mut with_preamble = PreambleBuffer::new(&amp;mut buffer, Preamble);
+///
+///     write!(&amp;mut with_preamble, [text(&quot;this text will be on a new line&quot;)])?;
+/// }
+///
+/// let formatted = Formatted::new(Document::from(buffer.into_vec()), SimpleFormatContext::default());
+/// assert_eq!(&quot;# heading\nthis text will be on a new line&quot;, formatted.print()?.as_code());
+///
+/// # Ok(())
+/// # }
+/// ```
+///
+/// The pre-amble does not get written if no content is written to the buffer.
+///
+/// ```
+/// use rome_formatter::{FormatState, Formatted, PreambleBuffer, SimpleFormatContext, VecBuffer, write};
+/// use rome_formatter::prelude::*;
+///
+/// struct Preamble;
+///
+/// impl Format&lt;SimpleFormatContext&gt; for Preamble {
+///     fn fmt(&amp;self, f: &amp;mut Formatter&lt;SimpleFormatContext&gt;) -&gt; FormatResult&lt;()&gt; {
+///         write!(f, [text(&quot;# heading&quot;), hard_line_break()])
+///     }
+/// }
+///
+/// # fn main() -&gt; FormatResult&lt;()&gt; {
+/// let mut state = FormatState::new(SimpleFormatContext::default());
+/// let mut buffer = VecBuffer::new(&amp;mut state);
+/// {
+///     let mut with_preamble = PreambleBuffer::new(&amp;mut buffer, Preamble);
+/// }
+///
+/// let formatted = Formatted::new(Document::from(buffer.into_vec()), SimpleFormatContext::default());
+/// assert_eq!(&quot;&quot;, formatted.print()?.as_code());
+/// # Ok(())
+/// # }
+/// ```
+</span><span class="kw">pub struct </span>PreambleBuffer&lt;<span class="lifetime">&#39;buf</span>, Preamble, Context&gt; {
+    <span class="doccomment">/// The wrapped buffer
+    </span>inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf </span><span class="kw-2">mut </span><span class="kw">dyn </span>Buffer&lt;Context = Context&gt;,
 
-    <span class="doccomment">/// The pre-amble to write once the first content gets written to this buffer.</span>
-    <span class="ident">preamble</span>: <span class="ident">Preamble</span>,
+    <span class="doccomment">/// The pre-amble to write once the first content gets written to this buffer.
+    </span>preamble: Preamble,
 
-    <span class="doccomment">/// Whether some content (including the pre-amble) has been written at this point.</span>
-    <span class="ident">empty</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Whether some content (including the pre-amble) has been written at this point.
+    </span>empty: bool,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">Preamble</span>, <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">PreambleBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">Preamble</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span>, <span class="ident">preamble</span>: <span class="ident">Preamble</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">inner</span>,
-            <span class="ident">preamble</span>,
-            <span class="ident">empty</span>: <span class="bool-val">true</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;buf</span>, Preamble, Context&gt; PreambleBuffer&lt;<span class="lifetime">&#39;buf</span>, Preamble, Context&gt; {
+    <span class="kw">pub fn </span>new(inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf </span><span class="kw-2">mut </span><span class="kw">dyn </span>Buffer&lt;Context = Context&gt;, preamble: Preamble) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            inner,
+            preamble,
+            empty: <span class="bool-val">true</span>,
         }
     }
 
-    <span class="doccomment">/// Returns `true` if the preamble has been written, `false` otherwise.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">did_write_preamble</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="op">!</span><span class="self">self</span>.<span class="ident">empty</span>
+    <span class="doccomment">/// Returns `true` if the preamble has been written, `false` otherwise.
+    </span><span class="kw">pub fn </span>did_write_preamble(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        !<span class="self">self</span>.empty
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Preamble</span>, <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="ident">PreambleBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Preamble</span>, <span class="ident">Context</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Preamble</span>: <span class="ident">Format</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;Preamble, Context&gt; Buffer <span class="kw">for </span>PreambleBuffer&lt;<span class="lifetime">&#39;_</span>, Preamble, Context&gt;
+<span class="kw">where
+    </span>Preamble: Format&lt;Context&gt;,
 {
-    <span class="kw">type</span> <span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span>;
+    <span class="kw">type </span>Context = Context;
 
-    <span class="kw">fn</span> <span class="ident">write_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="ident">FormatElement</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">empty</span> {
-            <span class="macro">write!</span>(<span class="self">self</span>.<span class="ident">inner</span>, [<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">preamble</span>])<span class="question-mark">?</span>;
-            <span class="self">self</span>.<span class="ident">empty</span> <span class="op">=</span> <span class="bool-val">false</span>;
+    <span class="kw">fn </span>write_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: FormatElement) -&gt; FormatResult&lt;()&gt; {
+        <span class="kw">if </span><span class="self">self</span>.empty {
+            <span class="macro">write!</span>(<span class="self">self</span>.inner, [<span class="kw-2">&amp;</span><span class="self">self</span>.preamble])<span class="question-mark">?</span>;
+            <span class="self">self</span>.empty = <span class="bool-val">false</span>;
         }
 
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write_element</span>(<span class="ident">element</span>)
+        <span class="self">self</span>.inner.write_element(element)
     }
 
-    <span class="kw">fn</span> <span class="ident">elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>] {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">elements</span>()
+    <span class="kw">fn </span>elements(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement] {
+        <span class="self">self</span>.inner.elements()
     }
 
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>()
+    <span class="kw">fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.inner.state()
     }
 
-    <span class="kw">fn</span> <span class="ident">state_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state_mut</span>()
+    <span class="kw">fn </span>state_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.inner.state_mut()
     }
 
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BufferSnapshot</span> {
-        <span class="ident">BufferSnapshot::Any</span>(<span class="ident">Box::new</span>(<span class="ident">PreambleBufferSnapshot</span> {
-            <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">snapshot</span>(),
-            <span class="ident">empty</span>: <span class="self">self</span>.<span class="ident">empty</span>,
+    <span class="kw">fn </span>snapshot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BufferSnapshot {
+        BufferSnapshot::Any(Box::new(PreambleBufferSnapshot {
+            inner: <span class="self">self</span>.inner.snapshot(),
+            empty: <span class="self">self</span>.empty,
         }))
     }
 
-    <span class="kw">fn</span> <span class="ident">restore_snapshot</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">snapshot</span>: <span class="ident">BufferSnapshot</span>) {
-        <span class="kw">let</span> <span class="ident">snapshot</span> <span class="op">=</span> <span class="ident">snapshot</span>.<span class="ident">unwrap_any</span>::<span class="op">&lt;</span><span class="ident">PreambleBufferSnapshot</span><span class="op">&gt;</span>();
+    <span class="kw">fn </span>restore_snapshot(<span class="kw-2">&amp;mut </span><span class="self">self</span>, snapshot: BufferSnapshot) {
+        <span class="kw">let </span>snapshot = snapshot.unwrap_any::&lt;PreambleBufferSnapshot&gt;();
 
-        <span class="self">self</span>.<span class="ident">empty</span> <span class="op">=</span> <span class="ident">snapshot</span>.<span class="ident">empty</span>;
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">restore_snapshot</span>(<span class="ident">snapshot</span>.<span class="ident">inner</span>);
+        <span class="self">self</span>.empty = snapshot.empty;
+        <span class="self">self</span>.inner.restore_snapshot(snapshot.inner);
     }
 }
 
-<span class="kw">struct</span> <span class="ident">PreambleBufferSnapshot</span> {
-    <span class="ident">inner</span>: <span class="ident">BufferSnapshot</span>,
-    <span class="ident">empty</span>: <span class="ident">bool</span>,
+<span class="kw">struct </span>PreambleBufferSnapshot {
+    inner: BufferSnapshot,
+    empty: bool,
 }
 
-<span class="doccomment">/// Buffer that allows you inspecting elements as they get written to the formatter.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Inspect</span><span class="op">&lt;</span><span class="lifetime">&#39;inner</span>, <span class="ident">Context</span>, <span class="ident">Inspector</span><span class="op">&gt;</span> {
-    <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;inner</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span>,
-    <span class="ident">inspector</span>: <span class="ident">Inspector</span>,
+<span class="doccomment">/// Buffer that allows you inspecting elements as they get written to the formatter.
+</span><span class="kw">pub struct </span>Inspect&lt;<span class="lifetime">&#39;inner</span>, Context, Inspector&gt; {
+    inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;inner </span><span class="kw-2">mut </span><span class="kw">dyn </span>Buffer&lt;Context = Context&gt;,
+    inspector: Inspector,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;inner</span>, <span class="ident">Context</span>, <span class="ident">Inspector</span><span class="op">&gt;</span> <span class="ident">Inspect</span><span class="op">&lt;</span><span class="lifetime">&#39;inner</span>, <span class="ident">Context</span>, <span class="ident">Inspector</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;inner</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span>, <span class="ident">inspector</span>: <span class="ident">Inspector</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">inner</span>, <span class="ident">inspector</span> }
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;inner</span>, Context, Inspector&gt; Inspect&lt;<span class="lifetime">&#39;inner</span>, Context, Inspector&gt; {
+    <span class="kw">fn </span>new(inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;inner </span><span class="kw-2">mut </span><span class="kw">dyn </span>Buffer&lt;Context = Context&gt;, inspector: Inspector) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ inner, inspector }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;inner</span>, <span class="ident">Context</span>, <span class="ident">Inspector</span><span class="op">&gt;</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="ident">Inspect</span><span class="op">&lt;</span><span class="lifetime">&#39;inner</span>, <span class="ident">Context</span>, <span class="ident">Inspector</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Inspector</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">FormatElement</span>),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;inner</span>, Context, Inspector&gt; Buffer <span class="kw">for </span>Inspect&lt;<span class="lifetime">&#39;inner</span>, Context, Inspector&gt;
+<span class="kw">where
+    </span>Inspector: FnMut(<span class="kw-2">&amp;</span>FormatElement),
 {
-    <span class="kw">type</span> <span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span>;
+    <span class="kw">type </span>Context = Context;
 
-    <span class="kw">fn</span> <span class="ident">write_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="ident">FormatElement</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        (<span class="self">self</span>.<span class="ident">inspector</span>)(<span class="kw-2">&amp;</span><span class="ident">element</span>);
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write_element</span>(<span class="ident">element</span>)
+    <span class="kw">fn </span>write_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: FormatElement) -&gt; FormatResult&lt;()&gt; {
+        (<span class="self">self</span>.inspector)(<span class="kw-2">&amp;</span>element);
+        <span class="self">self</span>.inner.write_element(element)
     }
 
-    <span class="kw">fn</span> <span class="ident">elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>] {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">elements</span>()
+    <span class="kw">fn </span>elements(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement] {
+        <span class="self">self</span>.inner.elements()
     }
 
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>()
+    <span class="kw">fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.inner.state()
     }
 
-    <span class="kw">fn</span> <span class="ident">state_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state_mut</span>()
+    <span class="kw">fn </span>state_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.inner.state_mut()
     }
 
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BufferSnapshot</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">snapshot</span>()
+    <span class="kw">fn </span>snapshot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BufferSnapshot {
+        <span class="self">self</span>.inner.snapshot()
     }
 
-    <span class="kw">fn</span> <span class="ident">restore_snapshot</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">snapshot</span>: <span class="ident">BufferSnapshot</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">restore_snapshot</span>(<span class="ident">snapshot</span>)
+    <span class="kw">fn </span>restore_snapshot(<span class="kw-2">&amp;mut </span><span class="self">self</span>, snapshot: BufferSnapshot) {
+        <span class="self">self</span>.inner.restore_snapshot(snapshot)
     }
 }
 
-<span class="doccomment">/// A Buffer that removes any soft line breaks.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// * Removes [`lines`](FormatElement::Line) with the mode [`Soft`](LineMode::Soft).</span>
-<span class="doccomment">/// * Replaces [`lines`](FormatElement::Line) with the mode [`Soft`](LineMode::SoftOrSpace) with a [`Space`](FormatElement::Space)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use rome_formatter::prelude::*;</span>
-<span class="doccomment">/// use rome_formatter::{format, write};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # fn main() -&gt; FormatResult&lt;()&gt; {</span>
-<span class="doccomment">/// use rome_formatter::{RemoveSoftLinesBuffer, SimpleFormatContext, VecBuffer};</span>
-<span class="doccomment">/// use rome_formatter::prelude::format_with;</span>
-<span class="doccomment">/// let formatted = format!(</span>
-<span class="doccomment">///     SimpleFormatContext::default(),</span>
-<span class="doccomment">///     [format_with(|f| {</span>
-<span class="doccomment">///         let mut buffer = RemoveSoftLinesBuffer::new(f);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///         write!(</span>
-<span class="doccomment">///             buffer,</span>
-<span class="doccomment">///             [</span>
-<span class="doccomment">///                 text(&quot;The next soft line or space gets replaced by a space&quot;),</span>
-<span class="doccomment">///                 soft_line_break_or_space(),</span>
-<span class="doccomment">///                 text(&quot;and the line here&quot;),</span>
-<span class="doccomment">///                 soft_line_break(),</span>
-<span class="doccomment">///                 text(&quot;is removed entirely.&quot;)</span>
-<span class="doccomment">///             ]</span>
-<span class="doccomment">///         )</span>
-<span class="doccomment">///     })]</span>
-<span class="doccomment">/// )?;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     formatted.document().as_ref(),</span>
-<span class="doccomment">///     &amp;[</span>
-<span class="doccomment">///         FormatElement::StaticText { text: &quot;The next soft line or space gets replaced by a space&quot; },</span>
-<span class="doccomment">///         FormatElement::Space,</span>
-<span class="doccomment">///         FormatElement::StaticText { text: &quot;and the line here&quot; },</span>
-<span class="doccomment">///         FormatElement::StaticText { text: &quot;is removed entirely.&quot; }</span>
-<span class="doccomment">///     ]</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Ok(())</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RemoveSoftLinesBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A Buffer that removes any soft line breaks.
+///
+/// * Removes [`lines`](FormatElement::Line) with the mode [`Soft`](LineMode::Soft).
+/// * Replaces [`lines`](FormatElement::Line) with the mode [`Soft`](LineMode::SoftOrSpace) with a [`Space`](FormatElement::Space)
+///
+/// # Examples
+///
+/// ```
+/// use rome_formatter::prelude::*;
+/// use rome_formatter::{format, write};
+///
+/// # fn main() -&gt; FormatResult&lt;()&gt; {
+/// use rome_formatter::{RemoveSoftLinesBuffer, SimpleFormatContext, VecBuffer};
+/// use rome_formatter::prelude::format_with;
+/// let formatted = format!(
+///     SimpleFormatContext::default(),
+///     [format_with(|f| {
+///         let mut buffer = RemoveSoftLinesBuffer::new(f);
+///
+///         write!(
+///             buffer,
+///             [
+///                 text(&quot;The next soft line or space gets replaced by a space&quot;),
+///                 soft_line_break_or_space(),
+///                 text(&quot;and the line here&quot;),
+///                 soft_line_break(),
+///                 text(&quot;is removed entirely.&quot;)
+///             ]
+///         )
+///     })]
+/// )?;
+///
+/// assert_eq!(
+///     formatted.document().as_ref(),
+///     &amp;[
+///         FormatElement::StaticText { text: &quot;The next soft line or space gets replaced by a space&quot; },
+///         FormatElement::Space,
+///         FormatElement::StaticText { text: &quot;and the line here&quot; },
+///         FormatElement::StaticText { text: &quot;is removed entirely.&quot; }
+///     ]
+/// );
+///
+/// # Ok(())
+/// # }
+/// ```
+</span><span class="kw">pub struct </span>RemoveSoftLinesBuffer&lt;<span class="lifetime">&#39;a</span>, Context&gt; {
+    inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="kw">dyn </span>Buffer&lt;Context = Context&gt;,
 
-    <span class="doccomment">/// Caches the interned elements after the soft line breaks have been removed.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The `key` is the [Interned] element as it has been passed to [Self::write_element] or the child of another</span>
-    <span class="doccomment">/// [Interned] element. The `value` is the matching document of the key where all soft line breaks have been removed.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It&#39;s fine to not snapshot the cache. The worst that can happen is that it holds on interned elements</span>
-    <span class="doccomment">/// that are now unused. But there&#39;s little harm in that and the cache is cleaned when dropping the buffer.</span>
-    <span class="ident">interned_cache</span>: <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">Interned</span>, <span class="ident">Interned</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Caches the interned elements after the soft line breaks have been removed.
+    ///
+    /// The `key` is the [Interned] element as it has been passed to [Self::write_element] or the child of another
+    /// [Interned] element. The `value` is the matching document of the key where all soft line breaks have been removed.
+    ///
+    /// It&#39;s fine to not snapshot the cache. The worst that can happen is that it holds on interned elements
+    /// that are now unused. But there&#39;s little harm in that and the cache is cleaned when dropping the buffer.
+    </span>interned_cache: FxHashMap&lt;Interned, Interned&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">RemoveSoftLinesBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new buffer that removes the soft line breaks before writing them into `buffer`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">inner</span>,
-            <span class="ident">interned_cache</span>: <span class="ident">FxHashMap::default</span>(),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, Context&gt; RemoveSoftLinesBuffer&lt;<span class="lifetime">&#39;a</span>, Context&gt; {
+    <span class="doccomment">/// Creates a new buffer that removes the soft line breaks before writing them into `buffer`.
+    </span><span class="kw">pub fn </span>new(inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="kw">dyn </span>Buffer&lt;Context = Context&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            inner,
+            interned_cache: FxHashMap::default(),
         }
     }
 
-    <span class="doccomment">/// Removes the soft line breaks from an interned element.</span>
-    <span class="kw">fn</span> <span class="ident">clean_interned</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">interned</span>: <span class="kw-2">&amp;</span><span class="ident">Interned</span>) -&gt; <span class="ident">Interned</span> {
-        <span class="ident">clean_interned</span>(<span class="ident">interned</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">interned_cache</span>)
+    <span class="doccomment">/// Removes the soft line breaks from an interned element.
+    </span><span class="kw">fn </span>clean_interned(<span class="kw-2">&amp;mut </span><span class="self">self</span>, interned: <span class="kw-2">&amp;</span>Interned) -&gt; Interned {
+        clean_interned(interned, <span class="kw-2">&amp;mut </span><span class="self">self</span>.interned_cache)
     }
 }
 
-<span class="comment">// Extracted to function to avoid monomorphization</span>
-<span class="kw">fn</span> <span class="ident">clean_interned</span>(
-    <span class="ident">interned</span>: <span class="kw-2">&amp;</span><span class="ident">Interned</span>,
-    <span class="ident">interned_cache</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">Interned</span>, <span class="ident">Interned</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">Interned</span> {
-    <span class="kw">match</span> <span class="ident">interned_cache</span>.<span class="ident">get</span>(<span class="ident">interned</span>) {
-        <span class="prelude-val">Some</span>(<span class="ident">cleaned</span>) =&gt; <span class="ident">cleaned</span>.<span class="ident">clone</span>(),
-        <span class="prelude-val">None</span> =&gt; {
-            <span class="comment">// Find the first soft line break element or interned element that must be changed</span>
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">interned</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">enumerate</span>()
-                .<span class="ident">find_map</span>(<span class="op">|</span>(<span class="ident">index</span>, <span class="ident">element</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">element</span> {
-                    <span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::Soft</span> <span class="op">|</span> <span class="ident">LineMode::SoftOrSpace</span>) =&gt; {
-                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cleaned</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                        <span class="ident">cleaned</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">interned</span>[..<span class="ident">index</span>]);
-                        <span class="prelude-val">Some</span>((<span class="ident">cleaned</span>, <span class="kw-2">&amp;</span><span class="ident">interned</span>[<span class="ident">index</span>..]))
+<span class="comment">// Extracted to function to avoid monomorphization
+</span><span class="kw">fn </span>clean_interned(
+    interned: <span class="kw-2">&amp;</span>Interned,
+    interned_cache: <span class="kw-2">&amp;mut </span>FxHashMap&lt;Interned, Interned&gt;,
+) -&gt; Interned {
+    <span class="kw">match </span>interned_cache.get(interned) {
+        <span class="prelude-val">Some</span>(cleaned) =&gt; cleaned.clone(),
+        <span class="prelude-val">None </span>=&gt; {
+            <span class="comment">// Find the first soft line break element or interned element that must be changed
+            </span><span class="kw">let </span>result = interned
+                .iter()
+                .enumerate()
+                .find_map(|(index, element)| <span class="kw">match </span>element {
+                    FormatElement::Line(LineMode::Soft | LineMode::SoftOrSpace) =&gt; {
+                        <span class="kw">let </span><span class="kw-2">mut </span>cleaned = Vec::new();
+                        cleaned.extend_from_slice(<span class="kw-2">&amp;</span>interned[..index]);
+                        <span class="prelude-val">Some</span>((cleaned, <span class="kw-2">&amp;</span>interned[index..]))
                     }
-                    <span class="ident">FormatElement::Interned</span>(<span class="ident">inner</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">cleaned_inner</span> <span class="op">=</span> <span class="ident">clean_interned</span>(<span class="ident">inner</span>, <span class="ident">interned_cache</span>);
+                    FormatElement::Interned(inner) =&gt; {
+                        <span class="kw">let </span>cleaned_inner = clean_interned(inner, interned_cache);
 
-                        <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="ident">cleaned_inner</span> <span class="op">!</span><span class="op">=</span> <span class="ident">inner</span> {
-                            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cleaned</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">interned</span>.<span class="ident">len</span>());
-                            <span class="ident">cleaned</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">interned</span>[..<span class="ident">index</span>]);
-                            <span class="ident">cleaned</span>.<span class="ident">push</span>(<span class="ident">FormatElement::Interned</span>(<span class="ident">cleaned_inner</span>));
-                            <span class="prelude-val">Some</span>((<span class="ident">cleaned</span>, <span class="kw-2">&amp;</span><span class="ident">interned</span>[<span class="ident">index</span> <span class="op">+</span> <span class="number">1</span>..]))
-                        } <span class="kw">else</span> {
-                            <span class="prelude-val">None</span>
-                        }
+                        <span class="kw">if </span><span class="kw-2">&amp;</span>cleaned_inner != inner {
+                            <span class="kw">let </span><span class="kw-2">mut </span>cleaned = Vec::with_capacity(interned.len());
+                            cleaned.extend_from_slice(<span class="kw-2">&amp;</span>interned[..index]);
+                            cleaned.push(FormatElement::Interned(cleaned_inner));
+                            <span class="prelude-val">Some</span>((cleaned, <span class="kw-2">&amp;</span>interned[index + <span class="number">1</span>..]))
+                        } <span class="kw">else </span>{
+                            <span class="prelude-val">None
+                        </span>}
                     }
 
-                    <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
                 });
 
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
-                <span class="comment">// Copy the whole interned buffer so that becomes possible to change the necessary elements.</span>
-                <span class="prelude-val">Some</span>((<span class="kw-2">mut</span> <span class="ident">cleaned</span>, <span class="ident">rest</span>)) =&gt; {
-                    <span class="kw">for</span> <span class="ident">element</span> <span class="kw">in</span> <span class="ident">rest</span> {
-                        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">element</span> {
-                            <span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::Soft</span>) =&gt; <span class="kw">continue</span>,
-                            <span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::SoftOrSpace</span>) =&gt; <span class="ident">FormatElement::Space</span>,
-                            <span class="ident">FormatElement::Interned</span>(<span class="ident">interned</span>) =&gt; {
-                                <span class="ident">FormatElement::Interned</span>(<span class="ident">clean_interned</span>(<span class="ident">interned</span>, <span class="ident">interned_cache</span>))
+            <span class="kw">let </span>result = <span class="kw">match </span>result {
+                <span class="comment">// Copy the whole interned buffer so that becomes possible to change the necessary elements.
+                </span><span class="prelude-val">Some</span>((<span class="kw-2">mut </span>cleaned, rest)) =&gt; {
+                    <span class="kw">for </span>element <span class="kw">in </span>rest {
+                        <span class="kw">let </span>element = <span class="kw">match </span>element {
+                            FormatElement::Line(LineMode::Soft) =&gt; <span class="kw">continue</span>,
+                            FormatElement::Line(LineMode::SoftOrSpace) =&gt; FormatElement::Space,
+                            FormatElement::Interned(interned) =&gt; {
+                                FormatElement::Interned(clean_interned(interned, interned_cache))
                             }
-                            <span class="ident">element</span> =&gt; <span class="ident">element</span>.<span class="ident">clone</span>(),
+                            element =&gt; element.clone(),
                         };
-                        <span class="ident">cleaned</span>.<span class="ident">push</span>(<span class="ident">element</span>)
+                        cleaned.push(element)
                     }
 
-                    <span class="ident">Interned::new</span>(<span class="ident">cleaned</span>)
+                    Interned::new(cleaned)
                 }
-                <span class="comment">// No change necessary, return existing interned element</span>
-                <span class="prelude-val">None</span> =&gt; <span class="ident">interned</span>.<span class="ident">clone</span>(),
+                <span class="comment">// No change necessary, return existing interned element
+                </span><span class="prelude-val">None </span>=&gt; interned.clone(),
             };
 
-            <span class="ident">interned_cache</span>.<span class="ident">insert</span>(<span class="ident">interned</span>.<span class="ident">clone</span>(), <span class="ident">result</span>.<span class="ident">clone</span>());
-            <span class="ident">result</span>
+            interned_cache.insert(interned.clone(), result.clone());
+            result
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="ident">RemoveSoftLinesBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span>;
+<span class="kw">impl</span>&lt;Context&gt; Buffer <span class="kw">for </span>RemoveSoftLinesBuffer&lt;<span class="lifetime">&#39;_</span>, Context&gt; {
+    <span class="kw">type </span>Context = Context;
 
-    <span class="kw">fn</span> <span class="ident">write_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="ident">FormatElement</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">element</span> {
-            <span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::Soft</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(()),
-            <span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::SoftOrSpace</span>) =&gt; <span class="ident">FormatElement::Space</span>,
-            <span class="ident">FormatElement::Interned</span>(<span class="ident">interned</span>) =&gt; {
-                <span class="ident">FormatElement::Interned</span>(<span class="self">self</span>.<span class="ident">clean_interned</span>(<span class="kw-2">&amp;</span><span class="ident">interned</span>))
+    <span class="kw">fn </span>write_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: FormatElement) -&gt; FormatResult&lt;()&gt; {
+        <span class="kw">let </span>element = <span class="kw">match </span>element {
+            FormatElement::Line(LineMode::Soft) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(()),
+            FormatElement::Line(LineMode::SoftOrSpace) =&gt; FormatElement::Space,
+            FormatElement::Interned(interned) =&gt; {
+                FormatElement::Interned(<span class="self">self</span>.clean_interned(<span class="kw-2">&amp;</span>interned))
             }
-            <span class="ident">element</span> =&gt; <span class="ident">element</span>,
+            element =&gt; element,
         };
 
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write_element</span>(<span class="ident">element</span>)
+        <span class="self">self</span>.inner.write_element(element)
     }
 
-    <span class="kw">fn</span> <span class="ident">elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>] {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">elements</span>()
+    <span class="kw">fn </span>elements(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement] {
+        <span class="self">self</span>.inner.elements()
     }
 
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>()
+    <span class="kw">fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.inner.state()
     }
 
-    <span class="kw">fn</span> <span class="ident">state_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state_mut</span>()
+    <span class="kw">fn </span>state_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.inner.state_mut()
     }
 
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BufferSnapshot</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">snapshot</span>()
+    <span class="kw">fn </span>snapshot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BufferSnapshot {
+        <span class="self">self</span>.inner.snapshot()
     }
 
-    <span class="kw">fn</span> <span class="ident">restore_snapshot</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">snapshot</span>: <span class="ident">BufferSnapshot</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">restore_snapshot</span>(<span class="ident">snapshot</span>)
+    <span class="kw">fn </span>restore_snapshot(<span class="kw-2">&amp;mut </span><span class="self">self</span>, snapshot: BufferSnapshot) {
+        <span class="self">self</span>.inner.restore_snapshot(snapshot)
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">BufferExtensions</span>: <span class="ident">Buffer</span> <span class="op">+</span> <span class="ident">Sized</span> {
-    <span class="doccomment">/// Returns a new buffer that calls the passed inspector for every element that gets written to the output</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">fn</span> <span class="ident">inspect</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">inspector</span>: <span class="ident">F</span>) -&gt; <span class="ident">Inspect</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span>, <span class="ident">F</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">FormatElement</span>),
+<span class="kw">pub trait </span>BufferExtensions: Buffer + Sized {
+    <span class="doccomment">/// Returns a new buffer that calls the passed inspector for every element that gets written to the output
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">fn </span>inspect&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, inspector: F) -&gt; Inspect&lt;<span class="self">Self</span>::Context, F&gt;
+    <span class="kw">where
+        </span>F: FnMut(<span class="kw-2">&amp;</span>FormatElement),
     {
-        <span class="ident">Inspect::new</span>(<span class="self">self</span>, <span class="ident">inspector</span>)
+        Inspect::new(<span class="self">self</span>, inspector)
     }
 
-    <span class="doccomment">/// Starts a recording that gives you access to all elements that have been written between the start</span>
-    <span class="doccomment">/// and end of the recording</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// #Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use std::ops::Deref;</span>
-    <span class="doccomment">/// use rome_formatter::prelude::*;</span>
-    <span class="doccomment">/// use rome_formatter::{write, format, SimpleFormatContext};</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # fn main() -&gt; FormatResult&lt;()&gt; {</span>
-    <span class="doccomment">/// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {</span>
-    <span class="doccomment">///     let mut recording = f.start_recording();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///     write!(recording, [text(&quot;A&quot;)])?;</span>
-    <span class="doccomment">///     write!(recording, [text(&quot;B&quot;)])?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///     write!(recording, [format_with(|f| write!(f, [text(&quot;C&quot;), text(&quot;D&quot;)]))])?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///     let recorded = recording.stop();</span>
-    <span class="doccomment">///     assert_eq!(</span>
-    <span class="doccomment">///         recorded.deref(),</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             FormatElement::StaticText{ text: &quot;A&quot; },</span>
-    <span class="doccomment">///             FormatElement::StaticText{ text: &quot;B&quot; },</span>
-    <span class="doccomment">///             FormatElement::StaticText{ text: &quot;C&quot; },</span>
-    <span class="doccomment">///             FormatElement::StaticText{ text: &quot;D&quot; }</span>
-    <span class="doccomment">///         ]</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///     Ok(())</span>
-    <span class="doccomment">/// })])?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(formatted.print()?.as_code(), &quot;ABCD&quot;);</span>
-    <span class="doccomment">/// # Ok(())</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">fn</span> <span class="ident">start_recording</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">Recording</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">Recording::new</span>(<span class="self">self</span>)
+    <span class="doccomment">/// Starts a recording that gives you access to all elements that have been written between the start
+    /// and end of the recording
+    ///
+    /// #Examples
+    ///
+    /// ```
+    /// use std::ops::Deref;
+    /// use rome_formatter::prelude::*;
+    /// use rome_formatter::{write, format, SimpleFormatContext};
+    ///
+    /// # fn main() -&gt; FormatResult&lt;()&gt; {
+    /// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {
+    ///     let mut recording = f.start_recording();
+    ///
+    ///     write!(recording, [text(&quot;A&quot;)])?;
+    ///     write!(recording, [text(&quot;B&quot;)])?;
+    ///
+    ///     write!(recording, [format_with(|f| write!(f, [text(&quot;C&quot;), text(&quot;D&quot;)]))])?;
+    ///
+    ///     let recorded = recording.stop();
+    ///     assert_eq!(
+    ///         recorded.deref(),
+    ///         &amp;[
+    ///             FormatElement::StaticText{ text: &quot;A&quot; },
+    ///             FormatElement::StaticText{ text: &quot;B&quot; },
+    ///             FormatElement::StaticText{ text: &quot;C&quot; },
+    ///             FormatElement::StaticText{ text: &quot;D&quot; }
+    ///         ]
+    ///     );
+    ///
+    ///     Ok(())
+    /// })])?;
+    ///
+    /// assert_eq!(formatted.print()?.as_code(), &quot;ABCD&quot;);
+    /// # Ok(())
+    /// # }
+    /// ```
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">fn </span>start_recording(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Recording&lt;<span class="self">Self</span>&gt; {
+        Recording::new(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Writes a sequence of elements into this buffer.</span>
-    <span class="kw">fn</span> <span class="ident">write_elements</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">elements</span>: <span class="ident">I</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">FormatElement</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Writes a sequence of elements into this buffer.
+    </span><span class="kw">fn </span>write_elements&lt;I&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, elements: I) -&gt; FormatResult&lt;()&gt;
+    <span class="kw">where
+        </span>I: IntoIterator&lt;Item = FormatElement&gt;,
     {
-        <span class="kw">for</span> <span class="ident">element</span> <span class="kw">in</span> <span class="ident">elements</span>.<span class="ident">into_iter</span>() {
-            <span class="self">self</span>.<span class="ident">write_element</span>(<span class="ident">element</span>)<span class="question-mark">?</span>;
+        <span class="kw">for </span>element <span class="kw">in </span>elements.into_iter() {
+            <span class="self">self</span>.write_element(element)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">BufferExtensions</span> <span class="kw">for</span> <span class="ident">T</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Buffer</span> {}
+<span class="kw">impl</span>&lt;T&gt; BufferExtensions <span class="kw">for </span>T <span class="kw">where </span>T: Buffer {}
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Recording</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">Buffer</span><span class="op">&gt;</span> {
-    <span class="ident">start</span>: <span class="ident">usize</span>,
-    <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf</span> <span class="kw-2">mut</span> <span class="ident">Buffer</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Recording&lt;<span class="lifetime">&#39;buf</span>, Buffer&gt; {
+    start: usize,
+    buffer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf </span><span class="kw-2">mut </span>Buffer,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Recording</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">B</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">B</span>: <span class="ident">Buffer</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;buf</span>, B&gt; Recording&lt;<span class="lifetime">&#39;buf</span>, B&gt;
+<span class="kw">where
+    </span>B: Buffer,
 {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf</span> <span class="kw-2">mut</span> <span class="ident">B</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">start</span>: <span class="ident">buffer</span>.<span class="ident">elements</span>().<span class="ident">len</span>(),
-            <span class="ident">buffer</span>,
+    <span class="kw">fn </span>new(buffer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf </span><span class="kw-2">mut </span>B) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            start: buffer.elements().len(),
+            buffer,
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_fmt</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">arguments</span>: <span class="ident">Arguments</span><span class="op">&lt;</span><span class="ident">B::Context</span><span class="op">&gt;</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">write_fmt</span>(<span class="ident">arguments</span>)
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>write_fmt(<span class="kw-2">&amp;mut </span><span class="self">self</span>, arguments: Arguments&lt;B::Context&gt;) -&gt; FormatResult&lt;()&gt; {
+        <span class="self">self</span>.buffer.write_fmt(arguments)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="ident">FormatElement</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">write_element</span>(<span class="ident">element</span>)
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>write_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: FormatElement) -&gt; FormatResult&lt;()&gt; {
+        <span class="self">self</span>.buffer.write_element(element)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stop</span>(<span class="self">self</span>) -&gt; <span class="ident">Recorded</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf</span> <span class="ident">B</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">buffer</span>;
-        <span class="kw">let</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">elements</span>();
+    <span class="kw">pub fn </span>stop(<span class="self">self</span>) -&gt; Recorded&lt;<span class="lifetime">&#39;buf</span>&gt; {
+        <span class="kw">let </span>buffer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf </span>B = <span class="self">self</span>.buffer;
+        <span class="kw">let </span>elements = buffer.elements();
 
-        <span class="kw">let</span> <span class="ident">recorded</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">start</span> <span class="op">&gt;</span> <span class="ident">elements</span>.<span class="ident">len</span>() {
-            <span class="comment">// May happen if buffer was rewinded.</span>
-            <span class="kw-2">&amp;</span>[]
-        } <span class="kw">else</span> {
-            <span class="kw-2">&amp;</span><span class="ident">elements</span>[<span class="self">self</span>.<span class="ident">start</span>..]
+        <span class="kw">let </span>recorded = <span class="kw">if </span><span class="self">self</span>.start &gt; elements.len() {
+            <span class="comment">// May happen if buffer was rewinded.
+            </span><span class="kw-2">&amp;</span>[]
+        } <span class="kw">else </span>{
+            <span class="kw-2">&amp;</span>elements[<span class="self">self</span>.start..]
         };
 
-        <span class="ident">Recorded</span>(<span class="ident">recorded</span>)
+        Recorded(recorded)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Recorded</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]);
+<span class="attribute">#[derive(Debug, Copy, Clone)]
+</span><span class="kw">pub struct </span>Recorded&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]);
 
-<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Recorded</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> [<span class="ident">FormatElement</span>];
+<span class="kw">impl </span>Deref <span class="kw">for </span>Recorded&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">type </span>Target = [FormatElement];
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-    }
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        <span class="self">self</span>.<span class="number">0
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

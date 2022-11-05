@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/lossless_tree_sink.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lossless_tree_sink.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_parser/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/lossless_tree_sink.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lossless_tree_sink.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_parser/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -111,118 +111,118 @@
 <span id="111">111</span>
 <span id="112">112</span>
 <span id="113">113</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::token_source::Trivia</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ParseDiagnostic</span>, <span class="ident">TreeSink</span>};
-<span class="kw">use</span> <span class="ident">rome_js_factory::JsSyntaxTreeBuilder</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>, <span class="ident">JsSyntaxNode</span>, <span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan::TriviaPiece</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::token_source::Trivia;
+<span class="kw">use crate</span>::{ParseDiagnostic, TreeSink};
+<span class="kw">use </span>rome_js_factory::JsSyntaxTreeBuilder;
+<span class="kw">use </span>rome_js_syntax::{JsSyntaxKind, JsSyntaxNode, TextRange, TextSize};
+<span class="kw">use </span>rome_rowan::TriviaPiece;
 
-<span class="doccomment">/// Structure for converting events to a syntax tree representation, while preserving whitespace.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `LosslessTreeSink` also handles attachment of trivia (whitespace) to nodes.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LosslessTreeSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    <span class="ident">trivia_list</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Trivia</span>],
-    <span class="ident">text_pos</span>: <span class="ident">TextSize</span>,
-    <span class="ident">trivia_pos</span>: <span class="ident">usize</span>,
-    <span class="ident">parents_count</span>: <span class="ident">usize</span>,
-    <span class="ident">errors</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParseDiagnostic</span><span class="op">&gt;</span>,
-    <span class="ident">inner</span>: <span class="ident">JsSyntaxTreeBuilder</span>,
-    <span class="doccomment">/// Signal that the sink must generate an EOF token when its finishing. See [LosslessTreeSink::finish] for more details.</span>
-    <span class="ident">needs_eof</span>: <span class="ident">bool</span>,
-    <span class="ident">trivia_pieces</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TriviaPiece</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Structure for converting events to a syntax tree representation, while preserving whitespace.
+///
+/// `LosslessTreeSink` also handles attachment of trivia (whitespace) to nodes.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>LosslessTreeSink&lt;<span class="lifetime">&#39;a</span>&gt; {
+    text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    trivia_list: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Trivia],
+    text_pos: TextSize,
+    trivia_pos: usize,
+    parents_count: usize,
+    errors: Vec&lt;ParseDiagnostic&gt;,
+    inner: JsSyntaxTreeBuilder,
+    <span class="doccomment">/// Signal that the sink must generate an EOF token when its finishing. See [LosslessTreeSink::finish] for more details.
+    </span>needs_eof: bool,
+    trivia_pieces: Vec&lt;TriviaPiece&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">TreeSink</span> <span class="kw">for</span> <span class="ident">LosslessTreeSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>, <span class="ident">end</span>: <span class="ident">TextSize</span>) {
-        <span class="self">self</span>.<span class="ident">do_token</span>(<span class="ident">kind</span>, <span class="ident">end</span>);
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TreeSink <span class="kw">for </span>LosslessTreeSink&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: JsSyntaxKind, end: TextSize) {
+        <span class="self">self</span>.do_token(kind, end);
     }
 
-    <span class="kw">fn</span> <span class="ident">start_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">start_node</span>(<span class="ident">kind</span>);
-        <span class="self">self</span>.<span class="ident">parents_count</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">fn </span>start_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: JsSyntaxKind) {
+        <span class="self">self</span>.inner.start_node(kind);
+        <span class="self">self</span>.parents_count += <span class="number">1</span>;
     }
 
-    <span class="kw">fn</span> <span class="ident">finish_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">parents_count</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">fn </span>finish_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.parents_count -= <span class="number">1</span>;
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">parents_count</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">needs_eof</span> {
-            <span class="self">self</span>.<span class="ident">do_token</span>(<span class="ident">JsSyntaxKind::EOF</span>, <span class="ident">TextSize::from</span>(<span class="self">self</span>.<span class="ident">text</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>));
+        <span class="kw">if </span><span class="self">self</span>.parents_count == <span class="number">0 </span>&amp;&amp; <span class="self">self</span>.needs_eof {
+            <span class="self">self</span>.do_token(JsSyntaxKind::EOF, TextSize::from(<span class="self">self</span>.text.len() <span class="kw">as </span>u32));
         }
 
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">finish_node</span>();
+        <span class="self">self</span>.inner.finish_node();
     }
 
-    <span class="kw">fn</span> <span class="ident">errors</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">errors</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParseDiagnostic</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">errors</span> <span class="op">=</span> <span class="ident">errors</span>;
+    <span class="kw">fn </span>errors(<span class="kw-2">&amp;mut </span><span class="self">self</span>, errors: Vec&lt;ParseDiagnostic&gt;) {
+        <span class="self">self</span>.errors = errors;
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">LosslessTreeSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="ident">trivia</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Trivia</span>]) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">text</span>,
-            <span class="ident">trivia_list</span>: <span class="ident">trivia</span>,
-            <span class="ident">text_pos</span>: <span class="number">0</span>.<span class="ident">into</span>(),
-            <span class="ident">trivia_pos</span>: <span class="number">0</span>,
-            <span class="ident">parents_count</span>: <span class="number">0</span>,
-            <span class="ident">inner</span>: <span class="ident">JsSyntaxTreeBuilder::default</span>(),
-            <span class="ident">errors</span>: <span class="macro">vec!</span>[],
-            <span class="ident">needs_eof</span>: <span class="bool-val">true</span>,
-            <span class="ident">trivia_pieces</span>: <span class="ident">Vec::with_capacity</span>(<span class="number">128</span>),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LosslessTreeSink&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>new(text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, trivia: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Trivia]) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            text,
+            trivia_list: trivia,
+            text_pos: <span class="number">0</span>.into(),
+            trivia_pos: <span class="number">0</span>,
+            parents_count: <span class="number">0</span>,
+            inner: JsSyntaxTreeBuilder::default(),
+            errors: <span class="macro">vec!</span>[],
+            needs_eof: <span class="bool-val">true</span>,
+            trivia_pieces: Vec::with_capacity(<span class="number">128</span>),
         }
     }
 
-    <span class="doccomment">/// Finishes the tree and return the root node with possible parser errors.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If tree is finished without a [rome_js_syntax::JsSyntaxKind::EOF], one will be generated and all pending trivia</span>
-    <span class="doccomment">/// will be appended to its leading trivia.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) -&gt; (<span class="ident">JsSyntaxNode</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParseDiagnostic</span><span class="op">&gt;</span>) {
-        (<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">finish</span>(), <span class="self">self</span>.<span class="ident">errors</span>)
+    <span class="doccomment">/// Finishes the tree and return the root node with possible parser errors.
+    ///
+    /// If tree is finished without a [rome_js_syntax::JsSyntaxKind::EOF], one will be generated and all pending trivia
+    /// will be appended to its leading trivia.
+    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; (JsSyntaxNode, Vec&lt;ParseDiagnostic&gt;) {
+        (<span class="self">self</span>.inner.finish(), <span class="self">self</span>.errors)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">do_token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>, <span class="ident">token_end</span>: <span class="ident">TextSize</span>) {
-        <span class="kw">if</span> <span class="ident">kind</span> <span class="op">==</span> <span class="ident">JsSyntaxKind::EOF</span> {
-            <span class="self">self</span>.<span class="ident">needs_eof</span> <span class="op">=</span> <span class="bool-val">false</span>;
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>do_token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: JsSyntaxKind, token_end: TextSize) {
+        <span class="kw">if </span>kind == JsSyntaxKind::EOF {
+            <span class="self">self</span>.needs_eof = <span class="bool-val">false</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">token_start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">text_pos</span>;
+        <span class="kw">let </span>token_start = <span class="self">self</span>.text_pos;
 
-        <span class="comment">// Every trivia up to the token (including line breaks) will be the leading trivia</span>
-        <span class="self">self</span>.<span class="ident">eat_trivia</span>(<span class="bool-val">false</span>);
-        <span class="kw">let</span> <span class="ident">trailing_start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">trivia_pieces</span>.<span class="ident">len</span>();
+        <span class="comment">// Every trivia up to the token (including line breaks) will be the leading trivia
+        </span><span class="self">self</span>.eat_trivia(<span class="bool-val">false</span>);
+        <span class="kw">let </span>trailing_start = <span class="self">self</span>.trivia_pieces.len();
 
-        <span class="self">self</span>.<span class="ident">text_pos</span> <span class="op">=</span> <span class="ident">token_end</span>;
+        <span class="self">self</span>.text_pos = token_end;
 
-        <span class="comment">// Everything until the next linebreak (but not including it)</span>
-        <span class="comment">// will be the trailing trivia...</span>
-        <span class="self">self</span>.<span class="ident">eat_trivia</span>(<span class="bool-val">true</span>);
+        <span class="comment">// Everything until the next linebreak (but not including it)
+        // will be the trailing trivia...
+        </span><span class="self">self</span>.eat_trivia(<span class="bool-val">true</span>);
 
-        <span class="kw">let</span> <span class="ident">token_range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">token_start</span>, <span class="self">self</span>.<span class="ident">text_pos</span>);
+        <span class="kw">let </span>token_range = TextRange::new(token_start, <span class="self">self</span>.text_pos);
 
-        <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>[<span class="ident">token_range</span>];
-        <span class="kw">let</span> <span class="ident">leading</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trivia_pieces</span>[<span class="number">0</span>..<span class="ident">trailing_start</span>];
-        <span class="kw">let</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trivia_pieces</span>[<span class="ident">trailing_start</span>..];
+        <span class="kw">let </span>text = <span class="kw-2">&amp;</span><span class="self">self</span>.text[token_range];
+        <span class="kw">let </span>leading = <span class="kw-2">&amp;</span><span class="self">self</span>.trivia_pieces[<span class="number">0</span>..trailing_start];
+        <span class="kw">let </span>trailing = <span class="kw-2">&amp;</span><span class="self">self</span>.trivia_pieces[trailing_start..];
 
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">token_with_trivia</span>(<span class="ident">kind</span>, <span class="ident">text</span>, <span class="ident">leading</span>, <span class="ident">trailing</span>);
-        <span class="self">self</span>.<span class="ident">trivia_pieces</span>.<span class="ident">clear</span>();
+        <span class="self">self</span>.inner.token_with_trivia(kind, text, leading, trailing);
+        <span class="self">self</span>.trivia_pieces.clear();
     }
 
-    <span class="kw">fn</span> <span class="ident">eat_trivia</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">trailing</span>: <span class="ident">bool</span>) {
-        <span class="kw">for</span> <span class="ident">trivia</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trivia_list</span>[<span class="self">self</span>.<span class="ident">trivia_pos</span>..] {
-            <span class="kw">if</span> <span class="ident">trailing</span> <span class="op">!</span><span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">trailing</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">text_pos</span> <span class="op">!</span><span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">offset</span>() {
+    <span class="kw">fn </span>eat_trivia(<span class="kw-2">&amp;mut </span><span class="self">self</span>, trailing: bool) {
+        <span class="kw">for </span>trivia <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.trivia_list[<span class="self">self</span>.trivia_pos..] {
+            <span class="kw">if </span>trailing != trivia.trailing() || <span class="self">self</span>.text_pos != trivia.offset() {
                 <span class="kw">break</span>;
             }
 
-            <span class="kw">let</span> <span class="ident">trivia_piece</span> <span class="op">=</span> <span class="ident">TriviaPiece::new</span>(<span class="ident">trivia</span>.<span class="ident">kind</span>(), <span class="ident">trivia</span>.<span class="ident">len</span>());
-            <span class="self">self</span>.<span class="ident">trivia_pieces</span>.<span class="ident">push</span>(<span class="ident">trivia_piece</span>);
+            <span class="kw">let </span>trivia_piece = TriviaPiece::new(trivia.kind(), trivia.len());
+            <span class="self">self</span>.trivia_pieces.push(trivia_piece);
 
-            <span class="self">self</span>.<span class="ident">text_pos</span> <span class="op">+</span><span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">len</span>();
-            <span class="self">self</span>.<span class="ident">trivia_pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+            <span class="self">self</span>.text_pos += trivia.len();
+            <span class="self">self</span>.trivia_pos += <span class="number">1</span>;
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

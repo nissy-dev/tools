@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_formatter/src/context.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>context.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_formatter/src/context.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>context.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -351,358 +351,358 @@
 <span id="351">351</span>
 <span id="352">352</span>
 <span id="353">353</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::comments</span>::{<span class="ident">FormatJsLeadingComment</span>, <span class="ident">JsCommentStyle</span>, <span class="ident">JsComments</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::context::trailing_comma::TrailingComma</span>;
-<span class="kw">use</span> <span class="ident">rome_formatter::printer::PrinterOptions</span>;
-<span class="kw">use</span> <span class="ident">rome_formatter</span>::{
-    <span class="ident">CstFormatContext</span>, <span class="ident">FormatContext</span>, <span class="ident">FormatElement</span>, <span class="ident">FormatOptions</span>, <span class="ident">IndentStyle</span>, <span class="ident">LineWidth</span>,
-    <span class="ident">TransformSourceMap</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::comments::{FormatJsLeadingComment, JsCommentStyle, JsComments};
+<span class="kw">use </span><span class="kw">crate</span>::context::trailing_comma::TrailingComma;
+<span class="kw">use </span>rome_formatter::printer::PrinterOptions;
+<span class="kw">use </span>rome_formatter::{
+    CstFormatContext, FormatContext, FormatElement, FormatOptions, IndentStyle, LineWidth,
+    TransformSourceMap,
 };
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsAnyFunctionBody</span>, <span class="ident">JsLanguage</span>, <span class="ident">SourceType</span>};
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">std::rc::Rc</span>;
-<span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
+<span class="kw">use </span>rome_js_syntax::{JsAnyFunctionBody, JsLanguage, SourceType};
+<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>std::rc::Rc;
+<span class="kw">use </span>std::str::FromStr;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">trailing_comma</span>;
+<span class="kw">pub mod </span>trailing_comma;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JsFormatContext</span> {
-    <span class="ident">options</span>: <span class="ident">JsFormatOptions</span>,
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>JsFormatContext {
+    options: JsFormatOptions,
 
-    <span class="doccomment">/// The comments of the nodes and tokens in the program.</span>
-    <span class="ident">comments</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">JsComments</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The comments of the nodes and tokens in the program.
+    </span>comments: Rc&lt;JsComments&gt;,
 
-    <span class="doccomment">/// Stores the formatted content of one function body.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Used during formatting of call arguments where function expressions and arrow function expressions</span>
-    <span class="doccomment">/// are formatted a second time if they are the first or last call argument.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Caching the body in the call arguments formatting is important. It minimises the cases</span>
-    <span class="doccomment">/// where the algorithm is quadratic, in case the function or arrow expression contains another</span>
-    <span class="doccomment">/// call expression with a function or call expression as first or last argument.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It&#39;s sufficient to only store a single cached body to cover the vast majority of cases</span>
-    <span class="doccomment">/// (there&#39;s no exception in any of our tests nor benchmark tests). The only case not covered is when</span>
-    <span class="doccomment">/// a parameter has an initializer that contains a call expression:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">///  test((</span>
-    <span class="doccomment">///    problematic = test(() =&gt; body)</span>
-    <span class="doccomment">///  ) =&gt; {});</span>
-    <span class="doccomment">///  ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This should be rare enough for us not to care about it.</span>
-    <span class="ident">cached_function_body</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">JsAnyFunctionBody</span>, <span class="ident">FormatElement</span>)<span class="op">&gt;</span>,
+    <span class="doccomment">/// Stores the formatted content of one function body.
+    ///
+    /// Used during formatting of call arguments where function expressions and arrow function expressions
+    /// are formatted a second time if they are the first or last call argument.
+    ///
+    /// Caching the body in the call arguments formatting is important. It minimises the cases
+    /// where the algorithm is quadratic, in case the function or arrow expression contains another
+    /// call expression with a function or call expression as first or last argument.
+    ///
+    /// It&#39;s sufficient to only store a single cached body to cover the vast majority of cases
+    /// (there&#39;s no exception in any of our tests nor benchmark tests). The only case not covered is when
+    /// a parameter has an initializer that contains a call expression:
+    ///
+    /// ```javascript
+    ///  test((
+    ///    problematic = test(() =&gt; body)
+    ///  ) =&gt; {});
+    ///  ```
+    ///
+    /// This should be rare enough for us not to care about it.
+    </span>cached_function_body: <span class="prelude-ty">Option</span>&lt;(JsAnyFunctionBody, FormatElement)&gt;,
 
-    <span class="ident">source_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TransformSourceMap</span><span class="op">&gt;</span>,
+    source_map: <span class="prelude-ty">Option</span>&lt;TransformSourceMap&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">JsFormatContext</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">options</span>: <span class="ident">JsFormatOptions</span>, <span class="ident">comments</span>: <span class="ident">JsComments</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">options</span>,
-            <span class="ident">comments</span>: <span class="ident">Rc::new</span>(<span class="ident">comments</span>),
-            <span class="ident">cached_function_body</span>: <span class="prelude-val">None</span>,
-            <span class="ident">source_map</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl </span>JsFormatContext {
+    <span class="kw">pub fn </span>new(options: JsFormatOptions, comments: JsComments) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            options,
+            comments: Rc::new(comments),
+            cached_function_body: <span class="prelude-val">None</span>,
+            source_map: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Returns the formatted content for the passed function body if it is cached or `None` if the currently</span>
-    <span class="doccomment">/// cached content belongs to another function body or the cache is empty.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// See [JsFormatContext::cached_function_body] for more in depth documentation.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_cached_function_body</span>(
+    <span class="doccomment">/// Returns the formatted content for the passed function body if it is cached or `None` if the currently
+    /// cached content belongs to another function body or the cache is empty.
+    ///
+    /// See [JsFormatContext::cached_function_body] for more in depth documentation.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_cached_function_body(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">body</span>: <span class="kw-2">&amp;</span><span class="ident">JsAnyFunctionBody</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">cached_function_body</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span>(<span class="ident">expected_body</span>, <span class="ident">formatted</span>)<span class="op">|</span> {
-                <span class="kw">if</span> <span class="ident">expected_body</span> <span class="op">==</span> <span class="ident">body</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">formatted</span>.<span class="ident">clone</span>())
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">None</span>
-                }
+        body: <span class="kw-2">&amp;</span>JsAnyFunctionBody,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;FormatElement&gt; {
+        <span class="self">self</span>.cached_function_body
+            .as_ref()
+            .and_then(|(expected_body, formatted)| {
+                <span class="kw">if </span>expected_body == body {
+                    <span class="prelude-val">Some</span>(formatted.clone())
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">None
+                </span>}
             })
     }
 
-    <span class="doccomment">/// Sets the currently cached formatted function body.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// See [JsFormatContext::cached_function_body] for more in depth documentation.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_cached_function_body</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">body</span>: <span class="kw-2">&amp;</span><span class="ident">JsAnyFunctionBody</span>,
-        <span class="ident">formatted</span>: <span class="ident">FormatElement</span>,
+    <span class="doccomment">/// Sets the currently cached formatted function body.
+    ///
+    /// See [JsFormatContext::cached_function_body] for more in depth documentation.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_cached_function_body(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        body: <span class="kw-2">&amp;</span>JsAnyFunctionBody,
+        formatted: FormatElement,
     ) {
-        <span class="self">self</span>.<span class="ident">cached_function_body</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">body</span>.<span class="ident">clone</span>(), <span class="ident">formatted</span>))
+        <span class="self">self</span>.cached_function_body = <span class="prelude-val">Some</span>((body.clone(), formatted))
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_source_map</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">source_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TransformSourceMap</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">source_map</span> <span class="op">=</span> <span class="ident">source_map</span>;
-        <span class="self">self</span>
+    <span class="kw">pub fn </span>with_source_map(<span class="kw-2">mut </span><span class="self">self</span>, source_map: <span class="prelude-ty">Option</span>&lt;TransformSourceMap&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.source_map = source_map;
+        <span class="self">self
+    </span>}
+}
+
+<span class="attribute">#[derive(Eq, PartialEq, Debug, Copy, Clone, Hash)]
+</span><span class="kw">pub struct </span>TabWidth(u8);
+
+<span class="kw">impl </span>From&lt;u8&gt; <span class="kw">for </span>TabWidth {
+    <span class="kw">fn </span>from(value: u8) -&gt; <span class="self">Self </span>{
+        TabWidth(value)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TabWidth</span>(<span class="ident">u8</span>);
+<span class="kw">impl </span>From&lt;TabWidth&gt; <span class="kw">for </span>u8 {
+    <span class="kw">fn </span>from(width: TabWidth) -&gt; <span class="self">Self </span>{
+        width.<span class="number">0
+    </span>}
+}
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TabWidth</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">TabWidth</span>(<span class="ident">value</span>)
+<span class="kw">impl </span>FormatContext <span class="kw">for </span>JsFormatContext {
+    <span class="kw">type </span>Options = JsFormatOptions;
+
+    <span class="kw">fn </span>options(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Options {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.options
+    }
+
+    <span class="kw">fn </span>source_map(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TransformSourceMap&gt; {
+        <span class="self">self</span>.source_map.as_ref()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">TabWidth</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u8</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">width</span>: <span class="ident">TabWidth</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">width</span>.<span class="number">0</span>
+<span class="kw">impl </span>CstFormatContext <span class="kw">for </span>JsFormatContext {
+    <span class="kw">type </span>Language = JsLanguage;
+    <span class="kw">type </span>Style = JsCommentStyle;
+    <span class="kw">type </span>CommentRule = FormatJsLeadingComment;
+
+    <span class="kw">fn </span>comments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>JsComments {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.comments
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FormatContext</span> <span class="kw">for</span> <span class="ident">JsFormatContext</span> {
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> <span class="ident">JsFormatOptions</span>;
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>JsFormatOptions {
+    <span class="doccomment">/// The indent style.
+    </span>indent_style: IndentStyle,
 
-    <span class="kw">fn</span> <span class="ident">options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Options</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">options</span>
-    }
+    <span class="doccomment">/// What&#39;s the max width of a line. Defaults to 80.
+    </span>line_width: LineWidth,
 
-    <span class="kw">fn</span> <span class="ident">source_map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TransformSourceMap</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">source_map</span>.<span class="ident">as_ref</span>()
-    }
+    <span class="doccomment">/// The style for quotes. Defaults to double.
+    </span>quote_style: QuoteStyle,
+
+    <span class="doccomment">/// When properties in objects are quoted. Defaults to as-needed.
+    </span>quote_properties: QuoteProperties,
+
+    <span class="doccomment">/// Print trailing commas wherever possible in multi-line comma-separated syntactic structures. Defaults to &quot;all&quot;.
+    </span>trailing_comma: TrailingComma,
+
+    <span class="doccomment">/// Information related to the current file
+    </span>source_type: SourceType,
 }
 
-<span class="kw">impl</span> <span class="ident">CstFormatContext</span> <span class="kw">for</span> <span class="ident">JsFormatContext</span> {
-    <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">JsLanguage</span>;
-    <span class="kw">type</span> <span class="ident">Style</span> <span class="op">=</span> <span class="ident">JsCommentStyle</span>;
-    <span class="kw">type</span> <span class="ident">CommentRule</span> <span class="op">=</span> <span class="ident">FormatJsLeadingComment</span>;
-
-    <span class="kw">fn</span> <span class="ident">comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">JsComments</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">comments</span>
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JsFormatOptions</span> {
-    <span class="doccomment">/// The indent style.</span>
-    <span class="ident">indent_style</span>: <span class="ident">IndentStyle</span>,
-
-    <span class="doccomment">/// What&#39;s the max width of a line. Defaults to 80.</span>
-    <span class="ident">line_width</span>: <span class="ident">LineWidth</span>,
-
-    <span class="doccomment">/// The style for quotes. Defaults to double.</span>
-    <span class="ident">quote_style</span>: <span class="ident">QuoteStyle</span>,
-
-    <span class="doccomment">/// When properties in objects are quoted. Defaults to as-needed.</span>
-    <span class="ident">quote_properties</span>: <span class="ident">QuoteProperties</span>,
-
-    <span class="doccomment">/// Print trailing commas wherever possible in multi-line comma-separated syntactic structures. Defaults to &quot;all&quot;.</span>
-    <span class="ident">trailing_comma</span>: <span class="ident">TrailingComma</span>,
-
-    <span class="doccomment">/// Information related to the current file</span>
-    <span class="ident">source_type</span>: <span class="ident">SourceType</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">JsFormatOptions</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source_type</span>: <span class="ident">SourceType</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">source_type</span>,
-            <span class="ident">indent_style</span>: <span class="ident">IndentStyle::default</span>(),
-            <span class="ident">line_width</span>: <span class="ident">LineWidth::default</span>(),
-            <span class="ident">quote_style</span>: <span class="ident">QuoteStyle::default</span>(),
-            <span class="ident">quote_properties</span>: <span class="ident">QuoteProperties::default</span>(),
-            <span class="ident">trailing_comma</span>: <span class="ident">TrailingComma::default</span>(),
+<span class="kw">impl </span>JsFormatOptions {
+    <span class="kw">pub fn </span>new(source_type: SourceType) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            source_type,
+            indent_style: IndentStyle::default(),
+            line_width: LineWidth::default(),
+            quote_style: QuoteStyle::default(),
+            quote_properties: QuoteProperties::default(),
+            trailing_comma: TrailingComma::default(),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_indent_style</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">indent_style</span>: <span class="ident">IndentStyle</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">indent_style</span> <span class="op">=</span> <span class="ident">indent_style</span>;
-        <span class="self">self</span>
+    <span class="kw">pub fn </span>with_indent_style(<span class="kw-2">mut </span><span class="self">self</span>, indent_style: IndentStyle) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.indent_style = indent_style;
+        <span class="self">self
+    </span>}
+
+    <span class="kw">pub fn </span>with_line_width(<span class="kw-2">mut </span><span class="self">self</span>, line_width: LineWidth) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.line_width = line_width;
+        <span class="self">self
+    </span>}
+
+    <span class="kw">pub fn </span>with_quote_style(<span class="kw-2">mut </span><span class="self">self</span>, quote_style: QuoteStyle) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.quote_style = quote_style;
+        <span class="self">self
+    </span>}
+
+    <span class="kw">pub fn </span>with_quote_properties(<span class="kw-2">mut </span><span class="self">self</span>, quote_properties: QuoteProperties) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.quote_properties = quote_properties;
+        <span class="self">self
+    </span>}
+
+    <span class="kw">pub fn </span>with_trailing_comma(<span class="kw-2">mut </span><span class="self">self</span>, trailing_comma: TrailingComma) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.trailing_comma = trailing_comma;
+        <span class="self">self
+    </span>}
+
+    <span class="kw">pub fn </span>quote_style(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuoteStyle {
+        <span class="self">self</span>.quote_style
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_line_width</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">line_width</span>: <span class="ident">LineWidth</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">line_width</span> <span class="op">=</span> <span class="ident">line_width</span>;
-        <span class="self">self</span>
+    <span class="kw">pub fn </span>quote_properties(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuoteProperties {
+        <span class="self">self</span>.quote_properties
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_quote_style</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">quote_style</span>: <span class="ident">QuoteStyle</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">quote_style</span> <span class="op">=</span> <span class="ident">quote_style</span>;
-        <span class="self">self</span>
+    <span class="kw">pub fn </span>source_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SourceType {
+        <span class="self">self</span>.source_type
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_quote_properties</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">quote_properties</span>: <span class="ident">QuoteProperties</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">quote_properties</span> <span class="op">=</span> <span class="ident">quote_properties</span>;
-        <span class="self">self</span>
+    <span class="kw">pub fn </span>trailing_comma(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TrailingComma {
+        <span class="self">self</span>.trailing_comma
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_trailing_comma</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">trailing_comma</span>: <span class="ident">TrailingComma</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">trailing_comma</span> <span class="op">=</span> <span class="ident">trailing_comma</span>;
-        <span class="self">self</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">quote_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuoteStyle</span> {
-        <span class="self">self</span>.<span class="ident">quote_style</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">quote_properties</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuoteProperties</span> {
-        <span class="self">self</span>.<span class="ident">quote_properties</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SourceType</span> {
-        <span class="self">self</span>.<span class="ident">source_type</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">trailing_comma</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TrailingComma</span> {
-        <span class="self">self</span>.<span class="ident">trailing_comma</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tab_width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TabWidth</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">indent_style</span> {
-            <span class="ident">IndentStyle::Tab</span> =&gt; <span class="number">2</span>.<span class="ident">into</span>(),
-            <span class="ident">IndentStyle::Space</span>(<span class="ident">quantities</span>) =&gt; <span class="ident">quantities</span>.<span class="ident">into</span>(),
-        }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">FormatOptions</span> <span class="kw">for</span> <span class="ident">JsFormatOptions</span> {
-    <span class="kw">fn</span> <span class="ident">indent_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">IndentStyle</span> {
-        <span class="self">self</span>.<span class="ident">indent_style</span>
-    }
-
-    <span class="kw">fn</span> <span class="ident">line_width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">LineWidth</span> {
-        <span class="self">self</span>.<span class="ident">line_width</span>
-    }
-
-    <span class="kw">fn</span> <span class="ident">as_print_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PrinterOptions</span> {
-        <span class="ident">PrinterOptions::default</span>()
-            .<span class="ident">with_indent</span>(<span class="self">self</span>.<span class="ident">indent_style</span>)
-            .<span class="ident">with_print_width</span>(<span class="self">self</span>.<span class="ident">line_width</span>.<span class="ident">into</span>())
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">JsFormatOptions</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="macro">writeln!</span>(<span class="ident">f</span>, <span class="string">&quot;Indent style: {}&quot;</span>, <span class="self">self</span>.<span class="ident">indent_style</span>)<span class="question-mark">?</span>;
-        <span class="macro">writeln!</span>(<span class="ident">f</span>, <span class="string">&quot;Line width: {}&quot;</span>, <span class="self">self</span>.<span class="ident">line_width</span>.<span class="ident">value</span>())<span class="question-mark">?</span>;
-        <span class="macro">writeln!</span>(<span class="ident">f</span>, <span class="string">&quot;Quote style: {}&quot;</span>, <span class="self">self</span>.<span class="ident">quote_style</span>)<span class="question-mark">?</span>;
-        <span class="macro">writeln!</span>(<span class="ident">f</span>, <span class="string">&quot;Quote properties: {}&quot;</span>, <span class="self">self</span>.<span class="ident">quote_properties</span>)<span class="question-mark">?</span>;
-        <span class="macro">writeln!</span>(<span class="ident">f</span>, <span class="string">&quot;Trailing comma: {}&quot;</span>, <span class="self">self</span>.<span class="ident">trailing_comma</span>)
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde&quot;</span>,
-    <span class="ident">derive</span>(<span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>, <span class="ident">schemars::JsonSchema</span>)
-)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QuoteStyle</span> {
-    <span class="attribute">#[<span class="ident">default</span>]</span>
-    <span class="ident">Double</span>,
-    <span class="ident">Single</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">QuoteStyle</span> {
-    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
-
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Err</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">s</span> {
-            <span class="string">&quot;double&quot;</span> <span class="op">|</span> <span class="string">&quot;Double&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Double</span>),
-            <span class="string">&quot;single&quot;</span> <span class="op">|</span> <span class="string">&quot;Single&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Single</span>),
-            <span class="comment">// TODO: replace this error with a diagnostic</span>
-            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Value not supported for QuoteStyle&quot;</span>),
+    <span class="kw">pub fn </span>tab_width(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TabWidth {
+        <span class="kw">match </span><span class="self">self</span>.indent_style {
+            IndentStyle::Tab =&gt; <span class="number">2</span>.into(),
+            IndentStyle::Space(quantities) =&gt; quantities.into(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">QuoteStyle</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuoteStyle::Double</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Double Quotes&quot;</span>),
-            <span class="ident">QuoteStyle::Single</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Single Quotes&quot;</span>),
+<span class="kw">impl </span>FormatOptions <span class="kw">for </span>JsFormatOptions {
+    <span class="kw">fn </span>indent_style(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; IndentStyle {
+        <span class="self">self</span>.indent_style
+    }
+
+    <span class="kw">fn </span>line_width(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LineWidth {
+        <span class="self">self</span>.line_width
+    }
+
+    <span class="kw">fn </span>as_print_options(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PrinterOptions {
+        PrinterOptions::default()
+            .with_indent(<span class="self">self</span>.indent_style)
+            .with_print_width(<span class="self">self</span>.line_width.into())
+    }
+}
+
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>JsFormatOptions {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="macro">writeln!</span>(f, <span class="string">&quot;Indent style: {}&quot;</span>, <span class="self">self</span>.indent_style)<span class="question-mark">?</span>;
+        <span class="macro">writeln!</span>(f, <span class="string">&quot;Line width: {}&quot;</span>, <span class="self">self</span>.line_width.value())<span class="question-mark">?</span>;
+        <span class="macro">writeln!</span>(f, <span class="string">&quot;Quote style: {}&quot;</span>, <span class="self">self</span>.quote_style)<span class="question-mark">?</span>;
+        <span class="macro">writeln!</span>(f, <span class="string">&quot;Quote properties: {}&quot;</span>, <span class="self">self</span>.quote_properties)<span class="question-mark">?</span>;
+        <span class="macro">writeln!</span>(f, <span class="string">&quot;Trailing comma: {}&quot;</span>, <span class="self">self</span>.trailing_comma)
+    }
+}
+
+<span class="attribute">#[derive(Debug, Eq, PartialEq, Clone, Copy)]
+#[cfg_attr(
+    feature = <span class="string">&quot;serde&quot;</span>,
+    derive(serde::Serialize, serde::Deserialize, schemars::JsonSchema)
+)]
+#[derive(Default)]
+</span><span class="kw">pub enum </span>QuoteStyle {
+    <span class="attribute">#[default]
+    </span>Double,
+    Single,
+}
+
+<span class="kw">impl </span>FromStr <span class="kw">for </span>QuoteStyle {
+    <span class="kw">type </span><span class="prelude-val">Err </span>= <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+
+    <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Err&gt; {
+        <span class="kw">match </span>s {
+            <span class="string">&quot;double&quot; </span>| <span class="string">&quot;Double&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Double),
+            <span class="string">&quot;single&quot; </span>| <span class="string">&quot;Single&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Single),
+            <span class="comment">// TODO: replace this error with a diagnostic
+            </span><span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Value not supported for QuoteStyle&quot;</span>),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">QuoteStyle</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_char</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">char</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuoteStyle::Double</span> =&gt; <span class="string">&#39;&quot;&#39;</span>,
-            <span class="ident">QuoteStyle::Single</span> =&gt; <span class="string">&#39;\&#39;&#39;</span>,
-        }
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuoteStyle::Double</span> =&gt; <span class="string">&quot;\&quot;&quot;</span>,
-            <span class="ident">QuoteStyle::Single</span> =&gt; <span class="string">&quot;&#39;&quot;</span>,
-        }
-    }
-
-    <span class="doccomment">/// Returns the quote, prepended with a backslash (escaped)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_escaped</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuoteStyle::Double</span> =&gt; <span class="string">&quot;\\\&quot;&quot;</span>,
-            <span class="ident">QuoteStyle::Single</span> =&gt; <span class="string">&quot;\\&#39;&quot;</span>,
-        }
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u8</span> {
-        <span class="self">self</span>.<span class="ident">as_char</span>() <span class="kw">as</span> <span class="ident">u8</span>
-    }
-
-    <span class="doccomment">/// Returns the quote in HTML entity</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_html_entity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuoteStyle::Double</span> =&gt; <span class="string">&quot;&amp;quot;&quot;</span>,
-            <span class="ident">QuoteStyle::Single</span> =&gt; <span class="string">&quot;&amp;apos;&quot;</span>,
-        }
-    }
-
-    <span class="doccomment">/// Given the current quote, it returns the other one</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">other</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuoteStyle::Double</span> =&gt; <span class="ident">QuoteStyle::Single</span>,
-            <span class="ident">QuoteStyle::Single</span> =&gt; <span class="ident">QuoteStyle::Double</span>,
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>QuoteStyle {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuoteStyle::Double =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Double Quotes&quot;</span>),
+            QuoteStyle::Single =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Single Quotes&quot;</span>),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde&quot;</span>,
-    <span class="ident">derive</span>(<span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>, <span class="ident">schemars::JsonSchema</span>)
-)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QuoteProperties</span> {
-    <span class="ident">AsNeeded</span>,
-    <span class="ident">Preserve</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">QuoteProperties</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::AsNeeded</span>
+<span class="kw">impl </span>QuoteStyle {
+    <span class="kw">pub fn </span>as_char(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuoteStyle::Double =&gt; <span class="string">&#39;&quot;&#39;</span>,
+            QuoteStyle::Single =&gt; <span class="string">&#39;\&#39;&#39;</span>,
+        }
     }
-}
 
-<span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">QuoteProperties</span> {
-    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
+    <span class="kw">pub fn </span>as_string(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuoteStyle::Double =&gt; <span class="string">&quot;\&quot;&quot;</span>,
+            QuoteStyle::Single =&gt; <span class="string">&quot;&#39;&quot;</span>,
+        }
+    }
 
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Err</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">s</span> {
-            <span class="string">&quot;as-needed&quot;</span> <span class="op">|</span> <span class="string">&quot;AsNeeded&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::AsNeeded</span>),
-            <span class="string">&quot;preserve&quot;</span> <span class="op">|</span> <span class="string">&quot;Preserve&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Preserve</span>),
-            <span class="comment">// TODO: replace this error with a diagnostic</span>
-            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Value not supported for QuoteProperties&quot;</span>),
+    <span class="doccomment">/// Returns the quote, prepended with a backslash (escaped)
+    </span><span class="kw">pub fn </span>as_escaped(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuoteStyle::Double =&gt; <span class="string">&quot;\\\&quot;&quot;</span>,
+            QuoteStyle::Single =&gt; <span class="string">&quot;\\&#39;&quot;</span>,
+        }
+    }
+
+    <span class="kw">pub fn </span>as_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
+        <span class="self">self</span>.as_char() <span class="kw">as </span>u8
+    }
+
+    <span class="doccomment">/// Returns the quote in HTML entity
+    </span><span class="kw">pub fn </span>as_html_entity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuoteStyle::Double =&gt; <span class="string">&quot;&amp;quot;&quot;</span>,
+            QuoteStyle::Single =&gt; <span class="string">&quot;&amp;apos;&quot;</span>,
+        }
+    }
+
+    <span class="doccomment">/// Given the current quote, it returns the other one
+    </span><span class="kw">pub fn </span>other(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span><span class="self">self </span>{
+            QuoteStyle::Double =&gt; QuoteStyle::Single,
+            QuoteStyle::Single =&gt; QuoteStyle::Double,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">QuoteProperties</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuoteProperties::AsNeeded</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;As needed&quot;</span>),
-            <span class="ident">QuoteProperties::Preserve</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Preserve&quot;</span>),
+<span class="attribute">#[derive(Debug, Eq, PartialEq, Clone, Copy)]
+#[cfg_attr(
+    feature = <span class="string">&quot;serde&quot;</span>,
+    derive(serde::Serialize, serde::Deserialize, schemars::JsonSchema)
+)]
+</span><span class="kw">pub enum </span>QuoteProperties {
+    AsNeeded,
+    Preserve,
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>QuoteProperties {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::AsNeeded
+    }
+}
+
+<span class="kw">impl </span>FromStr <span class="kw">for </span>QuoteProperties {
+    <span class="kw">type </span><span class="prelude-val">Err </span>= <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+
+    <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Err&gt; {
+        <span class="kw">match </span>s {
+            <span class="string">&quot;as-needed&quot; </span>| <span class="string">&quot;AsNeeded&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::AsNeeded),
+            <span class="string">&quot;preserve&quot; </span>| <span class="string">&quot;Preserve&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Preserve),
+            <span class="comment">// TODO: replace this error with a diagnostic
+            </span><span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Value not supported for QuoteProperties&quot;</span>),
+        }
+    }
+}
+
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>QuoteProperties {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuoteProperties::AsNeeded =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;As needed&quot;</span>),
+            QuoteProperties::Preserve =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Preserve&quot;</span>),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

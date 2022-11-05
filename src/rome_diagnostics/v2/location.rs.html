@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/location.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>location.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/location.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>location.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -532,539 +532,539 @@
 <span id="532">532</span>
 <span id="533">533</span>
 <span id="534">534</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">std::ops::Range</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Borrow</span>, <span class="ident">ops::Deref</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>rome_text_size::{TextRange, TextSize};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>std::ops::Range;
+<span class="kw">use </span>std::{borrow::Borrow, ops::Deref};
 
-<span class="doccomment">/// Represents the location of a diagnostic in a resource.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The resource this diagnostic is associated with.</span>
-    <span class="kw">pub</span> <span class="ident">resource</span>: <span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// An optional range of text within the resource associated with the</span>
-    <span class="doccomment">/// diagnostic.</span>
-    <span class="kw">pub</span> <span class="ident">span</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The optional source code of the resource.</span>
-    <span class="kw">pub</span> <span class="ident">source_code</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Represents the location of a diagnostic in a resource.
+</span><span class="attribute">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">pub struct </span>Location&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// The resource this diagnostic is associated with.
+    </span><span class="kw">pub </span>resource: Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    <span class="doccomment">/// An optional range of text within the resource associated with the
+    /// diagnostic.
+    </span><span class="kw">pub </span>span: <span class="prelude-ty">Option</span>&lt;TextRange&gt;,
+    <span class="doccomment">/// The optional source code of the resource.
+    </span><span class="kw">pub </span>source_code: <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new instance of [LocationBuilder].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>() -&gt; <span class="ident">LocationBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">LocationBuilder</span> {
-            <span class="ident">resource</span>: <span class="prelude-val">None</span>,
-            <span class="ident">span</span>: <span class="prelude-val">None</span>,
-            <span class="ident">source_code</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Location&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Creates a new instance of [LocationBuilder].
+    </span><span class="kw">pub fn </span>builder() -&gt; LocationBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+        LocationBuilder {
+            resource: <span class="prelude-val">None</span>,
+            span: <span class="prelude-val">None</span>,
+            source_code: <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="doccomment">/// The implementation of [PartialEq] for [Location] only compares the `path`</span>
-<span class="doccomment">/// and `span` fields</span>
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">resource</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">resource</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">span</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">span</span>
+<span class="doccomment">/// The implementation of [PartialEq] for [Location] only compares the `path`
+/// and `span` fields
+</span><span class="kw">impl </span>PartialEq <span class="kw">for </span>Location&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="self">self</span>.resource == other.resource &amp;&amp; <span class="self">self</span>.span == other.span
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {}
+<span class="kw">impl </span>Eq <span class="kw">for </span>Location&lt;<span class="lifetime">&#39;_</span>&gt; {}
 
-<span class="doccomment">/// Represents the resource a diagnostic is associated with.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The diagnostic is related to the content of the command line arguments.</span>
-    <span class="ident">Argv</span>,
-    <span class="doccomment">/// The diagnostic is related to the content of a memory buffer.</span>
-    <span class="ident">Memory</span>,
-    <span class="doccomment">/// The diagnostic is related to a file on the filesystem.</span>
-    <span class="ident">File</span>(<span class="ident">FilePath</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>),
+<span class="doccomment">/// Represents the resource a diagnostic is associated with.
+</span><span class="attribute">#[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub enum </span>Resource&lt;P&gt; {
+    <span class="doccomment">/// The diagnostic is related to the content of the command line arguments.
+    </span>Argv,
+    <span class="doccomment">/// The diagnostic is related to the content of a memory buffer.
+    </span>Memory,
+    <span class="doccomment">/// The diagnostic is related to a file on the filesystem.
+    </span>File(FilePath&lt;P&gt;),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Returns a `FilePath&lt;&amp;P::Target&gt;` if `self` points to a `Path`, or</span>
-    <span class="doccomment">/// `None` otherwise.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FilePath</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">Deref</span><span class="op">&gt;</span><span class="ident">::Target</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">P</span>: <span class="ident">Deref</span>,
+<span class="kw">impl</span>&lt;P&gt; Resource&lt;P&gt; {
+    <span class="doccomment">/// Returns a `FilePath&lt;&amp;P::Target&gt;` if `self` points to a `Path`, or
+    /// `None` otherwise.
+    </span><span class="kw">pub fn </span>as_file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FilePath&lt;<span class="kw-2">&amp;</span>&lt;P <span class="kw">as </span>Deref&gt;::Target&gt;&gt;
+    <span class="kw">where
+        </span>P: Deref,
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Resource::File</span>(<span class="ident">file</span>) <span class="op">=</span> <span class="self">self</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">file</span>.<span class="ident">as_deref</span>())
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+        <span class="kw">if let </span>Resource::File(file) = <span class="self">self </span>{
+            <span class="prelude-val">Some</span>(file.as_deref())
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 
-    <span class="doccomment">/// Converts a `Path&lt;P&gt;` to `Path&lt;&amp;P::Target&gt;`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">Deref</span><span class="op">&gt;</span><span class="ident">::Target</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">P</span>: <span class="ident">Deref</span>,
+    <span class="doccomment">/// Converts a `Path&lt;P&gt;` to `Path&lt;&amp;P::Target&gt;`.
+    </span><span class="kw">pub fn </span>as_deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Resource&lt;<span class="kw-2">&amp;</span>&lt;P <span class="kw">as </span>Deref&gt;::Target&gt;
+    <span class="kw">where
+        </span>P: Deref,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Resource::Argv</span> =&gt; <span class="ident">Resource::Argv</span>,
-            <span class="ident">Resource::Memory</span> =&gt; <span class="ident">Resource::Memory</span>,
-            <span class="ident">Resource::File</span>(<span class="ident">file</span>) =&gt; <span class="ident">Resource::File</span>(<span class="ident">file</span>.<span class="ident">as_deref</span>()),
+        <span class="kw">match </span><span class="self">self </span>{
+            Resource::Argv =&gt; Resource::Argv,
+            Resource::Memory =&gt; Resource::Memory,
+            Resource::File(file) =&gt; Resource::File(file.as_deref()),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Converts a `Path&lt;&amp;str&gt;` to `Path&lt;String&gt;`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_owned</span>(<span class="self">self</span>) -&gt; <span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Resource::Argv</span> =&gt; <span class="ident">Resource::Argv</span>,
-            <span class="ident">Resource::Memory</span> =&gt; <span class="ident">Resource::Memory</span>,
-            <span class="ident">Resource::File</span>(<span class="ident">file</span>) =&gt; <span class="ident">Resource::File</span>(<span class="ident">file</span>.<span class="ident">to_owned</span>()),
+<span class="kw">impl </span>Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt; {
+    <span class="doccomment">/// Converts a `Path&lt;&amp;str&gt;` to `Path&lt;String&gt;`.
+    </span><span class="kw">pub fn </span>to_owned(<span class="self">self</span>) -&gt; Resource&lt;String&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Resource::Argv =&gt; Resource::Argv,
+            Resource::Memory =&gt; Resource::Memory,
+            Resource::File(file) =&gt; Resource::File(file.to_owned()),
         }
     }
 }
 
-<span class="doccomment">/// Represents the path of a file on the filesystem.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FilePath</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The path is represented as a string path.</span>
-    <span class="ident">Path</span>(<span class="ident">P</span>),
-    <span class="doccomment">/// The path is represented as a [FileId].</span>
-    <span class="ident">FileId</span>(<span class="ident">FileId</span>),
-    <span class="doccomment">/// The path is represented as both a string path and a [FileId].</span>
-    <span class="ident">PathAndId</span> { <span class="ident">path</span>: <span class="ident">P</span>, <span class="ident">file_id</span>: <span class="ident">FileId</span> },
+<span class="doccomment">/// Represents the path of a file on the filesystem.
+</span><span class="attribute">#[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub enum </span>FilePath&lt;P&gt; {
+    <span class="doccomment">/// The path is represented as a string path.
+    </span>Path(P),
+    <span class="doccomment">/// The path is represented as a [FileId].
+    </span>FileId(FileId),
+    <span class="doccomment">/// The path is represented as both a string path and a [FileId].
+    </span>PathAndId { path: P, file_id: FileId },
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="ident">FilePath</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Returns the string path of this [FilePath] if it has one.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FilePath::Path</span>(<span class="ident">path</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">path</span>),
-            <span class="ident">FilePath::FileId</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="ident">path</span>),
+<span class="kw">impl</span>&lt;P&gt; FilePath&lt;P&gt; {
+    <span class="doccomment">/// Returns the string path of this [FilePath] if it has one.
+    </span><span class="kw">pub fn </span>path(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;P&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            FilePath::Path(path) =&gt; <span class="prelude-val">Some</span>(path),
+            FilePath::FileId(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+            FilePath::PathAndId { path, .. } =&gt; <span class="prelude-val">Some</span>(path),
         }
     }
 
-    <span class="doccomment">/// Returns the [FileId] of this [FilePath] if it has one.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">file_id</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FileId</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FilePath::Path</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">FilePath::FileId</span>(<span class="ident">file_id</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">file_id</span>),
-            <span class="ident">FilePath::PathAndId</span> { <span class="ident">file_id</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="ident">file_id</span>),
+    <span class="doccomment">/// Returns the [FileId] of this [FilePath] if it has one.
+    </span><span class="kw">pub fn </span>file_id(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FileId&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            FilePath::Path(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+            FilePath::FileId(file_id) =&gt; <span class="prelude-val">Some</span>(file_id),
+            FilePath::PathAndId { file_id, .. } =&gt; <span class="prelude-val">Some</span>(file_id),
         }
     }
 
-    <span class="doccomment">/// Converts a `FilePath&lt;P&gt;` to `FilePath&lt;&amp;P::Target&gt;`.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">as_deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">FilePath</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">Deref</span><span class="op">&gt;</span><span class="ident">::Target</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">P</span>: <span class="ident">Deref</span>,
+    <span class="doccomment">/// Converts a `FilePath&lt;P&gt;` to `FilePath&lt;&amp;P::Target&gt;`.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>as_deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FilePath&lt;<span class="kw-2">&amp;</span>&lt;P <span class="kw">as </span>Deref&gt;::Target&gt;
+    <span class="kw">where
+        </span>P: Deref,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FilePath::Path</span>(<span class="ident">path</span>) =&gt; <span class="ident">FilePath::Path</span>(<span class="ident">path</span>),
-            <span class="ident">FilePath::FileId</span>(<span class="ident">file_id</span>) =&gt; <span class="ident">FilePath::FileId</span>(<span class="kw-2">*</span><span class="ident">file_id</span>),
-            <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, <span class="ident">file_id</span> } =&gt; <span class="ident">FilePath::PathAndId</span> {
-                <span class="ident">path</span>,
-                <span class="ident">file_id</span>: <span class="kw-2">*</span><span class="ident">file_id</span>,
+        <span class="kw">match </span><span class="self">self </span>{
+            FilePath::Path(path) =&gt; FilePath::Path(path),
+            FilePath::FileId(file_id) =&gt; FilePath::FileId(<span class="kw-2">*</span>file_id),
+            FilePath::PathAndId { path, file_id } =&gt; FilePath::PathAndId {
+                path,
+                file_id: <span class="kw-2">*</span>file_id,
             },
         }
     }
 
-    <span class="doccomment">/// Returns the &quot;logical or&quot; of `self` and `other`, trying to merge the</span>
-    <span class="doccomment">/// [FilePath::Path] and [FilePath::FileId] variants into [FilePath::PathAndId].</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">or</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="self">Self</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">P</span>: <span class="ident">PartialEq</span>,
+    <span class="doccomment">/// Returns the &quot;logical or&quot; of `self` and `other`, trying to merge the
+    /// [FilePath::Path] and [FilePath::FileId] variants into [FilePath::PathAndId].
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>or(<span class="self">self</span>, other: <span class="self">Self</span>) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>P: PartialEq,
     {
-        <span class="kw">match</span> (<span class="self">self</span>, <span class="ident">other</span>) {
-            (<span class="ident">FilePath::Path</span>(<span class="ident">path</span>), <span class="ident">FilePath::FileId</span>(<span class="ident">file_id</span>)) =&gt; {
-                <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, <span class="ident">file_id</span> }
+        <span class="kw">match </span>(<span class="self">self</span>, other) {
+            (FilePath::Path(path), FilePath::FileId(file_id)) =&gt; {
+                FilePath::PathAndId { path, file_id }
             }
 
-            (<span class="ident">FilePath::FileId</span>(<span class="ident">file_id</span>), <span class="ident">FilePath::Path</span>(<span class="ident">path</span>)) =&gt; {
-                <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, <span class="ident">file_id</span> }
+            (FilePath::FileId(file_id), FilePath::Path(path)) =&gt; {
+                FilePath::PathAndId { path, file_id }
             }
 
-            (<span class="ident">FilePath::Path</span>(<span class="ident">inner_path</span>), <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, <span class="ident">file_id</span> })
-                <span class="kw">if</span> <span class="ident">inner_path</span> <span class="op">==</span> <span class="ident">path</span> =&gt;
+            (FilePath::Path(inner_path), FilePath::PathAndId { path, file_id })
+                <span class="kw">if </span>inner_path == path =&gt;
             {
-                <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, <span class="ident">file_id</span> }
+                FilePath::PathAndId { path, file_id }
             }
 
-            (<span class="ident">FilePath::FileId</span>(<span class="ident">inner_id</span>), <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, <span class="ident">file_id</span> })
-                <span class="kw">if</span> <span class="ident">inner_id</span> <span class="op">==</span> <span class="ident">file_id</span> =&gt;
+            (FilePath::FileId(inner_id), FilePath::PathAndId { path, file_id })
+                <span class="kw">if </span>inner_id == file_id =&gt;
             {
-                <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, <span class="ident">file_id</span> }
+                FilePath::PathAndId { path, file_id }
             }
 
-            (<span class="ident">file</span>, <span class="kw">_</span>) =&gt; <span class="ident">file</span>,
+            (file, <span class="kw">_</span>) =&gt; file,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FilePath</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Converts a `FilePath&lt;P&gt;` to `FilePath&lt;&amp;P::Target&gt;`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_owned</span>(<span class="self">self</span>) -&gt; <span class="ident">FilePath</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FilePath::Path</span>(<span class="ident">path</span>) =&gt; <span class="ident">FilePath::Path</span>(<span class="ident">path</span>.<span class="ident">to_string</span>()),
-            <span class="ident">FilePath::FileId</span>(<span class="ident">file_id</span>) =&gt; <span class="ident">FilePath::FileId</span>(<span class="ident">file_id</span>),
-            <span class="ident">FilePath::PathAndId</span> { <span class="ident">path</span>, <span class="ident">file_id</span> } =&gt; <span class="ident">FilePath::PathAndId</span> {
-                <span class="ident">path</span>: <span class="ident">path</span>.<span class="ident">to_string</span>(),
-                <span class="ident">file_id</span>,
+<span class="kw">impl </span>FilePath&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt; {
+    <span class="doccomment">/// Converts a `FilePath&lt;P&gt;` to `FilePath&lt;&amp;P::Target&gt;`.
+    </span><span class="kw">pub fn </span>to_owned(<span class="self">self</span>) -&gt; FilePath&lt;String&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            FilePath::Path(path) =&gt; FilePath::Path(path.to_string()),
+            FilePath::FileId(file_id) =&gt; FilePath::FileId(file_id),
+            FilePath::PathAndId { path, file_id } =&gt; FilePath::PathAndId {
+                path: path.to_string(),
+                file_id,
             },
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="doccomment">/// An id that points into a file database.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FileId</span>(<span class="ident">usize</span>);
+<span class="attribute">#[derive(Debug, Clone, Copy, Eq, PartialEq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="doccomment">/// An id that points into a file database.
+</span><span class="kw">pub struct </span>FileId(usize);
 
-<span class="kw">impl</span> <span class="ident">FileId</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">zero</span>() -&gt; <span class="self">Self</span> {
+<span class="kw">impl </span>FileId {
+    <span class="kw">pub const fn </span>zero() -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(<span class="number">0</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FileId</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">input</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">input</span>)
+<span class="kw">impl </span>From&lt;usize&gt; <span class="kw">for </span>FileId {
+    <span class="kw">fn </span>from(input: usize) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(input)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FileId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">usize</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">input</span>: <span class="ident">FileId</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">input</span>.<span class="number">0</span>
-    }
+<span class="kw">impl </span>From&lt;FileId&gt; <span class="kw">for </span>usize {
+    <span class="kw">fn </span>from(input: FileId) -&gt; <span class="self">Self </span>{
+        input.<span class="number">0
+    </span>}
 }
 
-<span class="kw">type</span> <span class="ident">OwnedSourceCode</span> <span class="op">=</span> <span class="ident">SourceCode</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">LineIndexBuf</span><span class="op">&gt;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">SourceCode</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">LineIndex</span><span class="op">&gt;</span>;
+<span class="kw">type </span>OwnedSourceCode = SourceCode&lt;String, LineIndexBuf&gt;;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>BorrowedSourceCode&lt;<span class="lifetime">&#39;a</span>&gt; = SourceCode&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>LineIndex&gt;;
 
-<span class="doccomment">/// Represents the source code of a file.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SourceCode</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The text content of the file.</span>
-    <span class="kw">pub</span> <span class="ident">text</span>: <span class="ident">T</span>,
-    <span class="doccomment">/// An optional &quot;line index&quot; for the file, a list of byte offsets for the</span>
-    <span class="doccomment">/// start of each line in the file.</span>
-    <span class="kw">pub</span> <span class="ident">line_starts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Represents the source code of a file.
+</span><span class="attribute">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">pub struct </span>SourceCode&lt;T, L&gt; {
+    <span class="doccomment">/// The text content of the file.
+    </span><span class="kw">pub </span>text: T,
+    <span class="doccomment">/// An optional &quot;line index&quot; for the file, a list of byte offsets for the
+    /// start of each line in the file.
+    </span><span class="kw">pub </span>line_starts: <span class="prelude-ty">Option</span>&lt;L&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">SourceCode</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Converts a `SourceCode&lt;T, L&gt;` to `SourceCode&lt;&amp;T::Target, &amp;L::Target&gt;`.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">as_deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SourceCode</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Deref</span><span class="op">&gt;</span><span class="ident">::Target</span>, <span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">L</span> <span class="kw">as</span> <span class="ident">Deref</span><span class="op">&gt;</span><span class="ident">::Target</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="ident">Deref</span>,
-        <span class="ident">L</span>: <span class="ident">Deref</span>,
+<span class="kw">impl</span>&lt;T, L&gt; SourceCode&lt;T, L&gt; {
+    <span class="doccomment">/// Converts a `SourceCode&lt;T, L&gt;` to `SourceCode&lt;&amp;T::Target, &amp;L::Target&gt;`.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>as_deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SourceCode&lt;<span class="kw-2">&amp;</span>&lt;T <span class="kw">as </span>Deref&gt;::Target, <span class="kw-2">&amp;</span>&lt;L <span class="kw">as </span>Deref&gt;::Target&gt;
+    <span class="kw">where
+        </span>T: Deref,
+        L: Deref,
     {
-        <span class="ident">SourceCode</span> {
-            <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>,
-            <span class="ident">line_starts</span>: <span class="self">self</span>.<span class="ident">line_starts</span>.<span class="ident">as_deref</span>(),
+        SourceCode {
+            text: <span class="kw-2">&amp;</span><span class="self">self</span>.text,
+            line_starts: <span class="self">self</span>.line_starts.as_deref(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Converts a `SourceCode&lt;&amp;str, &amp;LineIndex&gt;` to `SourceCode&lt;String, LineIndexBuf&gt;`.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">to_owned</span>(<span class="self">self</span>) -&gt; <span class="ident">OwnedSourceCode</span> {
-        <span class="ident">SourceCode</span> {
-            <span class="ident">text</span>: <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">line_starts</span>: <span class="self">self</span>.<span class="ident">line_starts</span>.<span class="ident">map</span>(<span class="ident">ToOwned::to_owned</span>),
+<span class="kw">impl </span>BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="doccomment">/// Converts a `SourceCode&lt;&amp;str, &amp;LineIndex&gt;` to `SourceCode&lt;String, LineIndexBuf&gt;`.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>to_owned(<span class="self">self</span>) -&gt; OwnedSourceCode {
+        SourceCode {
+            text: <span class="self">self</span>.text.to_owned(),
+            line_starts: <span class="self">self</span>.line_starts.map(ToOwned::to_owned),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LineIndex</span>([<span class="ident">TextSize</span>]);
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>LineIndex([TextSize]);
 
-<span class="kw">impl</span> <span class="ident">LineIndex</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> [<span class="ident">TextSize</span>]) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">Self</span> {
-        <span class="comment">// SAFETY: Transmuting `&amp;[TextSize]` to `&amp;LineIndex` is safe since</span>
-        <span class="comment">// `LineIndex` is a `repr(transparent)` struct containing a `[TextSize]`</span>
-        <span class="comment">// and thus has the same memory layout</span>
-        <span class="kw">unsafe</span> { <span class="ident">std::mem::transmute</span>(<span class="ident">slice</span>) }
+<span class="kw">impl </span>LineIndex {
+    <span class="kw">pub fn </span>new(slice: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>[TextSize]) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="self">Self </span>{
+        <span class="comment">// SAFETY: Transmuting `&amp;[TextSize]` to `&amp;LineIndex` is safe since
+        // `LineIndex` is a `repr(transparent)` struct containing a `[TextSize]`
+        // and thus has the same memory layout
+        </span><span class="kw">unsafe </span>{ std::mem::transmute(slice) }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">LineIndex</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> [<span class="ident">TextSize</span>];
+<span class="kw">impl </span>Deref <span class="kw">for </span>LineIndex {
+    <span class="kw">type </span>Target = [TextSize];
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
+    </span>}
+}
+
+<span class="kw">impl </span>ToOwned <span class="kw">for </span>LineIndex {
+    <span class="kw">type </span>Owned = LineIndexBuf;
+
+    <span class="kw">fn </span>to_owned(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Owned {
+        LineIndexBuf(<span class="self">self</span>.<span class="number">0</span>.to_owned())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToOwned</span> <span class="kw">for</span> <span class="ident">LineIndex</span> {
-    <span class="kw">type</span> <span class="ident">Owned</span> <span class="op">=</span> <span class="ident">LineIndexBuf</span>;
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>LineIndexBuf(Vec&lt;TextSize&gt;);
 
-    <span class="kw">fn</span> <span class="ident">to_owned</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Owned</span> {
-        <span class="ident">LineIndexBuf</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">to_owned</span>())
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LineIndexBuf</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span>);
-
-<span class="kw">impl</span> <span class="ident">LineIndexBuf</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_source_text</span>(<span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl </span>LineIndexBuf {
+    <span class="kw">pub fn </span>from_source_text(source: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(
-            <span class="ident">std::iter::once</span>(<span class="number">0</span>)
-                .<span class="ident">chain</span>(<span class="ident">source</span>.<span class="ident">match_indices</span>(<span class="kw-2">&amp;</span>[<span class="string">&#39;\n&#39;</span>, <span class="string">&#39;\r&#39;</span>]).<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="kw">_</span>)<span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">source</span>.<span class="ident">as_bytes</span>();
+            std::iter::once(<span class="number">0</span>)
+                .chain(source.match_indices(<span class="kw-2">&amp;</span>[<span class="string">&#39;\n&#39;</span>, <span class="string">&#39;\r&#39;</span>]).filter_map(|(i, <span class="kw">_</span>)| {
+                    <span class="kw">let </span>bytes = source.as_bytes();
 
-                    <span class="kw">match</span> <span class="ident">bytes</span>[<span class="ident">i</span>] {
-                        <span class="comment">// Filter out the `\r` in `\r\n` to avoid counting the line break twice</span>
-                        <span class="string">b&#39;\r&#39;</span> <span class="kw">if</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span> <span class="op">&lt;</span> <span class="ident">bytes</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">bytes</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> =&gt; <span class="prelude-val">None</span>,
-                        <span class="kw">_</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>),
+                    <span class="kw">match </span>bytes[i] {
+                        <span class="comment">// Filter out the `\r` in `\r\n` to avoid counting the line break twice
+                        </span><span class="string">b&#39;\r&#39; </span><span class="kw">if </span>i + <span class="number">1 </span>&lt; bytes.len() &amp;&amp; bytes[i + <span class="number">1</span>] == <span class="string">b&#39;\n&#39; </span>=&gt; <span class="prelude-val">None</span>,
+                        <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(i + <span class="number">1</span>),
                     }
                 }))
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">TextSize::try_from</span>(<span class="ident">i</span>).<span class="ident">expect</span>(<span class="string">&quot;integer overflow&quot;</span>))
-                .<span class="ident">collect</span>(),
+                .map(|i| TextSize::try_from(i).expect(<span class="string">&quot;integer overflow&quot;</span>))
+                .collect(),
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">LineIndexBuf</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">LineIndex</span>;
+<span class="kw">impl </span>Deref <span class="kw">for </span>LineIndexBuf {
+    <span class="kw">type </span>Target = LineIndex;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="ident">LineIndex::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_slice</span>())
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        LineIndex::new(<span class="self">self</span>.<span class="number">0</span>.as_slice())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">LineIndex</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">LineIndexBuf</span> {
-    <span class="kw">fn</span> <span class="ident">borrow</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">LineIndex</span> {
-        <span class="self">self</span>
-    }
+<span class="kw">impl </span>Borrow&lt;LineIndex&gt; <span class="kw">for </span>LineIndexBuf {
+    <span class="kw">fn </span>borrow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>LineIndex {
+        <span class="self">self
+    </span>}
 }
 
-<span class="doccomment">/// Builder type for the [Location] struct</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LocationBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">resource</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">span</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
-    <span class="ident">source_code</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Builder type for the [Location] struct
+</span><span class="kw">pub struct </span>LocationBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+    resource: <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
+    span: <span class="prelude-ty">Option</span>&lt;TextRange&gt;,
+    source_code: <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">LocationBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resource</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsResource</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">P</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">resource</span> <span class="op">=</span> <span class="ident">resource</span>.<span class="ident">as_resource</span>();
-        <span class="self">self</span>
-    }
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LocationBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>resource&lt;P: AsResource&gt;(<span class="kw-2">mut </span><span class="self">self</span>, resource: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>P) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.resource = resource.as_resource();
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">span</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">AsSpan</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">span</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">S</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">span</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">as_span</span>();
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>span&lt;S: AsSpan&gt;(<span class="kw-2">mut </span><span class="self">self</span>, span: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>S) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.span = span.as_span();
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source_code</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">AsSourceCode</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">source_code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">S</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">source_code</span> <span class="op">=</span> <span class="ident">source_code</span>.<span class="ident">as_source_code</span>();
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>source_code&lt;S: AsSourceCode&gt;(<span class="kw-2">mut </span><span class="self">self</span>, source_code: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>S) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.source_code = source_code.as_source_code();
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">Location</span> {
-            <span class="ident">resource</span>: <span class="self">self</span>.<span class="ident">resource</span><span class="question-mark">?</span>,
-            <span class="ident">span</span>: <span class="self">self</span>.<span class="ident">span</span>,
-            <span class="ident">source_code</span>: <span class="self">self</span>.<span class="ident">source_code</span>,
+    <span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Location&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(Location {
+            resource: <span class="self">self</span>.resource<span class="question-mark">?</span>,
+            span: <span class="self">self</span>.span,
+            source_code: <span class="self">self</span>.source_code,
         })
     }
 }
 
-<span class="doccomment">/// Utility trait for types that can be converted to a [Resource]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AsResource</span> {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Utility trait for types that can be converted to a [Resource]
+</span><span class="kw">pub trait </span>AsResource {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsResource</span><span class="op">&gt;</span> <span class="ident">AsResource</span> <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="ident">T::as_resource</span>)
+<span class="kw">impl</span>&lt;T: AsResource&gt; AsResource <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt; {
+        <span class="self">self</span>.as_ref().and_then(T::as_resource)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsResource</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">AsResource</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">T</span> {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">T::as_resource</span>(<span class="kw-2">*</span><span class="self">self</span>)
+<span class="kw">impl</span>&lt;T: AsResource + <span class="question-mark">?</span>Sized&gt; AsResource <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>T {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt; {
+        T::as_resource(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Deref</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">AsResource</span> <span class="kw">for</span> <span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">as_deref</span>())
+<span class="kw">impl</span>&lt;T: Deref&lt;Target = str&gt;&gt; AsResource <span class="kw">for </span>Resource&lt;T&gt; {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt; {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.as_deref())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Deref</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">AsResource</span> <span class="kw">for</span> <span class="ident">FilePath</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">Resource::File</span>(<span class="self">self</span>.<span class="ident">as_deref</span>()))
+<span class="kw">impl</span>&lt;T: Deref&lt;Target = str&gt;&gt; AsResource <span class="kw">for </span>FilePath&lt;T&gt; {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt; {
+        <span class="prelude-val">Some</span>(Resource::File(<span class="self">self</span>.as_deref()))
     }
 }
 
-<span class="comment">// Returns the equivalent of A || B, primarily intended for writing the path of</span>
-<span class="comment">// a diagnostic as `(String, FileId)`</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsResource</span>, <span class="ident">B</span>: <span class="ident">AsResource</span><span class="op">&gt;</span> <span class="ident">AsResource</span> <span class="kw">for</span> (<span class="ident">A</span>, <span class="ident">B</span>) {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> (<span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_resource</span>(), <span class="self">self</span>.<span class="number">1</span>.<span class="ident">as_resource</span>()) {
-            (<span class="prelude-val">Some</span>(<span class="ident">Resource::File</span>(<span class="ident">a</span>)), <span class="prelude-val">Some</span>(<span class="ident">Resource::File</span>(<span class="ident">b</span>))) =&gt; <span class="prelude-val">Some</span>(<span class="ident">Resource::File</span>(<span class="ident">a</span>.<span class="ident">or</span>(<span class="ident">b</span>))),
-            (<span class="prelude-val">Some</span>(<span class="ident">a</span>), <span class="prelude-val">Some</span>(<span class="ident">_b</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">a</span>),
-            (<span class="prelude-val">Some</span>(<span class="ident">path</span>), <span class="prelude-val">None</span>) <span class="op">|</span> (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">path</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">path</span>),
+<span class="comment">// Returns the equivalent of A || B, primarily intended for writing the path of
+// a diagnostic as `(String, FileId)`
+</span><span class="kw">impl</span>&lt;A: AsResource, B: AsResource&gt; AsResource <span class="kw">for </span>(A, B) {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt; {
+        <span class="kw">match </span>(<span class="self">self</span>.<span class="number">0</span>.as_resource(), <span class="self">self</span>.<span class="number">1</span>.as_resource()) {
+            (<span class="prelude-val">Some</span>(Resource::File(a)), <span class="prelude-val">Some</span>(Resource::File(b))) =&gt; <span class="prelude-val">Some</span>(Resource::File(a.or(b))),
+            (<span class="prelude-val">Some</span>(a), <span class="prelude-val">Some</span>(_b)) =&gt; <span class="prelude-val">Some</span>(a),
+            (<span class="prelude-val">Some</span>(path), <span class="prelude-val">None</span>) | (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(path)) =&gt; <span class="prelude-val">Some</span>(path),
             (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsResource</span> <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">Resource::File</span>(<span class="ident">FilePath::Path</span>(<span class="self">self</span>)))
+<span class="kw">impl </span>AsResource <span class="kw">for </span>String {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt; {
+        <span class="prelude-val">Some</span>(Resource::File(FilePath::Path(<span class="self">self</span>)))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsResource</span> <span class="kw">for</span> <span class="ident">str</span> {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">Resource::File</span>(<span class="ident">FilePath::Path</span>(<span class="self">self</span>)))
+<span class="kw">impl </span>AsResource <span class="kw">for </span>str {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt; {
+        <span class="prelude-val">Some</span>(Resource::File(FilePath::Path(<span class="self">self</span>)))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsResource</span> <span class="kw">for</span> <span class="ident">FileId</span> {
-    <span class="kw">fn</span> <span class="ident">as_resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">Resource::File</span>(<span class="ident">FilePath::FileId</span>(<span class="kw-2">*</span><span class="self">self</span>)))
+<span class="kw">impl </span>AsResource <span class="kw">for </span>FileId {
+    <span class="kw">fn </span>as_resource(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Resource&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt;&gt; {
+        <span class="prelude-val">Some</span>(Resource::File(FilePath::FileId(<span class="kw-2">*</span><span class="self">self</span>)))
     }
 }
 
-<span class="doccomment">/// Utility trait for types that can be converted into `Option&lt;TextRange&gt;`</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AsSpan</span> {
-    <span class="kw">fn</span> <span class="ident">as_span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Utility trait for types that can be converted into `Option&lt;TextRange&gt;`
+</span><span class="kw">pub trait </span>AsSpan {
+    <span class="kw">fn </span>as_span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextRange&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsSpan</span><span class="op">&gt;</span> <span class="ident">AsSpan</span> <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">as_span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="ident">T::as_span</span>)
+<span class="kw">impl</span>&lt;T: AsSpan&gt; AsSpan <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">fn </span>as_span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextRange&gt; {
+        <span class="self">self</span>.as_ref().and_then(T::as_span)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsSpan</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">AsSpan</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">T</span> {
-    <span class="kw">fn</span> <span class="ident">as_span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
-        <span class="ident">T::as_span</span>(<span class="kw-2">*</span><span class="self">self</span>)
+<span class="kw">impl</span>&lt;T: AsSpan + <span class="question-mark">?</span>Sized&gt; AsSpan <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>T {
+    <span class="kw">fn </span>as_span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextRange&gt; {
+        T::as_span(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsSpan</span> <span class="kw">for</span> <span class="ident">TextRange</span> {
-    <span class="kw">fn</span> <span class="ident">as_span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>AsSpan <span class="kw">for </span>TextRange {
+    <span class="kw">fn </span>as_span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextRange&gt; {
         <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">AsSpan</span> <span class="kw">for</span> <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">TextSize</span>: <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-    <span class="op">&lt;</span><span class="ident">TextSize</span> <span class="kw">as</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Error</span>: <span class="ident">Debug</span>,
+<span class="kw">impl</span>&lt;T: Copy&gt; AsSpan <span class="kw">for </span>Range&lt;T&gt;
+<span class="kw">where
+    </span>TextSize: TryFrom&lt;T&gt;,
+    &lt;TextSize <span class="kw">as </span>TryFrom&lt;T&gt;&gt;::Error: Debug,
 {
-    <span class="kw">fn</span> <span class="ident">as_span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">TextRange::new</span>(
-            <span class="ident">TextSize::try_from</span>(<span class="self">self</span>.<span class="ident">start</span>).<span class="ident">expect</span>(<span class="string">&quot;integer overflow&quot;</span>),
-            <span class="ident">TextSize::try_from</span>(<span class="self">self</span>.<span class="ident">end</span>).<span class="ident">expect</span>(<span class="string">&quot;integer overflow&quot;</span>),
+    <span class="kw">fn </span>as_span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextRange&gt; {
+        <span class="prelude-val">Some</span>(TextRange::new(
+            TextSize::try_from(<span class="self">self</span>.start).expect(<span class="string">&quot;integer overflow&quot;</span>),
+            TextSize::try_from(<span class="self">self</span>.end).expect(<span class="string">&quot;integer overflow&quot;</span>),
         ))
     }
 }
 
-<span class="doccomment">/// Utility trait for types that can be converted into [SourceCode]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AsSourceCode</span> {
-    <span class="kw">fn</span> <span class="ident">as_source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Utility trait for types that can be converted into [SourceCode]
+</span><span class="kw">pub trait </span>AsSourceCode {
+    <span class="kw">fn </span>as_source_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt;&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsSourceCode</span><span class="op">&gt;</span> <span class="ident">AsSourceCode</span> <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">as_source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="ident">T::as_source_code</span>)
+<span class="kw">impl</span>&lt;T: AsSourceCode&gt; AsSourceCode <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">fn </span>as_source_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+        <span class="self">self</span>.as_ref().and_then(T::as_source_code)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsSourceCode</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">AsSourceCode</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">T</span> {
-    <span class="kw">fn</span> <span class="ident">as_source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">T::as_source_code</span>(<span class="kw-2">*</span><span class="self">self</span>)
+<span class="kw">impl</span>&lt;T: AsSourceCode + <span class="question-mark">?</span>Sized&gt; AsSourceCode <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>T {
+    <span class="kw">fn </span>as_source_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+        T::as_source_code(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsSourceCode</span> <span class="kw">for</span> <span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">as_source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>AsSourceCode <span class="kw">for </span>BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>as_source_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsSourceCode</span> <span class="kw">for</span> <span class="ident">OwnedSourceCode</span> {
-    <span class="kw">fn</span> <span class="ident">as_source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">SourceCode</span> {
-            <span class="ident">text</span>: <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">as_str</span>(),
-            <span class="ident">line_starts</span>: <span class="self">self</span>.<span class="ident">line_starts</span>.<span class="ident">as_deref</span>(),
+<span class="kw">impl </span>AsSourceCode <span class="kw">for </span>OwnedSourceCode {
+    <span class="kw">fn </span>as_source_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(SourceCode {
+            text: <span class="self">self</span>.text.as_str(),
+            line_starts: <span class="self">self</span>.line_starts.as_deref(),
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsSourceCode</span> <span class="kw">for</span> <span class="ident">str</span> {
-    <span class="kw">fn</span> <span class="ident">as_source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">SourceCode</span> {
-            <span class="ident">text</span>: <span class="self">self</span>,
-            <span class="ident">line_starts</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl </span>AsSourceCode <span class="kw">for </span>str {
+    <span class="kw">fn </span>as_source_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(SourceCode {
+            text: <span class="self">self</span>,
+            line_starts: <span class="prelude-val">None</span>,
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsSourceCode</span> <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">as_source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">SourceCode</span> {
-            <span class="ident">text</span>: <span class="self">self</span>,
-            <span class="ident">line_starts</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl </span>AsSourceCode <span class="kw">for </span>String {
+    <span class="kw">fn </span>as_source_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;BorrowedSourceCode&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(SourceCode {
+            text: <span class="self">self</span>,
+            line_starts: <span class="prelude-val">None</span>,
         })
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">rome_text_size::TextSize</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>rome_text_size::TextSize;
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::LineIndexBuf</span>;
+    <span class="kw">use </span><span class="kw">super</span>::LineIndexBuf;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">line_starts_with_carriage_return_line_feed</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;a\r\nb\r\nc&quot;</span>;
-        <span class="kw">let</span> <span class="ident">LineIndexBuf</span>(<span class="ident">starts</span>) <span class="op">=</span> <span class="ident">LineIndexBuf::from_source_text</span>(<span class="ident">input</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>line_starts_with_carriage_return_line_feed() {
+        <span class="kw">let </span>input = <span class="string">&quot;a\r\nb\r\nc&quot;</span>;
+        <span class="kw">let </span>LineIndexBuf(starts) = LineIndexBuf::from_source_text(input);
 
         <span class="macro">assert_eq!</span>(
             <span class="macro">vec!</span>[
-                <span class="ident">TextSize::from</span>(<span class="number">0u32</span>),
-                <span class="ident">TextSize::from</span>(<span class="number">3u32</span>),
-                <span class="ident">TextSize::from</span>(<span class="number">6u32</span>)
+                TextSize::from(<span class="number">0u32</span>),
+                TextSize::from(<span class="number">3u32</span>),
+                TextSize::from(<span class="number">6u32</span>)
             ],
-            <span class="ident">starts</span>
+            starts
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">line_starts_with_carriage_return</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;a\rb\rc&quot;</span>;
-        <span class="kw">let</span> <span class="ident">LineIndexBuf</span>(<span class="ident">starts</span>) <span class="op">=</span> <span class="ident">LineIndexBuf::from_source_text</span>(<span class="ident">input</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>line_starts_with_carriage_return() {
+        <span class="kw">let </span>input = <span class="string">&quot;a\rb\rc&quot;</span>;
+        <span class="kw">let </span>LineIndexBuf(starts) = LineIndexBuf::from_source_text(input);
 
         <span class="macro">assert_eq!</span>(
             <span class="macro">vec!</span>[
-                <span class="ident">TextSize::from</span>(<span class="number">0u32</span>),
-                <span class="ident">TextSize::from</span>(<span class="number">2u32</span>),
-                <span class="ident">TextSize::from</span>(<span class="number">4u32</span>)
+                TextSize::from(<span class="number">0u32</span>),
+                TextSize::from(<span class="number">2u32</span>),
+                TextSize::from(<span class="number">4u32</span>)
             ],
-            <span class="ident">starts</span>
+            starts
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">line_starts_with_line_feed</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;a\nb\nc&quot;</span>;
-        <span class="kw">let</span> <span class="ident">LineIndexBuf</span>(<span class="ident">starts</span>) <span class="op">=</span> <span class="ident">LineIndexBuf::from_source_text</span>(<span class="ident">input</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>line_starts_with_line_feed() {
+        <span class="kw">let </span>input = <span class="string">&quot;a\nb\nc&quot;</span>;
+        <span class="kw">let </span>LineIndexBuf(starts) = LineIndexBuf::from_source_text(input);
 
         <span class="macro">assert_eq!</span>(
             <span class="macro">vec!</span>[
-                <span class="ident">TextSize::from</span>(<span class="number">0u32</span>),
-                <span class="ident">TextSize::from</span>(<span class="number">2u32</span>),
-                <span class="ident">TextSize::from</span>(<span class="number">4u32</span>)
+                TextSize::from(<span class="number">0u32</span>),
+                TextSize::from(<span class="number">2u32</span>),
+                TextSize::from(<span class="number">4u32</span>)
             ],
-            <span class="ident">starts</span>
+            starts
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/printer/call_stack.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>call_stack.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_formatter/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/printer/call_stack.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>call_stack.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_formatter/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -233,240 +233,240 @@
 <span id="233">233</span>
 <span id="234">234</span>
 <span id="235">235</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::format_element::tag::TagKind</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::format_element::PrintMode</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::printer::stack</span>::{<span class="ident">Stack</span>, <span class="ident">StackedStack</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::printer::Indention</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">IndentStyle</span>, <span class="ident">InvalidDocumentError</span>, <span class="ident">PrintError</span>, <span class="ident">PrintResult</span>};
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">std::num::NonZeroU8</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::format_element::tag::TagKind;
+<span class="kw">use </span><span class="kw">crate</span>::format_element::PrintMode;
+<span class="kw">use </span><span class="kw">crate</span>::printer::stack::{Stack, StackedStack};
+<span class="kw">use </span><span class="kw">crate</span>::printer::Indention;
+<span class="kw">use crate</span>::{IndentStyle, InvalidDocumentError, PrintError, PrintResult};
+<span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>std::num::NonZeroU8;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum</span> <span class="ident">StackFrameKind</span> {
-    <span class="ident">Root</span>,
-    <span class="ident">Tag</span>(<span class="ident">TagKind</span>),
+<span class="attribute">#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>StackFrameKind {
+    Root,
+    Tag(TagKind),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">StackFrame</span> {
-    <span class="ident">kind</span>: <span class="ident">StackFrameKind</span>,
-    <span class="ident">args</span>: <span class="ident">PrintElementArgs</span>,
+<span class="attribute">#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>StackFrame {
+    kind: StackFrameKind,
+    args: PrintElementArgs,
 }
 
-<span class="doccomment">/// Stores arguments passed to `print_element` call, holding the state specific to printing an element.</span>
-<span class="doccomment">/// E.g. the `indent` depends on the token the Printer&#39;s currently processing. That&#39;s why</span>
-<span class="doccomment">/// it must be stored outside of the [PrinterState] that stores the state common to all elements.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The state is passed by value, which is why it&#39;s important that it isn&#39;t storing any heavy</span>
-<span class="doccomment">/// data structures. Such structures should be stored on the [PrinterState] instead.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">PrintElementArgs</span> {
-    <span class="ident">indent</span>: <span class="ident">Indention</span>,
-    <span class="ident">mode</span>: <span class="ident">PrintMode</span>,
+<span class="doccomment">/// Stores arguments passed to `print_element` call, holding the state specific to printing an element.
+/// E.g. the `indent` depends on the token the Printer&#39;s currently processing. That&#39;s why
+/// it must be stored outside of the [PrinterState] that stores the state common to all elements.
+///
+/// The state is passed by value, which is why it&#39;s important that it isn&#39;t storing any heavy
+/// data structures. Such structures should be stored on the [PrinterState] instead.
+</span><span class="attribute">#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>PrintElementArgs {
+    indent: Indention,
+    mode: PrintMode,
 }
 
-<span class="kw">impl</span> <span class="ident">PrintElementArgs</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">indent</span>: <span class="ident">Indention</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">indent</span>,
-            ..<span class="ident"><span class="self">Self</span>::default</span>()
+<span class="kw">impl </span>PrintElementArgs {
+    <span class="kw">pub fn </span>new(indent: Indention) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            indent,
+            ..<span class="self">Self</span>::default()
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PrintMode</span> {
-        <span class="self">self</span>.<span class="ident">mode</span>
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PrintMode {
+        <span class="self">self</span>.mode
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">indention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Indention</span> {
-        <span class="self">self</span>.<span class="ident">indent</span>
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>indention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Indention {
+        <span class="self">self</span>.indent
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">increment_indent_level</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">indent_style</span>: <span class="ident">IndentStyle</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">indent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">indent</span>.<span class="ident">increment_level</span>(<span class="ident">indent_style</span>);
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>increment_indent_level(<span class="kw-2">mut </span><span class="self">self</span>, indent_style: IndentStyle) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.indent = <span class="self">self</span>.indent.increment_level(indent_style);
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decrement_indent</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">indent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">indent</span>.<span class="ident">decrement</span>();
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>decrement_indent(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.indent = <span class="self">self</span>.indent.decrement();
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset_indent</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">indent</span> <span class="op">=</span> <span class="ident">Indention::default</span>();
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>reset_indent(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.indent = Indention::default();
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_indent_align</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">count</span>: <span class="ident">NonZeroU8</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">indent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">indent</span>.<span class="ident">set_align</span>(<span class="ident">count</span>);
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>set_indent_align(<span class="kw-2">mut </span><span class="self">self</span>, count: NonZeroU8) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.indent = <span class="self">self</span>.indent.set_align(count);
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_print_mode</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">PrintMode</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">mode</span>;
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>with_print_mode(<span class="kw-2">mut </span><span class="self">self</span>, mode: PrintMode) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.mode = mode;
+        <span class="self">self
+    </span>}
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">PrintElementArgs</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">indent</span>: <span class="ident">Indention::Level</span>(<span class="number">0</span>),
-            <span class="ident">mode</span>: <span class="ident">PrintMode::Expanded</span>,
+<span class="kw">impl </span>Default <span class="kw">for </span>PrintElementArgs {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            indent: Indention::Level(<span class="number">0</span>),
+            mode: PrintMode::Expanded,
         }
     }
 }
 
-<span class="doccomment">/// Call stack that stores the [PrintElementCallArgs].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// New [PrintElementCallArgs] are pushed onto the stack for every [`start`](Tag::is_start) [`Tag`](FormatElement::Tag)</span>
-<span class="doccomment">/// and popped when reaching the corresponding [`end`](Tag::is_end) [`Tag`](FormatElement::Tag).</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait</span> <span class="ident">CallStack</span> {
-    <span class="kw">type</span> <span class="ident">Stack</span>: <span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">StackFrame</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Debug</span>;
+<span class="doccomment">/// Call stack that stores the [PrintElementCallArgs].
+///
+/// New [PrintElementCallArgs] are pushed onto the stack for every [`start`](Tag::is_start) [`Tag`](FormatElement::Tag)
+/// and popped when reaching the corresponding [`end`](Tag::is_end) [`Tag`](FormatElement::Tag).
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>CallStack {
+    <span class="kw">type </span>Stack: Stack&lt;StackFrame&gt; + Debug;
 
-    <span class="kw">fn</span> <span class="ident">stack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Stack</span>;
+    <span class="kw">fn </span>stack(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Stack;
 
-    <span class="kw">fn</span> <span class="ident">stack_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Stack</span>;
+    <span class="kw">fn </span>stack_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Stack;
 
-    <span class="doccomment">/// Pops the call arguments at the top and asserts that they correspond to a start tag of `kind`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `Ok` with the arguments if the kind of the top stack frame matches `kind`, otherwise</span>
-    <span class="doccomment">/// returns `Err`.</span>
-    <span class="kw">fn</span> <span class="ident">pop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">TagKind</span>) -&gt; <span class="ident">PrintResult</span><span class="op">&lt;</span><span class="ident">PrintElementArgs</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">stack_mut</span>().<span class="ident">pop</span>();
+    <span class="doccomment">/// Pops the call arguments at the top and asserts that they correspond to a start tag of `kind`.
+    ///
+    /// Returns `Ok` with the arguments if the kind of the top stack frame matches `kind`, otherwise
+    /// returns `Err`.
+    </span><span class="kw">fn </span>pop(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: TagKind) -&gt; PrintResult&lt;PrintElementArgs&gt; {
+        <span class="kw">let </span>last = <span class="self">self</span>.stack_mut().pop();
 
-        <span class="kw">match</span> <span class="ident">last</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">StackFrame</span> {
-                <span class="ident">kind</span>: <span class="ident">StackFrameKind::Tag</span>(<span class="ident">actual_kind</span>),
-                <span class="ident">args</span>,
-            }) <span class="kw">if</span> <span class="ident">actual_kind</span> <span class="op">==</span> <span class="ident">kind</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">args</span>),
-            <span class="comment">// Start / End kind don&#39;t match</span>
-            <span class="prelude-val">Some</span>(<span class="ident">StackFrame</span> {
-                <span class="ident">kind</span>: <span class="ident">StackFrameKind::Tag</span>(<span class="ident">expected_kind</span>),
+        <span class="kw">match </span>last {
+            <span class="prelude-val">Some</span>(StackFrame {
+                kind: StackFrameKind::Tag(actual_kind),
+                args,
+            }) <span class="kw">if </span>actual_kind == kind =&gt; <span class="prelude-val">Ok</span>(args),
+            <span class="comment">// Start / End kind don&#39;t match
+            </span><span class="prelude-val">Some</span>(StackFrame {
+                kind: StackFrameKind::Tag(expected_kind),
                 ..
-            }) =&gt; <span class="prelude-val">Err</span>(<span class="ident">PrintError::InvalidDocument</span>(<span class="ident"><span class="self">Self</span>::invalid_document_error</span>(
-                <span class="ident">kind</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">expected_kind</span>),
+            }) =&gt; <span class="prelude-val">Err</span>(PrintError::InvalidDocument(<span class="self">Self</span>::invalid_document_error(
+                kind,
+                <span class="prelude-val">Some</span>(expected_kind),
             ))),
-            <span class="comment">// Tried to pop the outer most stack frame, which is not valid</span>
-            <span class="prelude-val">Some</span>(
-                <span class="ident">frame</span> @ <span class="ident">StackFrame</span> {
-                    <span class="ident">kind</span>: <span class="ident">StackFrameKind::Root</span>,
+            <span class="comment">// Tried to pop the outer most stack frame, which is not valid
+            </span><span class="prelude-val">Some</span>(
+                frame @ StackFrame {
+                    kind: StackFrameKind::Root,
                     ..
                 },
             ) =&gt; {
-                <span class="comment">// Put it back in to guarantee that the stack is never empty</span>
-                <span class="self">self</span>.<span class="ident">stack_mut</span>().<span class="ident">push</span>(<span class="ident">frame</span>);
-                <span class="prelude-val">Err</span>(<span class="ident">PrintError::InvalidDocument</span>(<span class="ident"><span class="self">Self</span>::invalid_document_error</span>(
-                    <span class="ident">kind</span>, <span class="prelude-val">None</span>,
+                <span class="comment">// Put it back in to guarantee that the stack is never empty
+                </span><span class="self">self</span>.stack_mut().push(frame);
+                <span class="prelude-val">Err</span>(PrintError::InvalidDocument(<span class="self">Self</span>::invalid_document_error(
+                    kind, <span class="prelude-val">None</span>,
                 )))
             }
 
-            <span class="comment">// This should be unreachable but having it for completeness. Happens if the stack is empty.</span>
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">PrintError::InvalidDocument</span>(<span class="ident"><span class="self">Self</span>::invalid_document_error</span>(
-                <span class="ident">kind</span>, <span class="prelude-val">None</span>,
+            <span class="comment">// This should be unreachable but having it for completeness. Happens if the stack is empty.
+            </span><span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(PrintError::InvalidDocument(<span class="self">Self</span>::invalid_document_error(
+                kind, <span class="prelude-val">None</span>,
             ))),
         }
     }
 
-    <span class="attribute">#[<span class="ident">cold</span>]</span>
-    <span class="kw">fn</span> <span class="ident">invalid_document_error</span>(
-        <span class="ident">end_kind</span>: <span class="ident">TagKind</span>,
-        <span class="ident">start_kind</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TagKind</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">InvalidDocumentError</span> {
-        <span class="kw">match</span> <span class="ident">start_kind</span> {
-            <span class="prelude-val">None</span> =&gt; <span class="ident">InvalidDocumentError::StartTagMissing</span> { <span class="ident">kind</span>: <span class="ident">end_kind</span> },
-            <span class="prelude-val">Some</span>(<span class="ident">start_kind</span>) =&gt; <span class="ident">InvalidDocumentError::StartEndTagMismatch</span> {
-                <span class="ident">start_kind</span>,
-                <span class="ident">end_kind</span>,
+    <span class="attribute">#[cold]
+    </span><span class="kw">fn </span>invalid_document_error(
+        end_kind: TagKind,
+        start_kind: <span class="prelude-ty">Option</span>&lt;TagKind&gt;,
+    ) -&gt; InvalidDocumentError {
+        <span class="kw">match </span>start_kind {
+            <span class="prelude-val">None </span>=&gt; InvalidDocumentError::StartTagMissing { kind: end_kind },
+            <span class="prelude-val">Some</span>(start_kind) =&gt; InvalidDocumentError::StartEndTagMismatch {
+                start_kind,
+                end_kind,
             },
         }
     }
 
-    <span class="doccomment">/// Returns the [PrintElementArgs] for the current stack frame.</span>
-    <span class="kw">fn</span> <span class="ident">top</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PrintElementArgs</span> {
-        <span class="self">self</span>.<span class="ident">stack</span>()
-            .<span class="ident">top</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;Expected `stack` to never be empty.&quot;</span>)
-            .<span class="ident">args</span>
+    <span class="doccomment">/// Returns the [PrintElementArgs] for the current stack frame.
+    </span><span class="kw">fn </span>top(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PrintElementArgs {
+        <span class="self">self</span>.stack()
+            .top()
+            .expect(<span class="string">&quot;Expected `stack` to never be empty.&quot;</span>)
+            .args
     }
 
-    <span class="doccomment">/// Returns the [TagKind] of the current stack frame or [None] if this is the root stack frame.</span>
-    <span class="kw">fn</span> <span class="ident">top_kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TagKind</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>
-            .<span class="ident">stack</span>()
-            .<span class="ident">top</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;Expected `stack` to never be empty.&quot;</span>)
-            .<span class="ident">kind</span>
+    <span class="doccomment">/// Returns the [TagKind] of the current stack frame or [None] if this is the root stack frame.
+    </span><span class="kw">fn </span>top_kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TagKind&gt; {
+        <span class="kw">match </span><span class="self">self
+            </span>.stack()
+            .top()
+            .expect(<span class="string">&quot;Expected `stack` to never be empty.&quot;</span>)
+            .kind
         {
-            <span class="ident">StackFrameKind::Root</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">StackFrameKind::Tag</span>(<span class="ident">kind</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">kind</span>),
+            StackFrameKind::Root =&gt; <span class="prelude-val">None</span>,
+            StackFrameKind::Tag(kind) =&gt; <span class="prelude-val">Some</span>(kind),
         }
     }
 
-    <span class="doccomment">/// Creates a new stack frame for a [FormatElement::Tag] of `kind` with `args` as the call arguments.</span>
-    <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">TagKind</span>, <span class="ident">args</span>: <span class="ident">PrintElementArgs</span>) {
-        <span class="self">self</span>.<span class="ident">stack_mut</span>().<span class="ident">push</span>(<span class="ident">StackFrame</span> {
-            <span class="ident">kind</span>: <span class="ident">StackFrameKind::Tag</span>(<span class="ident">kind</span>),
-            <span class="ident">args</span>,
+    <span class="doccomment">/// Creates a new stack frame for a [FormatElement::Tag] of `kind` with `args` as the call arguments.
+    </span><span class="kw">fn </span>push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: TagKind, args: PrintElementArgs) {
+        <span class="self">self</span>.stack_mut().push(StackFrame {
+            kind: StackFrameKind::Tag(kind),
+            args,
         })
     }
 }
 
-<span class="doccomment">/// Call stack used for printing the [FormatElement]s</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">PrintCallStack</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StackFrame</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Call stack used for printing the [FormatElement]s
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>PrintCallStack(Vec&lt;StackFrame&gt;);
 
-<span class="kw">impl</span> <span class="ident">PrintCallStack</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">args</span>: <span class="ident">PrintElementArgs</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="macro">vec!</span>[<span class="ident">StackFrame</span> {
-            <span class="ident">kind</span>: <span class="ident">StackFrameKind::Root</span>,
-            <span class="ident">args</span>,
+<span class="kw">impl </span>PrintCallStack {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(args: PrintElementArgs) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="macro">vec!</span>[StackFrame {
+            kind: StackFrameKind::Root,
+            args,
         }])
     }
 }
 
-<span class="kw">impl</span> <span class="ident">CallStack</span> <span class="kw">for</span> <span class="ident">PrintCallStack</span> {
-    <span class="kw">type</span> <span class="ident">Stack</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StackFrame</span><span class="op">&gt;</span>;
+<span class="kw">impl </span>CallStack <span class="kw">for </span>PrintCallStack {
+    <span class="kw">type </span>Stack = Vec&lt;StackFrame&gt;;
 
-    <span class="kw">fn</span> <span class="ident">stack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Stack</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    <span class="kw">fn </span>stack(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Stack {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
+    </span>}
+
+    <span class="kw">fn </span>stack_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Stack {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0
+    </span>}
+}
+
+<span class="doccomment">/// Call stack used for measuring if some content fits on the line.
+///
+/// The stack is a view on top of the [PrintCallStack] because the stack frames are still necessary for printing.
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>FitsCallStack&lt;<span class="lifetime">&#39;print</span>&gt; {
+    stack: StackedStack&lt;<span class="lifetime">&#39;print</span>, StackFrame&gt;,
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;print</span>&gt; FitsCallStack&lt;<span class="lifetime">&#39;print</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(print: <span class="kw-2">&amp;</span><span class="lifetime">&#39;print </span>PrintCallStack, saved: Vec&lt;StackFrame&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>stack = StackedStack::with_vec(<span class="kw-2">&amp;</span>print.<span class="number">0</span>, saved);
+
+        <span class="self">Self </span>{ stack }
     }
 
-    <span class="kw">fn</span> <span class="ident">stack_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Stack</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>finish(<span class="self">self</span>) -&gt; Vec&lt;StackFrame&gt; {
+        <span class="self">self</span>.stack.into_vec()
     }
 }
 
-<span class="doccomment">/// Call stack used for measuring if some content fits on the line.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The stack is a view on top of the [PrintCallStack] because the stack frames are still necessary for printing.</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">FitsCallStack</span><span class="op">&lt;</span><span class="lifetime">&#39;print</span><span class="op">&gt;</span> {
-    <span class="ident">stack</span>: <span class="ident">StackedStack</span><span class="op">&lt;</span><span class="lifetime">&#39;print</span>, <span class="ident">StackFrame</span><span class="op">&gt;</span>,
-}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; CallStack <span class="kw">for </span>FitsCallStack&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">type </span>Stack = StackedStack&lt;<span class="lifetime">&#39;a</span>, StackFrame&gt;;
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;print</span><span class="op">&gt;</span> <span class="ident">FitsCallStack</span><span class="op">&lt;</span><span class="lifetime">&#39;print</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">print</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;print</span> <span class="ident">PrintCallStack</span>, <span class="ident">saved</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StackFrame</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">stack</span> <span class="op">=</span> <span class="ident">StackedStack::with_vec</span>(<span class="kw-2">&amp;</span><span class="ident">print</span>.<span class="number">0</span>, <span class="ident">saved</span>);
-
-        <span class="self">Self</span> { <span class="ident">stack</span> }
+    <span class="kw">fn </span>stack(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Stack {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.stack
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StackFrame</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">into_vec</span>()
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CallStack</span> <span class="kw">for</span> <span class="ident">FitsCallStack</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Stack</span> <span class="op">=</span> <span class="ident">StackedStack</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">StackFrame</span><span class="op">&gt;</span>;
-
-    <span class="kw">fn</span> <span class="ident">stack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Stack</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">stack</span>
-    }
-
-    <span class="kw">fn</span> <span class="ident">stack_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Stack</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stack</span>
+    <span class="kw">fn </span>stack_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Stack {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.stack
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_analyze/src/query.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>query.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_analyze/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_analyze/src/query.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>query.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_analyze/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -89,96 +89,96 @@
 <span id="89">89</span>
 <span id="90">90</span>
 <span id="91">91</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_control_flow::ControlFlowGraph</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">Language</span>, <span class="ident">SyntaxKindSet</span>, <span class="ident">SyntaxNode</span>, <span class="ident">TextRange</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>rome_control_flow::ControlFlowGraph;
+<span class="kw">use </span>rome_rowan::{AstNode, Language, SyntaxKindSet, SyntaxNode, TextRange};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">registry</span>::{<span class="ident">NodeLanguage</span>, <span class="ident">Phase</span>},
-    <span class="ident">services::FromServices</span>,
-    <span class="ident">ServiceBag</span>,
+<span class="kw">use crate</span>::{
+    registry::{NodeLanguage, Phase},
+    services::FromServices,
+    ServiceBag,
 };
 
-<span class="doccomment">/// Trait implemented for all types, for example lint rules can query them to emit diagnostics or code actions.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Queryable</span>: <span class="ident">Sized</span> {
-    <span class="kw">type</span> <span class="ident">Output</span>;
-    <span class="kw">type</span> <span class="ident">Language</span>: <span class="ident">Language</span>;
-    <span class="kw">type</span> <span class="ident">Services</span>: <span class="ident">FromServices</span> <span class="op">+</span> <span class="ident">Phase</span>;
+<span class="doccomment">/// Trait implemented for all types, for example lint rules can query them to emit diagnostics or code actions.
+</span><span class="kw">pub trait </span>Queryable: Sized {
+    <span class="kw">type </span>Output;
+    <span class="kw">type </span>Language: Language;
+    <span class="kw">type </span>Services: FromServices + Phase;
 
-    <span class="doccomment">/// Statically declares which [QueryMatch] variant is matched by this</span>
-    <span class="doccomment">/// [Queryable] type. For instance the [Ast] queryable matches on</span>
-    <span class="doccomment">/// [QueryMatch::Syntax], so its key is defined as [QueryKey::Syntax]</span>
-    <span class="kw">const</span> <span class="ident">KEY</span>: <span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Statically declares which [QueryMatch] variant is matched by this
+    /// [Queryable] type. For instance the [Ast] queryable matches on
+    /// [QueryMatch::Syntax], so its key is defined as [QueryKey::Syntax]
+    </span><span class="kw">const </span>KEY: QueryKey&lt;<span class="self">Self</span>::Language&gt;;
 
-    <span class="doccomment">/// Unwrap an instance of `Self` from a [QueryMatch].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Panics</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If the [QueryMatch] variant of `query` doesn&#39;t match `Self::KEY`</span>
-    <span class="kw">fn</span> <span class="ident">unwrap_match</span>(<span class="ident">services</span>: <span class="kw-2">&amp;</span><span class="ident">ServiceBag</span>, <span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="ident">QueryMatch</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::Output</span>;
+    <span class="doccomment">/// Unwrap an instance of `Self` from a [QueryMatch].
+    ///
+    /// ## Panics
+    ///
+    /// If the [QueryMatch] variant of `query` doesn&#39;t match `Self::KEY`
+    </span><span class="kw">fn </span>unwrap_match(services: <span class="kw-2">&amp;</span>ServiceBag, query: <span class="kw-2">&amp;</span>QueryMatch&lt;<span class="self">Self</span>::Language&gt;) -&gt; <span class="self">Self</span>::Output;
 }
 
-<span class="doccomment">/// Enumerate all the types of [Queryable] analyzer visitors may emit</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QueryMatch</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">Syntax</span>(<span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>),
-    <span class="ident">SemanticModel</span>(<span class="ident">TextRange</span>),
-    <span class="ident">ControlFlowGraph</span>(<span class="ident">ControlFlowGraph</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">TextRange</span>),
+<span class="doccomment">/// Enumerate all the types of [Queryable] analyzer visitors may emit
+</span><span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">pub enum </span>QueryMatch&lt;L: Language&gt; {
+    Syntax(SyntaxNode&lt;L&gt;),
+    SemanticModel(TextRange),
+    ControlFlowGraph(ControlFlowGraph&lt;L&gt;, TextRange),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">QueryMatch</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QueryMatch::Syntax</span>(<span class="ident">node</span>) =&gt; <span class="ident">node</span>.<span class="ident">text_trimmed_range</span>(),
-            <span class="ident">QueryMatch::SemanticModel</span>(<span class="ident">range</span>) <span class="op">|</span> <span class="ident">QueryMatch::ControlFlowGraph</span>(<span class="kw">_</span>, <span class="ident">range</span>) =&gt; <span class="kw-2">*</span><span class="ident">range</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; QueryMatch&lt;L&gt; {
+    <span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="kw">match </span><span class="self">self </span>{
+            QueryMatch::Syntax(node) =&gt; node.text_trimmed_range(),
+            QueryMatch::SemanticModel(range) | QueryMatch::ControlFlowGraph(<span class="kw">_</span>, range) =&gt; <span class="kw-2">*</span>range,
         }
     }
 }
 
-<span class="doccomment">/// Mirrors the variants of [QueryMatch] to statically compute which queries a</span>
-<span class="doccomment">/// given [Queryable] type can match</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">Syntax</span>(<span class="ident">SyntaxKindSet</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>),
-    <span class="ident">ControlFlowGraph</span>,
-    <span class="ident">SemanticModel</span>,
+<span class="doccomment">/// Mirrors the variants of [QueryMatch] to statically compute which queries a
+/// given [Queryable] type can match
+</span><span class="kw">pub enum </span>QueryKey&lt;L: Language&gt; {
+    Syntax(SyntaxKindSet&lt;L&gt;),
+    ControlFlowGraph,
+    SemanticModel,
 }
 
-<span class="doccomment">/// Query type usable by lint rules to match on specific [AstNode] types</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="ident">N</span>);
+<span class="doccomment">/// Query type usable by lint rules to match on specific [AstNode] types
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>Ast&lt;N&gt;(<span class="kw">pub </span>N);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> <span class="ident">Queryable</span> <span class="kw">for</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">N</span>: <span class="ident">AstNode</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="kw">impl</span>&lt;N&gt; Queryable <span class="kw">for </span>Ast&lt;N&gt;
+<span class="kw">where
+    </span>N: AstNode + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">N</span>;
-    <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">NodeLanguage</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Services</span> <span class="op">=</span> ();
+    <span class="kw">type </span>Output = N;
+    <span class="kw">type </span>Language = NodeLanguage&lt;N&gt;;
+    <span class="kw">type </span>Services = ();
 
-    <span class="doccomment">/// Match on [QueryMatch::Syntax] if the kind of the syntax node matches</span>
-    <span class="doccomment">/// the kind set of `N`</span>
-    <span class="kw">const</span> <span class="ident">KEY</span>: <span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">QueryKey::Syntax</span>(<span class="ident">N::KIND_SET</span>);
+    <span class="doccomment">/// Match on [QueryMatch::Syntax] if the kind of the syntax node matches
+    /// the kind set of `N`
+    </span><span class="kw">const </span>KEY: QueryKey&lt;<span class="self">Self</span>::Language&gt; = QueryKey::Syntax(N::KIND_SET);
 
-    <span class="kw">fn</span> <span class="ident">unwrap_match</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ServiceBag</span>, <span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="ident">QueryMatch</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::Output</span> {
-        <span class="kw">match</span> <span class="ident">query</span> {
-            <span class="ident">QueryMatch::Syntax</span>(<span class="ident">node</span>) =&gt; <span class="ident">N::unwrap_cast</span>(<span class="ident">node</span>.<span class="ident">clone</span>()),
-            <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;tried to unwrap unsupported QueryMatch kind, expected Syntax&quot;</span>),
+    <span class="kw">fn </span>unwrap_match(<span class="kw">_</span>: <span class="kw-2">&amp;</span>ServiceBag, query: <span class="kw-2">&amp;</span>QueryMatch&lt;<span class="self">Self</span>::Language&gt;) -&gt; <span class="self">Self</span>::Output {
+        <span class="kw">match </span>query {
+            QueryMatch::Syntax(node) =&gt; N::unwrap_cast(node.clone()),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;tried to unwrap unsupported QueryMatch kind, expected Syntax&quot;</span>),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Queryable</span> <span class="kw">for</span> <span class="ident">ControlFlowGraph</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span>;
-    <span class="kw">type</span> <span class="ident">Services</span> <span class="op">=</span> ();
+<span class="kw">impl</span>&lt;L: Language&gt; Queryable <span class="kw">for </span>ControlFlowGraph&lt;L&gt; {
+    <span class="kw">type </span>Output = <span class="self">Self</span>;
+    <span class="kw">type </span>Language = L;
+    <span class="kw">type </span>Services = ();
 
-    <span class="kw">const</span> <span class="ident">KEY</span>: <span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">QueryKey::ControlFlowGraph</span>;
+    <span class="kw">const </span>KEY: QueryKey&lt;<span class="self">Self</span>::Language&gt; = QueryKey::ControlFlowGraph;
 
-    <span class="kw">fn</span> <span class="ident">unwrap_match</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ServiceBag</span>, <span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="ident">QueryMatch</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::Output</span> {
-        <span class="kw">match</span> <span class="ident">query</span> {
-            <span class="ident">QueryMatch::ControlFlowGraph</span>(<span class="ident">cfg</span>, <span class="kw">_</span>) =&gt; <span class="ident">cfg</span>.<span class="ident">clone</span>(),
-            <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;tried to unwrap unsupported QueryMatch kind, expected Syntax&quot;</span>),
+    <span class="kw">fn </span>unwrap_match(<span class="kw">_</span>: <span class="kw-2">&amp;</span>ServiceBag, query: <span class="kw-2">&amp;</span>QueryMatch&lt;<span class="self">Self</span>::Language&gt;) -&gt; <span class="self">Self</span>::Output {
+        <span class="kw">match </span>query {
+            QueryMatch::ControlFlowGraph(cfg, <span class="kw">_</span>) =&gt; cfg.clone(),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;tried to unwrap unsupported QueryMatch kind, expected Syntax&quot;</span>),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

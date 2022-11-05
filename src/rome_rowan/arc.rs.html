@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/arc.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arc.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/arc.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arc.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -495,502 +495,502 @@
 <span id="495">495</span>
 <span id="496">496</span>
 <span id="497">497</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Vendored and stripped down version of triomphe</span>
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">alloc</span>::{<span class="self">self</span>, <span class="ident">Layout</span>},
-    <span class="ident">cmp::Ordering</span>,
-    <span class="ident">hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>},
-    <span class="ident">marker::PhantomData</span>,
-    <span class="ident">mem</span>::{<span class="self">self</span>, <span class="ident">ManuallyDrop</span>},
-    <span class="ident">ops::Deref</span>,
-    <span class="ident">ptr</span>,
-    <span class="ident">sync::atomic</span>::{
+</pre><pre class="rust"><code><span class="doccomment">//! Vendored and stripped down version of triomphe
+</span><span class="kw">use </span>std::{
+    alloc::{<span class="self">self</span>, Layout},
+    cmp::Ordering,
+    hash::{Hash, Hasher},
+    marker::PhantomData,
+    mem::{<span class="self">self</span>, ManuallyDrop},
+    ops::Deref,
+    ptr,
+    sync::atomic::{
         <span class="self">self</span>,
-        <span class="ident">Ordering</span>::{<span class="ident">Acquire</span>, <span class="ident">Relaxed</span>, <span class="ident">Release</span>},
+        Ordering::{Acquire, Relaxed, Release},
     },
 };
 
-<span class="kw">use</span> <span class="ident">memoffset::offset_of</span>;
+<span class="kw">use </span>memoffset::offset_of;
 
-<span class="doccomment">/// A soft limit on the amount of references that may be made to an `Arc`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Going above this limit will abort your program (although not</span>
-<span class="doccomment">/// necessarily) at _exactly_ `MAX_REFCOUNT + 1` references.</span>
-<span class="kw">const</span> <span class="ident">MAX_REFCOUNT</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">isize::MAX</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+<span class="doccomment">/// A soft limit on the amount of references that may be made to an `Arc`.
+///
+/// Going above this limit will abort your program (although not
+/// necessarily) at _exactly_ `MAX_REFCOUNT + 1` references.
+</span><span class="kw">const </span>MAX_REFCOUNT: usize = (isize::MAX) <span class="kw">as </span>usize;
 
-<span class="doccomment">/// The object allocated by an Arc&lt;T&gt;</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">count</span>: <span class="ident">atomic::AtomicUsize</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">data</span>: <span class="ident">T</span>,
+<span class="doccomment">/// The object allocated by an Arc&lt;T&gt;
+</span><span class="attribute">#[repr(C)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ArcInner&lt;T: <span class="question-mark">?</span>Sized&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) count: atomic::AtomicUsize,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) data: T,
 }
 
-<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
-<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
+<span class="kw">unsafe impl</span>&lt;T: <span class="question-mark">?</span>Sized + Sync + Send&gt; Send <span class="kw">for </span>ArcInner&lt;T&gt; {}
+<span class="kw">unsafe impl</span>&lt;T: <span class="question-mark">?</span>Sized + Sync + Send&gt; Sync <span class="kw">for </span>ArcInner&lt;T&gt; {}
 
-<span class="doccomment">/// An atomically reference counted shared pointer</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// See the documentation for [`Arc`] in the standard library. Unlike the</span>
-<span class="doccomment">/// standard library `Arc`, this `Arc` does not support weak reference counting.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Arc`]: https://doc.rust-lang.org/stable/std/sync/struct.Arc.html</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">p</span>: <span class="ident">ptr::NonNull</span><span class="op">&lt;</span><span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+<span class="doccomment">/// An atomically reference counted shared pointer
+///
+/// See the documentation for [`Arc`] in the standard library. Unlike the
+/// standard library `Arc`, this `Arc` does not support weak reference counting.
+///
+/// [`Arc`]: https://doc.rust-lang.org/stable/std/sync/struct.Arc.html
+</span><span class="attribute">#[repr(transparent)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Arc&lt;T: <span class="question-mark">?</span>Sized&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) p: ptr::NonNull&lt;ArcInner&lt;T&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) phantom: PhantomData&lt;T&gt;,
 }
 
-<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
-<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
+<span class="kw">unsafe impl</span>&lt;T: <span class="question-mark">?</span>Sized + Sync + Send&gt; Send <span class="kw">for </span>Arc&lt;T&gt; {}
+<span class="kw">unsafe impl</span>&lt;T: <span class="question-mark">?</span>Sized + Sync + Send&gt; Sync <span class="kw">for </span>Arc&lt;T&gt; {}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Reconstruct the Arc&lt;T&gt; from a raw pointer obtained from into_raw()</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Note: This raw pointer will be offset in the allocation and must be preceded</span>
-    <span class="doccomment">/// by the atomic count.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It is recommended to use OffsetArc for this</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ptr</span>: <span class="kw-2">*const</span> <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
-        <span class="comment">// To find the corresponding pointer to the `ArcInner` we need</span>
-        <span class="comment">// to subtract the offset of the `data` field from the pointer.</span>
-        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> (<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">u8</span>).<span class="ident">sub</span>(<span class="macro">offset_of!</span>(<span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">data</span>));
-        <span class="ident">Arc</span> {
-            <span class="ident">p</span>: <span class="ident">ptr::NonNull::new_unchecked</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>),
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;T&gt; Arc&lt;T&gt; {
+    <span class="doccomment">/// Reconstruct the Arc&lt;T&gt; from a raw pointer obtained from into_raw()
+    ///
+    /// Note: This raw pointer will be offset in the allocation and must be preceded
+    /// by the atomic count.
+    ///
+    /// It is recommended to use OffsetArc for this
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>from_raw(ptr: <span class="kw-2">*const </span>T) -&gt; <span class="self">Self </span>{
+        <span class="comment">// To find the corresponding pointer to the `ArcInner` we need
+        // to subtract the offset of the `data` field from the pointer.
+        </span><span class="kw">let </span>ptr = (ptr <span class="kw">as </span><span class="kw-2">*const </span>u8).sub(<span class="macro">offset_of!</span>(ArcInner&lt;T&gt;, data));
+        Arc {
+            p: ptr::NonNull::new_unchecked(ptr <span class="kw">as </span><span class="kw-2">*mut </span>ArcInner&lt;T&gt;),
+            phantom: PhantomData,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">inner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="comment">// This unsafety is ok because while this arc is alive we&#39;re guaranteed</span>
-        <span class="comment">// that the inner pointer is valid. Furthermore, we know that the</span>
-        <span class="comment">// `ArcInner` structure itself is `Sync` because the inner data is</span>
-        <span class="comment">// `Sync` as well, so we&#39;re ok loaning out an immutable pointer to these</span>
-        <span class="comment">// contents.</span>
-        <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">ptr</span>() }
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized&gt; Arc&lt;T&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>inner(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ArcInner&lt;T&gt; {
+        <span class="comment">// This unsafety is ok because while this arc is alive we&#39;re guaranteed
+        // that the inner pointer is valid. Furthermore, we know that the
+        // `ArcInner` structure itself is `Sync` because the inner data is
+        // `Sync` as well, so we&#39;re ok loaning out an immutable pointer to these
+        // contents.
+        </span><span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.ptr() }
     }
 
-    <span class="comment">// Non-inlined part of `drop`. Just invokes the destructor.</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">drop_slow</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">Box::from_raw</span>(<span class="self">self</span>.<span class="ident">ptr</span>());
+    <span class="comment">// Non-inlined part of `drop`. Just invokes the destructor.
+    </span><span class="attribute">#[inline(never)]
+    </span><span class="kw">unsafe fn </span>drop_slow(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let _ </span>= Box::from_raw(<span class="self">self</span>.ptr());
     }
 
-    <span class="doccomment">/// Test pointer equality between the two Arcs, i.e. they must be the _same_</span>
-    <span class="doccomment">/// allocation</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">ptr_eq</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">this</span>.<span class="ident">ptr</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">ptr</span>()
+    <span class="doccomment">/// Test pointer equality between the two Arcs, i.e. they must be the _same_
+    /// allocation
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>ptr_eq(this: <span class="kw-2">&amp;</span><span class="self">Self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        this.ptr() == other.ptr()
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">as_ptr</span>()
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>ArcInner&lt;T&gt; {
+        <span class="self">self</span>.p.as_ptr()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="comment">// Using a relaxed ordering is alright here, as knowledge of the</span>
-        <span class="comment">// original reference prevents other threads from erroneously deleting</span>
-        <span class="comment">// the object.</span>
-        <span class="comment">//</span>
-        <span class="comment">// As explained in the [Boost documentation][1], Increasing the</span>
-        <span class="comment">// reference counter can always be done with memory_order_relaxed: New</span>
-        <span class="comment">// references to an object can only be formed from an existing</span>
-        <span class="comment">// reference, and passing an existing reference from one thread to</span>
-        <span class="comment">// another must already provide any required synchronization.</span>
-        <span class="comment">//</span>
-        <span class="comment">// [1]: (www.boost.org/doc/libs/1_55_0/doc/html/atomic/usage_examples.html)</span>
-        <span class="kw">let</span> <span class="ident">old_size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>().<span class="ident">count</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Relaxed</span>);
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized&gt; Clone <span class="kw">for </span>Arc&lt;T&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="comment">// Using a relaxed ordering is alright here, as knowledge of the
+        // original reference prevents other threads from erroneously deleting
+        // the object.
+        //
+        // As explained in the [Boost documentation][1], Increasing the
+        // reference counter can always be done with memory_order_relaxed: New
+        // references to an object can only be formed from an existing
+        // reference, and passing an existing reference from one thread to
+        // another must already provide any required synchronization.
+        //
+        // [1]: (www.boost.org/doc/libs/1_55_0/doc/html/atomic/usage_examples.html)
+        </span><span class="kw">let </span>old_size = <span class="self">self</span>.inner().count.fetch_add(<span class="number">1</span>, Relaxed);
 
-        <span class="comment">// However we need to guard against massive refcounts in case someone</span>
-        <span class="comment">// is `mem::forget`ing Arcs. If we don&#39;t do this the count can overflow</span>
-        <span class="comment">// and users will use-after free. We racily saturate to `isize::MAX` on</span>
-        <span class="comment">// the assumption that there aren&#39;t ~2 billion threads incrementing</span>
-        <span class="comment">// the reference count at once. This branch will never be taken in</span>
-        <span class="comment">// any realistic program.</span>
-        <span class="comment">//</span>
-        <span class="comment">// We abort because such a program is incredibly degenerate, and we</span>
-        <span class="comment">// don&#39;t care to support it.</span>
-        <span class="kw">if</span> <span class="ident">old_size</span> <span class="op">&gt;</span> <span class="ident">MAX_REFCOUNT</span> {
-            <span class="ident">std::process::abort</span>();
+        <span class="comment">// However we need to guard against massive refcounts in case someone
+        // is `mem::forget`ing Arcs. If we don&#39;t do this the count can overflow
+        // and users will use-after free. We racily saturate to `isize::MAX` on
+        // the assumption that there aren&#39;t ~2 billion threads incrementing
+        // the reference count at once. This branch will never be taken in
+        // any realistic program.
+        //
+        // We abort because such a program is incredibly degenerate, and we
+        // don&#39;t care to support it.
+        </span><span class="kw">if </span>old_size &gt; MAX_REFCOUNT {
+            std::process::abort();
         }
 
-        <span class="kw">unsafe</span> {
-            <span class="ident">Arc</span> {
-                <span class="ident">p</span>: <span class="ident">ptr::NonNull::new_unchecked</span>(<span class="self">self</span>.<span class="ident">ptr</span>()),
-                <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+        <span class="kw">unsafe </span>{
+            Arc {
+                p: ptr::NonNull::new_unchecked(<span class="self">self</span>.ptr()),
+                phantom: PhantomData,
             }
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">T</span>;
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized&gt; Deref <span class="kw">for </span>Arc&lt;T&gt; {
+    <span class="kw">type </span>Target = T;
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">T</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>().<span class="ident">data</span>
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.inner().data
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Provides mutable access to the contents _if_ the `Arc` is uniquely owned.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_mut</span>(<span class="ident">this</span>: <span class="kw-2">&amp;mut</span> <span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">this</span>.<span class="ident">is_unique</span>() {
-            <span class="kw">unsafe</span> {
-                <span class="comment">// See make_mut() for documentation of the threadsafety here.</span>
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> (<span class="kw-2">*</span><span class="ident">this</span>.<span class="ident">ptr</span>()).<span class="ident">data</span>)
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized&gt; Arc&lt;T&gt; {
+    <span class="doccomment">/// Provides mutable access to the contents _if_ the `Arc` is uniquely owned.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_mut(this: <span class="kw-2">&amp;mut </span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>T&gt; {
+        <span class="kw">if </span>this.is_unique() {
+            <span class="kw">unsafe </span>{
+                <span class="comment">// See make_mut() for documentation of the threadsafety here.
+                </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>(<span class="kw-2">*</span>this.ptr()).data)
             }
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 
-    <span class="doccomment">/// Whether or not the `Arc` is uniquely owned (is the refcount 1?).</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_unique</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="comment">// See the extensive discussion in [1] for why this needs to be Acquire.</span>
-        <span class="comment">//</span>
-        <span class="comment">// [1] https://github.com/servo/servo/issues/21186</span>
-        <span class="self">self</span>.<span class="ident">inner</span>().<span class="ident">count</span>.<span class="ident">load</span>(<span class="ident">Acquire</span>) <span class="op">==</span> <span class="number">1</span>
-    }
+    <span class="doccomment">/// Whether or not the `Arc` is uniquely owned (is the refcount 1?).
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_unique(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="comment">// See the extensive discussion in [1] for why this needs to be Acquire.
+        //
+        // [1] https://github.com/servo/servo/issues/21186
+        </span><span class="self">self</span>.inner().count.load(Acquire) == <span class="number">1
+    </span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="comment">// Because `fetch_sub` is already atomic, we do not need to synchronize</span>
-        <span class="comment">// with other threads unless we are going to delete the object.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inner</span>().<span class="ident">count</span>.<span class="ident">fetch_sub</span>(<span class="number">1</span>, <span class="ident">Release</span>) <span class="op">!</span><span class="op">=</span> <span class="number">1</span> {
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized&gt; Drop <span class="kw">for </span>Arc&lt;T&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="comment">// Because `fetch_sub` is already atomic, we do not need to synchronize
+        // with other threads unless we are going to delete the object.
+        </span><span class="kw">if </span><span class="self">self</span>.inner().count.fetch_sub(<span class="number">1</span>, Release) != <span class="number">1 </span>{
             <span class="kw">return</span>;
         }
 
-        <span class="comment">// FIXME(bholley): Use the updated comment when [2] is merged.</span>
-        <span class="comment">//</span>
-        <span class="comment">// This load is needed to prevent reordering of use of the data and</span>
-        <span class="comment">// deletion of the data.  Because it is marked `Release`, the decreasing</span>
-        <span class="comment">// of the reference count synchronizes with this `Acquire` load. This</span>
-        <span class="comment">// means that use of the data happens before decreasing the reference</span>
-        <span class="comment">// count, which happens before this load, which happens before the</span>
-        <span class="comment">// deletion of the data.</span>
-        <span class="comment">//</span>
-        <span class="comment">// As explained in the [Boost documentation][1],</span>
-        <span class="comment">//</span>
-        <span class="comment">// &gt; It is important to enforce any possible access to the object in one</span>
-        <span class="comment">// &gt; thread (through an existing reference) to *happen before* deleting</span>
-        <span class="comment">// &gt; the object in a different thread. This is achieved by a &quot;release&quot;</span>
-        <span class="comment">// &gt; operation after dropping a reference (any access to the object</span>
-        <span class="comment">// &gt; through this reference must obviously happened before), and an</span>
-        <span class="comment">// &gt; &quot;acquire&quot; operation before deleting the object.</span>
-        <span class="comment">//</span>
-        <span class="comment">// [1]: (www.boost.org/doc/libs/1_55_0/doc/html/atomic/usage_examples.html)</span>
-        <span class="comment">// [2]: https://github.com/rust-lang/rust/pull/41714</span>
-        <span class="self">self</span>.<span class="ident">inner</span>().<span class="ident">count</span>.<span class="ident">load</span>(<span class="ident">Acquire</span>);
+        <span class="comment">// FIXME(bholley): Use the updated comment when [2] is merged.
+        //
+        // This load is needed to prevent reordering of use of the data and
+        // deletion of the data.  Because it is marked `Release`, the decreasing
+        // of the reference count synchronizes with this `Acquire` load. This
+        // means that use of the data happens before decreasing the reference
+        // count, which happens before this load, which happens before the
+        // deletion of the data.
+        //
+        // As explained in the [Boost documentation][1],
+        //
+        // &gt; It is important to enforce any possible access to the object in one
+        // &gt; thread (through an existing reference) to *happen before* deleting
+        // &gt; the object in a different thread. This is achieved by a &quot;release&quot;
+        // &gt; operation after dropping a reference (any access to the object
+        // &gt; through this reference must obviously happened before), and an
+        // &gt; &quot;acquire&quot; operation before deleting the object.
+        //
+        // [1]: (www.boost.org/doc/libs/1_55_0/doc/html/atomic/usage_examples.html)
+        // [2]: https://github.com/rust-lang/rust/pull/41714
+        </span><span class="self">self</span>.inner().count.load(Acquire);
 
-        <span class="kw">unsafe</span> {
-            <span class="self">self</span>.<span class="ident">drop_slow</span>();
+        <span class="kw">unsafe </span>{
+            <span class="self">self</span>.drop_slow();
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">PartialEq</span><span class="op">&gt;</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident"><span class="self">Self</span>::ptr_eq</span>(<span class="self">self</span>, <span class="ident">other</span>) <span class="op">|</span><span class="op">|</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) <span class="op">==</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="ident">other</span>)
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized + PartialEq&gt; PartialEq <span class="kw">for </span>Arc&lt;T&gt; {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Arc&lt;T&gt;) -&gt; bool {
+        <span class="self">Self</span>::ptr_eq(<span class="self">self</span>, other) || <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) == <span class="kw-2">*</span>(<span class="kw-2">*</span>other)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">PartialOrd</span><span class="op">&gt;</span> <span class="ident">PartialOrd</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ordering</span><span class="op">&gt;</span> {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">other</span>)
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized + PartialOrd&gt; PartialOrd <span class="kw">for </span>Arc&lt;T&gt; {
+    <span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Arc&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;Ordering&gt; {
+        (<span class="kw-2">**</span><span class="self">self</span>).partial_cmp(<span class="kw-2">&amp;**</span>other)
     }
 
-    <span class="kw">fn</span> <span class="ident">lt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) <span class="op">&lt;</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="ident">other</span>)
+    <span class="kw">fn </span>lt(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Arc&lt;T&gt;) -&gt; bool {
+        <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) &lt; <span class="kw-2">*</span>(<span class="kw-2">*</span>other)
     }
 
-    <span class="kw">fn</span> <span class="ident">le</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) <span class="op">&lt;</span><span class="op">=</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="ident">other</span>)
+    <span class="kw">fn </span>le(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Arc&lt;T&gt;) -&gt; bool {
+        <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) &lt;= <span class="kw-2">*</span>(<span class="kw-2">*</span>other)
     }
 
-    <span class="kw">fn</span> <span class="ident">gt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) <span class="op">&gt;</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="ident">other</span>)
+    <span class="kw">fn </span>gt(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Arc&lt;T&gt;) -&gt; bool {
+        <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) &gt; <span class="kw-2">*</span>(<span class="kw-2">*</span>other)
     }
 
-    <span class="kw">fn</span> <span class="ident">ge</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) <span class="op">&gt;</span><span class="op">=</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="ident">other</span>)
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Ord</span><span class="op">&gt;</span> <span class="ident">Ord</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">Ordering</span> {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">other</span>)
+    <span class="kw">fn </span>ge(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Arc&lt;T&gt;) -&gt; bool {
+        <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>) &gt;= <span class="kw-2">*</span>(<span class="kw-2">*</span>other)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Eq</span><span class="op">&gt;</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Hash</span><span class="op">&gt;</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">hash</span>(<span class="ident">state</span>)
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized + Ord&gt; Ord <span class="kw">for </span>Arc&lt;T&gt; {
+    <span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Arc&lt;T&gt;) -&gt; Ordering {
+        (<span class="kw-2">**</span><span class="self">self</span>).cmp(<span class="kw-2">&amp;**</span>other)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Hash</span>, <span class="ident">PartialOrd</span>)]</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">header</span>: <span class="ident">H</span>,
-    <span class="ident">length</span>: <span class="ident">usize</span>,
-    <span class="ident">slice</span>: <span class="ident">T</span>,
-}
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized + Eq&gt; Eq <span class="kw">for </span>Arc&lt;T&gt; {}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">T</span>] {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slice</span>
-    }
-
-    <span class="doccomment">/// Returns the number of items</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">length</span>
+<span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized + Hash&gt; Hash <span class="kw">for </span>Arc&lt;T&gt; {
+    <span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
+        (<span class="kw-2">**</span><span class="self">self</span>).hash(state)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>; <span class="number">0</span>]<span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span>;
+<span class="attribute">#[derive(Debug, Eq, PartialEq, Hash, PartialOrd)]
+#[repr(C)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>HeaderSlice&lt;H, T: <span class="question-mark">?</span>Sized&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) header: H,
+    length: usize,
+    slice: T,
+}
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">length</span>;
-            <span class="kw">let</span> <span class="ident">fake_slice</span>: <span class="kw-2">*const</span> [<span class="ident">T</span>] <span class="op">=</span>
-                <span class="ident">ptr::slice_from_raw_parts</span>(<span class="self">self</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">T</span>, <span class="ident">len</span>);
-            <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">fake_slice</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span>)
+<span class="kw">impl</span>&lt;H, T&gt; HeaderSlice&lt;H, [T]&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.slice
+    }
+
+    <span class="doccomment">/// Returns the number of items
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.length
+    }
+}
+
+<span class="kw">impl</span>&lt;H, T&gt; Deref <span class="kw">for </span>HeaderSlice&lt;H, [T; <span class="number">0</span>]&gt; {
+    <span class="kw">type </span>Target = HeaderSlice&lt;H, [T]&gt;;
+
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        <span class="kw">unsafe </span>{
+            <span class="kw">let </span>len = <span class="self">self</span>.length;
+            <span class="kw">let </span>fake_slice: <span class="kw-2">*const </span>[T] =
+                ptr::slice_from_raw_parts(<span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as </span><span class="kw-2">*const </span>T, len);
+            <span class="kw-2">&amp;*</span>(fake_slice <span class="kw">as </span><span class="kw-2">*const </span>HeaderSlice&lt;H, [T]&gt;)
         }
     }
 }
 
-<span class="doccomment">/// A &quot;thin&quot; `Arc` containing dynamically sized data</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is functionally equivalent to `Arc&lt;(H, [T])&gt;`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// When you create an `Arc` containing a dynamically sized type</span>
-<span class="doccomment">/// like `HeaderSlice&lt;H, [T]&gt;`, the `Arc` is represented on the stack</span>
-<span class="doccomment">/// as a &quot;fat pointer&quot;, where the length of the slice is stored</span>
-<span class="doccomment">/// alongside the `Arc`&#39;s pointer. In some situations you may wish to</span>
-<span class="doccomment">/// have a thin pointer instead, perhaps for FFI compatibility</span>
-<span class="doccomment">/// or space efficiency.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Note that we use `[T; 0]` in order to have the right alignment for `T`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `ThinArc` solves this by storing the length in the allocation itself,</span>
-<span class="doccomment">/// via `HeaderSlice`.</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">ptr</span>: <span class="ident">ptr::NonNull</span><span class="op">&lt;</span><span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>; <span class="number">0</span>]<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span>(<span class="ident">H</span>, <span class="ident">T</span>)<span class="op">&gt;</span>,
+<span class="doccomment">/// A &quot;thin&quot; `Arc` containing dynamically sized data
+///
+/// This is functionally equivalent to `Arc&lt;(H, [T])&gt;`
+///
+/// When you create an `Arc` containing a dynamically sized type
+/// like `HeaderSlice&lt;H, [T]&gt;`, the `Arc` is represented on the stack
+/// as a &quot;fat pointer&quot;, where the length of the slice is stored
+/// alongside the `Arc`&#39;s pointer. In some situations you may wish to
+/// have a thin pointer instead, perhaps for FFI compatibility
+/// or space efficiency.
+///
+/// Note that we use `[T; 0]` in order to have the right alignment for `T`.
+///
+/// `ThinArc` solves this by storing the length in the allocation itself,
+/// via `HeaderSlice`.
+</span><span class="attribute">#[repr(transparent)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ThinArc&lt;H, T&gt; {
+    ptr: ptr::NonNull&lt;ArcInner&lt;HeaderSlice&lt;H, [T; <span class="number">0</span>]&gt;&gt;&gt;,
+    phantom: PhantomData&lt;(H, T)&gt;,
 }
 
-<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span>, <span class="ident">T</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {}
-<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span>, <span class="ident">T</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {}
+<span class="kw">unsafe impl</span>&lt;H: Sync + Send, T: Sync + Send&gt; Send <span class="kw">for </span>ThinArc&lt;H, T&gt; {}
+<span class="kw">unsafe impl</span>&lt;H: Sync + Send, T: Sync + Send&gt; Sync <span class="kw">for </span>ThinArc&lt;H, T&gt; {}
 
-<span class="comment">// Synthesize a fat pointer from a thin pointer.</span>
-<span class="kw">fn</span> <span class="ident">thin_to_thick</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span>(
-    <span class="ident">thin</span>: <span class="kw-2">*mut</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>; <span class="number">0</span>]<span class="op">&gt;</span><span class="op">&gt;</span>,
-) -&gt; <span class="kw-2">*mut</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="kw">unsafe</span> { (<span class="kw-2">*</span><span class="ident">thin</span>).<span class="ident">data</span>.<span class="ident">length</span> };
-    <span class="kw">let</span> <span class="ident">fake_slice</span>: <span class="kw-2">*mut</span> [<span class="ident">T</span>] <span class="op">=</span> <span class="ident">ptr::slice_from_raw_parts_mut</span>(<span class="ident">thin</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">T</span>, <span class="ident">len</span>);
-    <span class="comment">// Transplants metadata.</span>
-    <span class="ident">fake_slice</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span><span class="op">&gt;</span>
+<span class="comment">// Synthesize a fat pointer from a thin pointer.
+</span><span class="kw">fn </span>thin_to_thick&lt;H, T&gt;(
+    thin: <span class="kw-2">*mut </span>ArcInner&lt;HeaderSlice&lt;H, [T; <span class="number">0</span>]&gt;&gt;,
+) -&gt; <span class="kw-2">*mut </span>ArcInner&lt;HeaderSlice&lt;H, [T]&gt;&gt; {
+    <span class="kw">let </span>len = <span class="kw">unsafe </span>{ (<span class="kw-2">*</span>thin).data.length };
+    <span class="kw">let </span>fake_slice: <span class="kw-2">*mut </span>[T] = ptr::slice_from_raw_parts_mut(thin <span class="kw">as </span><span class="kw-2">*mut </span>T, len);
+    <span class="comment">// Transplants metadata.
+    </span>fake_slice <span class="kw">as </span><span class="kw-2">*mut </span>ArcInner&lt;HeaderSlice&lt;H, [T]&gt;&gt;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Temporarily converts |self| into a bonafide Arc and exposes it to the</span>
-    <span class="doccomment">/// provided callback. The refcount is not modified.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with_arc</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">U</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">U</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="ident">U</span>,
+<span class="kw">impl</span>&lt;H, T&gt; ThinArc&lt;H, T&gt; {
+    <span class="doccomment">/// Temporarily converts |self| into a bonafide Arc and exposes it to the
+    /// provided callback. The refcount is not modified.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>with_arc&lt;F, U&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, f: F) -&gt; U
+    <span class="kw">where
+        </span>F: FnOnce(<span class="kw-2">&amp;</span>Arc&lt;HeaderSlice&lt;H, [T]&gt;&gt;) -&gt; U,
     {
-        <span class="comment">// Synthesize transient Arc, which never touches the refcount of the ArcInner.</span>
-        <span class="kw">let</span> <span class="ident">transient</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            <span class="ident">ManuallyDrop::new</span>(<span class="ident">Arc</span> {
-                <span class="ident">p</span>: <span class="ident">ptr::NonNull::new_unchecked</span>(<span class="ident">thin_to_thick</span>(<span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">as_ptr</span>())),
-                <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+        <span class="comment">// Synthesize transient Arc, which never touches the refcount of the ArcInner.
+        </span><span class="kw">let </span>transient = <span class="kw">unsafe </span>{
+            ManuallyDrop::new(Arc {
+                p: ptr::NonNull::new_unchecked(thin_to_thick(<span class="self">self</span>.ptr.as_ptr())),
+                phantom: PhantomData,
             })
         };
 
-        <span class="comment">// Expose the transient Arc to the callback, which may clone it if it wants.</span>
-        <span class="comment">// Forward the result.</span>
-        <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">transient</span>)
+        <span class="comment">// Expose the transient Arc to the callback, which may clone it if it wants.
+        // Forward the result.
+        </span>f(<span class="kw-2">&amp;</span>transient)
     }
 
-    <span class="doccomment">/// Creates a `ThinArc` for a HeaderSlice using the given header struct and</span>
-    <span class="doccomment">/// iterator to generate the slice.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_header_and_iter</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">header</span>: <span class="ident">H</span>, <span class="kw-2">mut</span> <span class="ident">items</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">ExactSizeIterator</span>,
+    <span class="doccomment">/// Creates a `ThinArc` for a HeaderSlice using the given header struct and
+    /// iterator to generate the slice.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>from_header_and_iter&lt;I&gt;(header: H, <span class="kw-2">mut </span>items: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>I: Iterator&lt;Item = T&gt; + ExactSizeIterator,
     {
-        <span class="macro">assert_ne!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(), <span class="number">0</span>, <span class="string">&quot;Need to think about ZST&quot;</span>);
+        <span class="macro">assert_ne!</span>(mem::size_of::&lt;T&gt;(), <span class="number">0</span>, <span class="string">&quot;Need to think about ZST&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">num_items</span> <span class="op">=</span> <span class="ident">items</span>.<span class="ident">len</span>();
+        <span class="kw">let </span>num_items = items.len();
 
-        <span class="comment">// Offset of the start of the slice in the allocation.</span>
-        <span class="kw">let</span> <span class="ident">inner_to_data_offset</span> <span class="op">=</span> <span class="macro">offset_of!</span>(<span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>; <span class="number">0</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">data</span>);
-        <span class="kw">let</span> <span class="ident">data_to_slice_offset</span> <span class="op">=</span> <span class="macro">offset_of!</span>(<span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>; <span class="number">0</span>]<span class="op">&gt;</span>, <span class="ident">slice</span>);
-        <span class="kw">let</span> <span class="ident">slice_offset</span> <span class="op">=</span> <span class="ident">inner_to_data_offset</span> <span class="op">+</span> <span class="ident">data_to_slice_offset</span>;
+        <span class="comment">// Offset of the start of the slice in the allocation.
+        </span><span class="kw">let </span>inner_to_data_offset = <span class="macro">offset_of!</span>(ArcInner&lt;HeaderSlice&lt;H, [T; <span class="number">0</span>]&gt;&gt;, data);
+        <span class="kw">let </span>data_to_slice_offset = <span class="macro">offset_of!</span>(HeaderSlice&lt;H, [T; <span class="number">0</span>]&gt;, slice);
+        <span class="kw">let </span>slice_offset = inner_to_data_offset + data_to_slice_offset;
 
-        <span class="comment">// Compute the size of the real payload.</span>
-        <span class="kw">let</span> <span class="ident">slice_size</span> <span class="op">=</span> <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()
-            .<span class="ident">checked_mul</span>(<span class="ident">num_items</span>)
-            .<span class="ident">expect</span>(<span class="string">&quot;size overflows&quot;</span>);
-        <span class="kw">let</span> <span class="ident">usable_size</span> <span class="op">=</span> <span class="ident">slice_offset</span>
-            .<span class="ident">checked_add</span>(<span class="ident">slice_size</span>)
-            .<span class="ident">expect</span>(<span class="string">&quot;size overflows&quot;</span>);
+        <span class="comment">// Compute the size of the real payload.
+        </span><span class="kw">let </span>slice_size = mem::size_of::&lt;T&gt;()
+            .checked_mul(num_items)
+            .expect(<span class="string">&quot;size overflows&quot;</span>);
+        <span class="kw">let </span>usable_size = slice_offset
+            .checked_add(slice_size)
+            .expect(<span class="string">&quot;size overflows&quot;</span>);
 
-        <span class="comment">// Round up size to alignment.</span>
-        <span class="kw">let</span> <span class="ident">align</span> <span class="op">=</span> <span class="ident">mem::align_of</span>::<span class="op">&lt;</span><span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>; <span class="number">0</span>]<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">usable_size</span>.<span class="ident">wrapping_add</span>(<span class="ident">align</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">&amp;</span> <span class="op">!</span>(<span class="ident">align</span> <span class="op">-</span> <span class="number">1</span>);
-        <span class="macro">assert!</span>(<span class="ident">size</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">usable_size</span>, <span class="string">&quot;size overflows&quot;</span>);
-        <span class="kw">let</span> <span class="ident">layout</span> <span class="op">=</span> <span class="ident">Layout::from_size_align</span>(<span class="ident">size</span>, <span class="ident">align</span>).<span class="ident">expect</span>(<span class="string">&quot;invalid layout&quot;</span>);
+        <span class="comment">// Round up size to alignment.
+        </span><span class="kw">let </span>align = mem::align_of::&lt;ArcInner&lt;HeaderSlice&lt;H, [T; <span class="number">0</span>]&gt;&gt;&gt;();
+        <span class="kw">let </span>size = usable_size.wrapping_add(align - <span class="number">1</span>) &amp; !(align - <span class="number">1</span>);
+        <span class="macro">assert!</span>(size &gt;= usable_size, <span class="string">&quot;size overflows&quot;</span>);
+        <span class="kw">let </span>layout = Layout::from_size_align(size, align).expect(<span class="string">&quot;invalid layout&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">ptr</span>: <span class="kw-2">*mut</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>; <span class="number">0</span>]<span class="op">&gt;</span><span class="op">&gt;</span>;
-        <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">alloc::alloc</span>(<span class="ident">layout</span>);
+        <span class="kw">let </span>ptr: <span class="kw-2">*mut </span>ArcInner&lt;HeaderSlice&lt;H, [T; <span class="number">0</span>]&gt;&gt;;
+        <span class="kw">unsafe </span>{
+            <span class="kw">let </span>buffer = alloc::alloc(layout);
 
-            <span class="kw">if</span> <span class="ident">buffer</span>.<span class="ident">is_null</span>() {
-                <span class="ident">alloc::handle_alloc_error</span>(<span class="ident">layout</span>);
+            <span class="kw">if </span>buffer.is_null() {
+                alloc::handle_alloc_error(layout);
             }
 
-            <span class="comment">// // Synthesize the fat pointer. We do this by claiming we have a direct</span>
-            <span class="comment">// // pointer to a [T], and then changing the type of the borrow. The key</span>
-            <span class="comment">// // point here is that the length portion of the fat pointer applies</span>
-            <span class="comment">// // only to the number of elements in the dynamically-sized portion of</span>
-            <span class="comment">// // the type, so the value will be the same whether it points to a [T]</span>
-            <span class="comment">// // or something else with a [T] as its last member.</span>
-            <span class="comment">// let fake_slice: &amp;mut [T] = slice::from_raw_parts_mut(buffer as *mut T, num_items);</span>
-            <span class="comment">// ptr = fake_slice as *mut [T] as *mut ArcInner&lt;HeaderSlice&lt;H, [T]&gt;&gt;;</span>
-            <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">buffer</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>;
+            <span class="comment">// // Synthesize the fat pointer. We do this by claiming we have a direct
+            // // pointer to a [T], and then changing the type of the borrow. The key
+            // // point here is that the length portion of the fat pointer applies
+            // // only to the number of elements in the dynamically-sized portion of
+            // // the type, so the value will be the same whether it points to a [T]
+            // // or something else with a [T] as its last member.
+            // let fake_slice: &amp;mut [T] = slice::from_raw_parts_mut(buffer as *mut T, num_items);
+            // ptr = fake_slice as *mut [T] as *mut ArcInner&lt;HeaderSlice&lt;H, [T]&gt;&gt;;
+            </span>ptr = buffer <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>;
 
-            <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">atomic::AtomicUsize::new</span>(<span class="number">1</span>);
+            <span class="kw">let </span>count = atomic::AtomicUsize::new(<span class="number">1</span>);
 
-            <span class="comment">// Write the data.</span>
-            <span class="comment">//</span>
-            <span class="comment">// Note that any panics here (i.e. from the iterator) are safe, since</span>
-            <span class="comment">// we&#39;ll just leak the uninitialized memory.</span>
-            <span class="ident">ptr::write</span>(<span class="macro">ptr::addr_of_mut!</span>((<span class="kw-2">*</span><span class="ident">ptr</span>).<span class="ident">count</span>), <span class="ident">count</span>);
-            <span class="ident">ptr::write</span>(<span class="macro">ptr::addr_of_mut!</span>((<span class="kw-2">*</span><span class="ident">ptr</span>).<span class="ident">data</span>.<span class="ident">header</span>), <span class="ident">header</span>);
-            <span class="ident">ptr::write</span>(<span class="macro">ptr::addr_of_mut!</span>((<span class="kw-2">*</span><span class="ident">ptr</span>).<span class="ident">data</span>.<span class="ident">length</span>), <span class="ident">num_items</span>);
-            <span class="kw">if</span> <span class="ident">num_items</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current</span> <span class="op">=</span> <span class="macro">ptr::addr_of_mut!</span>((<span class="kw-2">*</span><span class="ident">ptr</span>).<span class="ident">data</span>.<span class="ident">slice</span>) <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">T</span>;
-                <span class="macro">debug_assert_eq!</span>(<span class="ident">current</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">-</span> <span class="ident">buffer</span> <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">slice_offset</span>);
-                <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">num_items</span> {
-                    <span class="ident">ptr::write</span>(
-                        <span class="ident">current</span>,
-                        <span class="ident">items</span>
-                            .<span class="ident">next</span>()
-                            .<span class="ident">expect</span>(<span class="string">&quot;ExactSizeIterator over-reported length&quot;</span>),
+            <span class="comment">// Write the data.
+            //
+            // Note that any panics here (i.e. from the iterator) are safe, since
+            // we&#39;ll just leak the uninitialized memory.
+            </span>ptr::write(<span class="macro">ptr::addr_of_mut!</span>((<span class="kw-2">*</span>ptr).count), count);
+            ptr::write(<span class="macro">ptr::addr_of_mut!</span>((<span class="kw-2">*</span>ptr).data.header), header);
+            ptr::write(<span class="macro">ptr::addr_of_mut!</span>((<span class="kw-2">*</span>ptr).data.length), num_items);
+            <span class="kw">if </span>num_items != <span class="number">0 </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span>current = <span class="macro">ptr::addr_of_mut!</span>((<span class="kw-2">*</span>ptr).data.slice) <span class="kw">as </span><span class="kw-2">*mut </span>T;
+                <span class="macro">debug_assert_eq!</span>(current <span class="kw">as </span>usize - buffer <span class="kw">as </span>usize, slice_offset);
+                <span class="kw">for _ in </span><span class="number">0</span>..num_items {
+                    ptr::write(
+                        current,
+                        items
+                            .next()
+                            .expect(<span class="string">&quot;ExactSizeIterator over-reported length&quot;</span>),
                     );
-                    <span class="ident">current</span> <span class="op">=</span> <span class="ident">current</span>.<span class="ident">offset</span>(<span class="number">1</span>);
+                    current = current.offset(<span class="number">1</span>);
                 }
                 <span class="macro">assert!</span>(
-                    <span class="ident">items</span>.<span class="ident">next</span>().<span class="ident">is_none</span>(),
-                    <span class="string">&quot;ExactSizeIterator under-reported length&quot;</span>
-                );
+                    items.next().is_none(),
+                    <span class="string">&quot;ExactSizeIterator under-reported length&quot;
+                </span>);
 
-                <span class="comment">// We should have consumed the buffer exactly.</span>
-                <span class="macro">debug_assert_eq!</span>(<span class="ident">current</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">u8</span>, <span class="ident">buffer</span>.<span class="ident">add</span>(<span class="ident">usable_size</span>));
+                <span class="comment">// We should have consumed the buffer exactly.
+                </span><span class="macro">debug_assert_eq!</span>(current <span class="kw">as </span><span class="kw-2">*mut </span>u8, buffer.add(usable_size));
             }
             <span class="macro">assert!</span>(
-                <span class="ident">items</span>.<span class="ident">next</span>().<span class="ident">is_none</span>(),
-                <span class="string">&quot;ExactSizeIterator under-reported length&quot;</span>
-            );
+                items.next().is_none(),
+                <span class="string">&quot;ExactSizeIterator under-reported length&quot;
+            </span>);
         }
 
-        <span class="ident">ThinArc</span> {
-            <span class="ident">ptr</span>: <span class="kw">unsafe</span> { <span class="ident">ptr::NonNull::new_unchecked</span>(<span class="ident">ptr</span>) },
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+        ThinArc {
+            ptr: <span class="kw">unsafe </span>{ ptr::NonNull::new_unchecked(ptr) },
+            phantom: PhantomData,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;H, T&gt; Deref <span class="kw">for </span>ThinArc&lt;H, T&gt; {
+    <span class="kw">type </span>Target = HeaderSlice&lt;H, [T]&gt;;
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span>(<span class="kw-2">*</span><span class="ident">thin_to_thick</span>(<span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">as_ptr</span>())).<span class="ident">data</span> }
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        <span class="kw">unsafe </span>{ <span class="kw-2">&amp;</span>(<span class="kw-2">*</span>thin_to_thick(<span class="self">self</span>.ptr.as_ptr())).data }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">ThinArc::with_arc</span>(<span class="self">self</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">Arc::into_thin</span>(<span class="ident">a</span>.<span class="ident">clone</span>()))
+<span class="kw">impl</span>&lt;H, T&gt; Clone <span class="kw">for </span>ThinArc&lt;H, T&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        ThinArc::with_arc(<span class="self">self</span>, |a| Arc::into_thin(a.clone()))
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">Arc::from_thin</span>(<span class="ident">ThinArc</span> {
-            <span class="ident">ptr</span>: <span class="self">self</span>.<span class="ident">ptr</span>,
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;H, T&gt; Drop <span class="kw">for </span>ThinArc&lt;H, T&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let _ </span>= Arc::from_thin(ThinArc {
+            ptr: <span class="self">self</span>.ptr,
+            phantom: PhantomData,
         });
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Converts an `Arc` into a `ThinArc`. This consumes the `Arc`, so the refcount</span>
-    <span class="doccomment">/// is not modified.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_thin</span>(<span class="ident">a</span>: <span class="self">Self</span>) -&gt; <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;H, T&gt; Arc&lt;HeaderSlice&lt;H, [T]&gt;&gt; {
+    <span class="doccomment">/// Converts an `Arc` into a `ThinArc`. This consumes the `Arc`, so the refcount
+    /// is not modified.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>into_thin(a: <span class="self">Self</span>) -&gt; ThinArc&lt;H, T&gt; {
         <span class="macro">assert_eq!</span>(
-            <span class="ident">a</span>.<span class="ident">length</span>,
-            <span class="ident">a</span>.<span class="ident">slice</span>.<span class="ident">len</span>(),
-            <span class="string">&quot;Length needs to be correct for ThinArc to work&quot;</span>
-        );
-        <span class="kw">let</span> <span class="ident">fat_ptr</span>: <span class="kw-2">*mut</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>]<span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">ptr</span>();
-        <span class="ident">mem::forget</span>(<span class="ident">a</span>);
-        <span class="kw">let</span> <span class="ident">thin_ptr</span> <span class="op">=</span> <span class="ident">fat_ptr</span> <span class="kw">as</span> <span class="kw-2">*mut</span> [<span class="ident">usize</span>] <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">usize</span>;
-        <span class="ident">ThinArc</span> {
-            <span class="ident">ptr</span>: <span class="kw">unsafe</span> {
-                <span class="ident">ptr::NonNull::new_unchecked</span>(<span class="ident">thin_ptr</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">ArcInner</span><span class="op">&lt;</span><span class="ident">HeaderSlice</span><span class="op">&lt;</span><span class="ident">H</span>, [<span class="ident">T</span>; <span class="number">0</span>]<span class="op">&gt;</span><span class="op">&gt;</span>)
+            a.length,
+            a.slice.len(),
+            <span class="string">&quot;Length needs to be correct for ThinArc to work&quot;
+        </span>);
+        <span class="kw">let </span>fat_ptr: <span class="kw-2">*mut </span>ArcInner&lt;HeaderSlice&lt;H, [T]&gt;&gt; = a.ptr();
+        mem::forget(a);
+        <span class="kw">let </span>thin_ptr = fat_ptr <span class="kw">as </span><span class="kw-2">*mut </span>[usize] <span class="kw">as </span><span class="kw-2">*mut </span>usize;
+        ThinArc {
+            ptr: <span class="kw">unsafe </span>{
+                ptr::NonNull::new_unchecked(thin_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ArcInner&lt;HeaderSlice&lt;H, [T; <span class="number">0</span>]&gt;&gt;)
             },
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+            phantom: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Converts a `ThinArc` into an `Arc`. This consumes the `ThinArc`, so the refcount</span>
-    <span class="doccomment">/// is not modified.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_thin</span>(<span class="ident">a</span>: <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">thin_to_thick</span>(<span class="ident">a</span>.<span class="ident">ptr</span>.<span class="ident">as_ptr</span>());
-        <span class="ident">mem::forget</span>(<span class="ident">a</span>);
-        <span class="kw">unsafe</span> {
-            <span class="ident">Arc</span> {
-                <span class="ident">p</span>: <span class="ident">ptr::NonNull::new_unchecked</span>(<span class="ident">ptr</span>),
-                <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+    <span class="doccomment">/// Converts a `ThinArc` into an `Arc`. This consumes the `ThinArc`, so the refcount
+    /// is not modified.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>from_thin(a: ThinArc&lt;H, T&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>ptr = thin_to_thick(a.ptr.as_ptr());
+        mem::forget(a);
+        <span class="kw">unsafe </span>{
+            Arc {
+                p: ptr::NonNull::new_unchecked(ptr),
+                phantom: PhantomData,
             }
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">PartialEq</span>, <span class="ident">T</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">other</span>
+<span class="kw">impl</span>&lt;H: PartialEq, T: PartialEq&gt; PartialEq <span class="kw">for </span>ThinArc&lt;H, T&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>ThinArc&lt;H, T&gt;) -&gt; bool {
+        <span class="kw-2">**</span><span class="self">self </span>== <span class="kw-2">**</span>other
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Eq</span>, <span class="ident">T</span>: <span class="ident">Eq</span><span class="op">&gt;</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;H: Eq, T: Eq&gt; Eq <span class="kw">for </span>ThinArc&lt;H, T&gt; {}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hash</span>, <span class="ident">T</span>: <span class="ident">Hash</span><span class="op">&gt;</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">ThinArc</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">HSR</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">HSR</span>) {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">hash</span>(<span class="ident">state</span>)
+<span class="kw">impl</span>&lt;H: Hash, T: Hash&gt; Hash <span class="kw">for </span>ThinArc&lt;H, T&gt; {
+    <span class="kw">fn </span>hash&lt;HSR: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>HSR) {
+        (<span class="kw-2">**</span><span class="self">self</span>).hash(state)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

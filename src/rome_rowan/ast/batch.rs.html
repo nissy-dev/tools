@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/ast/batch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>batch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/ast/batch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>batch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -501,508 +501,508 @@
 <span id="501">501</span>
 <span id="502">502</span>
 <span id="503">503</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_text_edit::TextEdit</span>;
-<span class="kw">use</span> <span class="ident">rome_text_size::TextRange</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>rome_text_edit::TextEdit;
+<span class="kw">use </span>rome_text_size::TextRange;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">AstNode</span>, <span class="ident">Language</span>, <span class="ident">SyntaxElement</span>, <span class="ident">SyntaxKind</span>, <span class="ident">SyntaxNode</span>, <span class="ident">SyntaxSlot</span>, <span class="ident">SyntaxToken</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">cmp</span>,
-    <span class="ident">collections::BinaryHeap</span>,
-    <span class="ident">iter</span>::{<span class="ident">empty</span>, <span class="ident">once</span>},
+<span class="kw">use crate</span>::{AstNode, Language, SyntaxElement, SyntaxKind, SyntaxNode, SyntaxSlot, SyntaxToken};
+<span class="kw">use </span>std::{
+    cmp,
+    collections::BinaryHeap,
+    iter::{empty, once},
 };
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">BatchMutationExt</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Language</span>,
+<span class="kw">pub trait </span>BatchMutationExt&lt;L&gt;: AstNode&lt;Language = L&gt;
+<span class="kw">where
+    </span>L: Language,
 {
-    <span class="doccomment">/// It starts a [BatchMutation]</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;This method consumes the node and return the BatchMutation api that returns the new SynytaxNode on commit&quot;</span>]</span>
-    <span class="kw">fn</span> <span class="ident">begin</span>(<span class="self">self</span>) -&gt; <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// It starts a [BatchMutation]
+    </span><span class="attribute">#[must_use = <span class="string">&quot;This method consumes the node and return the BatchMutation api that returns the new SynytaxNode on commit&quot;</span>]
+    </span><span class="kw">fn </span>begin(<span class="self">self</span>) -&gt; BatchMutation&lt;L&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">BatchMutationExt</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Language</span>,
-    <span class="ident">T</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;L, T&gt; BatchMutationExt&lt;L&gt; <span class="kw">for </span>T
+<span class="kw">where
+    </span>L: Language,
+    T: AstNode&lt;Language = L&gt;,
 {
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;This method consumes the node and return the BatchMutation api that returns the new SynytaxNode on commit&quot;</span>]</span>
-    <span class="kw">fn</span> <span class="ident">begin</span>(<span class="self">self</span>) -&gt; <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">BatchMutation::new</span>(<span class="self">self</span>.<span class="ident">into_syntax</span>())
+    <span class="attribute">#[must_use = <span class="string">&quot;This method consumes the node and return the BatchMutation api that returns the new SynytaxNode on commit&quot;</span>]
+    </span><span class="kw">fn </span>begin(<span class="self">self</span>) -&gt; BatchMutation&lt;L&gt; {
+        BatchMutation::new(<span class="self">self</span>.into_syntax())
     }
 }
 
-<span class="doccomment">/// Stores the changes internally used by the [BatchMutation::commit] algorithm.</span>
-<span class="doccomment">/// It needs to be sorted by depth in decreasing order, then by range start and</span>
-<span class="doccomment">/// by slot in increasing order.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is necesasry so we can aggregate all changes to the same node using &quot;peek&quot;.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">CommitChange</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">parent_depth</span>: <span class="ident">usize</span>,
-    <span class="ident">parent</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">parent_range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span>,
-    <span class="ident">new_node_slot</span>: <span class="ident">usize</span>,
-    <span class="ident">new_node</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Stores the changes internally used by the [BatchMutation::commit] algorithm.
+/// It needs to be sorted by depth in decreasing order, then by range start and
+/// by slot in increasing order.
+///
+/// This is necesasry so we can aggregate all changes to the same node using &quot;peek&quot;.
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">struct </span>CommitChange&lt;L: Language&gt; {
+    parent_depth: usize,
+    parent: <span class="prelude-ty">Option</span>&lt;SyntaxNode&lt;L&gt;&gt;,
+    parent_range: <span class="prelude-ty">Option</span>&lt;(u32, u32)&gt;,
+    new_node_slot: usize,
+    new_node: <span class="prelude-ty">Option</span>&lt;SyntaxElement&lt;L&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">CommitChange</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Returns the &quot;ordering key&quot; for a change, controlling in what order this</span>
-    <span class="doccomment">/// change will be applied relatively to other changes. The key consists of</span>
-    <span class="doccomment">/// a tuple of numeric values representing the depth, parent start and slot</span>
-    <span class="doccomment">/// of the corresponding change</span>
-    <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="ident">cmp::Reverse</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>, <span class="ident">cmp::Reverse</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
+<span class="kw">impl</span>&lt;L: Language&gt; CommitChange&lt;L&gt; {
+    <span class="doccomment">/// Returns the &quot;ordering key&quot; for a change, controlling in what order this
+    /// change will be applied relatively to other changes. The key consists of
+    /// a tuple of numeric values representing the depth, parent start and slot
+    /// of the corresponding change
+    </span><span class="kw">fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, cmp::Reverse&lt;u32&gt;, cmp::Reverse&lt;usize&gt;) {
         (
-            <span class="self">self</span>.<span class="ident">parent_depth</span>,
-            <span class="ident">cmp::Reverse</span>(<span class="self">self</span>.<span class="ident">parent_range</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">start</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">start</span>).<span class="ident">unwrap_or</span>(<span class="number">0</span>)),
-            <span class="ident">cmp::Reverse</span>(<span class="self">self</span>.<span class="ident">new_node_slot</span>),
+            <span class="self">self</span>.parent_depth,
+            cmp::Reverse(<span class="self">self</span>.parent_range.map(|(start, <span class="kw">_</span>)| start).unwrap_or(<span class="number">0</span>)),
+            cmp::Reverse(<span class="self">self</span>.new_node_slot),
         )
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">CommitChange</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">key</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">key</span>()
+<span class="kw">impl</span>&lt;L: Language&gt; PartialEq <span class="kw">for </span>CommitChange&lt;L&gt; {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="self">self</span>.key() == other.key()
     }
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">CommitChange</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;L: Language&gt; Eq <span class="kw">for </span>CommitChange&lt;L&gt; {}
 
-<span class="doccomment">/// We order first by depth. Then by the range of the node.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The first is important to guarantee that all nodes that will be changed</span>
-<span class="doccomment">/// in the future are still valid with using SyntaxNode that we have.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The second is important to guarante that the &quot;.peek()&quot; we do below is sufficient</span>
-<span class="doccomment">/// to see the same node in case of two or more nodes having the same depth.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">PartialOrd</span> <span class="kw">for</span> <span class="ident">CommitChange</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">cmp::Ordering</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">cmp</span>(<span class="ident">other</span>))
+<span class="doccomment">/// We order first by depth. Then by the range of the node.
+///
+/// The first is important to guarantee that all nodes that will be changed
+/// in the future are still valid with using SyntaxNode that we have.
+///
+/// The second is important to guarante that the &quot;.peek()&quot; we do below is sufficient
+/// to see the same node in case of two or more nodes having the same depth.
+</span><span class="kw">impl</span>&lt;L: Language&gt; PartialOrd <span class="kw">for </span>CommitChange&lt;L&gt; {
+    <span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;cmp::Ordering&gt; {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.cmp(other))
     }
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Ord</span> <span class="kw">for</span> <span class="ident">CommitChange</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">cmp::Ordering</span> {
-        <span class="self">self</span>.<span class="ident">key</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">key</span>())
+<span class="kw">impl</span>&lt;L: Language&gt; Ord <span class="kw">for </span>CommitChange&lt;L&gt; {
+    <span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; cmp::Ordering {
+        <span class="self">self</span>.key().cmp(<span class="kw-2">&amp;</span>other.key())
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Language</span>,
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>BatchMutation&lt;L&gt;
+<span class="kw">where
+    </span>L: Language,
 {
-    <span class="ident">root</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="ident">changes</span>: <span class="ident">BinaryHeap</span><span class="op">&lt;</span><span class="ident">CommitChange</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    root: SyntaxNode&lt;L&gt;,
+    changes: BinaryHeap&lt;CommitChange&lt;L&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Language</span>,
+<span class="kw">impl</span>&lt;L&gt; BatchMutation&lt;L&gt;
+<span class="kw">where
+    </span>L: Language,
 {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">root</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">root</span>,
-            <span class="ident">changes</span>: <span class="ident">BinaryHeap::new</span>(),
+    <span class="kw">pub fn </span>new(root: SyntaxNode&lt;L&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            root,
+            changes: BinaryHeap::new(),
         }
     }
 
-    <span class="doccomment">/// Push a change to replace the &quot;prev_node&quot; with &quot;next_node&quot;.</span>
-    <span class="doccomment">/// Trivia from &quot;prev_node&quot; is automatically copied to &quot;next_node&quot;.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be commited.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_node</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">prev_node</span>: <span class="ident">T</span>, <span class="ident">next_node</span>: <span class="ident">T</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Push a change to replace the &quot;prev_node&quot; with &quot;next_node&quot;.
+    /// Trivia from &quot;prev_node&quot; is automatically copied to &quot;next_node&quot;.
+    ///
+    /// Changes to take effect must be commited.
+    </span><span class="kw">pub fn </span>replace_node&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, prev_node: T, next_node: T)
+    <span class="kw">where
+        </span>T: AstNode&lt;Language = L&gt;,
     {
-        <span class="self">self</span>.<span class="ident">replace_element</span>(
-            <span class="ident">prev_node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
-            <span class="ident">next_node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
+        <span class="self">self</span>.replace_element(
+            prev_node.into_syntax().into(),
+            next_node.into_syntax().into(),
         )
     }
 
-    <span class="doccomment">/// Push a change to replace the &quot;prev_token&quot; with &quot;next_token&quot;.</span>
-    <span class="doccomment">/// Trivia from &quot;prev_token&quot; is automatically copied to &quot;next_token&quot;.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be commited.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">prev_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">next_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">replace_element</span>(<span class="ident">prev_token</span>.<span class="ident">into</span>(), <span class="ident">next_token</span>.<span class="ident">into</span>())
+    <span class="doccomment">/// Push a change to replace the &quot;prev_token&quot; with &quot;next_token&quot;.
+    /// Trivia from &quot;prev_token&quot; is automatically copied to &quot;next_token&quot;.
+    ///
+    /// Changes to take effect must be commited.
+    </span><span class="kw">pub fn </span>replace_token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, prev_token: SyntaxToken&lt;L&gt;, next_token: SyntaxToken&lt;L&gt;) {
+        <span class="self">self</span>.replace_element(prev_token.into(), next_token.into())
     }
 
-    <span class="doccomment">/// Push a change to replace the &quot;prev_element&quot; with &quot;next_element&quot;.</span>
-    <span class="doccomment">/// Trivia from &quot;prev_element&quot; is automatically copied to &quot;next_element&quot;.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be commited.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_element</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">prev_element</span>: <span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">next_element</span>: <span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Push a change to replace the &quot;prev_element&quot; with &quot;next_element&quot;.
+    /// Trivia from &quot;prev_element&quot; is automatically copied to &quot;next_element&quot;.
+    ///
+    /// Changes to take effect must be commited.
+    </span><span class="kw">pub fn </span>replace_element(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        prev_element: SyntaxElement&lt;L&gt;,
+        next_element: SyntaxElement&lt;L&gt;,
     ) {
-        <span class="kw">let</span> (<span class="ident">prev_leading_trivia</span>, <span class="ident">prev_trailing_trivia</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">prev_element</span> {
-            <span class="ident">SyntaxElement::Node</span>(<span class="ident">node</span>) =&gt; (
-                <span class="ident">node</span>.<span class="ident">first_token</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident">token</span>.<span class="ident">leading_trivia</span>()),
-                <span class="ident">node</span>.<span class="ident">last_token</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident">token</span>.<span class="ident">trailing_trivia</span>()),
+        <span class="kw">let </span>(prev_leading_trivia, prev_trailing_trivia) = <span class="kw">match </span><span class="kw-2">&amp;</span>prev_element {
+            SyntaxElement::Node(node) =&gt; (
+                node.first_token().map(|token| token.leading_trivia()),
+                node.last_token().map(|token| token.trailing_trivia()),
             ),
-            <span class="ident">SyntaxElement::Token</span>(<span class="ident">token</span>) =&gt; {
-                (<span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">leading_trivia</span>()), <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">trailing_trivia</span>()))
+            SyntaxElement::Token(token) =&gt; {
+                (<span class="prelude-val">Some</span>(token.leading_trivia()), <span class="prelude-val">Some</span>(token.trailing_trivia()))
             }
         };
 
-        <span class="kw">let</span> <span class="ident">next_element</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">next_element</span> {
-            <span class="ident">SyntaxElement::Node</span>(<span class="kw-2">mut</span> <span class="ident">node</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">token</span>) <span class="op">=</span> <span class="ident">node</span>.<span class="ident">first_token</span>() {
-                    <span class="kw">let</span> <span class="ident">new_token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prev_leading_trivia</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">prev_leading_trivia</span>) =&gt; {
-                            <span class="ident">token</span>.<span class="ident">with_leading_trivia_pieces</span>(<span class="ident">prev_leading_trivia</span>.<span class="ident">pieces</span>())
+        <span class="kw">let </span>next_element = <span class="kw">match </span>next_element {
+            SyntaxElement::Node(<span class="kw-2">mut </span>node) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(token) = node.first_token() {
+                    <span class="kw">let </span>new_token = <span class="kw">match </span>prev_leading_trivia {
+                        <span class="prelude-val">Some</span>(prev_leading_trivia) =&gt; {
+                            token.with_leading_trivia_pieces(prev_leading_trivia.pieces())
                         }
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">token</span>.<span class="ident">with_leading_trivia_pieces</span>(<span class="ident">empty</span>()),
+                        <span class="prelude-val">None </span>=&gt; token.with_leading_trivia_pieces(empty()),
                     };
 
-                    <span class="ident">node</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">replace_child</span>(<span class="ident">token</span>.<span class="ident">into</span>(), <span class="ident">new_token</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+                    node = node.replace_child(token.into(), new_token.into()).unwrap();
                 }
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">token</span>) <span class="op">=</span> <span class="ident">node</span>.<span class="ident">last_token</span>() {
-                    <span class="kw">let</span> <span class="ident">new_token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prev_trailing_trivia</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">prev_trailing_trivia</span>) =&gt; {
-                            <span class="ident">token</span>.<span class="ident">with_trailing_trivia_pieces</span>(<span class="ident">prev_trailing_trivia</span>.<span class="ident">pieces</span>())
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(token) = node.last_token() {
+                    <span class="kw">let </span>new_token = <span class="kw">match </span>prev_trailing_trivia {
+                        <span class="prelude-val">Some</span>(prev_trailing_trivia) =&gt; {
+                            token.with_trailing_trivia_pieces(prev_trailing_trivia.pieces())
                         }
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">token</span>.<span class="ident">with_trailing_trivia_pieces</span>(<span class="ident">empty</span>()),
+                        <span class="prelude-val">None </span>=&gt; token.with_trailing_trivia_pieces(empty()),
                     };
 
-                    <span class="ident">node</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">replace_child</span>(<span class="ident">token</span>.<span class="ident">into</span>(), <span class="ident">new_token</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+                    node = node.replace_child(token.into(), new_token.into()).unwrap();
                 }
 
-                <span class="ident">SyntaxElement::Node</span>(<span class="ident">node</span>)
+                SyntaxElement::Node(node)
             }
-            <span class="ident">SyntaxElement::Token</span>(<span class="ident">token</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">new_token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prev_leading_trivia</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">prev_leading_trivia</span>) =&gt; {
-                        <span class="ident">token</span>.<span class="ident">with_leading_trivia_pieces</span>(<span class="ident">prev_leading_trivia</span>.<span class="ident">pieces</span>())
+            SyntaxElement::Token(token) =&gt; {
+                <span class="kw">let </span>new_token = <span class="kw">match </span>prev_leading_trivia {
+                    <span class="prelude-val">Some</span>(prev_leading_trivia) =&gt; {
+                        token.with_leading_trivia_pieces(prev_leading_trivia.pieces())
                     }
-                    <span class="prelude-val">None</span> =&gt; <span class="ident">token</span>.<span class="ident">with_leading_trivia_pieces</span>(<span class="ident">empty</span>()),
+                    <span class="prelude-val">None </span>=&gt; token.with_leading_trivia_pieces(empty()),
                 };
 
-                <span class="kw">let</span> <span class="ident">new_token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prev_trailing_trivia</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">prev_trailing_trivia</span>) =&gt; {
-                        <span class="ident">new_token</span>.<span class="ident">with_trailing_trivia_pieces</span>(<span class="ident">prev_trailing_trivia</span>.<span class="ident">pieces</span>())
+                <span class="kw">let </span>new_token = <span class="kw">match </span>prev_trailing_trivia {
+                    <span class="prelude-val">Some</span>(prev_trailing_trivia) =&gt; {
+                        new_token.with_trailing_trivia_pieces(prev_trailing_trivia.pieces())
                     }
-                    <span class="prelude-val">None</span> =&gt; <span class="ident">new_token</span>.<span class="ident">with_trailing_trivia_pieces</span>(<span class="ident">empty</span>()),
+                    <span class="prelude-val">None </span>=&gt; new_token.with_trailing_trivia_pieces(empty()),
                 };
-                <span class="ident">SyntaxElement::Token</span>(<span class="ident">new_token</span>)
+                SyntaxElement::Token(new_token)
             }
         };
 
-        <span class="self">self</span>.<span class="ident">push_change</span>(<span class="ident">prev_element</span>, <span class="prelude-val">Some</span>(<span class="ident">next_element</span>))
+        <span class="self">self</span>.push_change(prev_element, <span class="prelude-val">Some</span>(next_element))
     }
 
-    <span class="doccomment">/// Push a change to replace the &quot;prev_node&quot; with &quot;next_node&quot;.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be committed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_node_discard_trivia</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">prev_node</span>: <span class="ident">T</span>, <span class="ident">next_node</span>: <span class="ident">T</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Push a change to replace the &quot;prev_node&quot; with &quot;next_node&quot;.
+    ///
+    /// Changes to take effect must be committed.
+    </span><span class="kw">pub fn </span>replace_node_discard_trivia&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, prev_node: T, next_node: T)
+    <span class="kw">where
+        </span>T: AstNode&lt;Language = L&gt;,
     {
-        <span class="self">self</span>.<span class="ident">replace_element_discard_trivia</span>(
-            <span class="ident">prev_node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
-            <span class="ident">next_node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
+        <span class="self">self</span>.replace_element_discard_trivia(
+            prev_node.into_syntax().into(),
+            next_node.into_syntax().into(),
         )
     }
 
-    <span class="doccomment">/// Push a change to replace the &quot;prev_token&quot; with &quot;next_token&quot;.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be committed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_token_discard_trivia</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">prev_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">next_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Push a change to replace the &quot;prev_token&quot; with &quot;next_token&quot;.
+    ///
+    /// Changes to take effect must be committed.
+    </span><span class="kw">pub fn </span>replace_token_discard_trivia(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        prev_token: SyntaxToken&lt;L&gt;,
+        next_token: SyntaxToken&lt;L&gt;,
     ) {
-        <span class="self">self</span>.<span class="ident">replace_element_discard_trivia</span>(<span class="ident">prev_token</span>.<span class="ident">into</span>(), <span class="ident">next_token</span>.<span class="ident">into</span>())
+        <span class="self">self</span>.replace_element_discard_trivia(prev_token.into(), next_token.into())
     }
 
-    <span class="doccomment">/// Push a change to replace the &quot;prev_element&quot; with &quot;next_element&quot;.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be committed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_element_discard_trivia</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">prev_element</span>: <span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">next_element</span>: <span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Push a change to replace the &quot;prev_element&quot; with &quot;next_element&quot;.
+    ///
+    /// Changes to take effect must be committed.
+    </span><span class="kw">pub fn </span>replace_element_discard_trivia(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        prev_element: SyntaxElement&lt;L&gt;,
+        next_element: SyntaxElement&lt;L&gt;,
     ) {
-        <span class="self">self</span>.<span class="ident">push_change</span>(<span class="ident">prev_element</span>, <span class="prelude-val">Some</span>(<span class="ident">next_element</span>))
+        <span class="self">self</span>.push_change(prev_element, <span class="prelude-val">Some</span>(next_element))
     }
 
-    <span class="doccomment">/// Push a change to remove the specified token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be commited.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">prev_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">remove_element</span>(<span class="ident">prev_token</span>.<span class="ident">into</span>())
+    <span class="doccomment">/// Push a change to remove the specified token.
+    ///
+    /// Changes to take effect must be commited.
+    </span><span class="kw">pub fn </span>remove_token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, prev_token: SyntaxToken&lt;L&gt;) {
+        <span class="self">self</span>.remove_element(prev_token.into())
     }
 
-    <span class="doccomment">/// Push a change to remove the specified node.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be commited.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_node</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">prev_node</span>: <span class="ident">T</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Push a change to remove the specified node.
+    ///
+    /// Changes to take effect must be commited.
+    </span><span class="kw">pub fn </span>remove_node&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, prev_node: T)
+    <span class="kw">where
+        </span>T: AstNode&lt;Language = L&gt;,
     {
-        <span class="self">self</span>.<span class="ident">remove_element</span>(<span class="ident">prev_node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>())
+        <span class="self">self</span>.remove_element(prev_node.into_syntax().into())
     }
 
-    <span class="doccomment">/// Push a change to remove the specified element.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes to take effect must be commited.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">prev_element</span>: <span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">push_change</span>(<span class="ident">prev_element</span>, <span class="prelude-val">None</span>)
+    <span class="doccomment">/// Push a change to remove the specified element.
+    ///
+    /// Changes to take effect must be commited.
+    </span><span class="kw">pub fn </span>remove_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, prev_element: SyntaxElement&lt;L&gt;) {
+        <span class="self">self</span>.push_change(prev_element, <span class="prelude-val">None</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">push_change</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">prev_element</span>: <span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">next_element</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>push_change(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        prev_element: SyntaxElement&lt;L&gt;,
+        next_element: <span class="prelude-ty">Option</span>&lt;SyntaxElement&lt;L&gt;&gt;,
     ) {
-        <span class="kw">let</span> <span class="ident">new_node_slot</span> <span class="op">=</span> <span class="ident">prev_element</span>.<span class="ident">index</span>();
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">prev_element</span>.<span class="ident">parent</span>();
-        <span class="kw">let</span> <span class="ident">parent_range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">text_range</span>();
-            (<span class="ident">range</span>.<span class="ident">start</span>().<span class="ident">into</span>(), <span class="ident">range</span>.<span class="ident">end</span>().<span class="ident">into</span>())
+        <span class="kw">let </span>new_node_slot = prev_element.index();
+        <span class="kw">let </span>parent = prev_element.parent();
+        <span class="kw">let </span>parent_range: <span class="prelude-ty">Option</span>&lt;(u32, u32)&gt; = parent.as_ref().map(|p| {
+            <span class="kw">let </span>range = p.text_range();
+            (range.start().into(), range.end().into())
         });
-        <span class="kw">let</span> <span class="ident">parent_depth</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">ancestors</span>().<span class="ident">count</span>()).<span class="ident">unwrap_or</span>(<span class="number">0</span>);
+        <span class="kw">let </span>parent_depth = parent.as_ref().map(|p| p.ancestors().count()).unwrap_or(<span class="number">0</span>);
 
-        <span class="self">self</span>.<span class="ident">changes</span>.<span class="ident">push</span>(<span class="ident">CommitChange</span> {
-            <span class="ident">parent_depth</span>,
-            <span class="ident">parent</span>,
-            <span class="ident">parent_range</span>,
-            <span class="ident">new_node_slot</span>,
-            <span class="ident">new_node</span>: <span class="ident">next_element</span>,
+        <span class="self">self</span>.changes.push(CommitChange {
+            parent_depth,
+            parent,
+            parent_range,
+            new_node_slot,
+            new_node: next_element,
         });
     }
 
-    <span class="doccomment">/// Returns the range of the document modified by this mutation along with</span>
-    <span class="doccomment">/// a list of individual text edits to be performed on the source code, or</span>
-    <span class="doccomment">/// [None] if the mutation is empty</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_text_edits</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">TextRange</span>, <span class="ident">TextEdit</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">range</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="doccomment">/// Returns the range of the document modified by this mutation along with
+    /// a list of individual text edits to be performed on the source code, or
+    /// [None] if the mutation is empty
+    </span><span class="kw">pub fn </span>as_text_edits(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(TextRange, TextEdit)&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>range = <span class="prelude-val">None</span>;
 
-        <span class="kw">for</span> <span class="ident">change</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">changes</span> {
-            <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">change</span>.<span class="ident">parent</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>);
-            <span class="kw">let</span> <span class="ident">delete</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">parent</span>.<span class="ident">slots</span>().<span class="ident">nth</span>(<span class="ident">change</span>.<span class="ident">new_node_slot</span>) {
-                <span class="prelude-val">Some</span>(<span class="ident">SyntaxSlot::Node</span>(<span class="ident">node</span>)) =&gt; <span class="ident">node</span>.<span class="ident">text_range</span>(),
-                <span class="prelude-val">Some</span>(<span class="ident">SyntaxSlot::Token</span>(<span class="ident">token</span>)) =&gt; <span class="ident">token</span>.<span class="ident">text_range</span>(),
-                <span class="kw">_</span> =&gt; <span class="kw">continue</span>,
+        <span class="kw">for </span>change <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.changes {
+            <span class="kw">let </span>parent = change.parent.as_ref().unwrap_or(<span class="kw-2">&amp;</span><span class="self">self</span>.root);
+            <span class="kw">let </span>delete = <span class="kw">match </span>parent.slots().nth(change.new_node_slot) {
+                <span class="prelude-val">Some</span>(SyntaxSlot::Node(node)) =&gt; node.text_range(),
+                <span class="prelude-val">Some</span>(SyntaxSlot::Token(token)) =&gt; token.text_range(),
+                <span class="kw">_ </span>=&gt; <span class="kw">continue</span>,
             };
 
-            <span class="ident">range</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span> {
-                <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">delete</span>),
-                <span class="prelude-val">Some</span>(<span class="ident">range</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">range</span>.<span class="ident">cover</span>(<span class="ident">delete</span>)),
+            range = <span class="kw">match </span>range {
+                <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Some</span>(delete),
+                <span class="prelude-val">Some</span>(range) =&gt; <span class="prelude-val">Some</span>(range.cover(delete)),
             };
         }
 
-        <span class="kw">let</span> <span class="ident">text_range</span> <span class="op">=</span> <span class="ident">range</span><span class="question-mark">?</span>;
+        <span class="kw">let </span>text_range = range<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="ident">new</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">commit</span>().<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="ident">text_edit</span> <span class="op">=</span> <span class="ident">TextEdit::from_unicode_words</span>(<span class="kw-2">&amp;</span><span class="ident">old</span>, <span class="kw-2">&amp;</span><span class="ident">new</span>);
+        <span class="kw">let </span>old = <span class="self">self</span>.root.to_string();
+        <span class="kw">let </span>new = <span class="self">self</span>.clone().commit().to_string();
+        <span class="kw">let </span>text_edit = TextEdit::from_unicode_words(<span class="kw-2">&amp;</span>old, <span class="kw-2">&amp;</span>new);
 
-        <span class="prelude-val">Some</span>((<span class="ident">text_range</span>, <span class="ident">text_edit</span>))
+        <span class="prelude-val">Some</span>((text_range, text_edit))
     }
 
-    <span class="doccomment">/// The core of the batch mutation algorithm can be summarized as:</span>
-    <span class="doccomment">/// 1 - Iterate all requested changes;</span>
-    <span class="doccomment">/// 2 - Insert them into a heap (priority queue) by depth. Deeper changes are done first;</span>
-    <span class="doccomment">/// 3 - Loop popping requested changes from the heap, taking the deepest change we have for the moment;</span>
-    <span class="doccomment">/// 4 - Each requested change has a &quot;parent&quot;, an &quot;index&quot; and the &quot;new node&quot; (or None);</span>
-    <span class="doccomment">/// 5 - Clone the current parent&#39;s &quot;parent&quot;, the &quot;greatparent&quot;;</span>
-    <span class="doccomment">/// 6 - Detach the current &quot;parent&quot; from the tree;</span>
-    <span class="doccomment">/// 7 - Replace the old node at &quot;index&quot; at the current &quot;parent&quot; with the current &quot;new node&quot;;</span>
-    <span class="doccomment">/// 8 - Insert into the heap the greatparent as the parent and the current &quot;parent&quot; as the &quot;new node&quot;;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is the simple case. The algorithm also has a more complex case when to changes have a common ancestor,</span>
-    <span class="doccomment">/// which can actually be one of the changed nodes.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// To address this case at step 3, when we pop a new change to apply it, we actually aggregate all changes to the current</span>
-    <span class="doccomment">/// parent together. This is done by the heap because we also sort by node and it&#39;s range.</span>
-    <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">commit</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">BatchMutation</span> { <span class="ident">root</span>, <span class="kw-2">mut</span> <span class="ident">changes</span> } <span class="op">=</span> <span class="self">self</span>;
-        <span class="comment">// Fill the heap with the requested changes</span>
+    <span class="doccomment">/// The core of the batch mutation algorithm can be summarized as:
+    /// 1 - Iterate all requested changes;
+    /// 2 - Insert them into a heap (priority queue) by depth. Deeper changes are done first;
+    /// 3 - Loop popping requested changes from the heap, taking the deepest change we have for the moment;
+    /// 4 - Each requested change has a &quot;parent&quot;, an &quot;index&quot; and the &quot;new node&quot; (or None);
+    /// 5 - Clone the current parent&#39;s &quot;parent&quot;, the &quot;greatparent&quot;;
+    /// 6 - Detach the current &quot;parent&quot; from the tree;
+    /// 7 - Replace the old node at &quot;index&quot; at the current &quot;parent&quot; with the current &quot;new node&quot;;
+    /// 8 - Insert into the heap the greatparent as the parent and the current &quot;parent&quot; as the &quot;new node&quot;;
+    ///
+    /// This is the simple case. The algorithm also has a more complex case when to changes have a common ancestor,
+    /// which can actually be one of the changed nodes.
+    ///
+    /// To address this case at step 3, when we pop a new change to apply it, we actually aggregate all changes to the current
+    /// parent together. This is done by the heap because we also sort by node and it&#39;s range.
+    ///
+    </span><span class="kw">pub fn </span>commit(<span class="self">self</span>) -&gt; SyntaxNode&lt;L&gt; {
+        <span class="kw">let </span>BatchMutation { root, <span class="kw-2">mut </span>changes } = <span class="self">self</span>;
+        <span class="comment">// Fill the heap with the requested changes
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">item</span>) <span class="op">=</span> <span class="ident">changes</span>.<span class="ident">pop</span>() {
-            <span class="comment">// If parent is None, we reached the root</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current_parent</span>) <span class="op">=</span> <span class="ident">item</span>.<span class="ident">parent</span> {
-                <span class="comment">// This must be done before the detachment below</span>
-                <span class="comment">// because we need nodes that are still valid in the old tree</span>
+        </span><span class="kw">while let </span><span class="prelude-val">Some</span>(item) = changes.pop() {
+            <span class="comment">// If parent is None, we reached the root
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(current_parent) = item.parent {
+                <span class="comment">// This must be done before the detachment below
+                // because we need nodes that are still valid in the old tree
 
-                <span class="kw">let</span> <span class="ident">grandparent</span> <span class="op">=</span> <span class="ident">current_parent</span>.<span class="ident">parent</span>();
-                <span class="kw">let</span> <span class="ident">grandparent_range</span> <span class="op">=</span> <span class="ident">grandparent</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">g</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">g</span>.<span class="ident">text_range</span>();
-                    (<span class="ident">range</span>.<span class="ident">start</span>().<span class="ident">into</span>(), <span class="ident">range</span>.<span class="ident">end</span>().<span class="ident">into</span>())
+                </span><span class="kw">let </span>grandparent = current_parent.parent();
+                <span class="kw">let </span>grandparent_range = grandparent.as_ref().map(|g| {
+                    <span class="kw">let </span>range = g.text_range();
+                    (range.start().into(), range.end().into())
                 });
-                <span class="kw">let</span> <span class="ident">currentparent_slot</span> <span class="op">=</span> <span class="ident">current_parent</span>.<span class="ident">index</span>();
+                <span class="kw">let </span>currentparent_slot = current_parent.index();
 
-                <span class="comment">// Aggregate all modifications to the current parent</span>
-                <span class="comment">// This works because of the Ord we defined in the [CommitChange] struct</span>
+                <span class="comment">// Aggregate all modifications to the current parent
+                // This works because of the Ord we defined in the [CommitChange] struct
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">modifications</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="ident">item</span>.<span class="ident">new_node_slot</span>, <span class="ident">item</span>.<span class="ident">new_node</span>)];
-                <span class="kw">loop</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">next_change_parent</span>) <span class="op">=</span> <span class="ident">changes</span>.<span class="ident">peek</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">i</span>.<span class="ident">parent</span>.<span class="ident">as_ref</span>())
+                </span><span class="kw">let </span><span class="kw-2">mut </span>modifications = <span class="macro">vec!</span>[(item.new_node_slot, item.new_node)];
+                <span class="kw">loop </span>{
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(next_change_parent) = changes.peek().and_then(|i| i.parent.as_ref())
                     {
-                        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">next_change_parent</span> <span class="op">==</span> <span class="ident">current_parent</span> {
-                            <span class="comment">// SAFETY: We can .pop().unwrap() because we .peek() above</span>
-                            <span class="kw">let</span> <span class="ident">next_change</span> <span class="op">=</span> <span class="ident">changes</span>.<span class="ident">pop</span>().<span class="ident">expect</span>(<span class="string">&quot;changes.pop&quot;</span>);
-                            <span class="ident">modifications</span>.<span class="ident">push</span>((<span class="ident">next_change</span>.<span class="ident">new_node_slot</span>, <span class="ident">next_change</span>.<span class="ident">new_node</span>));
+                        <span class="kw">if </span><span class="kw-2">*</span>next_change_parent == current_parent {
+                            <span class="comment">// SAFETY: We can .pop().unwrap() because we .peek() above
+                            </span><span class="kw">let </span>next_change = changes.pop().expect(<span class="string">&quot;changes.pop&quot;</span>);
+                            modifications.push((next_change.new_node_slot, next_change.new_node));
                             <span class="kw">continue</span>;
                         }
                     }
                     <span class="kw">break</span>;
                 }
 
-                <span class="comment">// Now we detach the current parent, make all the modifications</span>
-                <span class="comment">// and push a pending change to its parent.</span>
+                <span class="comment">// Now we detach the current parent, make all the modifications
+                // and push a pending change to its parent.
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_parent</span> <span class="op">=</span> <span class="ident">current_parent</span>.<span class="ident">detach</span>();
-                <span class="kw">let</span> <span class="ident">is_list</span> <span class="op">=</span> <span class="ident">current_parent</span>.<span class="ident">kind</span>().<span class="ident">is_list</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">removed_slots</span> <span class="op">=</span> <span class="number">0</span>;
+                </span><span class="kw">let </span><span class="kw-2">mut </span>current_parent = current_parent.detach();
+                <span class="kw">let </span>is_list = current_parent.kind().is_list();
+                <span class="kw">let </span><span class="kw-2">mut </span>removed_slots = <span class="number">0</span>;
 
-                <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">replace_with</span>) <span class="kw">in</span> <span class="ident">modifications</span> {
-                    <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span>.<span class="ident">checked_sub</span>( <span class="ident">removed_slots</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="macro">panic!</span>(<span class="string">&quot;cannot replace element in slot {index} with {removed_slots} removed slots&quot;</span>));
+                <span class="kw">for </span>(index, replace_with) <span class="kw">in </span>modifications {
+                    <span class="kw">let </span>index = index.checked_sub( removed_slots).unwrap_or_else(|| <span class="macro">panic!</span>(<span class="string">&quot;cannot replace element in slot {index} with {removed_slots} removed slots&quot;</span>));
 
-                    <span class="ident">current_parent</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_list</span> <span class="op">&amp;&amp;</span> <span class="ident">replace_with</span>.<span class="ident">is_none</span>() {
-                        <span class="ident">removed_slots</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                        <span class="ident">current_parent</span>.<span class="ident">clone</span>().<span class="ident">splice_slots</span>(<span class="ident">index</span>..<span class="op">=</span><span class="ident">index</span>, <span class="ident">empty</span>())
-                    } <span class="kw">else</span> {
-                        <span class="ident">current_parent</span>
-                            .<span class="ident">clone</span>()
-                            .<span class="ident">splice_slots</span>(<span class="ident">index</span>..<span class="op">=</span><span class="ident">index</span>, <span class="ident">once</span>(<span class="ident">replace_with</span>))
+                    current_parent = <span class="kw">if </span>is_list &amp;&amp; replace_with.is_none() {
+                        removed_slots += <span class="number">1</span>;
+                        current_parent.clone().splice_slots(index..=index, empty())
+                    } <span class="kw">else </span>{
+                        current_parent
+                            .clone()
+                            .splice_slots(index..=index, once(replace_with))
                     };
                 }
 
-                <span class="ident">changes</span>.<span class="ident">push</span>(<span class="ident">CommitChange</span> {
-                    <span class="ident">parent_depth</span>: <span class="ident">item</span>.<span class="ident">parent_depth</span> <span class="op">-</span> <span class="number">1</span>,
-                    <span class="ident">parent</span>: <span class="ident">grandparent</span>,
-                    <span class="ident">parent_range</span>: <span class="ident">grandparent_range</span>,
-                    <span class="ident">new_node_slot</span>: <span class="ident">currentparent_slot</span>,
-                    <span class="ident">new_node</span>: <span class="prelude-val">Some</span>(<span class="ident">SyntaxElement::Node</span>(<span class="ident">current_parent</span>)),
+                changes.push(CommitChange {
+                    parent_depth: item.parent_depth - <span class="number">1</span>,
+                    parent: grandparent,
+                    parent_range: grandparent_range,
+                    new_node_slot: currentparent_slot,
+                    new_node: <span class="prelude-val">Some</span>(SyntaxElement::Node(current_parent)),
                 });
-            } <span class="kw">else</span> {
-                <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">item</span>
-                    .<span class="ident">new_node</span>
-                    .<span class="ident">expect</span>(<span class="string">&quot;new_node&quot;</span>)
-                    .<span class="ident">into_node</span>()
-                    .<span class="ident">expect</span>(<span class="string">&quot;expected root to be a node and not a token&quot;</span>);
+            } <span class="kw">else </span>{
+                <span class="kw">let </span>root = item
+                    .new_node
+                    .expect(<span class="string">&quot;new_node&quot;</span>)
+                    .into_node()
+                    .expect(<span class="string">&quot;expected root to be a node and not a token&quot;</span>);
 
-                <span class="kw">return</span> <span class="ident">root</span>;
+                <span class="kw">return </span>root;
             }
         }
 
-        <span class="ident">root</span>
+        root
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">raw_language</span>::{<span class="ident">LiteralExpression</span>, <span class="ident">RawLanguageKind</span>, <span class="ident">RawLanguageRoot</span>, <span class="ident">RawSyntaxTreeBuilder</span>},
-        <span class="ident">AstNode</span>, <span class="ident">BatchMutationExt</span>, <span class="ident">SyntaxNodeCast</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">pub mod </span>tests {
+    <span class="kw">use crate</span>::{
+        raw_language::{LiteralExpression, RawLanguageKind, RawLanguageRoot, RawSyntaxTreeBuilder},
+        AstNode, BatchMutationExt, SyntaxNodeCast,
     };
 
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// 0: ROOT@0..1</span>
-    <span class="doccomment">///     0: LITERAL_EXPRESSION@0..1</span>
-    <span class="doccomment">///         0: STRING_TOKEN@0..1 &quot;a&quot; [] []</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">tree_one</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; (<span class="ident">RawLanguageRoot</span>, <span class="ident">String</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">builder</span>
-            .<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>)
-            .<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>)
-            .<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="ident">a</span>)
-            .<span class="ident">finish_node</span>()
-            .<span class="ident">finish_node</span>();
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>().<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">RawLanguageRoot</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">root</span>.<span class="ident">syntax</span>());
-        (<span class="ident">root</span>, <span class="ident">s</span>)
+    <span class="doccomment">/// ```
+    /// 0: ROOT@0..1
+    ///     0: LITERAL_EXPRESSION@0..1
+    ///         0: STRING_TOKEN@0..1 &quot;a&quot; [] []
+    /// ```
+    </span><span class="kw">fn </span>tree_one(a: <span class="kw-2">&amp;</span>str) -&gt; (RawLanguageRoot, String) {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
+        builder
+            .start_node(RawLanguageKind::ROOT)
+            .start_node(RawLanguageKind::LITERAL_EXPRESSION)
+            .token(RawLanguageKind::STRING_TOKEN, a)
+            .finish_node()
+            .finish_node();
+        <span class="kw">let </span>root = builder.finish().cast::&lt;RawLanguageRoot&gt;().unwrap();
+        <span class="kw">let </span>s = <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, root.syntax());
+        (root, s)
     }
 
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// 0: ROOT@0..1</span>
-    <span class="doccomment">///     0: LITERAL_EXPRESSION@0..1</span>
-    <span class="doccomment">///         0: STRING_TOKEN@0..1 &quot;a&quot; [] []</span>
-    <span class="doccomment">///     1: LITERAL_EXPRESSION@0..1</span>
-    <span class="doccomment">///         0: STRING_TOKEN@0..1 &quot;b&quot; [] []</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">tree_two</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; (<span class="ident">RawLanguageRoot</span>, <span class="ident">String</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">builder</span>
-            .<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>)
-            .<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>)
-            .<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="ident">a</span>)
-            .<span class="ident">finish_node</span>()
-            .<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>)
-            .<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="ident">b</span>)
-            .<span class="ident">finish_node</span>()
-            .<span class="ident">finish_node</span>();
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>().<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">RawLanguageRoot</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">root</span>.<span class="ident">syntax</span>());
-        (<span class="ident">root</span>, <span class="ident">s</span>)
+    <span class="doccomment">/// ```
+    /// 0: ROOT@0..1
+    ///     0: LITERAL_EXPRESSION@0..1
+    ///         0: STRING_TOKEN@0..1 &quot;a&quot; [] []
+    ///     1: LITERAL_EXPRESSION@0..1
+    ///         0: STRING_TOKEN@0..1 &quot;b&quot; [] []
+    /// ```
+    </span><span class="kw">fn </span>tree_two(a: <span class="kw-2">&amp;</span>str, b: <span class="kw-2">&amp;</span>str) -&gt; (RawLanguageRoot, String) {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
+        builder
+            .start_node(RawLanguageKind::ROOT)
+            .start_node(RawLanguageKind::LITERAL_EXPRESSION)
+            .token(RawLanguageKind::STRING_TOKEN, a)
+            .finish_node()
+            .start_node(RawLanguageKind::LITERAL_EXPRESSION)
+            .token(RawLanguageKind::STRING_TOKEN, b)
+            .finish_node()
+            .finish_node();
+        <span class="kw">let </span>root = builder.finish().cast::&lt;RawLanguageRoot&gt;().unwrap();
+        <span class="kw">let </span>s = <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, root.syntax());
+        (root, s)
     }
 
-    <span class="kw">fn</span> <span class="ident">find</span>(<span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">RawLanguageRoot</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">LiteralExpression</span> {
-        <span class="ident">root</span>.<span class="ident">syntax</span>()
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span> <span class="op">&amp;&amp;</span> <span class="ident">x</span>.<span class="ident">text_trimmed</span>() <span class="op">==</span> <span class="ident">name</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">LiteralExpression</span><span class="op">&gt;</span>()
-            .<span class="ident">unwrap</span>()
+    <span class="kw">fn </span>find(root: <span class="kw-2">&amp;</span>RawLanguageRoot, name: <span class="kw-2">&amp;</span>str) -&gt; LiteralExpression {
+        root.syntax()
+            .descendants()
+            .find(|x| x.kind() == RawLanguageKind::LITERAL_EXPRESSION &amp;&amp; x.text_trimmed() == name)
+            .unwrap()
+            .cast::&lt;LiteralExpression&gt;()
+            .unwrap()
     }
 
-    <span class="kw">fn</span> <span class="ident">clone_detach</span>(<span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">RawLanguageRoot</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">LiteralExpression</span> {
-        <span class="ident">root</span>.<span class="ident">syntax</span>()
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span> <span class="op">&amp;&amp;</span> <span class="ident">x</span>.<span class="ident">text_trimmed</span>() <span class="op">==</span> <span class="ident">name</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">detach</span>()
-            .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">LiteralExpression</span><span class="op">&gt;</span>()
-            .<span class="ident">unwrap</span>()
+    <span class="kw">fn </span>clone_detach(root: <span class="kw-2">&amp;</span>RawLanguageRoot, name: <span class="kw-2">&amp;</span>str) -&gt; LiteralExpression {
+        root.syntax()
+            .descendants()
+            .find(|x| x.kind() == RawLanguageKind::LITERAL_EXPRESSION &amp;&amp; x.text_trimmed() == name)
+            .unwrap()
+            .detach()
+            .cast::&lt;LiteralExpression&gt;()
+            .unwrap()
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ok_batch_mutation_no_changes</span>() {
-        <span class="kw">let</span> (<span class="ident">before</span>, <span class="ident">before_debug</span>) <span class="op">=</span> <span class="ident">tree_one</span>(<span class="string">&quot;a&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">pub fn </span>ok_batch_mutation_no_changes() {
+        <span class="kw">let </span>(before, before_debug) = tree_one(<span class="string">&quot;a&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">batch</span> <span class="op">=</span> <span class="ident">before</span>.<span class="ident">begin</span>();
-        <span class="kw">let</span> <span class="ident">after</span> <span class="op">=</span> <span class="ident">batch</span>.<span class="ident">commit</span>();
+        <span class="kw">let </span>batch = before.begin();
+        <span class="kw">let </span>after = batch.commit();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">before_debug</span>, <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">after</span>));
+        <span class="macro">assert_eq!</span>(before_debug, <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, after));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ok_batch_mutation_one_change</span>() {
-        <span class="kw">let</span> (<span class="ident">before</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">tree_one</span>(<span class="string">&quot;a&quot;</span>);
-        <span class="kw">let</span> (<span class="ident">expected</span>, <span class="ident">expected_debug</span>) <span class="op">=</span> <span class="ident">tree_one</span>(<span class="string">&quot;b&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">pub fn </span>ok_batch_mutation_one_change() {
+        <span class="kw">let </span>(before, <span class="kw">_</span>) = tree_one(<span class="string">&quot;a&quot;</span>);
+        <span class="kw">let </span>(expected, expected_debug) = tree_one(<span class="string">&quot;b&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">find</span>(<span class="kw-2">&amp;</span><span class="ident">before</span>, <span class="string">&quot;a&quot;</span>);
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">clone_detach</span>(<span class="kw-2">&amp;</span><span class="ident">expected</span>, <span class="string">&quot;b&quot;</span>);
+        <span class="kw">let </span>a = find(<span class="kw-2">&amp;</span>before, <span class="string">&quot;a&quot;</span>);
+        <span class="kw">let </span>b = clone_detach(<span class="kw-2">&amp;</span>expected, <span class="string">&quot;b&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">batch</span> <span class="op">=</span> <span class="ident">before</span>.<span class="ident">begin</span>();
-        <span class="ident">batch</span>.<span class="ident">replace_node</span>(<span class="ident">a</span>, <span class="ident">b</span>);
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">batch</span>.<span class="ident">commit</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>batch = before.begin();
+        batch.replace_node(a, b);
+        <span class="kw">let </span>root = batch.commit();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected_debug</span>, <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">root</span>));
+        <span class="macro">assert_eq!</span>(expected_debug, <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, root));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ok_batch_mutation_multiple_changes_different_branches</span>() {
-        <span class="kw">let</span> (<span class="ident">before</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">tree_two</span>(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>);
-        <span class="kw">let</span> (<span class="ident">expected</span>, <span class="ident">expected_debug</span>) <span class="op">=</span> <span class="ident">tree_two</span>(<span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">pub fn </span>ok_batch_mutation_multiple_changes_different_branches() {
+        <span class="kw">let </span>(before, <span class="kw">_</span>) = tree_two(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>);
+        <span class="kw">let </span>(expected, expected_debug) = tree_two(<span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">find</span>(<span class="kw-2">&amp;</span><span class="ident">before</span>, <span class="string">&quot;a&quot;</span>);
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">find</span>(<span class="kw-2">&amp;</span><span class="ident">before</span>, <span class="string">&quot;b&quot;</span>);
-        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">clone_detach</span>(<span class="kw-2">&amp;</span><span class="ident">expected</span>, <span class="string">&quot;c&quot;</span>);
-        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">clone_detach</span>(<span class="kw-2">&amp;</span><span class="ident">expected</span>, <span class="string">&quot;d&quot;</span>);
+        <span class="kw">let </span>a = find(<span class="kw-2">&amp;</span>before, <span class="string">&quot;a&quot;</span>);
+        <span class="kw">let </span>b = find(<span class="kw-2">&amp;</span>before, <span class="string">&quot;b&quot;</span>);
+        <span class="kw">let </span>c = clone_detach(<span class="kw-2">&amp;</span>expected, <span class="string">&quot;c&quot;</span>);
+        <span class="kw">let </span>d = clone_detach(<span class="kw-2">&amp;</span>expected, <span class="string">&quot;d&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">batch</span> <span class="op">=</span> <span class="ident">before</span>.<span class="ident">begin</span>();
-        <span class="ident">batch</span>.<span class="ident">replace_node</span>(<span class="ident">a</span>, <span class="ident">c</span>);
-        <span class="ident">batch</span>.<span class="ident">replace_node</span>(<span class="ident">b</span>, <span class="ident">d</span>);
-        <span class="kw">let</span> <span class="ident">after</span> <span class="op">=</span> <span class="ident">batch</span>.<span class="ident">commit</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>batch = before.begin();
+        batch.replace_node(a, c);
+        batch.replace_node(b, d);
+        <span class="kw">let </span>after = batch.commit();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected_debug</span>, <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">after</span>));
+        <span class="macro">assert_eq!</span>(expected_debug, <span class="macro">format!</span>(<span class="string">&quot;{:#?}&quot;</span>, after));
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

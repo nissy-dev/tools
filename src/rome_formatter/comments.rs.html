@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/comments.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>comments.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/comments.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>comments.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -1142,967 +1142,967 @@
 <span id="1142">1142</span>
 <span id="1143">1143</span>
 <span id="1144">1144</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Types for extracting and representing comments of a syntax tree.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Most programming languages support comments allowing programmers to document their programs. Comments are different from other syntaxes  because programming languages allow comments in almost any position, giving programmers great flexibility on where they can write comments:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```ignore</span>
-<span class="doccomment">//! /**</span>
-<span class="doccomment">//!  * Documentation comment</span>
-<span class="doccomment">//!  */</span>
-<span class="doccomment">//! async /* comment */ function Test () // line comment</span>
-<span class="doccomment">//! {/*inline*/}</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! However, this flexibility makes formatting comments challenging because:</span>
-<span class="doccomment">//! * The formatter must consistently place comments so that re-formatting the output yields the same result and does not create invalid syntax (line comments).</span>
-<span class="doccomment">//! * It is essential that formatters place comments close to the syntax the programmer intended to document. However, the lack of rules regarding where comments are allowed and what syntax they document requires the use of heuristics to infer the documented syntax.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This module strikes a balance between placing comments as closely as possible to their source location and reducing the complexity of formatting comments. It does so by associating comments per node rather than a token. This greatly reduces the combinations of possible comment positions but turns out to be, in practice, sufficiently precise to keep comments close to their source location.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Node comments</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Comments are associated per node but get further distinguished on their location related to that node:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ### Leading Comments</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A comment at the start of a node</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```ignore</span>
-<span class="doccomment">//! // Leading comment of the statement</span>
-<span class="doccomment">//! console.log(&quot;test&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! [/* leading comment of identifier */ a ];</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ### Dangling Comments</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A comment that is neither at the start nor the end of a node</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```ignore</span>
-<span class="doccomment">//! [/* in between the brackets */ ];</span>
-<span class="doccomment">//! async  /* between keywords */  function Test () {}</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ### Trailing Comments</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A comment at the end of a node</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```ignore</span>
-<span class="doccomment">//! [a /* trailing comment of a */, b, c];</span>
-<span class="doccomment">//! [</span>
-<span class="doccomment">//!     a // trailing comment of a</span>
-<span class="doccomment">//! ]</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Limitations</span>
-<span class="doccomment">//! Limiting the placement of comments to leading, dangling, or trailing node comments reduces complexity inside the formatter but means, that the formatter&#39;s possibility of where comments can be formatted depends on the AST structure.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! For example, the continue statement in JavaScript is defined as:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```ungram</span>
-<span class="doccomment">//! JsContinueStatement =</span>
-<span class="doccomment">//! &#39;continue&#39;</span>
-<span class="doccomment">//! (label: &#39;ident&#39;)?</span>
-<span class="doccomment">//! &#39;;&#39;?</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! but a programmer may decide to add a comment in front or after the label:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```ignore</span>
-<span class="doccomment">//! continue /* comment 1 */ label;</span>
-<span class="doccomment">//! continue label /* comment 2*/; /* trailing */</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Because all children of the `continue` statement are tokens, it is only possible to make the comments leading, dangling, or trailing comments of the `continue` statement. But this results in a loss of information as the formatting code can no longer distinguish if a comment appeared before or after the label and, thus, has to format them the same way.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This hasn&#39;t shown to be a significant limitation today but the infrastructure could be extended to support a `label` on [`SourceComment`] that allows to further categorise comments.</span>
-<span class="doccomment">//!</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Types for extracting and representing comments of a syntax tree.
+//!
+//! Most programming languages support comments allowing programmers to document their programs. Comments are different from other syntaxes  because programming languages allow comments in almost any position, giving programmers great flexibility on where they can write comments:
+//!
+//! ```ignore
+//! /**
+//!  * Documentation comment
+//!  */
+//! async /* comment */ function Test () // line comment
+//! {/*inline*/}
+//! ```
+//!
+//! However, this flexibility makes formatting comments challenging because:
+//! * The formatter must consistently place comments so that re-formatting the output yields the same result and does not create invalid syntax (line comments).
+//! * It is essential that formatters place comments close to the syntax the programmer intended to document. However, the lack of rules regarding where comments are allowed and what syntax they document requires the use of heuristics to infer the documented syntax.
+//!
+//! This module strikes a balance between placing comments as closely as possible to their source location and reducing the complexity of formatting comments. It does so by associating comments per node rather than a token. This greatly reduces the combinations of possible comment positions but turns out to be, in practice, sufficiently precise to keep comments close to their source location.
+//!
+//! ## Node comments
+//!
+//! Comments are associated per node but get further distinguished on their location related to that node:
+//!
+//! ### Leading Comments
+//!
+//! A comment at the start of a node
+//!
+//! ```ignore
+//! // Leading comment of the statement
+//! console.log(&quot;test&quot;);
+//!
+//! [/* leading comment of identifier */ a ];
+//! ```
+//!
+//! ### Dangling Comments
+//!
+//! A comment that is neither at the start nor the end of a node
+//!
+//! ```ignore
+//! [/* in between the brackets */ ];
+//! async  /* between keywords */  function Test () {}
+//! ```
+//!
+//! ### Trailing Comments
+//!
+//! A comment at the end of a node
+//!
+//! ```ignore
+//! [a /* trailing comment of a */, b, c];
+//! [
+//!     a // trailing comment of a
+//! ]
+//! ```
+//!
+//! ## Limitations
+//! Limiting the placement of comments to leading, dangling, or trailing node comments reduces complexity inside the formatter but means, that the formatter&#39;s possibility of where comments can be formatted depends on the AST structure.
+//!
+//! For example, the continue statement in JavaScript is defined as:
+//!
+//! ```ungram
+//! JsContinueStatement =
+//! &#39;continue&#39;
+//! (label: &#39;ident&#39;)?
+//! &#39;;&#39;?
+//! ```
+//!
+//! but a programmer may decide to add a comment in front or after the label:
+//!
+//! ```ignore
+//! continue /* comment 1 */ label;
+//! continue label /* comment 2*/; /* trailing */
+//! ```
+//!
+//! Because all children of the `continue` statement are tokens, it is only possible to make the comments leading, dangling, or trailing comments of the `continue` statement. But this results in a loss of information as the formatting code can no longer distinguish if a comment appeared before or after the label and, thus, has to format them the same way.
+//!
+//! This hasn&#39;t shown to be a significant limitation today but the infrastructure could be extended to support a `label` on [`SourceComment`] that allows to further categorise comments.
+//!
 
-<span class="kw">mod</span> <span class="ident">builder</span>;
-<span class="kw">mod</span> <span class="ident">map</span>;
+</span><span class="kw">mod </span>builder;
+<span class="kw">mod </span>map;
 
-<span class="kw">use</span> <span class="self">self</span>::{<span class="ident">builder::CommentsBuilderVisitor</span>, <span class="ident">map::CommentsMap</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">TextSize</span>, <span class="ident">TransformSourceMap</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan::syntax::SyntaxElementKey</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">Language</span>, <span class="ident">SyntaxNode</span>, <span class="ident">SyntaxToken</span>, <span class="ident">SyntaxTriviaPieceComments</span>};
-<span class="kw">use</span> <span class="ident">rustc_hash::FxHashSet</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-<span class="kw">use</span> <span class="ident">std::cell</span>::{<span class="ident">Cell</span>, <span class="ident">RefCell</span>};
-<span class="kw">use</span> <span class="ident">std::rc::Rc</span>;
+<span class="kw">use </span><span class="self">self</span>::{builder::CommentsBuilderVisitor, map::CommentsMap};
+<span class="kw">use crate</span>::{TextSize, TransformSourceMap};
+<span class="kw">use </span>rome_rowan::syntax::SyntaxElementKey;
+<span class="kw">use </span>rome_rowan::{Language, SyntaxNode, SyntaxToken, SyntaxTriviaPieceComments};
+<span class="kw">use </span>rustc_hash::FxHashSet;
+<span class="attribute">#[cfg(debug_assertions)]
+</span><span class="kw">use </span>std::cell::{Cell, RefCell};
+<span class="kw">use </span>std::rc::Rc;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CommentKind</span> {
-    <span class="doccomment">/// An inline comment that can appear between any two tokens and doesn&#39;t contain any line breaks.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a /* test */</span>
-    <span class="doccomment">/// ```</span>
-    <span class="ident">InlineBlock</span>,
+<span class="attribute">#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+</span><span class="kw">pub enum </span>CommentKind {
+    <span class="doccomment">/// An inline comment that can appear between any two tokens and doesn&#39;t contain any line breaks.
+    ///
+    /// ## Examples
+    ///
+    /// ```ignore
+    /// a /* test */
+    /// ```
+    </span>InlineBlock,
 
-    <span class="doccomment">/// A block comment that can appear between any two tokens and contains at least one line break.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// /* first line</span>
-    <span class="doccomment">///  * more content on the second line</span>
-    <span class="doccomment">///  */</span>
-    <span class="doccomment">/// ```</span>
-    <span class="ident">Block</span>,
+    <span class="doccomment">/// A block comment that can appear between any two tokens and contains at least one line break.
+    ///
+    /// ## Examples
+    ///
+    /// ```javascript
+    /// /* first line
+    ///  * more content on the second line
+    ///  */
+    /// ```
+    </span>Block,
 
-    <span class="doccomment">/// A line comment that appears at the end of the line.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a // test</span>
-    <span class="doccomment">/// ```</span>
-    <span class="ident">Line</span>,
+    <span class="doccomment">/// A line comment that appears at the end of the line.
+    ///
+    /// ## Examples
+    ///
+    /// ```ignore
+    /// a // test
+    /// ```
+    </span>Line,
 }
 
-<span class="kw">impl</span> <span class="ident">CommentKind</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_line</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">CommentKind::Line</span>)
+<span class="kw">impl </span>CommentKind {
+    <span class="kw">pub const fn </span>is_line(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, CommentKind::Line)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">CommentKind::Block</span>)
+    <span class="kw">pub const fn </span>is_block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, CommentKind::Block)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_inline_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">CommentKind::InlineBlock</span>)
+    <span class="kw">pub const fn </span>is_inline_block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, CommentKind::InlineBlock)
     }
 
-    <span class="doccomment">/// Returns `true` for comments that can appear inline between any two tokens.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// use rome_formatter::comments::CommentKind;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // Block and InlineBlock comments can appear inline</span>
-    <span class="doccomment">/// assert!(CommentKind::Block.is_inline());</span>
-    <span class="doccomment">/// assert!(CommentKind::InlineBlock.is_inline());</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // But not line comments</span>
-    <span class="doccomment">/// assert!(!CommentKind::Line.is_inline())</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_inline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">CommentKind::InlineBlock</span> <span class="op">|</span> <span class="ident">CommentKind::Block</span>)
-    }
-}
-
-<span class="doccomment">/// A comment in the source document.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The number of lines appearing before this comment</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">lines_before</span>: <span class="ident">u32</span>,
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">lines_after</span>: <span class="ident">u32</span>,
-
-    <span class="doccomment">/// The comment piece</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">piece</span>: <span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-
-    <span class="doccomment">/// The kind of the comment.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">kind</span>: <span class="ident">CommentKind</span>,
-
-    <span class="doccomment">/// Whether the comment has been formatted or not.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">formatted</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Returns the underlining comment trivia piece</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">piece</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">piece</span>
-    }
-
-    <span class="doccomment">/// The number of lines between this comment and the **previous** token or comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Same line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a // end of line</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `0` because there&#39;s no line break between the token `a` and the comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Own Line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// /* comment */</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `2` because there are two line breaks between the token `a` and the comment.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lines_before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="ident">lines_before</span>
-    }
-
-    <span class="doccomment">/// The number of line breaks right after this comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## End of line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a; // comment</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// b;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `2` because there are two line breaks between the comment and the token `b`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Same line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a;</span>
-    <span class="doccomment">/// /* comment */ b;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `0` because there are no line breaks between the comment and the token `b`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lines_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="ident">lines_after</span>
-    }
-
-    <span class="doccomment">/// The kind of the comment</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CommentKind</span> {
-        <span class="self">self</span>.<span class="ident">kind</span>
-    }
-
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mark_formatted</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {}
-
-    <span class="doccomment">/// Marks the comment as formatted</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mark_formatted</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">formatted</span>.<span class="ident">set</span>(<span class="bool-val">true</span>)
+    <span class="doccomment">/// Returns `true` for comments that can appear inline between any two tokens.
+    ///
+    /// ## Examples
+    ///
+    /// ```rust
+    /// use rome_formatter::comments::CommentKind;
+    ///
+    /// // Block and InlineBlock comments can appear inline
+    /// assert!(CommentKind::Block.is_inline());
+    /// assert!(CommentKind::InlineBlock.is_inline());
+    ///
+    /// // But not line comments
+    /// assert!(!CommentKind::Line.is_inline())
+    /// ```
+    </span><span class="kw">pub const fn </span>is_inline(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, CommentKind::InlineBlock | CommentKind::Block)
     }
 }
 
-<span class="doccomment">/// A comment decorated with additional information about its surrounding context in the source document.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Used by [CommentStyle::place_comment] to determine if this should become a [leading](self#leading-comments), [dangling](self#dangling-comments), or [trailing](self#trailing-comments) comment.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">enclosing</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="ident">preceding</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">following</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">following_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">text_position</span>: <span class="ident">CommentTextPosition</span>,
-    <span class="ident">lines_before</span>: <span class="ident">u32</span>,
-    <span class="ident">lines_after</span>: <span class="ident">u32</span>,
-    <span class="ident">comment</span>: <span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="ident">kind</span>: <span class="ident">CommentKind</span>,
+<span class="doccomment">/// A comment in the source document.
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>SourceComment&lt;L: Language&gt; {
+    <span class="doccomment">/// The number of lines appearing before this comment
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) lines_before: u32,
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) lines_after: u32,
+
+    <span class="doccomment">/// The comment piece
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) piece: SyntaxTriviaPieceComments&lt;L&gt;,
+
+    <span class="doccomment">/// The kind of the comment.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) kind: CommentKind,
+
+    <span class="doccomment">/// Whether the comment has been formatted or not.
+    </span><span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) formatted: Cell&lt;bool&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The closest parent node that fully encloses the comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A node encloses a comment when the comment is between two of its direct children (ignoring lists).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [a, /* comment */ b]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The enclosing node is the array expression and not the identifier `b` because</span>
-    <span class="doccomment">/// `a` and `b` are children of the array expression and `comment` is a comment between the two nodes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">enclosing_node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">enclosing</span>
+<span class="kw">impl</span>&lt;L: Language&gt; SourceComment&lt;L&gt; {
+    <span class="doccomment">/// Returns the underlining comment trivia piece
+    </span><span class="kw">pub fn </span>piece(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxTriviaPieceComments&lt;L&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.piece
     }
 
-    <span class="doccomment">/// Returns the comment piece.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">piece</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">comment</span>
+    <span class="doccomment">/// The number of lines between this comment and the **previous** token or comment.
+    ///
+    /// # Examples
+    ///
+    /// ## Same line
+    ///
+    /// ```ignore
+    /// a // end of line
+    /// ```
+    ///
+    /// Returns `0` because there&#39;s no line break between the token `a` and the comment.
+    ///
+    /// ## Own Line
+    ///
+    /// ```ignore
+    /// a;
+    ///
+    /// /* comment */
+    /// ```
+    ///
+    /// Returns `2` because there are two line breaks between the token `a` and the comment.
+    </span><span class="kw">pub fn </span>lines_before(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="self">self</span>.lines_before
     }
 
-    <span class="doccomment">/// Returns the node preceding the comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The direct child node (ignoring lists) of the [`enclosing_node`](DecoratedComment::enclosing_node) that precedes this comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [None] if the [`enclosing_node`](DecoratedComment::enclosing_node) only consists of tokens or if</span>
-    <span class="doccomment">/// all preceding children of the [`enclosing_node`](DecoratedComment::enclosing_node) have been tokens.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The Preceding node is guaranteed to be a sibling of [`following_node`](DecoratedComment::following_node).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Preceding tokens only</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [/* comment */]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// Returns [None] because the comment has no preceding node, only a preceding `[` token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Preceding node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [a /* comment */, b]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `Some(a)` because `a` directly precedes the comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Preceding token and node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [a, /* comment */]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///  Returns `Some(a)` because `a` is the preceding node of `comment`. The presence of the `,` token</span>
-    <span class="doccomment">/// doesn&#39;t change that.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">preceding_node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">preceding</span>.<span class="ident">as_ref</span>()
+    <span class="doccomment">/// The number of line breaks right after this comment.
+    ///
+    /// # Examples
+    ///
+    /// ## End of line
+    ///
+    /// ```ignore
+    /// a; // comment
+    ///
+    /// b;
+    /// ```
+    ///
+    /// Returns `2` because there are two line breaks between the comment and the token `b`.
+    ///
+    /// ## Same line
+    ///
+    /// ```ignore
+    /// a;
+    /// /* comment */ b;
+    /// ```
+    ///
+    /// Returns `0` because there are no line breaks between the comment and the token `b`.
+    </span><span class="kw">pub fn </span>lines_after(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="self">self</span>.lines_after
     }
 
-    <span class="doccomment">/// Takes the [`preceding_node`](DecoratedComment::preceding_node) and replaces it with [None].</span>
-    <span class="kw">fn</span> <span class="ident">take_preceding_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">preceding</span>.<span class="ident">take</span>()
+    <span class="doccomment">/// The kind of the comment
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CommentKind {
+        <span class="self">self</span>.kind
     }
 
-    <span class="doccomment">/// Returns the node following the comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The direct child node (ignoring lists) of the [`enclosing_node`](DecoratedComment::enclosing_node) that follows this comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [None] if the [`enclosing_node`](DecoratedComment::enclosing_node) only consists of tokens or if</span>
-    <span class="doccomment">/// all children children of the [`enclosing_node`](DecoratedComment::enclosing_node) following this comment are tokens.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The following node is guaranteed to be a sibling of [`preceding_node`](DecoratedComment::preceding_node).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Following tokens only</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [ /* comment */ ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [None] because there&#39;s no node following the comment, only the `]` token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Following node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [ /* comment */ a ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `Some(a)` because `a` is the node directly following the comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Following token and node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// async /* comment */ function test() {}</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `Some(test)` because the `test` identifier is the first node following `comment`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Following parenthesized expression</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// !(</span>
-    <span class="doccomment">///     a /* comment */</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// b</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `None` because `comment` is enclosed inside the parenthesized expression and it has no children</span>
-    <span class="doccomment">/// following `/* comment */.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">following_node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">following</span>.<span class="ident">as_ref</span>()
-    }
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    #[inline(always)]
+    </span><span class="kw">pub fn </span>mark_formatted(<span class="kw-2">&amp;</span><span class="self">self</span>) {}
 
-    <span class="doccomment">/// Takes the [`following_node`](DecoratedComment::following_node) and replaces it with [None].</span>
-    <span class="kw">fn</span> <span class="ident">take_following_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">following</span>.<span class="ident">take</span>()
-    }
-
-    <span class="doccomment">/// The number of line breaks between this comment and the **previous** token or comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Same line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a // end of line</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `0` because there&#39;s no line break between the token `a` and the comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Own Line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// /* comment */</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `2` because there are two line breaks between the token `a` and the comment.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lines_before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="ident">lines_before</span>
-    }
-
-    <span class="doccomment">/// The number of line breaks right after this comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## End of line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a; // comment</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// b;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `2` because there are two line breaks between the comment and the token `b`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Same line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a;</span>
-    <span class="doccomment">/// /* comment */ b;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `0` because there are no line breaks between the comment and the token `b`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lines_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="ident">lines_after</span>
-    }
-
-    <span class="doccomment">/// Returns the [CommentKind] of the comment.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CommentKind</span> {
-        <span class="self">self</span>.<span class="ident">kind</span>
-    }
-
-    <span class="doccomment">/// The position of the comment in the text.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CommentTextPosition</span> {
-        <span class="self">self</span>.<span class="ident">text_position</span>
-    }
-
-    <span class="doccomment">/// The next token that comes after this comment. It is possible that other comments are between this comment</span>
-    <span class="doccomment">/// and the token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a /* comment */ /* other b */</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The `following_token` for both comments is `b` because it&#39;s the token coming after the comments.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">following_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">following_token</span>.<span class="ident">as_ref</span>()
+    <span class="doccomment">/// Marks the comment as formatted
+    </span><span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">pub fn </span>mark_formatted(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="self">self</span>.formatted.set(<span class="bool-val">true</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">decorated</span>: <span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">lines_before</span>: <span class="ident">decorated</span>.<span class="ident">lines_before</span>,
-            <span class="ident">lines_after</span>: <span class="ident">decorated</span>.<span class="ident">lines_after</span>,
-            <span class="ident">piece</span>: <span class="ident">decorated</span>.<span class="ident">comment</span>,
-            <span class="ident">kind</span>: <span class="ident">decorated</span>.<span class="ident">kind</span>,
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-            <span class="ident">formatted</span>: <span class="ident">Cell::new</span>(<span class="bool-val">false</span>),
+<span class="doccomment">/// A comment decorated with additional information about its surrounding context in the source document.
+///
+/// Used by [CommentStyle::place_comment] to determine if this should become a [leading](self#leading-comments), [dangling](self#dangling-comments), or [trailing](self#trailing-comments) comment.
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>DecoratedComment&lt;L: Language&gt; {
+    enclosing: SyntaxNode&lt;L&gt;,
+    preceding: <span class="prelude-ty">Option</span>&lt;SyntaxNode&lt;L&gt;&gt;,
+    following: <span class="prelude-ty">Option</span>&lt;SyntaxNode&lt;L&gt;&gt;,
+    following_token: <span class="prelude-ty">Option</span>&lt;SyntaxToken&lt;L&gt;&gt;,
+    text_position: CommentTextPosition,
+    lines_before: u32,
+    lines_after: u32,
+    comment: SyntaxTriviaPieceComments&lt;L&gt;,
+    kind: CommentKind,
+}
+
+<span class="kw">impl</span>&lt;L: Language&gt; DecoratedComment&lt;L&gt; {
+    <span class="doccomment">/// The closest parent node that fully encloses the comment.
+    ///
+    /// A node encloses a comment when the comment is between two of its direct children (ignoring lists).
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// [a, /* comment */ b]
+    /// ```
+    ///
+    /// The enclosing node is the array expression and not the identifier `b` because
+    /// `a` and `b` are children of the array expression and `comment` is a comment between the two nodes.
+    </span><span class="kw">pub fn </span>enclosing_node(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.enclosing
+    }
+
+    <span class="doccomment">/// Returns the comment piece.
+    </span><span class="kw">pub fn </span>piece(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxTriviaPieceComments&lt;L&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.comment
+    }
+
+    <span class="doccomment">/// Returns the node preceding the comment.
+    ///
+    /// The direct child node (ignoring lists) of the [`enclosing_node`](DecoratedComment::enclosing_node) that precedes this comment.
+    ///
+    /// Returns [None] if the [`enclosing_node`](DecoratedComment::enclosing_node) only consists of tokens or if
+    /// all preceding children of the [`enclosing_node`](DecoratedComment::enclosing_node) have been tokens.
+    ///
+    /// The Preceding node is guaranteed to be a sibling of [`following_node`](DecoratedComment::following_node).
+    ///
+    /// # Examples
+    ///
+    /// ## Preceding tokens only
+    ///
+    /// ```ignore
+    /// [/* comment */]
+    /// ```
+    /// Returns [None] because the comment has no preceding node, only a preceding `[` token.
+    ///
+    /// ## Preceding node
+    ///
+    /// ```ignore
+    /// [a /* comment */, b]
+    /// ```
+    ///
+    /// Returns `Some(a)` because `a` directly precedes the comment.
+    ///
+    /// ## Preceding token and node
+    ///
+    /// ```ignore
+    /// [a, /* comment */]
+    /// ```
+    ///
+    ///  Returns `Some(a)` because `a` is the preceding node of `comment`. The presence of the `,` token
+    /// doesn&#39;t change that.
+    </span><span class="kw">pub fn </span>preceding_node(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;&gt; {
+        <span class="self">self</span>.preceding.as_ref()
+    }
+
+    <span class="doccomment">/// Takes the [`preceding_node`](DecoratedComment::preceding_node) and replaces it with [None].
+    </span><span class="kw">fn </span>take_preceding_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&lt;L&gt;&gt; {
+        <span class="self">self</span>.preceding.take()
+    }
+
+    <span class="doccomment">/// Returns the node following the comment.
+    ///
+    /// The direct child node (ignoring lists) of the [`enclosing_node`](DecoratedComment::enclosing_node) that follows this comment.
+    ///
+    /// Returns [None] if the [`enclosing_node`](DecoratedComment::enclosing_node) only consists of tokens or if
+    /// all children children of the [`enclosing_node`](DecoratedComment::enclosing_node) following this comment are tokens.
+    ///
+    /// The following node is guaranteed to be a sibling of [`preceding_node`](DecoratedComment::preceding_node).
+    ///
+    /// # Examples
+    ///
+    /// ## Following tokens only
+    ///
+    /// ```ignore
+    /// [ /* comment */ ]
+    /// ```
+    ///
+    /// Returns [None] because there&#39;s no node following the comment, only the `]` token.
+    ///
+    /// ## Following node
+    ///
+    /// ```ignore
+    /// [ /* comment */ a ]
+    /// ```
+    ///
+    /// Returns `Some(a)` because `a` is the node directly following the comment.
+    ///
+    /// ## Following token and node
+    ///
+    /// ```ignore
+    /// async /* comment */ function test() {}
+    /// ```
+    ///
+    /// Returns `Some(test)` because the `test` identifier is the first node following `comment`.
+    ///
+    /// ## Following parenthesized expression
+    ///
+    /// ```ignore
+    /// !(
+    ///     a /* comment */
+    /// );
+    /// b
+    /// ```
+    ///
+    /// Returns `None` because `comment` is enclosed inside the parenthesized expression and it has no children
+    /// following `/* comment */.
+    </span><span class="kw">pub fn </span>following_node(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;&gt; {
+        <span class="self">self</span>.following.as_ref()
+    }
+
+    <span class="doccomment">/// Takes the [`following_node`](DecoratedComment::following_node) and replaces it with [None].
+    </span><span class="kw">fn </span>take_following_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&lt;L&gt;&gt; {
+        <span class="self">self</span>.following.take()
+    }
+
+    <span class="doccomment">/// The number of line breaks between this comment and the **previous** token or comment.
+    ///
+    /// # Examples
+    ///
+    /// ## Same line
+    ///
+    /// ```ignore
+    /// a // end of line
+    /// ```
+    ///
+    /// Returns `0` because there&#39;s no line break between the token `a` and the comment.
+    ///
+    /// ## Own Line
+    ///
+    /// ```ignore
+    /// a;
+    ///
+    /// /* comment */
+    /// ```
+    ///
+    /// Returns `2` because there are two line breaks between the token `a` and the comment.
+    </span><span class="kw">pub fn </span>lines_before(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="self">self</span>.lines_before
+    }
+
+    <span class="doccomment">/// The number of line breaks right after this comment.
+    ///
+    /// # Examples
+    ///
+    /// ## End of line
+    ///
+    /// ```ignore
+    /// a; // comment
+    ///
+    /// b;
+    /// ```
+    ///
+    /// Returns `2` because there are two line breaks between the comment and the token `b`.
+    ///
+    /// ## Same line
+    ///
+    /// ```ignore
+    /// a;
+    /// /* comment */ b;
+    /// ```
+    ///
+    /// Returns `0` because there are no line breaks between the comment and the token `b`.
+    </span><span class="kw">pub fn </span>lines_after(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="self">self</span>.lines_after
+    }
+
+    <span class="doccomment">/// Returns the [CommentKind] of the comment.
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CommentKind {
+        <span class="self">self</span>.kind
+    }
+
+    <span class="doccomment">/// The position of the comment in the text.
+    </span><span class="kw">pub fn </span>text_position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CommentTextPosition {
+        <span class="self">self</span>.text_position
+    }
+
+    <span class="doccomment">/// The next token that comes after this comment. It is possible that other comments are between this comment
+    /// and the token.
+    ///
+    /// ```ignore
+    /// a /* comment */ /* other b */
+    /// ```
+    ///
+    /// The `following_token` for both comments is `b` because it&#39;s the token coming after the comments.
+    </span><span class="kw">pub fn </span>following_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SyntaxToken&lt;L&gt;&gt; {
+        <span class="self">self</span>.following_token.as_ref()
+    }
+}
+
+<span class="kw">impl</span>&lt;L: Language&gt; From&lt;DecoratedComment&lt;L&gt;&gt; <span class="kw">for </span>SourceComment&lt;L&gt; {
+    <span class="kw">fn </span>from(decorated: DecoratedComment&lt;L&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            lines_before: decorated.lines_before,
+            lines_after: decorated.lines_after,
+            piece: decorated.comment,
+            kind: decorated.kind,
+            <span class="attribute">#[cfg(debug_assertions)]
+            </span>formatted: Cell::new(<span class="bool-val">false</span>),
         }
     }
 }
 
-<span class="doccomment">/// The position of a comment in the source text.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CommentTextPosition</span> {
-    <span class="doccomment">/// A comment that is on the same line as the preceding token and is separated by at least one line break from the following token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## End of line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a; /* this */ // or this</span>
-    <span class="doccomment">/// b;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Both `/* this */` and `// or this` are end of line comments because both comments are separated by</span>
-    <span class="doccomment">/// at least one line break from the following token `b`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Own line</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a;</span>
-    <span class="doccomment">/// /* comment */</span>
-    <span class="doccomment">/// b;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is not an end of line comment because it isn&#39;t on the same line as the preceding token `a`.</span>
-    <span class="ident">EndOfLine</span>,
+<span class="doccomment">/// The position of a comment in the source text.
+</span><span class="attribute">#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>CommentTextPosition {
+    <span class="doccomment">/// A comment that is on the same line as the preceding token and is separated by at least one line break from the following token.
+    ///
+    /// # Examples
+    ///
+    /// ## End of line
+    ///
+    /// ```ignore
+    /// a; /* this */ // or this
+    /// b;
+    /// ```
+    ///
+    /// Both `/* this */` and `// or this` are end of line comments because both comments are separated by
+    /// at least one line break from the following token `b`.
+    ///
+    /// ## Own line
+    ///
+    /// ```ignore
+    /// a;
+    /// /* comment */
+    /// b;
+    /// ```
+    ///
+    /// This is not an end of line comment because it isn&#39;t on the same line as the preceding token `a`.
+    </span>EndOfLine,
 
-    <span class="doccomment">/// A Comment that is separated by at least one line break from the preceding token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a;</span>
-    <span class="doccomment">/// /* comment */ /* or this */</span>
-    <span class="doccomment">/// b;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Both comments are own line comments because they are separated by one line break from the preceding</span>
-    <span class="doccomment">/// token `a`.</span>
-    <span class="ident">OwnLine</span>,
+    <span class="doccomment">/// A Comment that is separated by at least one line break from the preceding token.
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// a;
+    /// /* comment */ /* or this */
+    /// b;
+    /// ```
+    ///
+    /// Both comments are own line comments because they are separated by one line break from the preceding
+    /// token `a`.
+    </span>OwnLine,
 
-    <span class="doccomment">/// A comment that is placed on the same line as the preceding and following token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// a /* comment */ + b</span>
-    <span class="doccomment">/// ```</span>
-    <span class="ident">SameLine</span>,
+    <span class="doccomment">/// A comment that is placed on the same line as the preceding and following token.
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// a /* comment */ + b
+    /// ```
+    </span>SameLine,
 }
 
-<span class="kw">impl</span> <span class="ident">CommentTextPosition</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_same_line</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">CommentTextPosition::SameLine</span>)
+<span class="kw">impl </span>CommentTextPosition {
+    <span class="kw">pub const fn </span>is_same_line(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, CommentTextPosition::SameLine)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_own_line</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">CommentTextPosition::OwnLine</span>)
+    <span class="kw">pub const fn </span>is_own_line(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, CommentTextPosition::OwnLine)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_end_of_line</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">CommentTextPosition::EndOfLine</span>)
+    <span class="kw">pub const fn </span>is_end_of_line(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, CommentTextPosition::EndOfLine)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CommentPlacement</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Makes `comment` a [leading comment](self#leading-comments) of `node`.</span>
-    <span class="ident">Leading</span> {
-        <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">comment</span>: <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub enum </span>CommentPlacement&lt;L: Language&gt; {
+    <span class="doccomment">/// Makes `comment` a [leading comment](self#leading-comments) of `node`.
+    </span>Leading {
+        node: SyntaxNode&lt;L&gt;,
+        comment: SourceComment&lt;L&gt;,
     },
-    <span class="doccomment">/// Makes `comment` a [trailing comment](self#trailing-comments) of `node`.</span>
-    <span class="ident">Trailing</span> {
-        <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">comment</span>: <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    },
-
-    <span class="doccomment">/// Makes `comment` a [dangling comment](self#dangling-comments) of `node`.</span>
-    <span class="ident">Dangling</span> {
-        <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">comment</span>: <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Makes `comment` a [trailing comment](self#trailing-comments) of `node`.
+    </span>Trailing {
+        node: SyntaxNode&lt;L&gt;,
+        comment: SourceComment&lt;L&gt;,
     },
 
-    <span class="doccomment">/// Uses the default heuristic to determine the placement of the comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Same line comments</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Makes the comment a...</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * [trailing comment] of the [`preceding_node`] if both the [`following_node`] and [`preceding_node`] are not [None]</span>
-    <span class="doccomment">///     and the comment and [`preceding_node`] are only separated by a space (there&#39;s no token between the comment and [`preceding_node`]).</span>
-    <span class="doccomment">/// * [leading comment] of the [`following_node`] if the [`following_node`] is not [None]</span>
-    <span class="doccomment">/// * [trailing comment] of the [`preceding_node`] if the [`preceding_node`] is not [None]</span>
-    <span class="doccomment">/// * [dangling comment] of the [`enclosing_node`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">/// ### Comment with preceding and following nodes</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [</span>
-    <span class="doccomment">///     a, // comment</span>
-    <span class="doccomment">///     b</span>
-    <span class="doccomment">/// ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [trailing comment] of the node `a`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Comment with preceding node only</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [</span>
-    <span class="doccomment">///     a // comment</span>
-    <span class="doccomment">/// ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [trailing comment] of the node `a`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Comment with following node only</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [ // comment</span>
-    <span class="doccomment">///     b</span>
-    <span class="doccomment">/// ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [leading comment] of the node `b`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Dangling comment</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [ // comment</span>
-    <span class="doccomment">/// ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [dangling comment] of the enclosing array expression because both the [`preceding_node`] and [`following_node`] are [None].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Own line comments</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Makes the comment a...</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * [leading comment] of the [`following_node`] if the [`following_node`] is not [None]</span>
-    <span class="doccomment">/// * or a [trailing comment] of the [`preceding_node`] if the [`preceding_node`] is not [None]</span>
-    <span class="doccomment">/// * or a [dangling comment] of the [`enclosing_node`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Comment with leading and preceding nodes</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [</span>
-    <span class="doccomment">///     a,</span>
-    <span class="doccomment">///     // comment</span>
-    <span class="doccomment">///     b</span>
-    <span class="doccomment">/// ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [leading comment] of the node `b`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Comment with preceding node only</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [</span>
-    <span class="doccomment">///     a</span>
-    <span class="doccomment">///     // comment</span>
-    <span class="doccomment">/// ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [trailing comment] of the node `a`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Comment with following node only</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [</span>
-    <span class="doccomment">///     // comment</span>
-    <span class="doccomment">///     b</span>
-    <span class="doccomment">/// ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [leading comment] of the node `b`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Dangling comment</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [</span>
-    <span class="doccomment">///     // comment</span>
-    <span class="doccomment">/// ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [dangling comment] of the array expression because both [`preceding_node`] and [`following_node`] are [None].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # End of line comments</span>
-    <span class="doccomment">/// Makes the comment a...</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * [trailing comment] of the [`preceding_node`] if the [`preceding_node`] is not [None]</span>
-    <span class="doccomment">/// * or a [leading comment] of the [`following_node`] if the [`following_node`] is not [None]</span>
-    <span class="doccomment">/// * or a [dangling comment] of the [`enclosing_node`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Comment with leading and preceding nodes</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [a /* comment */, b]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [trailing comment] of the node `a` because there&#39;s no token between the node `a` and the `comment`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [a, /* comment */ b]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [leading comment] of the node `b` because the node `a` and the comment are separated by a `,` token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Comment with preceding node only</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [a, /* last */ ]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [trailing comment] of the node `a` because the [`following_node`] is [None].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Comment with following node only</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [/* comment */ b]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [leading comment] of the node `b` because the [`preceding_node`] is [None]</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Dangling comment</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// [/* comment*/]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The comment becomes a [dangling comment] of the array expression because both [`preceding_node`] and [`following_node`] are [None].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`preceding_node`]: DecoratedComment::preceding_node</span>
-    <span class="doccomment">/// [`following_node`]: DecoratedComment::following_node</span>
-    <span class="doccomment">/// [`enclosing_node`]: DecoratedComment::enclosing_node</span>
-    <span class="doccomment">/// [trailing comment]: self#trailing-comments</span>
-    <span class="doccomment">/// [leading comment]: self#leading-comments</span>
-    <span class="doccomment">/// [dangling comment]: self#dangling-comments</span>
-    <span class="ident">Default</span>(<span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// Makes `comment` a [dangling comment](self#dangling-comments) of `node`.
+    </span>Dangling {
+        node: SyntaxNode&lt;L&gt;,
+        comment: SourceComment&lt;L&gt;,
+    },
+
+    <span class="doccomment">/// Uses the default heuristic to determine the placement of the comment.
+    ///
+    /// # Same line comments
+    ///
+    /// Makes the comment a...
+    ///
+    /// * [trailing comment] of the [`preceding_node`] if both the [`following_node`] and [`preceding_node`] are not [None]
+    ///     and the comment and [`preceding_node`] are only separated by a space (there&#39;s no token between the comment and [`preceding_node`]).
+    /// * [leading comment] of the [`following_node`] if the [`following_node`] is not [None]
+    /// * [trailing comment] of the [`preceding_node`] if the [`preceding_node`] is not [None]
+    /// * [dangling comment] of the [`enclosing_node`].
+    ///
+    /// ## Examples
+    /// ### Comment with preceding and following nodes
+    ///
+    /// ```ignore
+    /// [
+    ///     a, // comment
+    ///     b
+    /// ]
+    /// ```
+    ///
+    /// The comment becomes a [trailing comment] of the node `a`.
+    ///
+    /// ### Comment with preceding node only
+    ///
+    /// ```ignore
+    /// [
+    ///     a // comment
+    /// ]
+    /// ```
+    ///
+    /// The comment becomes a [trailing comment] of the node `a`.
+    ///
+    /// ### Comment with following node only
+    ///
+    /// ```ignore
+    /// [ // comment
+    ///     b
+    /// ]
+    /// ```
+    ///
+    /// The comment becomes a [leading comment] of the node `b`.
+    ///
+    /// ### Dangling comment
+    ///
+    /// ```ignore
+    /// [ // comment
+    /// ]
+    /// ```
+    ///
+    /// The comment becomes a [dangling comment] of the enclosing array expression because both the [`preceding_node`] and [`following_node`] are [None].
+    ///
+    /// # Own line comments
+    ///
+    /// Makes the comment a...
+    ///
+    /// * [leading comment] of the [`following_node`] if the [`following_node`] is not [None]
+    /// * or a [trailing comment] of the [`preceding_node`] if the [`preceding_node`] is not [None]
+    /// * or a [dangling comment] of the [`enclosing_node`].
+    ///
+    /// ## Examples
+    ///
+    /// ### Comment with leading and preceding nodes
+    ///
+    /// ```ignore
+    /// [
+    ///     a,
+    ///     // comment
+    ///     b
+    /// ]
+    /// ```
+    ///
+    /// The comment becomes a [leading comment] of the node `b`.
+    ///
+    /// ### Comment with preceding node only
+    ///
+    /// ```ignore
+    /// [
+    ///     a
+    ///     // comment
+    /// ]
+    /// ```
+    ///
+    /// The comment becomes a [trailing comment] of the node `a`.
+    ///
+    /// ### Comment with following node only
+    ///
+    /// ```ignore
+    /// [
+    ///     // comment
+    ///     b
+    /// ]
+    /// ```
+    ///
+    /// The comment becomes a [leading comment] of the node `b`.
+    ///
+    /// ### Dangling comment
+    ///
+    /// ```ignore
+    /// [
+    ///     // comment
+    /// ]
+    /// ```
+    ///
+    /// The comment becomes a [dangling comment] of the array expression because both [`preceding_node`] and [`following_node`] are [None].
+    ///
+    ///
+    /// # End of line comments
+    /// Makes the comment a...
+    ///
+    /// * [trailing comment] of the [`preceding_node`] if the [`preceding_node`] is not [None]
+    /// * or a [leading comment] of the [`following_node`] if the [`following_node`] is not [None]
+    /// * or a [dangling comment] of the [`enclosing_node`].
+    ///
+    ///
+    /// ## Examples
+    ///
+    /// ### Comment with leading and preceding nodes
+    ///
+    /// ```ignore
+    /// [a /* comment */, b]
+    /// ```
+    ///
+    /// The comment becomes a [trailing comment] of the node `a` because there&#39;s no token between the node `a` and the `comment`.
+    ///
+    /// ```ignore
+    /// [a, /* comment */ b]
+    /// ```
+    ///
+    /// The comment becomes a [leading comment] of the node `b` because the node `a` and the comment are separated by a `,` token.
+    ///
+    /// ### Comment with preceding node only
+    ///
+    /// ```ignore
+    /// [a, /* last */ ]
+    /// ```
+    ///
+    /// The comment becomes a [trailing comment] of the node `a` because the [`following_node`] is [None].
+    ///
+    /// ### Comment with following node only
+    ///
+    /// ```ignore
+    /// [/* comment */ b]
+    /// ```
+    ///
+    /// The comment becomes a [leading comment] of the node `b` because the [`preceding_node`] is [None]
+    ///
+    /// ### Dangling comment
+    ///
+    /// ```ignore
+    /// [/* comment*/]
+    /// ```
+    ///
+    /// The comment becomes a [dangling comment] of the array expression because both [`preceding_node`] and [`following_node`] are [None].
+    ///
+    /// [`preceding_node`]: DecoratedComment::preceding_node
+    /// [`following_node`]: DecoratedComment::following_node
+    /// [`enclosing_node`]: DecoratedComment::enclosing_node
+    /// [trailing comment]: self#trailing-comments
+    /// [leading comment]: self#leading-comments
+    /// [dangling comment]: self#dangling-comments
+    </span>Default(DecoratedComment&lt;L&gt;),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">CommentPlacement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Makes `comment` a [leading comment](self#leading-comments) of `node`.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">leading</span>(<span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">comment</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Leading</span> {
-            <span class="ident">node</span>,
-            <span class="ident">comment</span>: <span class="ident">comment</span>.<span class="ident">into</span>(),
+<span class="kw">impl</span>&lt;L: Language&gt; CommentPlacement&lt;L&gt; {
+    <span class="doccomment">/// Makes `comment` a [leading comment](self#leading-comments) of `node`.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>leading(node: SyntaxNode&lt;L&gt;, comment: <span class="kw">impl </span>Into&lt;SourceComment&lt;L&gt;&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Leading {
+            node,
+            comment: comment.into(),
         }
     }
 
-    <span class="doccomment">/// Makes `comment` a [dangling comment](self::dangling-comments) of `node`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dangling</span>(<span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">comment</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Dangling</span> {
-            <span class="ident">node</span>,
-            <span class="ident">comment</span>: <span class="ident">comment</span>.<span class="ident">into</span>(),
+    <span class="doccomment">/// Makes `comment` a [dangling comment](self::dangling-comments) of `node`.
+    </span><span class="kw">pub fn </span>dangling(node: SyntaxNode&lt;L&gt;, comment: <span class="kw">impl </span>Into&lt;SourceComment&lt;L&gt;&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Dangling {
+            node,
+            comment: comment.into(),
         }
     }
 
-    <span class="doccomment">/// Makes `comment` a [trailing comment](self::trailing-comments) of `node`.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">trailing</span>(<span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">comment</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Trailing</span> {
-            <span class="ident">node</span>,
-            <span class="ident">comment</span>: <span class="ident">comment</span>.<span class="ident">into</span>(),
+    <span class="doccomment">/// Makes `comment` a [trailing comment](self::trailing-comments) of `node`.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>trailing(node: SyntaxNode&lt;L&gt;, comment: <span class="kw">impl </span>Into&lt;SourceComment&lt;L&gt;&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Trailing {
+            node,
+            comment: comment.into(),
         }
     }
 
-    <span class="doccomment">/// Returns the placement if it isn&#39;t [CommentPlacement::Default], otherwise calls `f` and returns the result.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">or_else</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">CommentPlacement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Returns the placement if it isn&#39;t [CommentPlacement::Default], otherwise calls `f` and returns the result.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>or_else&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: FnOnce(DecoratedComment&lt;L&gt;) -&gt; CommentPlacement&lt;L&gt;,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">CommentPlacement::Default</span>(<span class="ident">comment</span>) =&gt; <span class="ident">f</span>(<span class="ident">comment</span>),
-            <span class="ident">placement</span> =&gt; <span class="ident">placement</span>,
+        <span class="kw">match </span><span class="self">self </span>{
+            CommentPlacement::Default(comment) =&gt; f(comment),
+            placement =&gt; placement,
         }
     }
 }
 
-<span class="doccomment">/// Defines how to format comments for a specific [Language].</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">CommentStyle</span>: <span class="ident">Default</span> {
-    <span class="kw">type</span> <span class="ident">Language</span>: <span class="ident">Language</span>;
+<span class="doccomment">/// Defines how to format comments for a specific [Language].
+</span><span class="kw">pub trait </span>CommentStyle: Default {
+    <span class="kw">type </span>Language: Language;
 
-    <span class="doccomment">/// Returns `true` if a comment with the given `text` is a `rome-ignore format:` suppression comment.</span>
-    <span class="kw">fn</span> <span class="ident">is_suppression</span>(<span class="ident">_text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-        <span class="bool-val">false</span>
-    }
+    <span class="doccomment">/// Returns `true` if a comment with the given `text` is a `rome-ignore format:` suppression comment.
+    </span><span class="kw">fn </span>is_suppression(_text: <span class="kw-2">&amp;</span>str) -&gt; bool {
+        <span class="bool-val">false
+    </span>}
 
-    <span class="doccomment">/// Returns the (kind)[CommentKind] of the comment</span>
-    <span class="kw">fn</span> <span class="ident">get_comment_kind</span>(<span class="ident">comment</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident">CommentKind</span>;
+    <span class="doccomment">/// Returns the (kind)[CommentKind] of the comment
+    </span><span class="kw">fn </span>get_comment_kind(comment: <span class="kw-2">&amp;</span>SyntaxTriviaPieceComments&lt;<span class="self">Self</span>::Language&gt;) -&gt; CommentKind;
 
-    <span class="doccomment">/// Determines the placement of `comment`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The default implementation returns [CommentPlacement::Default].</span>
-    <span class="kw">fn</span> <span class="ident">place_comment</span>(
+    <span class="doccomment">/// Determines the placement of `comment`.
+    ///
+    /// The default implementation returns [CommentPlacement::Default].
+    </span><span class="kw">fn </span>place_comment(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">comment</span>: <span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">CommentPlacement</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> {
-        <span class="ident">CommentPlacement::Default</span>(<span class="ident">comment</span>)
+        comment: DecoratedComment&lt;<span class="self">Self</span>::Language&gt;,
+    ) -&gt; CommentPlacement&lt;<span class="self">Self</span>::Language&gt; {
+        CommentPlacement::Default(comment)
     }
 }
 
-<span class="doccomment">/// The comments of a syntax tree stored by node.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Cloning `comments` is cheap as it only involves bumping a reference counter.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Comments</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The use of a [Rc] is necessary to achieve that [Comments] has a lifetime that is independent from the [crate::Formatter].</span>
-    <span class="doccomment">/// Having independent lifetimes is necessary to support the use case where a (formattable object)[crate::Format]</span>
-    <span class="doccomment">/// iterates over all comments, and writes them into the [crate::Formatter] (mutably borrowing the [crate::Formatter] and in turn its context).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```block</span>
-    <span class="doccomment">/// for leading in f.context().comments().leading_comments(node) {</span>
-    <span class="doccomment">///     ^</span>
-    <span class="doccomment">///     |- Borrows comments</span>
-    <span class="doccomment">///   write!(f, [comment(leading.piece.text())])?;</span>
-    <span class="doccomment">///          ^</span>
-    <span class="doccomment">///          |- Mutably borrows the formatter, state, context, and comments (if comments aren&#39;t cloned)</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Using an `Rc` here allows to cheaply clone [Comments] for these use cases.</span>
-    <span class="ident">data</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">CommentsData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// The comments of a syntax tree stored by node.
+///
+/// Cloning `comments` is cheap as it only involves bumping a reference counter.
+</span><span class="attribute">#[derive(Debug, Clone, Default)]
+</span><span class="kw">pub struct </span>Comments&lt;L: Language&gt; {
+    <span class="doccomment">/// The use of a [Rc] is necessary to achieve that [Comments] has a lifetime that is independent from the [crate::Formatter].
+    /// Having independent lifetimes is necessary to support the use case where a (formattable object)[crate::Format]
+    /// iterates over all comments, and writes them into the [crate::Formatter] (mutably borrowing the [crate::Formatter] and in turn its context).
+    ///
+    /// ```block
+    /// for leading in f.context().comments().leading_comments(node) {
+    ///     ^
+    ///     |- Borrows comments
+    ///   write!(f, [comment(leading.piece.text())])?;
+    ///          ^
+    ///          |- Mutably borrows the formatter, state, context, and comments (if comments aren&#39;t cloned)
+    /// }
+    /// ```
+    ///
+    /// Using an `Rc` here allows to cheaply clone [Comments] for these use cases.
+    </span>data: Rc&lt;CommentsData&lt;L&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Comments</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Extracts all the comments from `root` and its descendants nodes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_node</span><span class="op">&lt;</span><span class="ident">Style</span><span class="op">&gt;</span>(
-        <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="ident">Style</span>,
-        <span class="ident">source_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TransformSourceMap</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">Style</span>: <span class="ident">CommentStyle</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; Comments&lt;L&gt; {
+    <span class="doccomment">/// Extracts all the comments from `root` and its descendants nodes.
+    </span><span class="kw">pub fn </span>from_node&lt;Style&gt;(
+        root: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;,
+        style: <span class="kw-2">&amp;</span>Style,
+        source_map: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TransformSourceMap&gt;,
+    ) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>Style: CommentStyle&lt;Language = L&gt;,
     {
-        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">CommentsBuilderVisitor::new</span>(<span class="ident">style</span>, <span class="ident">source_map</span>);
+        <span class="kw">let </span>builder = CommentsBuilderVisitor::new(style, source_map);
 
-        <span class="kw">let</span> (<span class="ident">comments</span>, <span class="ident">skipped</span>) <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">visit</span>(<span class="ident">root</span>);
+        <span class="kw">let </span>(comments, skipped) = builder.visit(root);
 
-        <span class="self">Self</span> {
-            <span class="ident">data</span>: <span class="ident">Rc::new</span>(<span class="ident">CommentsData</span> {
-                <span class="ident">root</span>: <span class="prelude-val">Some</span>(<span class="ident">root</span>.<span class="ident">clone</span>()),
-                <span class="ident">is_suppression</span>: <span class="ident">Style::is_suppression</span>,
+        <span class="self">Self </span>{
+            data: Rc::new(CommentsData {
+                root: <span class="prelude-val">Some</span>(root.clone()),
+                is_suppression: Style::is_suppression,
 
-                <span class="ident">comments</span>,
-                <span class="ident">with_skipped</span>: <span class="ident">skipped</span>,
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-                <span class="ident">checked_suppressions</span>: <span class="ident">RefCell::new</span>(<span class="ident">Default::default</span>()),
+                comments,
+                with_skipped: skipped,
+                <span class="attribute">#[cfg(debug_assertions)]
+                </span>checked_suppressions: RefCell::new(Default::default()),
             }),
         }
     }
 
-    <span class="doccomment">/// Returns `true` if the given `node` has any [leading](self#leading-comments) or [trailing](self#trailing-comments) comments.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">comments</span>.<span class="ident">has</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">key</span>())
+    <span class="doccomment">/// Returns `true` if the given `node` has any [leading](self#leading-comments) or [trailing](self#trailing-comments) comments.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>has_comments(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; bool {
+        <span class="self">self</span>.data.comments.has(<span class="kw-2">&amp;</span>node.key())
     }
 
-    <span class="doccomment">/// Returns `true` if the given `node` has any [leading comments](self#leading-comments).</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_leading_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="op">!</span><span class="self">self</span>.<span class="ident">leading_comments</span>(<span class="ident">node</span>).<span class="ident">is_empty</span>()
+    <span class="doccomment">/// Returns `true` if the given `node` has any [leading comments](self#leading-comments).
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>has_leading_comments(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; bool {
+        !<span class="self">self</span>.leading_comments(node).is_empty()
     }
 
-    <span class="doccomment">/// Tests if the node has any [leading comments](self#leading-comments) that have a leading line break.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Corresponds to [CommentTextPosition::OwnLine].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_leading_own_line_comment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">leading_comments</span>(<span class="ident">node</span>)
-            .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">comment</span><span class="op">|</span> <span class="ident">comment</span>.<span class="ident">lines_after</span>() <span class="op">&gt;</span> <span class="number">0</span>)
+    <span class="doccomment">/// Tests if the node has any [leading comments](self#leading-comments) that have a leading line break.
+    ///
+    /// Corresponds to [CommentTextPosition::OwnLine].
+    </span><span class="kw">pub fn </span>has_leading_own_line_comment(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; bool {
+        <span class="self">self</span>.leading_comments(node)
+            .iter()
+            .any(|comment| comment.lines_after() &gt; <span class="number">0</span>)
     }
 
-    <span class="doccomment">/// Returns the `node`&#39;s [leading comments](self#leading-comments).</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">leading_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>] {
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">comments</span>.<span class="ident">leading</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">key</span>())
+    <span class="doccomment">/// Returns the `node`&#39;s [leading comments](self#leading-comments).
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>leading_comments(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; <span class="kw-2">&amp;</span>[SourceComment&lt;L&gt;] {
+        <span class="self">self</span>.data.comments.leading(<span class="kw-2">&amp;</span>node.key())
     }
 
-    <span class="doccomment">/// Returns `true` if node has any [dangling comments](self#dangling-comments).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_dangling_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="op">!</span><span class="self">self</span>.<span class="ident">dangling_comments</span>(<span class="ident">node</span>).<span class="ident">is_empty</span>()
+    <span class="doccomment">/// Returns `true` if node has any [dangling comments](self#dangling-comments).
+    </span><span class="kw">pub fn </span>has_dangling_comments(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; bool {
+        !<span class="self">self</span>.dangling_comments(node).is_empty()
     }
 
-    <span class="doccomment">/// Returns the [dangling comments](self#dangling-comments) of `node`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dangling_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>] {
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">comments</span>.<span class="ident">dangling</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">key</span>())
+    <span class="doccomment">/// Returns the [dangling comments](self#dangling-comments) of `node`
+    </span><span class="kw">pub fn </span>dangling_comments(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; <span class="kw-2">&amp;</span>[SourceComment&lt;L&gt;] {
+        <span class="self">self</span>.data.comments.dangling(<span class="kw-2">&amp;</span>node.key())
     }
 
-    <span class="doccomment">/// Returns the `node`&#39;s [trailing comments](self#trailing-comments).</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">trailing_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>] {
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">comments</span>.<span class="ident">trailing</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">key</span>())
+    <span class="doccomment">/// Returns the `node`&#39;s [trailing comments](self#trailing-comments).
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>trailing_comments(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; <span class="kw-2">&amp;</span>[SourceComment&lt;L&gt;] {
+        <span class="self">self</span>.data.comments.trailing(<span class="kw-2">&amp;</span>node.key())
     }
 
-    <span class="doccomment">/// Returns `true` if the node has any [trailing](self#trailing-comments) [line](CommentKind::Line) comment.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_trailing_line_comment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">trailing_comments</span>(<span class="ident">node</span>)
-            .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">comment</span><span class="op">|</span> <span class="ident">comment</span>.<span class="ident">kind</span>().<span class="ident">is_line</span>())
+    <span class="doccomment">/// Returns `true` if the node has any [trailing](self#trailing-comments) [line](CommentKind::Line) comment.
+    </span><span class="kw">pub fn </span>has_trailing_line_comment(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; bool {
+        <span class="self">self</span>.trailing_comments(node)
+            .iter()
+            .any(|comment| comment.kind().is_line())
     }
 
-    <span class="doccomment">/// Returns `true` if the given `node` has any [trailing comments](self#trailing-comments).</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_trailing_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="op">!</span><span class="self">self</span>.<span class="ident">trailing_comments</span>(<span class="ident">node</span>).<span class="ident">is_empty</span>()
+    <span class="doccomment">/// Returns `true` if the given `node` has any [trailing comments](self#trailing-comments).
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>has_trailing_comments(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; bool {
+        !<span class="self">self</span>.trailing_comments(node).is_empty()
     }
 
-    <span class="doccomment">/// Returns an iterator over the [leading](self#leading-comments) and [trailing comments](self#trailing-comments) of `node`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">leading_trailing_comments</span>(
+    <span class="doccomment">/// Returns an iterator over the [leading](self#leading-comments) and [trailing comments](self#trailing-comments) of `node`.
+    </span><span class="kw">pub fn </span>leading_trailing_comments(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">leading_comments</span>(<span class="ident">node</span>)
-            .<span class="ident">iter</span>()
-            .<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">trailing_comments</span>(<span class="ident">node</span>).<span class="ident">iter</span>())
+        node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="kw-2">&amp;</span>SourceComment&lt;L&gt;&gt; {
+        <span class="self">self</span>.leading_comments(node)
+            .iter()
+            .chain(<span class="self">self</span>.trailing_comments(node).iter())
     }
 
-    <span class="doccomment">/// Returns an iterator over the [leading](self#leading-comments), [dangling](self#dangling-comments), and [trailing](self#trailing) comments of `node`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">leading_dangling_trailing_comments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span> {
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">comments</span>.<span class="ident">parts</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">key</span>())
+    <span class="doccomment">/// Returns an iterator over the [leading](self#leading-comments), [dangling](self#dangling-comments), and [trailing](self#trailing) comments of `node`.
+    </span><span class="kw">pub fn </span>leading_dangling_trailing_comments&lt;<span class="lifetime">&#39;a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+        node: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SyntaxNode&lt;L&gt;,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="kw-2">&amp;</span>SourceComment&lt;L&gt;&gt; + <span class="lifetime">&#39;a </span>{
+        <span class="self">self</span>.data.comments.parts(<span class="kw-2">&amp;</span>node.key())
     }
 
-    <span class="doccomment">/// Returns `true` if that node has skipped token trivia attached.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_skipped</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">with_skipped</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">token</span>.<span class="ident">key</span>())
+    <span class="doccomment">/// Returns `true` if that node has skipped token trivia attached.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>has_skipped(<span class="kw-2">&amp;</span><span class="self">self</span>, token: <span class="kw-2">&amp;</span>SyntaxToken&lt;L&gt;) -&gt; bool {
+        <span class="self">self</span>.data.with_skipped.contains(<span class="kw-2">&amp;</span>token.key())
     }
 
-    <span class="doccomment">/// Returns `true` if `node` has a [leading](self#leading-comments), [dangling](self#dangling-comments), or [trailing](self#trailing-comments) suppression comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// // rome-ignore format: Reason</span>
-    <span class="doccomment">/// console.log(&quot;Test&quot;);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `true` for the expression statement but `false` for the call expression because the</span>
-    <span class="doccomment">/// call expression is nested inside of the expression statement.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_suppressed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">mark_suppression_checked</span>(<span class="ident">node</span>);
-        <span class="kw">let</span> <span class="ident">is_suppression</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">is_suppression</span>;
+    <span class="doccomment">/// Returns `true` if `node` has a [leading](self#leading-comments), [dangling](self#dangling-comments), or [trailing](self#trailing-comments) suppression comment.
+    ///
+    /// # Examples
+    ///
+    /// ```javascript
+    /// // rome-ignore format: Reason
+    /// console.log(&quot;Test&quot;);
+    /// ```
+    ///
+    /// Returns `true` for the expression statement but `false` for the call expression because the
+    /// call expression is nested inside of the expression statement.
+    </span><span class="kw">pub fn </span>is_suppressed(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; bool {
+        <span class="self">self</span>.mark_suppression_checked(node);
+        <span class="kw">let </span>is_suppression = <span class="self">self</span>.data.is_suppression;
 
-        <span class="self">self</span>.<span class="ident">leading_dangling_trailing_comments</span>(<span class="ident">node</span>)
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">comment</span><span class="op">|</span> <span class="ident">is_suppression</span>(<span class="ident">comment</span>.<span class="ident">piece</span>().<span class="ident">text</span>()))
+        <span class="self">self</span>.leading_dangling_trailing_comments(node)
+            .any(|comment| is_suppression(comment.piece().text()))
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mark_suppression_checked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {}
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    #[inline(always)]
+    </span><span class="kw">pub fn </span>mark_suppression_checked(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) {}
 
-    <span class="doccomment">/// Marks that it isn&#39;t necessary for the given node to check if it has been suppressed or not.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mark_suppression_checked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">checked_nodes</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">checked_suppressions</span>.<span class="ident">borrow_mut</span>();
-        <span class="ident">checked_nodes</span>.<span class="ident">insert</span>(<span class="ident">node</span>.<span class="ident">clone</span>());
+    <span class="doccomment">/// Marks that it isn&#39;t necessary for the given node to check if it has been suppressed or not.
+    </span><span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">pub fn </span>mark_suppression_checked(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) {
+        <span class="kw">let </span><span class="kw-2">mut </span>checked_nodes = <span class="self">self</span>.data.checked_suppressions.borrow_mut();
+        checked_nodes.insert(node.clone());
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">assert_checked_all_suppressions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {}
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    #[inline(always)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>assert_checked_all_suppressions(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) {}
 
-    <span class="doccomment">/// Verifies that [NodeSuppressions::is_suppressed] has been called for every node of `root`.</span>
-    <span class="doccomment">/// This is a no-op in builds that have the feature `debug_assertions` disabled.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Panics</span>
-    <span class="doccomment">/// If theres any node for which the formatting didn&#39;t very if it has a suppression comment.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">assert_checked_all_suppressions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="kw">use</span> <span class="ident">rome_rowan::SyntaxKind</span>;
+    <span class="doccomment">/// Verifies that [NodeSuppressions::is_suppressed] has been called for every node of `root`.
+    /// This is a no-op in builds that have the feature `debug_assertions` disabled.
+    ///
+    /// # Panics
+    /// If theres any node for which the formatting didn&#39;t very if it has a suppression comment.
+    </span><span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>assert_checked_all_suppressions(<span class="kw-2">&amp;</span><span class="self">self</span>, root: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) {
+        <span class="kw">use </span>rome_rowan::SyntaxKind;
 
-        <span class="kw">let</span> <span class="ident">checked_nodes</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">checked_suppressions</span>.<span class="ident">borrow</span>();
-        <span class="kw">for</span> <span class="ident">node</span> <span class="kw">in</span> <span class="ident">root</span>.<span class="ident">descendants</span>() {
-            <span class="kw">if</span> <span class="ident">node</span>.<span class="ident">kind</span>().<span class="ident">is_list</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">kind</span>().<span class="ident">is_root</span>() {
+        <span class="kw">let </span>checked_nodes = <span class="self">self</span>.data.checked_suppressions.borrow();
+        <span class="kw">for </span>node <span class="kw">in </span>root.descendants() {
+            <span class="kw">if </span>node.kind().is_list() || node.kind().is_root() {
                 <span class="kw">continue</span>;
             }
 
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">checked_nodes</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>) {
+            <span class="kw">if </span>!checked_nodes.contains(<span class="kw-2">&amp;</span>node) {
                 <span class="macro">panic!</span>(
                     <span class="string">r#&quot;
 The following node has been formatted without checking if it has suppression comments.
@@ -2111,55 +2111,55 @@ manually test if the node has a suppression comment using `f.context().comments(
 if using the node&#39;s format rule isn&#39;t an option.&quot;
 
 Node:
-{node:#?}&quot;#</span>
-                );
+{node:#?}&quot;#
+                </span>);
             }
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">assert_formatted_all_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {}
+    <span class="attribute">#[inline(always)]
+    #[cfg(not(debug_assertions))]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>assert_formatted_all_comments(<span class="kw-2">&amp;</span><span class="self">self</span>) {}
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">assert_formatted_all_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">has_unformatted_comments</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">data</span>
-            .<span class="ident">comments</span>
-            .<span class="ident">all_parts</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">comment</span><span class="op">|</span> <span class="op">!</span><span class="ident">comment</span>.<span class="ident">formatted</span>.<span class="ident">get</span>());
+    <span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>assert_formatted_all_comments(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">let </span>has_unformatted_comments = <span class="self">self
+            </span>.data
+            .comments
+            .all_parts()
+            .any(|comment| !comment.formatted.get());
 
-        <span class="kw">if</span> <span class="ident">has_unformatted_comments</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">unformatted_comments</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">if </span>has_unformatted_comments {
+            <span class="kw">let </span><span class="kw-2">mut </span>unformatted_comments = Vec::new();
 
-            <span class="kw">for</span> <span class="ident">node</span> <span class="kw">in</span> <span class="self">self</span>
-                .<span class="ident">data</span>
-                .<span class="ident">root</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;Expected root for comments with data&quot;</span>)
-                .<span class="ident">descendants</span>()
+            <span class="kw">for </span>node <span class="kw">in </span><span class="self">self
+                </span>.data
+                .root
+                .as_ref()
+                .expect(<span class="string">&quot;Expected root for comments with data&quot;</span>)
+                .descendants()
             {
-                <span class="ident">unformatted_comments</span>.<span class="ident">extend</span>(<span class="self">self</span>.<span class="ident">leading_comments</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>).<span class="ident">iter</span>().<span class="ident">filter_map</span>(
-                    <span class="op">|</span><span class="ident">comment</span><span class="op">|</span> {
-                        (<span class="op">!</span><span class="ident">comment</span>.<span class="ident">formatted</span>.<span class="ident">get</span>()).<span class="ident">then_some</span>(<span class="ident">DebugComment::Leading</span> {
-                            <span class="ident">node</span>: <span class="ident">node</span>.<span class="ident">clone</span>(),
-                            <span class="ident">comment</span>,
+                unformatted_comments.extend(<span class="self">self</span>.leading_comments(<span class="kw-2">&amp;</span>node).iter().filter_map(
+                    |comment| {
+                        (!comment.formatted.get()).then_some(DebugComment::Leading {
+                            node: node.clone(),
+                            comment,
                         })
                     },
                 ));
-                <span class="ident">unformatted_comments</span>.<span class="ident">extend</span>(<span class="self">self</span>.<span class="ident">dangling_comments</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>).<span class="ident">iter</span>().<span class="ident">filter_map</span>(
-                    <span class="op">|</span><span class="ident">comment</span><span class="op">|</span> {
-                        (<span class="op">!</span><span class="ident">comment</span>.<span class="ident">formatted</span>.<span class="ident">get</span>()).<span class="ident">then_some</span>(<span class="ident">DebugComment::Dangling</span> {
-                            <span class="ident">node</span>: <span class="ident">node</span>.<span class="ident">clone</span>(),
-                            <span class="ident">comment</span>,
+                unformatted_comments.extend(<span class="self">self</span>.dangling_comments(<span class="kw-2">&amp;</span>node).iter().filter_map(
+                    |comment| {
+                        (!comment.formatted.get()).then_some(DebugComment::Dangling {
+                            node: node.clone(),
+                            comment,
                         })
                     },
                 ));
-                <span class="ident">unformatted_comments</span>.<span class="ident">extend</span>(<span class="self">self</span>.<span class="ident">trailing_comments</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>).<span class="ident">iter</span>().<span class="ident">filter_map</span>(
-                    <span class="op">|</span><span class="ident">comment</span><span class="op">|</span> {
-                        (<span class="op">!</span><span class="ident">comment</span>.<span class="ident">formatted</span>.<span class="ident">get</span>()).<span class="ident">then_some</span>(<span class="ident">DebugComment::Trailing</span> {
-                            <span class="ident">node</span>: <span class="ident">node</span>.<span class="ident">clone</span>(),
-                            <span class="ident">comment</span>,
+                unformatted_comments.extend(<span class="self">self</span>.trailing_comments(<span class="kw-2">&amp;</span>node).iter().filter_map(
+                    |comment| {
+                        (!comment.formatted.get()).then_some(DebugComment::Trailing {
+                            node: node.clone(),
+                            comment,
                         })
                     },
                 ));
@@ -2170,121 +2170,121 @@ Node:
     }
 }
 
-<span class="kw">struct</span> <span class="ident">CommentsData</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">root</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>CommentsData&lt;L: Language&gt; {
+    root: <span class="prelude-ty">Option</span>&lt;SyntaxNode&lt;L&gt;&gt;,
 
-    <span class="ident">is_suppression</span>: <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span>,
+    is_suppression: <span class="kw">fn</span>(<span class="kw-2">&amp;</span>str) -&gt; bool,
 
-    <span class="doccomment">/// Stores all leading node comments by node</span>
-    <span class="ident">comments</span>: <span class="ident">CommentsMap</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span>, <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">with_skipped</span>: <span class="ident">FxHashSet</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Stores all leading node comments by node
+    </span>comments: CommentsMap&lt;SyntaxElementKey, SourceComment&lt;L&gt;&gt;,
+    with_skipped: FxHashSet&lt;SyntaxElementKey&gt;,
 
-    <span class="doccomment">/// Stores all nodes for which [Comments::is_suppressed] has been called.</span>
-    <span class="doccomment">/// This index of nodes that have been checked if they have a suppression comments is used to</span>
-    <span class="doccomment">/// detect format implementations that manually format a child node without previously checking if</span>
-    <span class="doccomment">/// the child has a suppression comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The implementation refrains from snapshotting the checked nodes because a node gets formatted</span>
-    <span class="doccomment">/// as verbatim if its formatting fails which has the same result as formatting it as suppressed node</span>
-    <span class="doccomment">/// (thus, guarantees that the formatting isn&#39;t changed).</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="ident">checked_suppressions</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">FxHashSet</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Stores all nodes for which [Comments::is_suppressed] has been called.
+    /// This index of nodes that have been checked if they have a suppression comments is used to
+    /// detect format implementations that manually format a child node without previously checking if
+    /// the child has a suppression comment.
+    ///
+    /// The implementation refrains from snapshotting the checked nodes because a node gets formatted
+    /// as verbatim if its formatting fails which has the same result as formatting it as suppressed node
+    /// (thus, guarantees that the formatting isn&#39;t changed).
+    </span><span class="attribute">#[cfg(debug_assertions)]
+    </span>checked_suppressions: RefCell&lt;FxHashSet&lt;SyntaxNode&lt;L&gt;&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">CommentsData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">root</span>: <span class="prelude-val">None</span>,
-            <span class="ident">is_suppression</span>: <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="bool-val">false</span>,
-            <span class="ident">comments</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">with_skipped</span>: <span class="ident">Default::default</span>(),
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-            <span class="ident">checked_suppressions</span>: <span class="ident">Default::default</span>(),
+<span class="kw">impl</span>&lt;L: Language&gt; Default <span class="kw">for </span>CommentsData&lt;L&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            root: <span class="prelude-val">None</span>,
+            is_suppression: |<span class="kw">_</span>| <span class="bool-val">false</span>,
+            comments: Default::default(),
+            with_skipped: Default::default(),
+            <span class="attribute">#[cfg(debug_assertions)]
+            </span>checked_suppressions: Default::default(),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">CommentsData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">comments</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+<span class="kw">impl</span>&lt;L: Language&gt; std::fmt::Debug <span class="kw">for </span>CommentsData&lt;L&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="kw">let </span><span class="kw-2">mut </span>comments = Vec::new();
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">root</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span> {
-            <span class="kw">for</span> <span class="ident">node</span> <span class="kw">in</span> <span class="ident">root</span>.<span class="ident">descendants</span>() {
-                <span class="kw">for</span> <span class="ident">leading</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">comments</span>.<span class="ident">leading</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">key</span>()) {
-                    <span class="ident">comments</span>.<span class="ident">push</span>(<span class="ident">DebugComment::Leading</span> {
-                        <span class="ident">node</span>: <span class="ident">node</span>.<span class="ident">clone</span>(),
-                        <span class="ident">comment</span>: <span class="ident">leading</span>,
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(root) = <span class="kw-2">&amp;</span><span class="self">self</span>.root {
+            <span class="kw">for </span>node <span class="kw">in </span>root.descendants() {
+                <span class="kw">for </span>leading <span class="kw">in </span><span class="self">self</span>.comments.leading(<span class="kw-2">&amp;</span>node.key()) {
+                    comments.push(DebugComment::Leading {
+                        node: node.clone(),
+                        comment: leading,
                     });
                 }
 
-                <span class="kw">for</span> <span class="ident">dangling</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">comments</span>.<span class="ident">dangling</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">key</span>()) {
-                    <span class="ident">comments</span>.<span class="ident">push</span>(<span class="ident">DebugComment::Dangling</span> {
-                        <span class="ident">node</span>: <span class="ident">node</span>.<span class="ident">clone</span>(),
-                        <span class="ident">comment</span>: <span class="ident">dangling</span>,
+                <span class="kw">for </span>dangling <span class="kw">in </span><span class="self">self</span>.comments.dangling(<span class="kw-2">&amp;</span>node.key()) {
+                    comments.push(DebugComment::Dangling {
+                        node: node.clone(),
+                        comment: dangling,
                     });
                 }
 
-                <span class="kw">for</span> <span class="ident">trailing</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">comments</span>.<span class="ident">trailing</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">key</span>()) {
-                    <span class="ident">comments</span>.<span class="ident">push</span>(<span class="ident">DebugComment::Trailing</span> {
-                        <span class="ident">node</span>: <span class="ident">node</span>.<span class="ident">clone</span>(),
-                        <span class="ident">comment</span>: <span class="ident">trailing</span>,
+                <span class="kw">for </span>trailing <span class="kw">in </span><span class="self">self</span>.comments.trailing(<span class="kw-2">&amp;</span>node.key()) {
+                    comments.push(DebugComment::Trailing {
+                        node: node.clone(),
+                        comment: trailing,
                     });
                 }
             }
         }
 
-        <span class="ident">comments</span>.<span class="ident">sort_by_key</span>(<span class="op">|</span><span class="ident">comment</span><span class="op">|</span> <span class="ident">comment</span>.<span class="ident">start</span>());
+        comments.sort_by_key(|comment| comment.start());
 
-        <span class="ident">f</span>.<span class="ident">debug_list</span>().<span class="ident">entries</span>(<span class="ident">comments</span>).<span class="ident">finish</span>()
+        f.debug_list().entries(comments).finish()
     }
 }
 
-<span class="doccomment">/// Helper for printing a comment of [Comments]</span>
-<span class="kw">enum</span> <span class="ident">DebugComment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">Leading</span> {
-        <span class="ident">comment</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Helper for printing a comment of [Comments]
+</span><span class="kw">enum </span>DebugComment&lt;<span class="lifetime">&#39;a</span>, L: Language&gt; {
+    Leading {
+        comment: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SourceComment&lt;L&gt;,
+        node: SyntaxNode&lt;L&gt;,
     },
-    <span class="ident">Trailing</span> {
-        <span class="ident">comment</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+    Trailing {
+        comment: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SourceComment&lt;L&gt;,
+        node: SyntaxNode&lt;L&gt;,
     },
-    <span class="ident">Dangling</span> {
-        <span class="ident">comment</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+    Dangling {
+        comment: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SourceComment&lt;L&gt;,
+        node: SyntaxNode&lt;L&gt;,
     },
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">DebugComment</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">DebugComment::Leading</span> { <span class="ident">comment</span>, .. }
-            <span class="op">|</span> <span class="ident">DebugComment::Trailing</span> { <span class="ident">comment</span>, .. }
-            <span class="op">|</span> <span class="ident">DebugComment::Dangling</span> { <span class="ident">comment</span>, .. } =&gt; <span class="ident">comment</span>.<span class="ident">piece</span>.<span class="ident">text_range</span>().<span class="ident">start</span>(),
+<span class="kw">impl</span>&lt;L: Language&gt; DebugComment&lt;<span class="lifetime">&#39;_</span>, L&gt; {
+    <span class="kw">fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="kw">match </span><span class="self">self </span>{
+            DebugComment::Leading { comment, .. }
+            | DebugComment::Trailing { comment, .. }
+            | DebugComment::Dangling { comment, .. } =&gt; comment.piece.text_range().start(),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">DebugComment</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">DebugComment::Leading</span> { <span class="ident">node</span>, <span class="ident">comment</span> } =&gt; <span class="ident">f</span>
-                .<span class="ident">debug_struct</span>(<span class="string">&quot;Leading&quot;</span>)
-                .<span class="ident">field</span>(<span class="string">&quot;node&quot;</span>, <span class="ident">node</span>)
-                .<span class="ident">field</span>(<span class="string">&quot;comment&quot;</span>, <span class="ident">comment</span>)
-                .<span class="ident">finish</span>(),
-            <span class="ident">DebugComment::Dangling</span> { <span class="ident">node</span>, <span class="ident">comment</span> } =&gt; <span class="ident">f</span>
-                .<span class="ident">debug_struct</span>(<span class="string">&quot;Dangling&quot;</span>)
-                .<span class="ident">field</span>(<span class="string">&quot;node&quot;</span>, <span class="ident">node</span>)
-                .<span class="ident">field</span>(<span class="string">&quot;comment&quot;</span>, <span class="ident">comment</span>)
-                .<span class="ident">finish</span>(),
-            <span class="ident">DebugComment::Trailing</span> { <span class="ident">node</span>, <span class="ident">comment</span> } =&gt; <span class="ident">f</span>
-                .<span class="ident">debug_struct</span>(<span class="string">&quot;Trailing&quot;</span>)
-                .<span class="ident">field</span>(<span class="string">&quot;node&quot;</span>, <span class="ident">node</span>)
-                .<span class="ident">field</span>(<span class="string">&quot;comment&quot;</span>, <span class="ident">comment</span>)
-                .<span class="ident">finish</span>(),
+<span class="kw">impl</span>&lt;L: Language&gt; std::fmt::Debug <span class="kw">for </span>DebugComment&lt;<span class="lifetime">&#39;_</span>, L&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            DebugComment::Leading { node, comment } =&gt; f
+                .debug_struct(<span class="string">&quot;Leading&quot;</span>)
+                .field(<span class="string">&quot;node&quot;</span>, node)
+                .field(<span class="string">&quot;comment&quot;</span>, comment)
+                .finish(),
+            DebugComment::Dangling { node, comment } =&gt; f
+                .debug_struct(<span class="string">&quot;Dangling&quot;</span>)
+                .field(<span class="string">&quot;node&quot;</span>, node)
+                .field(<span class="string">&quot;comment&quot;</span>, comment)
+                .finish(),
+            DebugComment::Trailing { node, comment } =&gt; f
+                .debug_struct(<span class="string">&quot;Trailing&quot;</span>)
+                .field(<span class="string">&quot;node&quot;</span>, node)
+                .field(<span class="string">&quot;comment&quot;</span>, comment)
+                .finish(),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

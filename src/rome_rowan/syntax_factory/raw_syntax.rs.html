@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax_factory/raw_syntax.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>raw_syntax.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax_factory/raw_syntax.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>raw_syntax.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -189,196 +189,196 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green::GreenElement</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">GreenNode</span>, <span class="ident">GreenToken</span>, <span class="ident">NodeOrToken</span>, <span class="ident">SyntaxKind</span>};
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::green::GreenElement;
+<span class="kw">use crate</span>::{GreenNode, GreenToken, NodeOrToken, SyntaxKind};
+<span class="kw">use </span>std::marker::PhantomData;
 
-<span class="doccomment">/// New-type wrapper around a `GreenNode`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Allows third-party crates to access limited information about a `GreenNode` or construct</span>
-<span class="doccomment">/// a `GreenNode` in a limited places.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawSyntaxNode</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> {
-    <span class="ident">raw</span>: <span class="ident">GreenNode</span>,
-    <span class="ident">ph</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span>,
+<span class="doccomment">/// New-type wrapper around a `GreenNode`.
+///
+/// Allows third-party crates to access limited information about a `GreenNode` or construct
+/// a `GreenNode` in a limited places.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>RawSyntaxNode&lt;K: SyntaxKind&gt; {
+    raw: GreenNode,
+    ph: PhantomData&lt;K&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">RawSyntaxNode</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new node with the given `kind` and `slots`.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">kind</span>: <span class="ident">K</span>, <span class="ident">slots</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RawSyntaxElement</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">I::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
+<span class="kw">impl</span>&lt;K: SyntaxKind&gt; RawSyntaxNode&lt;K&gt; {
+    <span class="doccomment">/// Creates a new node with the given `kind` and `slots`.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>new&lt;I&gt;(kind: K, slots: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>I: IntoIterator&lt;Item = <span class="prelude-ty">Option</span>&lt;RawSyntaxElement&lt;K&gt;&gt;&gt;,
+        I::IntoIter: ExactSizeIterator,
     {
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">GreenNode::new</span>(
-                <span class="ident">kind</span>.<span class="ident">to_raw</span>(),
-                <span class="ident">slots</span>
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">slot</span><span class="op">|</span> <span class="ident">slot</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">element</span><span class="op">|</span> <span class="ident">element</span>.<span class="ident">into_green</span>())),
+        <span class="self">Self </span>{
+            raw: GreenNode::new(
+                kind.to_raw(),
+                slots
+                    .into_iter()
+                    .map(|slot| slot.map(|element| element.into_green())),
             ),
-            <span class="ident">ph</span>: <span class="ident">PhantomData</span>,
+            ph: PhantomData,
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">K</span> {
-        <span class="ident">K::from_raw</span>(<span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">kind</span>())
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; K {
+        K::from_raw(<span class="self">self</span>.raw.kind())
     }
 
-    <span class="doccomment">/// Unwraps this raw syntax into it&#39;s underlying green node.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_green</span>(<span class="self">self</span>) -&gt; <span class="ident">GreenNode</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GreenNode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RawSyntaxNode</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">node</span>: <span class="ident">GreenNode</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">node</span>,
-            <span class="ident">ph</span>: <span class="ident">PhantomData</span>,
-        }
+    <span class="doccomment">/// Unwraps this raw syntax into it&#39;s underlying green node.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>into_green(<span class="self">self</span>) -&gt; GreenNode {
+        <span class="self">self</span>.raw
     }
 }
 
-<span class="doccomment">/// New-type wrapper around a `GreenToken`. Allows third-party crates to access limited information</span>
-<span class="doccomment">/// on not yet fully constructed nodes.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawSyntaxToken</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> {
-    <span class="ident">raw</span>: <span class="ident">GreenToken</span>,
-    <span class="ident">ph</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">RawSyntaxToken</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">K</span> {
-        <span class="ident">K::from_raw</span>(<span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">kind</span>())
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GreenToken</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RawSyntaxToken</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">token</span>: <span class="ident">GreenToken</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">token</span>,
-            <span class="ident">ph</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;K: SyntaxKind&gt; From&lt;GreenNode&gt; <span class="kw">for </span>RawSyntaxNode&lt;K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>from(node: GreenNode) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            raw: node,
+            ph: PhantomData,
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RawSyntaxElement</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">NodeOrToken</span><span class="op">&lt;</span><span class="ident">RawSyntaxNode</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span>, <span class="ident">RawSyntaxToken</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// New-type wrapper around a `GreenToken`. Allows third-party crates to access limited information
+/// on not yet fully constructed nodes.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>RawSyntaxToken&lt;K: SyntaxKind&gt; {
+    raw: GreenToken,
+    ph: PhantomData&lt;K&gt;,
+}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">RawSyntaxElement</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">K</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">node</span>.<span class="ident">kind</span>(),
-            <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">token</span>.<span class="ident">kind</span>(),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">into_green</span>(<span class="self">self</span>) -&gt; <span class="ident">GreenElement</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>.<span class="ident">raw</span>),
-            <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>.<span class="ident">raw</span>),
-        }
+<span class="kw">impl</span>&lt;K: SyntaxKind&gt; RawSyntaxToken&lt;K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; K {
+        K::from_raw(<span class="self">self</span>.raw.kind())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GreenElement</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RawSyntaxElement</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">element</span>: <span class="ident">GreenElement</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">element</span> {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">NodeOrToken::Node</span>(<span class="ident">RawSyntaxNode::from</span>(<span class="ident">node</span>)),
-            <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">NodeOrToken::Token</span>(<span class="ident">RawSyntaxToken::from</span>(<span class="ident">token</span>)),
+<span class="kw">impl</span>&lt;K: SyntaxKind&gt; From&lt;GreenToken&gt; <span class="kw">for </span>RawSyntaxToken&lt;K&gt; {
+    <span class="kw">fn </span>from(token: GreenToken) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            raw: token,
+            ph: PhantomData,
         }
     }
 }
 
-<span class="doccomment">/// New-type wrapper to a reference of a `GreenNode`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawSyntaxNodeRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> {
-    <span class="ident">raw</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenNode</span>,
-    <span class="ident">ph</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span>,
-}
+<span class="kw">pub type </span>RawSyntaxElement&lt;K&gt; = NodeOrToken&lt;RawSyntaxNode&lt;K&gt;, RawSyntaxToken&lt;K&gt;&gt;;
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">RawSyntaxNodeRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">K</span> {
-        <span class="ident">K::from_raw</span>(<span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">kind</span>())
+<span class="kw">impl</span>&lt;K: SyntaxKind&gt; RawSyntaxElement&lt;K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; K {
+        <span class="kw">match </span><span class="self">self </span>{
+            NodeOrToken::Node(node) =&gt; node.kind(),
+            NodeOrToken::Token(token) =&gt; token.kind(),
+        }
     }
-}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenNode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RawSyntaxNodeRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenNode</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">node</span>,
-            <span class="ident">ph</span>: <span class="ident">PhantomData</span>,
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>into_green(<span class="self">self</span>) -&gt; GreenElement {
+        <span class="kw">match </span><span class="self">self </span>{
+            NodeOrToken::Node(node) =&gt; NodeOrToken::Node(node.raw),
+            NodeOrToken::Token(token) =&gt; NodeOrToken::Token(token.raw),
         }
     }
 }
 
-<span class="doccomment">/// New-type wrapper to a reference of a `GreenToken`</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawSyntaxTokenRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> {
-    <span class="ident">raw</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenToken</span>,
-    <span class="ident">ph</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">RawSyntaxTokenRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">K</span> {
-        <span class="ident">K::from_raw</span>(<span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">kind</span>())
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenToken</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RawSyntaxTokenRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenToken</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>: <span class="ident">token</span>,
-            <span class="ident">ph</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;K: SyntaxKind&gt; From&lt;GreenElement&gt; <span class="kw">for </span>RawSyntaxElement&lt;K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>from(element: GreenElement) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>element {
+            NodeOrToken::Node(node) =&gt; NodeOrToken::Node(RawSyntaxNode::from(node)),
+            NodeOrToken::Token(token) =&gt; NodeOrToken::Token(RawSyntaxToken::from(token)),
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RawSyntaxElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span> <span class="op">=</span>
-    <span class="ident">NodeOrToken</span><span class="op">&lt;</span><span class="ident">RawSyntaxNodeRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span>, <span class="ident">RawSyntaxTokenRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// New-type wrapper to a reference of a `GreenNode`.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>RawSyntaxNodeRef&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; {
+    raw: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenNode,
+    ph: PhantomData&lt;K&gt;,
+}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">RawSyntaxElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">K</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">node</span>.<span class="ident">kind</span>(),
-            <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">token</span>.<span class="ident">kind</span>(),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; RawSyntaxNodeRef&lt;<span class="lifetime">&#39;a</span>, K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; K {
+        K::from_raw(<span class="self">self</span>.raw.kind())
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenNode&gt; <span class="kw">for </span>RawSyntaxNodeRef&lt;<span class="lifetime">&#39;a</span>, K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>from(node: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenNode) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            raw: node,
+            ph: PhantomData,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">NodeOrToken</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenNode</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenToken</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">RawSyntaxElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span>
+<span class="doccomment">/// New-type wrapper to a reference of a `GreenToken`
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>RawSyntaxTokenRef&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; {
+    raw: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenToken,
+    ph: PhantomData&lt;K&gt;,
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; RawSyntaxTokenRef&lt;<span class="lifetime">&#39;a</span>, K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; K {
+        K::from_raw(<span class="self">self</span>.raw.kind())
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenToken&gt; <span class="kw">for </span>RawSyntaxTokenRef&lt;<span class="lifetime">&#39;a</span>, K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>from(token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenToken) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            raw: token,
+            ph: PhantomData,
+        }
+    }
+}
+
+<span class="kw">pub type </span>RawSyntaxElementRef&lt;<span class="lifetime">&#39;a</span>, K&gt; =
+    NodeOrToken&lt;RawSyntaxNodeRef&lt;<span class="lifetime">&#39;a</span>, K&gt;, RawSyntaxTokenRef&lt;<span class="lifetime">&#39;a</span>, K&gt;&gt;;
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; RawSyntaxElementRef&lt;<span class="lifetime">&#39;a</span>, K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; K {
+        <span class="kw">match </span><span class="self">self </span>{
+            NodeOrToken::Node(node) =&gt; node.kind(),
+            NodeOrToken::Token(token) =&gt; token.kind(),
+        }
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; From&lt;NodeOrToken&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenNode, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenToken&gt;&gt;
+    <span class="kw">for </span>RawSyntaxElementRef&lt;<span class="lifetime">&#39;a</span>, K&gt;
 {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">element</span>: <span class="ident">NodeOrToken</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenNode</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenToken</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">element</span> {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">NodeOrToken::Node</span>(<span class="ident">RawSyntaxNodeRef::from</span>(<span class="ident">node</span>)),
-            <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">NodeOrToken::Token</span>(<span class="ident">RawSyntaxTokenRef::from</span>(<span class="ident">token</span>)),
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>from(element: NodeOrToken&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenNode, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenToken&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>element {
+            NodeOrToken::Node(node) =&gt; NodeOrToken::Node(RawSyntaxNodeRef::from(node)),
+            NodeOrToken::Token(token) =&gt; NodeOrToken::Token(RawSyntaxTokenRef::from(token)),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">SyntaxKind</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenElement</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RawSyntaxElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">element</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenElement</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">element</span> {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">NodeOrToken::Node</span>(<span class="ident">RawSyntaxNodeRef::from</span>(<span class="ident">node</span>)),
-            <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">NodeOrToken::Token</span>(<span class="ident">RawSyntaxTokenRef::from</span>(<span class="ident">token</span>)),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: SyntaxKind&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenElement&gt; <span class="kw">for </span>RawSyntaxElementRef&lt;<span class="lifetime">&#39;a</span>, K&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>from(element: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenElement) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>element {
+            NodeOrToken::Node(node) =&gt; NodeOrToken::Node(RawSyntaxNodeRef::from(node)),
+            NodeOrToken::Token(token) =&gt; NodeOrToken::Token(RawSyntaxTokenRef::from(token)),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

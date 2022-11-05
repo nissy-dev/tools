@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/printer/queue.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>queue.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_formatter/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/printer/queue.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>queue.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_formatter/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -402,409 +402,409 @@
 <span id="402">402</span>
 <span id="403">403</span>
 <span id="404">404</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::format_element::tag::TagKind</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude::Tag</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::printer::stack</span>::{<span class="ident">Stack</span>, <span class="ident">StackedStack</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::printer</span>::{<span class="ident">invalid_end_tag</span>, <span class="ident">invalid_start_tag</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">FormatElement</span>, <span class="ident">PrintResult</span>};
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">std::iter::FusedIterator</span>;
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::format_element::tag::TagKind;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::Tag;
+<span class="kw">use </span><span class="kw">crate</span>::printer::stack::{Stack, StackedStack};
+<span class="kw">use </span><span class="kw">crate</span>::printer::{invalid_end_tag, invalid_start_tag};
+<span class="kw">use crate</span>::{FormatElement, PrintResult};
+<span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>std::iter::FusedIterator;
+<span class="kw">use </span>std::marker::PhantomData;
 
-<span class="doccomment">/// Queue of [FormatElement]s.</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait</span> <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Stack</span>: <span class="ident">Stack</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]<span class="op">&gt;</span>;
+<span class="doccomment">/// Queue of [FormatElement]s.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>Queue&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">type </span>Stack: Stack&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]&gt;;
 
-    <span class="kw">fn</span> <span class="ident">stack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Stack</span>;
+    <span class="kw">fn </span>stack(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Stack;
 
-    <span class="kw">fn</span> <span class="ident">stack_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Stack</span>;
+    <span class="kw">fn </span>stack_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Stack;
 
-    <span class="kw">fn</span> <span class="ident">next_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
+    <span class="kw">fn </span>next_index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 
-    <span class="kw">fn</span> <span class="ident">set_next_index</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>);
+    <span class="kw">fn </span>set_next_index(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize);
 
-    <span class="doccomment">/// Pops the element at the end of the queue.</span>
-    <span class="kw">fn</span> <span class="ident">pop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">FormatElement</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">stack</span>().<span class="ident">top</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">top_slice</span>) =&gt; {
-                <span class="comment">// SAFETY: Safe because queue ensures that slices inside `slices` are never empty.</span>
-                <span class="kw">let</span> <span class="ident">next_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_index</span>();
-                <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">top_slice</span>[<span class="ident">next_index</span>];
+    <span class="doccomment">/// Pops the element at the end of the queue.
+    </span><span class="kw">fn </span>pop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FormatElement&gt; {
+        <span class="kw">match </span><span class="self">self</span>.stack().top() {
+            <span class="prelude-val">Some</span>(top_slice) =&gt; {
+                <span class="comment">// SAFETY: Safe because queue ensures that slices inside `slices` are never empty.
+                </span><span class="kw">let </span>next_index = <span class="self">self</span>.next_index();
+                <span class="kw">let </span>element = <span class="kw-2">&amp;</span>top_slice[next_index];
 
-                <span class="kw">if</span> <span class="ident">next_index</span> <span class="op">+</span> <span class="number">1</span> <span class="op">==</span> <span class="ident">top_slice</span>.<span class="ident">len</span>() {
-                    <span class="self">self</span>.<span class="ident">stack_mut</span>().<span class="ident">pop</span>().<span class="ident">unwrap</span>();
-                    <span class="self">self</span>.<span class="ident">set_next_index</span>(<span class="number">0</span>);
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">set_next_index</span>(<span class="ident">next_index</span> <span class="op">+</span> <span class="number">1</span>);
+                <span class="kw">if </span>next_index + <span class="number">1 </span>== top_slice.len() {
+                    <span class="self">self</span>.stack_mut().pop().unwrap();
+                    <span class="self">self</span>.set_next_index(<span class="number">0</span>);
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.set_next_index(next_index + <span class="number">1</span>);
                 }
 
-                <span class="prelude-val">Some</span>(<span class="ident">element</span>)
+                <span class="prelude-val">Some</span>(element)
             }
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Returns the next element, not traversing into [FormatElement::Interned].</span>
-    <span class="kw">fn</span> <span class="ident">top_with_interned</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">FormatElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">stack</span>()
-            .<span class="ident">top</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">top_slice</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">top_slice</span>[<span class="self">self</span>.<span class="ident">next_index</span>()])
+    <span class="doccomment">/// Returns the next element, not traversing into [FormatElement::Interned].
+    </span><span class="kw">fn </span>top_with_interned(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FormatElement&gt; {
+        <span class="self">self</span>.stack()
+            .top()
+            .map(|top_slice| <span class="kw-2">&amp;</span>top_slice[<span class="self">self</span>.next_index()])
     }
 
-    <span class="doccomment">/// Returns the next element, recursively resolving the first element of [FormatElement::Interned].</span>
-    <span class="kw">fn</span> <span class="ident">top</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">FormatElement</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">top</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">top_with_interned</span>();
+    <span class="doccomment">/// Returns the next element, recursively resolving the first element of [FormatElement::Interned].
+    </span><span class="kw">fn </span>top(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FormatElement&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>top = <span class="self">self</span>.top_with_interned();
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">FormatElement::Interned</span>(<span class="ident">interned</span>)) <span class="op">=</span> <span class="ident">top</span> {
-            <span class="ident">top</span> <span class="op">=</span> <span class="ident">interned</span>.<span class="ident">first</span>()
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(FormatElement::Interned(interned)) = top {
+            top = interned.first()
         }
 
-        <span class="ident">top</span>
+        top
     }
 
-    <span class="doccomment">/// Queues a single element to process before the other elements in this queue.</span>
-    <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">FormatElement</span>) {
-        <span class="self">self</span>.<span class="ident">extend_back</span>(<span class="ident">std::slice::from_ref</span>(<span class="ident">element</span>))
+    <span class="doccomment">/// Queues a single element to process before the other elements in this queue.
+    </span><span class="kw">fn </span>push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FormatElement) {
+        <span class="self">self</span>.extend_back(std::slice::from_ref(element))
     }
 
-    <span class="doccomment">/// Queues a slice of elements to process before the other elements in this queue.</span>
-    <span class="kw">fn</span> <span class="ident">extend_back</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">elements</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]) {
-        <span class="kw">match</span> <span class="ident">elements</span> {
+    <span class="doccomment">/// Queues a slice of elements to process before the other elements in this queue.
+    </span><span class="kw">fn </span>extend_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>, elements: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]) {
+        <span class="kw">match </span>elements {
             [] =&gt; {
-                <span class="comment">// Don&#39;t push empty slices</span>
-            }
-            <span class="ident">slice</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">next_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_index</span>();
-                <span class="kw">let</span> <span class="ident">stack</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">stack_mut</span>();
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">top</span>) <span class="op">=</span> <span class="ident">stack</span>.<span class="ident">pop</span>() {
-                    <span class="ident">stack</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">top</span>[<span class="ident">next_index</span>..])
+                <span class="comment">// Don&#39;t push empty slices
+            </span>}
+            slice =&gt; {
+                <span class="kw">let </span>next_index = <span class="self">self</span>.next_index();
+                <span class="kw">let </span>stack = <span class="self">self</span>.stack_mut();
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(top) = stack.pop() {
+                    stack.push(<span class="kw-2">&amp;</span>top[next_index..])
                 }
 
-                <span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">slice</span>);
-                <span class="self">self</span>.<span class="ident">set_next_index</span>(<span class="number">0</span>);
+                stack.push(slice);
+                <span class="self">self</span>.set_next_index(<span class="number">0</span>);
             }
         }
     }
 
-    <span class="doccomment">/// Removes top slice.</span>
-    <span class="kw">fn</span> <span class="ident">pop_slice</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">set_next_index</span>(<span class="number">0</span>);
-        <span class="self">self</span>.<span class="ident">stack_mut</span>().<span class="ident">pop</span>()
+    <span class="doccomment">/// Removes top slice.
+    </span><span class="kw">fn </span>pop_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]&gt; {
+        <span class="self">self</span>.set_next_index(<span class="number">0</span>);
+        <span class="self">self</span>.stack_mut().pop()
     }
 
-    <span class="doccomment">/// Skips all content until it finds the corresponding end tag with the given kind.</span>
-    <span class="kw">fn</span> <span class="ident">skip_content</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">TagKind</span>)
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="doccomment">/// Skips all content until it finds the corresponding end tag with the given kind.
+    </span><span class="kw">fn </span>skip_content(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: TagKind)
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">iter_content</span>(<span class="ident">kind</span>);
+        <span class="kw">let </span>iter = <span class="self">self</span>.iter_content(kind);
 
-        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="ident">iter</span> {
-            <span class="comment">// consume whole iterator until end</span>
-        }
+        <span class="kw">for _ in </span>iter {
+            <span class="comment">// consume whole iterator until end
+        </span>}
     }
 
-    <span class="doccomment">/// Iterates over all elements until it finds the matching end tag of the specified kind.</span>
-    <span class="kw">fn</span> <span class="ident">iter_content</span><span class="op">&lt;</span><span class="lifetime">&#39;q</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;q</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">TagKind</span>) -&gt; <span class="ident">QueueContentIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, <span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="doccomment">/// Iterates over all elements until it finds the matching end tag of the specified kind.
+    </span><span class="kw">fn </span>iter_content&lt;<span class="lifetime">&#39;q</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;q </span><span class="kw-2">mut </span><span class="self">self</span>, kind: TagKind) -&gt; QueueContentIterator&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, <span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="ident">QueueContentIterator::new</span>(<span class="self">self</span>, <span class="ident">kind</span>)
+        QueueContentIterator::new(<span class="self">self</span>, kind)
     }
 }
 
-<span class="doccomment">/// Queue with the elements to print.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">PrintQueue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">slices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]<span class="op">&gt;</span>,
-    <span class="ident">next_index</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// Queue with the elements to print.
+</span><span class="attribute">#[derive(Debug, Default, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>PrintQueue&lt;<span class="lifetime">&#39;a</span>&gt; {
+    slices: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]&gt;,
+    next_index: usize,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">PrintQueue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">slices</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">slice</span> {
-            [] =&gt; <span class="ident">Vec::default</span>(),
-            <span class="ident">slice</span> =&gt; <span class="macro">vec!</span>[<span class="ident">slice</span>],
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; PrintQueue&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(slice: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>slices = <span class="kw">match </span>slice {
+            [] =&gt; Vec::default(),
+            slice =&gt; <span class="macro">vec!</span>[slice],
         };
 
-        <span class="self">Self</span> {
-            <span class="ident">slices</span>,
-            <span class="ident">next_index</span>: <span class="number">0</span>,
+        <span class="self">Self </span>{
+            slices,
+            next_index: <span class="number">0</span>,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">slices</span>.<span class="ident">is_empty</span>()
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.slices.is_empty()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PrintQueue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Stack</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]<span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Queue&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>PrintQueue&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">type </span>Stack = Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]&gt;;
 
-    <span class="kw">fn</span> <span class="ident">stack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Stack</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slices</span>
+    <span class="kw">fn </span>stack(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Stack {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.slices
     }
 
-    <span class="kw">fn</span> <span class="ident">stack_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Stack</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">slices</span>
+    <span class="kw">fn </span>stack_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Stack {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.slices
     }
 
-    <span class="kw">fn</span> <span class="ident">next_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">next_index</span>
+    <span class="kw">fn </span>next_index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.next_index
     }
 
-    <span class="kw">fn</span> <span class="ident">set_next_index</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) {
-        <span class="self">self</span>.<span class="ident">next_index</span> <span class="op">=</span> <span class="ident">index</span>
+    <span class="kw">fn </span>set_next_index(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize) {
+        <span class="self">self</span>.next_index = index
     }
 }
 
-<span class="doccomment">/// Queue for measuring if an element fits on the line.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The queue is a view on top of the [PrintQueue] because no elements should be removed</span>
-<span class="doccomment">/// from the [PrintQueue] while measuring.</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">FitsQueue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span><span class="op">&gt;</span> {
-    <span class="ident">stack</span>: <span class="ident">StackedStack</span><span class="op">&lt;</span><span class="lifetime">&#39;print</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]<span class="op">&gt;</span>,
-    <span class="ident">next_index</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// Queue for measuring if an element fits on the line.
+///
+/// The queue is a view on top of the [PrintQueue] because no elements should be removed
+/// from the [PrintQueue] while measuring.
+</span><span class="attribute">#[must_use]
+#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>FitsQueue&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span>&gt; {
+    stack: StackedStack&lt;<span class="lifetime">&#39;print</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]&gt;,
+    next_index: usize,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span><span class="op">&gt;</span> <span class="ident">FitsQueue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">print_queue</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;print</span> <span class="ident">PrintQueue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-        <span class="ident">saved</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]<span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">stack</span> <span class="op">=</span> <span class="ident">StackedStack::with_vec</span>(<span class="kw-2">&amp;</span><span class="ident">print_queue</span>.<span class="ident">slices</span>, <span class="ident">saved</span>);
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span>&gt; FitsQueue&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(
+        print_queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;print </span>PrintQueue&lt;<span class="lifetime">&#39;a</span>&gt;,
+        saved: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>stack = StackedStack::with_vec(<span class="kw-2">&amp;</span>print_queue.slices, saved);
 
-        <span class="self">Self</span> {
-            <span class="ident">stack</span>,
-            <span class="ident">next_index</span>: <span class="ident">print_queue</span>.<span class="ident">next_index</span>,
+        <span class="self">Self </span>{
+            stack,
+            next_index: print_queue.next_index,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">into_vec</span>()
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>finish(<span class="self">self</span>) -&gt; Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]&gt; {
+        <span class="self">self</span>.stack.into_vec()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span><span class="op">&gt;</span> <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FitsQueue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Stack</span> <span class="op">=</span> <span class="ident">StackedStack</span><span class="op">&lt;</span><span class="lifetime">&#39;print</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">FormatElement</span>]<span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span>&gt; Queue&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>FitsQueue&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;print</span>&gt; {
+    <span class="kw">type </span>Stack = StackedStack&lt;<span class="lifetime">&#39;print</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[FormatElement]&gt;;
 
-    <span class="kw">fn</span> <span class="ident">stack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Stack</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">stack</span>
+    <span class="kw">fn </span>stack(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Stack {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.stack
     }
 
-    <span class="kw">fn</span> <span class="ident">stack_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Stack</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stack</span>
+    <span class="kw">fn </span>stack_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Stack {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.stack
     }
 
-    <span class="kw">fn</span> <span class="ident">next_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">next_index</span>
+    <span class="kw">fn </span>next_index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.next_index
     }
 
-    <span class="kw">fn</span> <span class="ident">set_next_index</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) {
-        <span class="self">self</span>.<span class="ident">next_index</span> <span class="op">=</span> <span class="ident">index</span>;
+    <span class="kw">fn </span>set_next_index(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize) {
+        <span class="self">self</span>.next_index = index;
     }
 }
 
-<span class="doccomment">/// Iterator that calls [Queue::pop] until it reaches the end of the document.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The iterator traverses into the content of any [FormatElement::Interned].</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">QueueIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, <span class="ident">Q</span>: <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">queue</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;q</span> <span class="kw-2">mut</span> <span class="ident">Q</span>,
-    <span class="ident">lifetime</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> ()<span class="op">&gt;</span>,
+<span class="doccomment">/// Iterator that calls [Queue::pop] until it reaches the end of the document.
+///
+/// The iterator traverses into the content of any [FormatElement::Interned].
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>QueueIterator&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, Q: Queue&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;q </span><span class="kw-2">mut </span>Q,
+    lifetime: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>()&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Q</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">QueueIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;_</span>, <span class="ident">Q</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Q</span>: <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, Q&gt; Iterator <span class="kw">for </span>QueueIterator&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;_</span>, Q&gt;
+<span class="kw">where
+    </span>Q: Queue&lt;<span class="lifetime">&#39;a</span>&gt;,
 {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">FormatElement</span>;
+    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FormatElement;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">pop</span>()
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="self">self</span>.queue.pop()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Q</span><span class="op">&gt;</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">QueueIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;_</span>, <span class="ident">Q</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Q</span>: <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, Q&gt; FusedIterator <span class="kw">for </span>QueueIterator&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;_</span>, Q&gt; <span class="kw">where </span>Q: Queue&lt;<span class="lifetime">&#39;a</span>&gt; {}
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">QueueContentIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, <span class="ident">Q</span>: <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">queue</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;q</span> <span class="kw-2">mut</span> <span class="ident">Q</span>,
-    <span class="ident">kind</span>: <span class="ident">TagKind</span>,
-    <span class="ident">depth</span>: <span class="ident">usize</span>,
-    <span class="ident">lifetime</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> ()<span class="op">&gt;</span>,
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>QueueContentIterator&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, Q: Queue&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;q </span><span class="kw-2">mut </span>Q,
+    kind: TagKind,
+    depth: usize,
+    lifetime: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>()&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, <span class="ident">Q</span><span class="op">&gt;</span> <span class="ident">QueueContentIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, <span class="ident">Q</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Q</span>: <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, Q&gt; QueueContentIterator&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;q</span>, Q&gt;
+<span class="kw">where
+    </span>Q: Queue&lt;<span class="lifetime">&#39;a</span>&gt;,
 {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">queue</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;q</span> <span class="kw-2">mut</span> <span class="ident">Q</span>, <span class="ident">kind</span>: <span class="ident">TagKind</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">queue</span>,
-            <span class="ident">kind</span>,
-            <span class="ident">depth</span>: <span class="number">1</span>,
-            <span class="ident">lifetime</span>: <span class="ident">PhantomData</span>,
+    <span class="kw">fn </span>new(queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;q </span><span class="kw-2">mut </span>Q, kind: TagKind) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            queue,
+            kind,
+            depth: <span class="number">1</span>,
+            lifetime: PhantomData,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Q</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">QueueContentIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;_</span>, <span class="ident">Q</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Q</span>: <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, Q&gt; Iterator <span class="kw">for </span>QueueContentIterator&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;_</span>, Q&gt;
+<span class="kw">where
+    </span>Q: Queue&lt;<span class="lifetime">&#39;a</span>&gt;,
 {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">FormatElement</span>;
+    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FormatElement;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">depth</span> {
-            <span class="number">0</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="kw">_</span> =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">top</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">pop</span>();
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">match </span><span class="self">self</span>.depth {
+            <span class="number">0 </span>=&gt; <span class="prelude-val">None</span>,
+            <span class="kw">_ </span>=&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>top = <span class="self">self</span>.queue.pop();
 
-                <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">FormatElement::Interned</span>(<span class="ident">interned</span>)) <span class="op">=</span> <span class="ident">top</span> {
-                    <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">extend_back</span>(<span class="ident">interned</span>);
-                    <span class="ident">top</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">pop</span>();
+                <span class="kw">while let </span><span class="prelude-val">Some</span>(FormatElement::Interned(interned)) = top {
+                    <span class="self">self</span>.queue.extend_back(interned);
+                    top = <span class="self">self</span>.queue.pop();
                 }
 
-                <span class="kw">match</span> <span class="ident">top</span>.<span class="ident">expect</span>(<span class="string">&quot;Missing end signal.&quot;</span>) {
-                    <span class="ident">element</span> @ <span class="ident">FormatElement::Tag</span>(<span class="ident">tag</span>) <span class="kw">if</span> <span class="ident">tag</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="self">self</span>.<span class="ident">kind</span> =&gt; {
-                        <span class="kw">if</span> <span class="ident">tag</span>.<span class="ident">is_start</span>() {
-                            <span class="self">self</span>.<span class="ident">depth</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                        } <span class="kw">else</span> {
-                            <span class="self">self</span>.<span class="ident">depth</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+                <span class="kw">match </span>top.expect(<span class="string">&quot;Missing end signal.&quot;</span>) {
+                    element @ FormatElement::Tag(tag) <span class="kw">if </span>tag.kind() == <span class="self">self</span>.kind =&gt; {
+                        <span class="kw">if </span>tag.is_start() {
+                            <span class="self">self</span>.depth += <span class="number">1</span>;
+                        } <span class="kw">else </span>{
+                            <span class="self">self</span>.depth -= <span class="number">1</span>;
 
-                            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">depth</span> <span class="op">==</span> <span class="number">0</span> {
-                                <span class="kw">return</span> <span class="prelude-val">None</span>;
+                            <span class="kw">if </span><span class="self">self</span>.depth == <span class="number">0 </span>{
+                                <span class="kw">return </span><span class="prelude-val">None</span>;
                             }
                         }
 
-                        <span class="prelude-val">Some</span>(<span class="ident">element</span>)
+                        <span class="prelude-val">Some</span>(element)
                     }
-                    <span class="ident">element</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">element</span>),
+                    element =&gt; <span class="prelude-val">Some</span>(element),
                 }
             }
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Q</span><span class="op">&gt;</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">QueueContentIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;_</span>, <span class="ident">Q</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Q</span>: <span class="ident">Queue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, Q&gt; FusedIterator <span class="kw">for </span>QueueContentIterator&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;_</span>, Q&gt; <span class="kw">where </span>Q: Queue&lt;<span class="lifetime">&#39;a</span>&gt; {}
 
-<span class="doccomment">/// A predicate determining when to end measuring if some content fits on the line.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Called for every [`element`](FormatElement) in the [FitsQueue] when measuring if a content</span>
-<span class="doccomment">/// fits on the line. The measuring of the content ends after the first element [`element`](FormatElement) for which this</span>
-<span class="doccomment">/// predicate returns `true` (similar to a take while iterator except that it takes while the predicate returns `false`).</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait</span> <span class="ident">FitsEndPredicate</span> {
-    <span class="kw">fn</span> <span class="ident">is_end</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="kw-2">&amp;</span><span class="ident">FormatElement</span>) -&gt; <span class="ident">PrintResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+<span class="doccomment">/// A predicate determining when to end measuring if some content fits on the line.
+///
+/// Called for every [`element`](FormatElement) in the [FitsQueue] when measuring if a content
+/// fits on the line. The measuring of the content ends after the first element [`element`](FormatElement) for which this
+/// predicate returns `true` (similar to a take while iterator except that it takes while the predicate returns `false`).
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>FitsEndPredicate {
+    <span class="kw">fn </span>is_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: <span class="kw-2">&amp;</span>FormatElement) -&gt; PrintResult&lt;bool&gt;;
 }
 
-<span class="doccomment">/// Filter that includes all elements until it reaches the end of the document.</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">AllPredicate</span>;
+<span class="doccomment">/// Filter that includes all elements until it reaches the end of the document.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>AllPredicate;
 
-<span class="kw">impl</span> <span class="ident">FitsEndPredicate</span> <span class="kw">for</span> <span class="ident">AllPredicate</span> {
-    <span class="kw">fn</span> <span class="ident">is_end</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_element</span>: <span class="kw-2">&amp;</span><span class="ident">FormatElement</span>) -&gt; <span class="ident">PrintResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>FitsEndPredicate <span class="kw">for </span>AllPredicate {
+    <span class="kw">fn </span>is_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _element: <span class="kw-2">&amp;</span>FormatElement) -&gt; PrintResult&lt;bool&gt; {
         <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
     }
 }
 
-<span class="doccomment">/// Filter that takes all elements between two matching [Tag::StartEntry] and [Tag::EndEntry] tags.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum</span> <span class="ident">SingleEntryPredicate</span> {
-    <span class="ident">Entry</span> { <span class="ident">depth</span>: <span class="ident">usize</span> },
-    <span class="ident">Done</span>,
+<span class="doccomment">/// Filter that takes all elements between two matching [Tag::StartEntry] and [Tag::EndEntry] tags.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>SingleEntryPredicate {
+    Entry { depth: usize },
+    Done,
 }
 
-<span class="kw">impl</span> <span class="ident">SingleEntryPredicate</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_done</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">SingleEntryPredicate::Done</span>)
+<span class="kw">impl </span>SingleEntryPredicate {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const fn </span>is_done(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, SingleEntryPredicate::Done)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">SingleEntryPredicate</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">SingleEntryPredicate::Entry</span> { <span class="ident">depth</span>: <span class="number">0</span> }
+<span class="kw">impl </span>Default <span class="kw">for </span>SingleEntryPredicate {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        SingleEntryPredicate::Entry { depth: <span class="number">0 </span>}
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FitsEndPredicate</span> <span class="kw">for</span> <span class="ident">SingleEntryPredicate</span> {
-    <span class="kw">fn</span> <span class="ident">is_end</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="kw-2">&amp;</span><span class="ident">FormatElement</span>) -&gt; <span class="ident">PrintResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">SingleEntryPredicate::Done</span> =&gt; <span class="bool-val">true</span>,
-            <span class="ident">SingleEntryPredicate::Entry</span> { <span class="ident">depth</span> } =&gt; <span class="kw">match</span> <span class="ident">element</span> {
-                <span class="ident">FormatElement::Tag</span>(<span class="ident">Tag::StartEntry</span>) =&gt; {
-                    <span class="kw-2">*</span><span class="ident">depth</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+<span class="kw">impl </span>FitsEndPredicate <span class="kw">for </span>SingleEntryPredicate {
+    <span class="kw">fn </span>is_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: <span class="kw-2">&amp;</span>FormatElement) -&gt; PrintResult&lt;bool&gt; {
+        <span class="kw">let </span>result = <span class="kw">match </span><span class="self">self </span>{
+            SingleEntryPredicate::Done =&gt; <span class="bool-val">true</span>,
+            SingleEntryPredicate::Entry { depth } =&gt; <span class="kw">match </span>element {
+                FormatElement::Tag(Tag::StartEntry) =&gt; {
+                    <span class="kw-2">*</span>depth += <span class="number">1</span>;
 
-                    <span class="bool-val">false</span>
-                }
-                <span class="ident">FormatElement::Tag</span>(<span class="ident">Tag::EndEntry</span>) =&gt; {
-                    <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">depth</span> <span class="op">==</span> <span class="number">0</span> {
-                        <span class="kw">return</span> <span class="ident">invalid_end_tag</span>(<span class="ident">TagKind::Entry</span>, <span class="prelude-val">None</span>);
+                    <span class="bool-val">false
+                </span>}
+                FormatElement::Tag(Tag::EndEntry) =&gt; {
+                    <span class="kw">if </span><span class="kw-2">*</span>depth == <span class="number">0 </span>{
+                        <span class="kw">return </span>invalid_end_tag(TagKind::Entry, <span class="prelude-val">None</span>);
                     }
 
-                    <span class="kw-2">*</span><span class="ident">depth</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="kw-2">*</span>depth -= <span class="number">1</span>;
 
-                    <span class="kw">let</span> <span class="ident">is_end</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">depth</span> <span class="op">==</span> <span class="number">0</span>;
+                    <span class="kw">let </span>is_end = <span class="kw-2">*</span>depth == <span class="number">0</span>;
 
-                    <span class="kw">if</span> <span class="ident">is_end</span> {
-                        <span class="kw-2">*</span><span class="self">self</span> <span class="op">=</span> <span class="ident">SingleEntryPredicate::Done</span>;
+                    <span class="kw">if </span>is_end {
+                        <span class="kw-2">*</span><span class="self">self </span>= SingleEntryPredicate::Done;
                     }
 
-                    <span class="ident">is_end</span>
+                    is_end
                 }
-                <span class="ident">FormatElement::Interned</span>(<span class="kw">_</span>) =&gt; <span class="bool-val">false</span>,
-                <span class="ident">element</span> <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">depth</span> <span class="op">==</span> <span class="number">0</span> =&gt; {
-                    <span class="kw">return</span> <span class="ident">invalid_start_tag</span>(<span class="ident">TagKind::Entry</span>, <span class="prelude-val">Some</span>(<span class="ident">element</span>));
+                FormatElement::Interned(<span class="kw">_</span>) =&gt; <span class="bool-val">false</span>,
+                element <span class="kw">if </span><span class="kw-2">*</span>depth == <span class="number">0 </span>=&gt; {
+                    <span class="kw">return </span>invalid_start_tag(TagKind::Entry, <span class="prelude-val">Some</span>(element));
                 }
-                <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
+                <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
             },
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+        <span class="prelude-val">Ok</span>(result)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::format_element::LineMode</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude::Tag</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::printer::queue</span>::{<span class="ident">PrintQueue</span>, <span class="ident">Queue</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::FormatElement</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::format_element::LineMode;
+    <span class="kw">use </span><span class="kw">crate</span>::prelude::Tag;
+    <span class="kw">use </span><span class="kw">crate</span>::printer::queue::{PrintQueue, Queue};
+    <span class="kw">use </span><span class="kw">crate</span>::FormatElement;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">extend_back_pop_last</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">queue</span> <span class="op">=</span>
-            <span class="ident">PrintQueue::new</span>(<span class="kw-2">&amp;</span>[<span class="ident">FormatElement::Tag</span>(<span class="ident">Tag::StartEntry</span>), <span class="ident">FormatElement::Space</span>]);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>extend_back_pop_last() {
+        <span class="kw">let </span><span class="kw-2">mut </span>queue =
+            PrintQueue::new(<span class="kw-2">&amp;</span>[FormatElement::Tag(Tag::StartEntry), FormatElement::Space]);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">queue</span>.<span class="ident">pop</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">FormatElement::Tag</span>(<span class="ident">Tag::StartEntry</span>)));
+        <span class="macro">assert_eq!</span>(queue.pop(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>FormatElement::Tag(Tag::StartEntry)));
 
-        <span class="ident">queue</span>.<span class="ident">extend_back</span>(<span class="kw-2">&amp;</span>[<span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::SoftOrSpace</span>)]);
+        queue.extend_back(<span class="kw-2">&amp;</span>[FormatElement::Line(LineMode::SoftOrSpace)]);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">queue</span>.<span class="ident">pop</span>(),
-            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::SoftOrSpace</span>))
+            queue.pop(),
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>FormatElement::Line(LineMode::SoftOrSpace))
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">queue</span>.<span class="ident">pop</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">FormatElement::Space</span>));
+        <span class="macro">assert_eq!</span>(queue.pop(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>FormatElement::Space));
 
-        <span class="macro">assert_eq!</span>(<span class="ident">queue</span>.<span class="ident">pop</span>(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(queue.pop(), <span class="prelude-val">None</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">extend_back_empty_queue</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">queue</span> <span class="op">=</span>
-            <span class="ident">PrintQueue::new</span>(<span class="kw-2">&amp;</span>[<span class="ident">FormatElement::Tag</span>(<span class="ident">Tag::StartEntry</span>), <span class="ident">FormatElement::Space</span>]);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>extend_back_empty_queue() {
+        <span class="kw">let </span><span class="kw-2">mut </span>queue =
+            PrintQueue::new(<span class="kw-2">&amp;</span>[FormatElement::Tag(Tag::StartEntry), FormatElement::Space]);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">queue</span>.<span class="ident">pop</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">FormatElement::Tag</span>(<span class="ident">Tag::StartEntry</span>)));
-        <span class="macro">assert_eq!</span>(<span class="ident">queue</span>.<span class="ident">pop</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">FormatElement::Space</span>));
+        <span class="macro">assert_eq!</span>(queue.pop(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>FormatElement::Tag(Tag::StartEntry)));
+        <span class="macro">assert_eq!</span>(queue.pop(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>FormatElement::Space));
 
-        <span class="ident">queue</span>.<span class="ident">extend_back</span>(<span class="kw-2">&amp;</span>[<span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::SoftOrSpace</span>)]);
+        queue.extend_back(<span class="kw-2">&amp;</span>[FormatElement::Line(LineMode::SoftOrSpace)]);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">queue</span>.<span class="ident">pop</span>(),
-            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">FormatElement::Line</span>(<span class="ident">LineMode::SoftOrSpace</span>))
+            queue.pop(),
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>FormatElement::Line(LineMode::SoftOrSpace))
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">queue</span>.<span class="ident">pop</span>(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(queue.pop(), <span class="prelude-val">None</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

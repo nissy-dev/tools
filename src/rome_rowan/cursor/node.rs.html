@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/cursor/node.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>node.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/cursor/node.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>node.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -957,964 +957,964 @@
 <span id="957">957</span>
 <span id="958">958</span>
 <span id="959">959</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cursor</span>::{<span class="ident">NodeData</span>, <span class="ident">SyntaxElement</span>, <span class="ident">SyntaxToken</span>, <span class="ident">SyntaxTrivia</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green</span>::{<span class="ident">Child</span>, <span class="ident">Children</span>, <span class="ident">GreenElementRef</span>, <span class="ident">Slot</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">Direction</span>, <span class="ident">GreenNode</span>, <span class="ident">GreenNodeData</span>, <span class="ident">NodeOrToken</span>, <span class="ident">RawSyntaxKind</span>, <span class="ident">SyntaxNodeText</span>, <span class="ident">TokenAtOffset</span>,
-    <span class="ident">WalkEvent</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cursor::{NodeData, SyntaxElement, SyntaxToken, SyntaxTrivia};
+<span class="kw">use </span><span class="kw">crate</span>::green::{Child, Children, GreenElementRef, Slot};
+<span class="kw">use crate</span>::{
+    Direction, GreenNode, GreenNodeData, NodeOrToken, RawSyntaxKind, SyntaxNodeText, TokenAtOffset,
+    WalkEvent,
 };
-<span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">std::hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>};
-<span class="kw">use</span> <span class="ident">std::iter::FusedIterator</span>;
-<span class="kw">use</span> <span class="ident">std::ops</span>;
-<span class="kw">use</span> <span class="ident">std::ptr::NonNull</span>;
-<span class="kw">use</span> <span class="ident">std::rc::Rc</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>, <span class="ident">iter</span>};
+<span class="kw">use </span>rome_text_size::{TextRange, TextSize};
+<span class="kw">use </span>std::hash::{Hash, Hasher};
+<span class="kw">use </span>std::iter::FusedIterator;
+<span class="kw">use </span>std::ops;
+<span class="kw">use </span>std::ptr::NonNull;
+<span class="kw">use </span>std::rc::Rc;
+<span class="kw">use </span>std::{fmt, iter};
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">GreenElement</span>, <span class="ident">NodeKind</span>, <span class="ident">WeakGreenElement</span>};
+<span class="kw">use super</span>::{GreenElement, NodeKind, WeakGreenElement};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">SyntaxNode</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">ptr</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">NodeData</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SyntaxNode {
+    <span class="kw">pub</span>(<span class="kw">super</span>) ptr: Rc&lt;NodeData&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxNode</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_root</span>(<span class="ident">green</span>: <span class="ident">GreenNode</span>) -&gt; <span class="ident">SyntaxNode</span> {
-        <span class="ident">SyntaxNode</span> {
-            <span class="ident">ptr</span>: <span class="ident">NodeData::new</span>(
-                <span class="ident">NodeKind::Root</span> {
-                    <span class="ident">green</span>: <span class="ident">GreenElement::Node</span>(<span class="ident">green</span>),
+<span class="kw">impl </span>SyntaxNode {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new_root(green: GreenNode) -&gt; SyntaxNode {
+        SyntaxNode {
+            ptr: NodeData::new(
+                NodeKind::Root {
+                    green: GreenElement::Node(green),
                 },
                 <span class="number">0</span>,
-                <span class="number">0</span>.<span class="ident">into</span>(),
+                <span class="number">0</span>.into(),
             ),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new_child</span>(
-        <span class="ident">green</span>: <span class="kw-2">&amp;</span><span class="ident">GreenNodeData</span>,
-        <span class="ident">parent</span>: <span class="ident">SyntaxNode</span>,
-        <span class="ident">slot</span>: <span class="ident">u32</span>,
-        <span class="ident">offset</span>: <span class="ident">TextSize</span>,
-    ) -&gt; <span class="ident">SyntaxNode</span> {
-        <span class="ident">SyntaxNode</span> {
-            <span class="ident">ptr</span>: <span class="ident">NodeData::new</span>(
-                <span class="ident">NodeKind::Child</span> {
-                    <span class="ident">green</span>: <span class="ident">WeakGreenElement::new</span>(<span class="ident">GreenElementRef::Node</span>(<span class="ident">green</span>)),
-                    <span class="ident">parent</span>: <span class="ident">parent</span>.<span class="ident">ptr</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new_child(
+        green: <span class="kw-2">&amp;</span>GreenNodeData,
+        parent: SyntaxNode,
+        slot: u32,
+        offset: TextSize,
+    ) -&gt; SyntaxNode {
+        SyntaxNode {
+            ptr: NodeData::new(
+                NodeKind::Child {
+                    green: WeakGreenElement::new(GreenElementRef::Node(green)),
+                    parent: parent.ptr,
                 },
-                <span class="ident">slot</span>,
-                <span class="ident">offset</span>,
+                slot,
+                offset,
             ),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clone_subtree</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxNode</span> {
-        <span class="ident">SyntaxNode::new_root</span>(<span class="self">self</span>.<span class="ident">green</span>().<span class="ident">into</span>())
+    <span class="kw">pub fn </span>clone_subtree(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxNode {
+        SyntaxNode::new_root(<span class="self">self</span>.green().into())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">NodeData</span> {
-        <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">as_ref</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>NodeData {
+        <span class="self">self</span>.ptr.as_ref()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RawSyntaxKind</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">kind</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RawSyntaxKind {
+        <span class="self">self</span>.data().kind()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">offset</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>offset(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.data().offset()
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">element_in_slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">slot_index</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">slots</span>()
-            .<span class="ident">nth</span>(<span class="ident">slot_index</span> <span class="kw">as</span> <span class="ident">usize</span>)
-            .<span class="ident">expect</span>(<span class="string">&quot;Slot index out of bounds&quot;</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>element_in_slot(<span class="kw-2">&amp;</span><span class="self">self</span>, slot_index: u32) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="kw">let </span>slot = <span class="self">self
+            </span>.slots()
+            .nth(slot_index <span class="kw">as </span>usize)
+            .expect(<span class="string">&quot;Slot index out of bounds&quot;</span>);
 
-        <span class="ident">slot</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">element</span><span class="op">|</span> <span class="ident">element</span>)
+        slot.map(|element| element)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">slots</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxSlots</span> {
-        <span class="ident">SyntaxSlots::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>slots(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxSlots {
+        SyntaxSlots::new(<span class="self">self</span>.clone())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">text_range</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.data().text_range()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_trimmed_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">text_range</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">range</span>.<span class="ident">start</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">range</span>.<span class="ident">end</span>();
+    <span class="kw">pub fn </span>text_trimmed_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="kw">let </span>range = <span class="self">self</span>.text_range();
+        <span class="kw">let </span><span class="kw-2">mut </span>start = range.start();
+        <span class="kw">let </span><span class="kw-2">mut </span>end = range.end();
 
-        <span class="comment">// Remove all trivia from the start of the node</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_token</span>();
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">token</span>.<span class="ident">take</span>() {
-            <span class="kw">let</span> (<span class="ident">leading_len</span>, <span class="ident">trailing_len</span>, <span class="ident">total_len</span>) <span class="op">=</span> <span class="ident">t</span>.<span class="ident">green</span>().<span class="ident">leading_trailing_total_len</span>();
-            <span class="kw">let</span> <span class="ident">token_len</span>: <span class="ident">u32</span> <span class="op">=</span> (<span class="ident">total_len</span> <span class="op">-</span> <span class="ident">leading_len</span> <span class="op">-</span> <span class="ident">trailing_len</span>).<span class="ident">into</span>();
-            <span class="kw">if</span> <span class="ident">token_len</span> <span class="op">==</span> <span class="number">0</span> {
-                <span class="ident">start</span> <span class="op">+</span><span class="op">=</span> <span class="ident">total_len</span>;
-                <span class="ident">token</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">next_token</span>();
-            } <span class="kw">else</span> {
-                <span class="ident">start</span> <span class="op">+</span><span class="op">=</span> <span class="ident">leading_len</span>;
+        <span class="comment">// Remove all trivia from the start of the node
+        </span><span class="kw">let </span><span class="kw-2">mut </span>token = <span class="self">self</span>.first_token();
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(t) = token.take() {
+            <span class="kw">let </span>(leading_len, trailing_len, total_len) = t.green().leading_trailing_total_len();
+            <span class="kw">let </span>token_len: u32 = (total_len - leading_len - trailing_len).into();
+            <span class="kw">if </span>token_len == <span class="number">0 </span>{
+                start += total_len;
+                token = t.next_token();
+            } <span class="kw">else </span>{
+                start += leading_len;
             }
         }
 
-        <span class="comment">// Remove all trivia from the end of the node</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">last_token</span>();
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">token</span>.<span class="ident">take</span>() {
-            <span class="kw">let</span> (<span class="ident">leading_len</span>, <span class="ident">trailing_len</span>, <span class="ident">total_len</span>) <span class="op">=</span> <span class="ident">t</span>.<span class="ident">green</span>().<span class="ident">leading_trailing_total_len</span>();
-            <span class="kw">let</span> <span class="ident">token_len</span>: <span class="ident">u32</span> <span class="op">=</span> (<span class="ident">total_len</span> <span class="op">-</span> <span class="ident">leading_len</span> <span class="op">-</span> <span class="ident">trailing_len</span>).<span class="ident">into</span>();
-            <span class="kw">if</span> <span class="ident">token_len</span> <span class="op">==</span> <span class="number">0</span> {
-                <span class="ident">end</span> <span class="op">-</span><span class="op">=</span> <span class="ident">total_len</span>;
-                <span class="ident">token</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">prev_token</span>();
-            } <span class="kw">else</span> {
-                <span class="ident">end</span> <span class="op">-</span><span class="op">=</span> <span class="ident">trailing_len</span>;
+        <span class="comment">// Remove all trivia from the end of the node
+        </span><span class="kw">let </span><span class="kw-2">mut </span>token = <span class="self">self</span>.last_token();
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(t) = token.take() {
+            <span class="kw">let </span>(leading_len, trailing_len, total_len) = t.green().leading_trailing_total_len();
+            <span class="kw">let </span>token_len: u32 = (total_len - leading_len - trailing_len).into();
+            <span class="kw">if </span>token_len == <span class="number">0 </span>{
+                end -= total_len;
+                token = t.prev_token();
+            } <span class="kw">else </span>{
+                end -= trailing_len;
             }
         }
 
-        <span class="ident">TextRange::new</span>(<span class="ident">start</span>, <span class="ident">end</span>.<span class="ident">max</span>(<span class="ident">start</span>))
+        TextRange::new(start, end.max(start))
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first_leading_trivia</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxTrivia</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">first_token</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">leading_trivia</span>())
+    <span class="kw">pub fn </span>first_leading_trivia(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxTrivia&gt; {
+        <span class="self">self</span>.first_token().map(|x| x.leading_trivia())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_trailing_trivia</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxTrivia</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">last_token</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">trailing_trivia</span>())
+    <span class="kw">pub fn </span>last_trailing_trivia(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxTrivia&gt; {
+        <span class="self">self</span>.last_token().map(|x| x.trailing_trivia())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">slot</span>() <span class="kw">as</span> <span class="ident">usize</span>
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.data().slot() <span class="kw">as </span>usize
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxNodeText</span> {
-        <span class="ident">SyntaxNodeText::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxNodeText {
+        SyntaxNodeText::new(<span class="self">self</span>.clone())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_trimmed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxNodeText</span> {
-        <span class="ident">SyntaxNodeText::with_range</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="self">self</span>.<span class="ident">text_trimmed_range</span>())
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>text_trimmed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxNodeText {
+        SyntaxNodeText::with_range(<span class="self">self</span>.clone(), <span class="self">self</span>.text_trimmed_range())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">NonNull</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, <span class="ident">TextSize</span>) {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">key</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (NonNull&lt;()&gt;, TextSize) {
+        <span class="self">self</span>.data().key()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">green</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GreenNodeData</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">green</span>().<span class="ident">into_node</span>().<span class="ident">unwrap</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>green(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>GreenNodeData {
+        <span class="self">self</span>.data().green().into_node().unwrap()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">parent_node</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
+        <span class="self">self</span>.data().parent_node()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ancestors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="ident">iter::successors</span>(<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">clone</span>()), <span class="ident">SyntaxNode::parent</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>ancestors(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SyntaxNode&gt; {
+        iter::successors(<span class="prelude-val">Some</span>(<span class="self">self</span>.clone()), SyntaxNode::parent)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">children</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxNodeChildren</span> {
-        <span class="ident">SyntaxNodeChildren::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>children(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxNodeChildren {
+        SyntaxNodeChildren::new(<span class="self">self</span>.clone())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">children_with_tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxElementChildren</span> {
-        <span class="ident">SyntaxElementChildren::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>children_with_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxElementChildren {
+        SyntaxElementChildren::new(<span class="self">self</span>.clone())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxToken</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">DoubleEndedIterator</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
-        <span class="self">self</span>.<span class="ident">green</span>().<span class="ident">children</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="ident">child</span>.<span class="ident">element</span>().<span class="ident">into_token</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> {
-                <span class="ident">SyntaxToken::new</span>(
-                    <span class="ident">token</span>,
-                    <span class="self">self</span>.<span class="ident">clone</span>(),
-                    <span class="ident">child</span>.<span class="ident">slot</span>() <span class="kw">as</span> <span class="ident">u32</span>,
-                    <span class="self">self</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>(),
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>tokens(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SyntaxToken&gt; + DoubleEndedIterator + <span class="lifetime">&#39;_ </span>{
+        <span class="self">self</span>.green().children().filter_map(|child| {
+            child.element().into_token().map(|token| {
+                SyntaxToken::new(
+                    token,
+                    <span class="self">self</span>.clone(),
+                    child.slot() <span class="kw">as </span>u32,
+                    <span class="self">self</span>.offset() + child.rel_offset(),
                 )
             })
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first_child</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">green</span>().<span class="ident">children</span>().<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="ident">child</span>.<span class="ident">element</span>().<span class="ident">into_node</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">green</span><span class="op">|</span> {
-                <span class="ident">SyntaxNode::new_child</span>(
-                    <span class="ident">green</span>,
-                    <span class="self">self</span>.<span class="ident">clone</span>(),
-                    <span class="ident">child</span>.<span class="ident">slot</span>() <span class="kw">as</span> <span class="ident">u32</span>,
-                    <span class="self">self</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>(),
+    <span class="kw">pub fn </span>first_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
+        <span class="self">self</span>.green().children().find_map(|child| {
+            child.element().into_node().map(|green| {
+                SyntaxNode::new_child(
+                    green,
+                    <span class="self">self</span>.clone(),
+                    child.slot() <span class="kw">as </span>u32,
+                    <span class="self">self</span>.offset() + child.rel_offset(),
                 )
             })
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_child</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">green</span>().<span class="ident">children</span>().<span class="ident">rev</span>().<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="ident">child</span>.<span class="ident">element</span>().<span class="ident">into_node</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">green</span><span class="op">|</span> {
-                <span class="ident">SyntaxNode::new_child</span>(
-                    <span class="ident">green</span>,
-                    <span class="self">self</span>.<span class="ident">clone</span>(),
-                    <span class="ident">child</span>.<span class="ident">slot</span>(),
-                    <span class="self">self</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>(),
+    <span class="kw">pub fn </span>last_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
+        <span class="self">self</span>.green().children().rev().find_map(|child| {
+            child.element().into_node().map(|green| {
+                SyntaxNode::new_child(
+                    green,
+                    <span class="self">self</span>.clone(),
+                    child.slot(),
+                    <span class="self">self</span>.offset() + child.rel_offset(),
                 )
             })
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first_child_or_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">green</span>().<span class="ident">children</span>().<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="ident">SyntaxElement::new</span>(
-                <span class="ident">child</span>.<span class="ident">element</span>(),
-                <span class="self">self</span>.<span class="ident">clone</span>(),
-                <span class="ident">child</span>.<span class="ident">slot</span>(),
-                <span class="self">self</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>(),
+    <span class="kw">pub fn </span>first_child_or_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="self">self</span>.green().children().next().map(|child| {
+            SyntaxElement::new(
+                child.element(),
+                <span class="self">self</span>.clone(),
+                child.slot(),
+                <span class="self">self</span>.offset() + child.rel_offset(),
             )
         })
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_child_or_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">green</span>().<span class="ident">children</span>().<span class="ident">next_back</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="ident">SyntaxElement::new</span>(
-                <span class="ident">child</span>.<span class="ident">element</span>(),
-                <span class="self">self</span>.<span class="ident">clone</span>(),
-                <span class="ident">child</span>.<span class="ident">slot</span>(),
-                <span class="self">self</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>(),
+    <span class="kw">pub fn </span>last_child_or_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="self">self</span>.green().children().next_back().map(|child| {
+            SyntaxElement::new(
+                child.element(),
+                <span class="self">self</span>.clone(),
+                child.slot(),
+                <span class="self">self</span>.offset() + child.rel_offset(),
             )
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_sibling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">next_sibling</span>()
+    <span class="kw">pub fn </span>next_sibling(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
+        <span class="self">self</span>.data().next_sibling()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prev_sibling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">prev_sibling</span>()
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_sibling_or_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">next_sibling_or_token</span>()
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prev_sibling_or_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">prev_sibling_or_token</span>()
+    <span class="kw">pub fn </span>prev_sibling(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
+        <span class="self">self</span>.data().prev_sibling()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">descendants_with_tokens</span>(<span class="ident">Direction::Next</span>)
-            .<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">into_token</span>())
+    <span class="kw">pub fn </span>next_sibling_or_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="self">self</span>.data().next_sibling_or_token()
+    }
+    <span class="kw">pub fn </span>prev_sibling_or_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="self">self</span>.data().prev_sibling_or_token()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&gt;</span> {
-        <span class="ident">PreorderWithTokens::new</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">Direction::Prev</span>)
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">event</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
-                <span class="ident">WalkEvent::Enter</span>(<span class="ident">it</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">it</span>),
-                <span class="ident">WalkEvent::Leave</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">pub fn </span>first_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxToken&gt; {
+        <span class="self">self</span>.descendants_with_tokens(Direction::Next)
+            .find_map(|x| x.into_token())
+    }
+
+    <span class="kw">pub fn </span>last_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxToken&gt; {
+        PreorderWithTokens::new(<span class="self">self</span>.clone(), Direction::Prev)
+            .filter_map(|event| <span class="kw">match </span>event {
+                WalkEvent::Enter(it) =&gt; <span class="prelude-val">Some</span>(it),
+                WalkEvent::Leave(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
             })
-            .<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">into_token</span>())
+            .find_map(|x| x.into_token())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">siblings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">direction</span>: <span class="ident">Direction</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="ident">iter::successors</span>(<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">clone</span>()), <span class="kw">move</span> <span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">direction</span> {
-            <span class="ident">Direction::Next</span> =&gt; <span class="ident">node</span>.<span class="ident">next_sibling</span>(),
-            <span class="ident">Direction::Prev</span> =&gt; <span class="ident">node</span>.<span class="ident">prev_sibling</span>(),
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>siblings(<span class="kw-2">&amp;</span><span class="self">self</span>, direction: Direction) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SyntaxNode&gt; {
+        iter::successors(<span class="prelude-val">Some</span>(<span class="self">self</span>.clone()), <span class="kw">move </span>|node| <span class="kw">match </span>direction {
+            Direction::Next =&gt; node.next_sibling(),
+            Direction::Prev =&gt; node.prev_sibling(),
         })
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">siblings_with_tokens</span>(
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>siblings_with_tokens(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">direction</span>: <span class="ident">Direction</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">me</span>: <span class="ident">SyntaxElement</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into</span>();
-        <span class="ident">iter::successors</span>(<span class="prelude-val">Some</span>(<span class="ident">me</span>), <span class="kw">move</span> <span class="op">|</span><span class="ident">el</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">direction</span> {
-            <span class="ident">Direction::Next</span> =&gt; <span class="ident">el</span>.<span class="ident">next_sibling_or_token</span>(),
-            <span class="ident">Direction::Prev</span> =&gt; <span class="ident">el</span>.<span class="ident">prev_sibling_or_token</span>(),
+        direction: Direction,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SyntaxElement&gt; {
+        <span class="kw">let </span>me: SyntaxElement = <span class="self">self</span>.clone().into();
+        iter::successors(<span class="prelude-val">Some</span>(me), <span class="kw">move </span>|el| <span class="kw">match </span>direction {
+            Direction::Next =&gt; el.next_sibling_or_token(),
+            Direction::Prev =&gt; el.prev_sibling_or_token(),
         })
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">descendants</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">preorder</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">event</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
-            <span class="ident">WalkEvent::Enter</span>(<span class="ident">node</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">node</span>),
-            <span class="ident">WalkEvent::Leave</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>descendants(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SyntaxNode&gt; {
+        <span class="self">self</span>.preorder().filter_map(|event| <span class="kw">match </span>event {
+            WalkEvent::Enter(node) =&gt; <span class="prelude-val">Some</span>(node),
+            WalkEvent::Leave(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
         })
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">descendants_with_tokens</span>(
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>descendants_with_tokens(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">direction</span>: <span class="ident">Direction</span>,
-    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">preorder_with_tokens</span>(<span class="ident">direction</span>)
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">event</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
-                <span class="ident">WalkEvent::Enter</span>(<span class="ident">it</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">it</span>),
-                <span class="ident">WalkEvent::Leave</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+        direction: Direction,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SyntaxElement&gt; {
+        <span class="self">self</span>.preorder_with_tokens(direction)
+            .filter_map(|event| <span class="kw">match </span>event {
+                WalkEvent::Enter(it) =&gt; <span class="prelude-val">Some</span>(it),
+                WalkEvent::Leave(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
             })
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">preorder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Preorder</span> {
-        <span class="ident">Preorder::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>preorder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Preorder {
+        Preorder::new(<span class="self">self</span>.clone())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">preorder_with_tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">direction</span>: <span class="ident">Direction</span>) -&gt; <span class="ident">PreorderWithTokens</span> {
-        <span class="ident">PreorderWithTokens::new</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">direction</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>preorder_with_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, direction: Direction) -&gt; PreorderWithTokens {
+        PreorderWithTokens::new(<span class="self">self</span>.clone(), direction)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">preorder_slots</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SlotsPreorder</span> {
-        <span class="ident">SlotsPreorder::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>preorder_slots(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SlotsPreorder {
+        SlotsPreorder::new(<span class="self">self</span>.clone())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_at_offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">offset</span>: <span class="ident">TextSize</span>) -&gt; <span class="ident">TokenAtOffset</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&gt;</span> {
-        <span class="comment">// TODO: this could be faster if we first drill-down to node, and only</span>
-        <span class="comment">// then switch to token search. We should also replace explicit</span>
-        <span class="comment">// recursion with a loop.</span>
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">text_range</span>();
+    <span class="kw">pub fn </span>token_at_offset(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TextSize) -&gt; TokenAtOffset&lt;SyntaxToken&gt; {
+        <span class="comment">// TODO: this could be faster if we first drill-down to node, and only
+        // then switch to token search. We should also replace explicit
+        // recursion with a loop.
+        </span><span class="kw">let </span>range = <span class="self">self</span>.text_range();
         <span class="macro">assert!</span>(
-            <span class="ident">range</span>.<span class="ident">start</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">offset</span> <span class="op">&amp;&amp;</span> <span class="ident">offset</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">range</span>.<span class="ident">end</span>(),
+            range.start() &lt;= offset &amp;&amp; offset &lt;= range.end(),
             <span class="string">&quot;Bad offset: range {:?} offset {:?}&quot;</span>,
-            <span class="ident">range</span>,
-            <span class="ident">offset</span>
+            range,
+            offset
         );
-        <span class="kw">if</span> <span class="ident">range</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">return</span> <span class="ident">TokenAtOffset::None</span>;
+        <span class="kw">if </span>range.is_empty() {
+            <span class="kw">return </span>TokenAtOffset::None;
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">children</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">children_with_tokens</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">child_range</span> <span class="op">=</span> <span class="ident">child</span>.<span class="ident">text_range</span>();
-            <span class="op">!</span><span class="ident">child_range</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">child_range</span>.<span class="ident">contains_inclusive</span>(<span class="ident">offset</span>)
+        <span class="kw">let </span><span class="kw-2">mut </span>children = <span class="self">self</span>.children_with_tokens().filter(|child| {
+            <span class="kw">let </span>child_range = child.text_range();
+            !child_range.is_empty() &amp;&amp; child_range.contains_inclusive(offset)
         });
 
-        <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">children</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">right</span> <span class="op">=</span> <span class="ident">children</span>.<span class="ident">next</span>();
-        <span class="macro">assert!</span>(<span class="ident">children</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+        <span class="kw">let </span>left = children.next().unwrap();
+        <span class="kw">let </span>right = children.next();
+        <span class="macro">assert!</span>(children.next().is_none());
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">right</span>) <span class="op">=</span> <span class="ident">right</span> {
-            <span class="kw">match</span> (<span class="ident">left</span>.<span class="ident">token_at_offset</span>(<span class="ident">offset</span>), <span class="ident">right</span>.<span class="ident">token_at_offset</span>(<span class="ident">offset</span>)) {
-                (<span class="ident">TokenAtOffset::Single</span>(<span class="ident">left</span>), <span class="ident">TokenAtOffset::Single</span>(<span class="ident">right</span>)) =&gt; {
-                    <span class="ident">TokenAtOffset::Between</span>(<span class="ident">left</span>, <span class="ident">right</span>)
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(right) = right {
+            <span class="kw">match </span>(left.token_at_offset(offset), right.token_at_offset(offset)) {
+                (TokenAtOffset::Single(left), TokenAtOffset::Single(right)) =&gt; {
+                    TokenAtOffset::Between(left, right)
                 }
-                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
             }
-        } <span class="kw">else</span> {
-            <span class="ident">left</span>.<span class="ident">token_at_offset</span>(<span class="ident">offset</span>)
+        } <span class="kw">else </span>{
+            left.token_at_offset(offset)
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">covering_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">SyntaxElement</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span>: <span class="ident">SyntaxElement</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into</span>();
-        <span class="kw">loop</span> {
+    <span class="kw">pub fn </span>covering_element(<span class="kw-2">&amp;</span><span class="self">self</span>, range: TextRange) -&gt; SyntaxElement {
+        <span class="kw">let </span><span class="kw-2">mut </span>res: SyntaxElement = <span class="self">self</span>.clone().into();
+        <span class="kw">loop </span>{
             <span class="macro">assert!</span>(
-                <span class="ident">res</span>.<span class="ident">text_range</span>().<span class="ident">contains_range</span>(<span class="ident">range</span>),
+                res.text_range().contains_range(range),
                 <span class="string">&quot;Bad range: node range {:?}, range {:?}&quot;</span>,
-                <span class="ident">res</span>.<span class="ident">text_range</span>(),
-                <span class="ident">range</span>,
+                res.text_range(),
+                range,
             );
-            <span class="ident">res</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">res</span> {
-                <span class="ident">NodeOrToken::Token</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="ident">res</span>,
-                <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">child_or_token_at_range</span>(<span class="ident">range</span>) {
-                    <span class="prelude-val">Some</span>(<span class="ident">it</span>) =&gt; <span class="ident">it</span>,
-                    <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="ident">res</span>,
+            res = <span class="kw">match </span><span class="kw-2">&amp;</span>res {
+                NodeOrToken::Token(<span class="kw">_</span>) =&gt; <span class="kw">return </span>res,
+                NodeOrToken::Node(node) =&gt; <span class="kw">match </span>node.child_or_token_at_range(range) {
+                    <span class="prelude-val">Some</span>(it) =&gt; it,
+                    <span class="prelude-val">None </span>=&gt; <span class="kw">return </span>res,
                 },
             };
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">child_or_token_at_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">rel_range</span> <span class="op">=</span> <span class="ident">range</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>();
-        <span class="self">self</span>.<span class="ident">green</span>()
-            .<span class="ident">slot_at_range</span>(<span class="ident">rel_range</span>)
-            .<span class="ident">and_then</span>(<span class="op">|</span>(<span class="ident">index</span>, <span class="ident">rel_offset</span>, <span class="ident">slot</span>)<span class="op">|</span> {
-                <span class="ident">slot</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">green</span><span class="op">|</span> {
-                    <span class="ident">SyntaxElement::new</span>(
-                        <span class="ident">green</span>,
-                        <span class="self">self</span>.<span class="ident">clone</span>(),
-                        <span class="ident">index</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                        <span class="self">self</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">rel_offset</span>,
+    <span class="kw">pub fn </span>child_or_token_at_range(<span class="kw-2">&amp;</span><span class="self">self</span>, range: TextRange) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="kw">let </span>rel_range = range - <span class="self">self</span>.offset();
+        <span class="self">self</span>.green()
+            .slot_at_range(rel_range)
+            .and_then(|(index, rel_offset, slot)| {
+                slot.as_ref().map(|green| {
+                    SyntaxElement::new(
+                        green,
+                        <span class="self">self</span>.clone(),
+                        index <span class="kw">as </span>u32,
+                        <span class="self">self</span>.offset() + rel_offset,
                     )
                 })
             })
     }
 
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">detach</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">ptr</span>: <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">detach</span>(),
+    <span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">pub fn </span>detach(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            ptr: <span class="self">self</span>.ptr.detach(),
         }
     }
 
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">splice_slots</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">range</span>: <span class="ident">R</span>, <span class="ident">replace_with</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">ops::RangeBounds</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">pub fn </span>splice_slots&lt;R, I&gt;(<span class="self">self</span>, range: R, replace_with: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>R: ops::RangeBounds&lt;usize&gt;,
+        I: Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt;&gt;,
     {
-        <span class="self">Self</span> {
-            <span class="ident">ptr</span>: <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">splice_slots</span>(
-                <span class="ident">range</span>,
-                <span class="ident">replace_with</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">element</span><span class="op">|</span> {
-                    <span class="ident">element</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">child</span>.<span class="ident">detach</span>() {
-                        <span class="ident">NodeOrToken::Node</span>(<span class="ident">it</span>) =&gt; <span class="ident">it</span>.<span class="ident">ptr</span>.<span class="ident">into_green</span>(),
-                        <span class="ident">NodeOrToken::Token</span>(<span class="ident">it</span>) =&gt; <span class="ident">it</span>.<span class="ident">into_green</span>(),
+        <span class="self">Self </span>{
+            ptr: <span class="self">self</span>.ptr.splice_slots(
+                range,
+                replace_with.into_iter().map(|element| {
+                    element.map(|child| <span class="kw">match </span>child.detach() {
+                        NodeOrToken::Node(it) =&gt; it.ptr.into_green(),
+                        NodeOrToken::Token(it) =&gt; it.into_green(),
                     })
                 }),
             ),
         }
     }
 
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_child</span>(<span class="self">self</span>, <span class="ident">prev_elem</span>: <span class="ident">SyntaxElement</span>, <span class="ident">next_elem</span>: <span class="ident">SyntaxElement</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="self">Self</span> {
-            <span class="ident">ptr</span>: <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">replace_child</span>(<span class="ident">prev_elem</span>, <span class="ident">next_elem</span>)<span class="question-mark">?</span>,
+    <span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">pub fn </span>replace_child(<span class="self">self</span>, prev_elem: SyntaxElement, next_elem: SyntaxElement) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="prelude-val">Some</span>(<span class="self">Self </span>{
+            ptr: <span class="self">self</span>.ptr.replace_child(prev_elem, next_elem)<span class="question-mark">?</span>,
         })
     }
 }
 
-<span class="comment">// Identity semantics for hash &amp; eq</span>
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">SyntaxNode</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">key</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">data</span>().<span class="ident">key</span>()
+<span class="comment">// Identity semantics for hash &amp; eq
+</span><span class="kw">impl </span>PartialEq <span class="kw">for </span>SyntaxNode {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>SyntaxNode) -&gt; bool {
+        <span class="self">self</span>.data().key() == other.data().key()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">SyntaxNode</span> {}
+<span class="kw">impl </span>Eq <span class="kw">for </span>SyntaxNode {}
 
-<span class="kw">impl</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">SyntaxNode</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
-        <span class="self">self</span>.<span class="ident">data</span>().<span class="ident">key</span>().<span class="ident">hash</span>(<span class="ident">state</span>);
+<span class="kw">impl </span>Hash <span class="kw">for </span>SyntaxNode {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
+        <span class="self">self</span>.data().key().hash(state);
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">SyntaxNode</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;SyntaxNode&quot;</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;kind&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>())
-            .<span class="ident">field</span>(<span class="string">&quot;text_range&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text_range</span>())
-            .<span class="ident">finish</span>()
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>SyntaxNode {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        f.debug_struct(<span class="string">&quot;SyntaxNode&quot;</span>)
+            .field(<span class="string">&quot;kind&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.kind())
+            .field(<span class="string">&quot;text_range&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.text_range())
+            .finish()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">SyntaxNode</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="self">self</span>.<span class="ident">preorder_with_tokens</span>(<span class="ident">Direction::Next</span>)
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">event</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
-                <span class="ident">WalkEvent::Enter</span>(<span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">token</span>),
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>SyntaxNode {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="self">self</span>.preorder_with_tokens(Direction::Next)
+            .filter_map(|event| <span class="kw">match </span>event {
+                WalkEvent::Enter(NodeOrToken::Token(token)) =&gt; <span class="prelude-val">Some</span>(token),
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             })
-            .<span class="ident">try_for_each</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">fmt::Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">it</span>, <span class="ident">f</span>))
+            .try_for_each(|it| fmt::Display::fmt(<span class="kw-2">&amp;</span>it, f))
     }
 }
 
-<span class="comment">// region: iterators</span>
+<span class="comment">// region: iterators
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">SyntaxNodeChildren</span> {
-    <span class="ident">next</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span>,
+</span><span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SyntaxNodeChildren {
+    next: <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxNodeChildren</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">parent</span>: <span class="ident">SyntaxNode</span>) -&gt; <span class="ident">SyntaxNodeChildren</span> {
-        <span class="ident">SyntaxNodeChildren</span> {
-            <span class="ident">next</span>: <span class="ident">parent</span>.<span class="ident">first_child</span>(),
+<span class="kw">impl </span>SyntaxNodeChildren {
+    <span class="kw">fn </span>new(parent: SyntaxNode) -&gt; SyntaxNodeChildren {
+        SyntaxNodeChildren {
+            next: parent.first_child(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SyntaxNodeChildren</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxNode</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">next</span>.<span class="ident">take</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">next</span><span class="op">|</span> {
-            <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">next</span>.<span class="ident">next_sibling</span>();
-            <span class="ident">next</span>
+<span class="kw">impl </span>Iterator <span class="kw">for </span>SyntaxNodeChildren {
+    <span class="kw">type </span>Item = SyntaxNode;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
+        <span class="self">self</span>.next.take().map(|next| {
+            <span class="self">self</span>.next = next.next_sibling();
+            next
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxNodeChildren</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>SyntaxNodeChildren {}
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">SyntaxElementChildren</span> {
-    <span class="ident">next</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Clone, Debug, Default)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SyntaxElementChildren {
+    next: <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxElementChildren</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">parent</span>: <span class="ident">SyntaxNode</span>) -&gt; <span class="ident">SyntaxElementChildren</span> {
-        <span class="ident">SyntaxElementChildren</span> {
-            <span class="ident">next</span>: <span class="ident">parent</span>.<span class="ident">first_child_or_token</span>(),
+<span class="kw">impl </span>SyntaxElementChildren {
+    <span class="kw">fn </span>new(parent: SyntaxNode) -&gt; SyntaxElementChildren {
+        SyntaxElementChildren {
+            next: parent.first_child_or_token(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SyntaxElementChildren</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxElement</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">next</span>.<span class="ident">take</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">next</span><span class="op">|</span> {
-            <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">next</span>.<span class="ident">next_sibling_or_token</span>();
-            <span class="ident">next</span>
+<span class="kw">impl </span>Iterator <span class="kw">for </span>SyntaxElementChildren {
+    <span class="kw">type </span>Item = SyntaxElement;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="self">self</span>.next.take().map(|next| {
+            <span class="self">self</span>.next = next.next_sibling_or_token();
+            next
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxElementChildren</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>SyntaxElementChildren {}
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Preorder</span> {
-    <span class="ident">start</span>: <span class="ident">SyntaxNode</span>,
-    <span class="ident">next</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">skip_subtree</span>: <span class="ident">bool</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Preorder {
+    start: SyntaxNode,
+    next: <span class="prelude-ty">Option</span>&lt;WalkEvent&lt;SyntaxNode&gt;&gt;,
+    skip_subtree: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">Preorder</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">start</span>: <span class="ident">SyntaxNode</span>) -&gt; <span class="ident">Preorder</span> {
-        <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">WalkEvent::Enter</span>(<span class="ident">start</span>.<span class="ident">clone</span>()));
-        <span class="ident">Preorder</span> {
-            <span class="ident">start</span>,
-            <span class="ident">next</span>,
-            <span class="ident">skip_subtree</span>: <span class="bool-val">false</span>,
+<span class="kw">impl </span>Preorder {
+    <span class="kw">fn </span>new(start: SyntaxNode) -&gt; Preorder {
+        <span class="kw">let </span>next = <span class="prelude-val">Some</span>(WalkEvent::Enter(start.clone()));
+        Preorder {
+            start,
+            next,
+            skip_subtree: <span class="bool-val">false</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">skip_subtree</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">skip_subtree</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">pub fn </span>skip_subtree(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.skip_subtree = <span class="bool-val">true</span>;
     }
 
-    <span class="attribute">#[<span class="ident">cold</span>]</span>
-    <span class="kw">fn</span> <span class="ident">do_skip</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span>.<span class="ident">take</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">next</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">next</span> {
-            <span class="ident">WalkEvent::Enter</span>(<span class="ident">first_child</span>) =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">first_child</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>()),
-            <span class="ident">WalkEvent::Leave</span>(<span class="ident">parent</span>) =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">parent</span>),
+    <span class="attribute">#[cold]
+    </span><span class="kw">fn </span>do_skip(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.next = <span class="self">self</span>.next.take().map(|next| <span class="kw">match </span>next {
+            WalkEvent::Enter(first_child) =&gt; WalkEvent::Leave(first_child.parent().unwrap()),
+            WalkEvent::Leave(parent) =&gt; WalkEvent::Leave(parent),
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Preorder</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span>;
+<span class="kw">impl </span>Iterator <span class="kw">for </span>Preorder {
+    <span class="kw">type </span>Item = WalkEvent&lt;SyntaxNode&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">skip_subtree</span> {
-            <span class="self">self</span>.<span class="ident">do_skip</span>();
-            <span class="self">self</span>.<span class="ident">skip_subtree</span> <span class="op">=</span> <span class="bool-val">false</span>;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;WalkEvent&lt;SyntaxNode&gt;&gt; {
+        <span class="kw">if </span><span class="self">self</span>.skip_subtree {
+            <span class="self">self</span>.do_skip();
+            <span class="self">self</span>.skip_subtree = <span class="bool-val">false</span>;
         }
-        <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span>.<span class="ident">take</span>();
-        <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">next</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">next</span><span class="op">|</span> {
-            <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="ident">next</span> {
-                <span class="ident">WalkEvent::Enter</span>(<span class="ident">node</span>) =&gt; <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">first_child</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">child</span>) =&gt; <span class="ident">WalkEvent::Enter</span>(<span class="ident">child</span>),
-                    <span class="prelude-val">None</span> =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">node</span>.<span class="ident">clone</span>()),
+        <span class="kw">let </span>next = <span class="self">self</span>.next.take();
+        <span class="self">self</span>.next = next.as_ref().and_then(|next| {
+            <span class="prelude-val">Some</span>(<span class="kw">match </span>next {
+                WalkEvent::Enter(node) =&gt; <span class="kw">match </span>node.first_child() {
+                    <span class="prelude-val">Some</span>(child) =&gt; WalkEvent::Enter(child),
+                    <span class="prelude-val">None </span>=&gt; WalkEvent::Leave(node.clone()),
                 },
-                <span class="ident">WalkEvent::Leave</span>(<span class="ident">node</span>) =&gt; {
-                    <span class="kw">if</span> <span class="ident">node</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">start</span> {
-                        <span class="kw">return</span> <span class="prelude-val">None</span>;
+                WalkEvent::Leave(node) =&gt; {
+                    <span class="kw">if </span>node == <span class="kw-2">&amp;</span><span class="self">self</span>.start {
+                        <span class="kw">return </span><span class="prelude-val">None</span>;
                     }
-                    <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">next_sibling</span>() {
-                        <span class="prelude-val">Some</span>(<span class="ident">sibling</span>) =&gt; <span class="ident">WalkEvent::Enter</span>(<span class="ident">sibling</span>),
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">node</span>.<span class="ident">parent</span>()<span class="question-mark">?</span>),
+                    <span class="kw">match </span>node.next_sibling() {
+                        <span class="prelude-val">Some</span>(sibling) =&gt; WalkEvent::Enter(sibling),
+                        <span class="prelude-val">None </span>=&gt; WalkEvent::Leave(node.parent()<span class="question-mark">?</span>),
                     }
                 }
             })
         });
-        <span class="ident">next</span>
+        next
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">Preorder</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>Preorder {}
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">PreorderWithTokens</span> {
-    <span class="ident">start</span>: <span class="ident">SyntaxElement</span>,
-    <span class="ident">next</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">skip_subtree</span>: <span class="ident">bool</span>,
-    <span class="ident">direction</span>: <span class="ident">Direction</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>PreorderWithTokens {
+    start: SyntaxElement,
+    next: <span class="prelude-ty">Option</span>&lt;WalkEvent&lt;SyntaxElement&gt;&gt;,
+    skip_subtree: bool,
+    direction: Direction,
 }
 
-<span class="kw">impl</span> <span class="ident">PreorderWithTokens</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">start</span>: <span class="ident">SyntaxNode</span>, <span class="ident">direction</span>: <span class="ident">Direction</span>) -&gt; <span class="ident">PreorderWithTokens</span> {
-        <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">WalkEvent::Enter</span>(<span class="ident">start</span>.<span class="ident">clone</span>().<span class="ident">into</span>()));
-        <span class="ident">PreorderWithTokens</span> {
-            <span class="ident">start</span>: <span class="ident">start</span>.<span class="ident">into</span>(),
-            <span class="ident">next</span>,
-            <span class="ident">direction</span>,
-            <span class="ident">skip_subtree</span>: <span class="bool-val">false</span>,
+<span class="kw">impl </span>PreorderWithTokens {
+    <span class="kw">fn </span>new(start: SyntaxNode, direction: Direction) -&gt; PreorderWithTokens {
+        <span class="kw">let </span>next = <span class="prelude-val">Some</span>(WalkEvent::Enter(start.clone().into()));
+        PreorderWithTokens {
+            start: start.into(),
+            next,
+            direction,
+            skip_subtree: <span class="bool-val">false</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">skip_subtree</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">skip_subtree</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">pub fn </span>skip_subtree(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.skip_subtree = <span class="bool-val">true</span>;
     }
 
-    <span class="attribute">#[<span class="ident">cold</span>]</span>
-    <span class="kw">fn</span> <span class="ident">do_skip</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span>.<span class="ident">take</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">next</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">next</span> {
-            <span class="ident">WalkEvent::Enter</span>(<span class="ident">first_child</span>) =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">first_child</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>()),
-            <span class="ident">WalkEvent::Leave</span>(<span class="ident">parent</span>) =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">parent</span>),
+    <span class="attribute">#[cold]
+    </span><span class="kw">fn </span>do_skip(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.next = <span class="self">self</span>.next.take().map(|next| <span class="kw">match </span>next {
+            WalkEvent::Enter(first_child) =&gt; WalkEvent::Leave(first_child.parent().unwrap().into()),
+            WalkEvent::Leave(parent) =&gt; WalkEvent::Leave(parent),
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">PreorderWithTokens</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span>;
+<span class="kw">impl </span>Iterator <span class="kw">for </span>PreorderWithTokens {
+    <span class="kw">type </span>Item = WalkEvent&lt;SyntaxElement&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">skip_subtree</span> {
-            <span class="self">self</span>.<span class="ident">do_skip</span>();
-            <span class="self">self</span>.<span class="ident">skip_subtree</span> <span class="op">=</span> <span class="bool-val">false</span>;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;WalkEvent&lt;SyntaxElement&gt;&gt; {
+        <span class="kw">if </span><span class="self">self</span>.skip_subtree {
+            <span class="self">self</span>.do_skip();
+            <span class="self">self</span>.skip_subtree = <span class="bool-val">false</span>;
         }
-        <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span>.<span class="ident">take</span>();
-        <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">next</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">next</span><span class="op">|</span> {
-            <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="ident">next</span> {
-                <span class="ident">WalkEvent::Enter</span>(<span class="ident">el</span>) =&gt; <span class="kw">match</span> <span class="ident">el</span> {
-                    <span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">direction</span> {
-                            <span class="ident">Direction::Next</span> =&gt; <span class="ident">node</span>.<span class="ident">first_child_or_token</span>(),
-                            <span class="ident">Direction::Prev</span> =&gt; <span class="ident">node</span>.<span class="ident">last_child_or_token</span>(),
+        <span class="kw">let </span>next = <span class="self">self</span>.next.take();
+        <span class="self">self</span>.next = next.as_ref().and_then(|next| {
+            <span class="prelude-val">Some</span>(<span class="kw">match </span>next {
+                WalkEvent::Enter(el) =&gt; <span class="kw">match </span>el {
+                    NodeOrToken::Node(node) =&gt; {
+                        <span class="kw">let </span>next = <span class="kw">match </span><span class="self">self</span>.direction {
+                            Direction::Next =&gt; node.first_child_or_token(),
+                            Direction::Prev =&gt; node.last_child_or_token(),
                         };
-                        <span class="kw">match</span> <span class="ident">next</span> {
-                            <span class="prelude-val">Some</span>(<span class="ident">child</span>) =&gt; <span class="ident">WalkEvent::Enter</span>(<span class="ident">child</span>),
-                            <span class="prelude-val">None</span> =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">node</span>.<span class="ident">clone</span>().<span class="ident">into</span>()),
+                        <span class="kw">match </span>next {
+                            <span class="prelude-val">Some</span>(child) =&gt; WalkEvent::Enter(child),
+                            <span class="prelude-val">None </span>=&gt; WalkEvent::Leave(node.clone().into()),
                         }
                     }
-                    <span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">token</span>.<span class="ident">clone</span>().<span class="ident">into</span>()),
+                    NodeOrToken::Token(token) =&gt; WalkEvent::Leave(token.clone().into()),
                 },
-                <span class="ident">WalkEvent::Leave</span>(<span class="ident">el</span>) <span class="kw">if</span> <span class="ident">el</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">start</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
-                <span class="ident">WalkEvent::Leave</span>(<span class="ident">el</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">direction</span> {
-                        <span class="ident">Direction::Next</span> =&gt; <span class="ident">el</span>.<span class="ident">next_sibling_or_token</span>(),
-                        <span class="ident">Direction::Prev</span> =&gt; <span class="ident">el</span>.<span class="ident">prev_sibling_or_token</span>(),
+                WalkEvent::Leave(el) <span class="kw">if </span>el == <span class="kw-2">&amp;</span><span class="self">self</span>.start =&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
+                WalkEvent::Leave(el) =&gt; {
+                    <span class="kw">let </span>next = <span class="kw">match </span><span class="self">self</span>.direction {
+                        Direction::Next =&gt; el.next_sibling_or_token(),
+                        Direction::Prev =&gt; el.prev_sibling_or_token(),
                     };
 
-                    <span class="kw">match</span> <span class="ident">next</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">sibling</span>) =&gt; <span class="ident">WalkEvent::Enter</span>(<span class="ident">sibling</span>),
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">el</span>.<span class="ident">parent</span>()<span class="question-mark">?</span>.<span class="ident">into</span>()),
+                    <span class="kw">match </span>next {
+                        <span class="prelude-val">Some</span>(sibling) =&gt; WalkEvent::Enter(sibling),
+                        <span class="prelude-val">None </span>=&gt; WalkEvent::Leave(el.parent()<span class="question-mark">?</span>.into()),
                     }
                 }
             })
         });
-        <span class="ident">next</span>
+        next
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">PreorderWithTokens</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>PreorderWithTokens {}
 
-<span class="doccomment">/// Represents a cursor to a green node slot. A slot either contains an element or is empty</span>
-<span class="doccomment">/// if the child isn&#39;t present in the source.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">SyntaxSlot</span> {
-    <span class="ident">Node</span>(<span class="ident">SyntaxNode</span>),
-    <span class="ident">Token</span>(<span class="ident">SyntaxToken</span>),
-    <span class="ident">Empty</span> { <span class="ident">parent</span>: <span class="ident">SyntaxNode</span>, <span class="ident">index</span>: <span class="ident">u32</span> },
+<span class="doccomment">/// Represents a cursor to a green node slot. A slot either contains an element or is empty
+/// if the child isn&#39;t present in the source.
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>SyntaxSlot {
+    Node(SyntaxNode),
+    Token(SyntaxToken),
+    Empty { parent: SyntaxNode, index: u32 },
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SyntaxSlot</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">element</span>: <span class="ident">SyntaxElement</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">element</span> {
-            <span class="ident">SyntaxElement::Node</span>(<span class="ident">node</span>) =&gt; <span class="ident">SyntaxSlot::Node</span>(<span class="ident">node</span>),
-            <span class="ident">SyntaxElement::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">SyntaxSlot::Token</span>(<span class="ident">token</span>),
+<span class="kw">impl </span>From&lt;SyntaxElement&gt; <span class="kw">for </span>SyntaxSlot {
+    <span class="kw">fn </span>from(element: SyntaxElement) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>element {
+            SyntaxElement::Node(node) =&gt; SyntaxSlot::Node(node),
+            SyntaxElement::Token(token) =&gt; SyntaxSlot::Token(token),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxSlot</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">mapper</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">SyntaxElement</span>) -&gt; <span class="ident">R</span>,
+<span class="kw">impl </span>SyntaxSlot {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>map&lt;F, R&gt;(<span class="self">self</span>, mapper: F) -&gt; <span class="prelude-ty">Option</span>&lt;R&gt;
+    <span class="kw">where
+        </span>F: FnOnce(SyntaxElement) -&gt; R,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">SyntaxSlot::Node</span>(<span class="ident">node</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">mapper</span>(<span class="ident">SyntaxElement::Node</span>(<span class="ident">node</span>))),
-            <span class="ident">SyntaxSlot::Token</span>(<span class="ident">token</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">mapper</span>(<span class="ident">SyntaxElement::Token</span>(<span class="ident">token</span>))),
-            <span class="ident">SyntaxSlot::Empty</span> { .. } =&gt; <span class="prelude-val">None</span>,
+        <span class="kw">match </span><span class="self">self </span>{
+            SyntaxSlot::Node(node) =&gt; <span class="prelude-val">Some</span>(mapper(SyntaxElement::Node(node))),
+            SyntaxSlot::Token(token) =&gt; <span class="prelude-val">Some</span>(mapper(SyntaxElement::Token(token))),
+            SyntaxSlot::Empty { .. } =&gt; <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="doccomment">/// Iterator over a node&#39;s slots</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">SyntaxSlots</span> {
-    <span class="doccomment">/// Position of the next element to return.</span>
-    <span class="ident">pos</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// Iterator over a node&#39;s slots
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SyntaxSlots {
+    <span class="doccomment">/// Position of the next element to return.
+    </span>pos: u32,
 
-    <span class="doccomment">/// Position of the last returned element from the back.</span>
-    <span class="doccomment">/// Initially points one element past the last slot.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [nth_back]: https://doc.rust-lang.org/std/iter/trait.DoubleEndedIterator.html#method.nth_back</span>
-    <span class="ident">back_pos</span>: <span class="ident">u32</span>,
-    <span class="ident">parent</span>: <span class="ident">SyntaxNode</span>,
+    <span class="doccomment">/// Position of the last returned element from the back.
+    /// Initially points one element past the last slot.
+    ///
+    /// [nth_back]: https://doc.rust-lang.org/std/iter/trait.DoubleEndedIterator.html#method.nth_back
+    </span>back_pos: u32,
+    parent: SyntaxNode,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxSlots</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">parent</span>: <span class="ident">SyntaxNode</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">pos</span>: <span class="number">0</span>,
-            <span class="ident">back_pos</span>: <span class="ident">parent</span>.<span class="ident">green</span>().<span class="ident">slice</span>().<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>,
-            <span class="ident">parent</span>,
+<span class="kw">impl </span>SyntaxSlots {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>new(parent: SyntaxNode) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            pos: <span class="number">0</span>,
+            back_pos: parent.green().slice().len() <span class="kw">as </span>u32,
+            parent,
         }
     }
 
-    <span class="doccomment">/// Returns a slice containing the remaining elements to iterate over</span>
-    <span class="doccomment">/// an empty slice if the iterator reached the end.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">Slot</span>] {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pos</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">back_pos</span> {
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">green</span>().<span class="ident">slice</span>()[<span class="self">self</span>.<span class="ident">pos</span> <span class="kw">as</span> <span class="ident">usize</span>..<span class="self">self</span>.<span class="ident">back_pos</span> <span class="kw">as</span> <span class="ident">usize</span>]
-        } <span class="kw">else</span> {
+    <span class="doccomment">/// Returns a slice containing the remaining elements to iterate over
+    /// an empty slice if the iterator reached the end.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[Slot] {
+        <span class="kw">if </span><span class="self">self</span>.pos &lt; <span class="self">self</span>.back_pos {
+            <span class="kw-2">&amp;</span><span class="self">self</span>.parent.green().slice()[<span class="self">self</span>.pos <span class="kw">as </span>usize..<span class="self">self</span>.back_pos <span class="kw">as </span>usize]
+        } <span class="kw">else </span>{
             <span class="kw-2">&amp;</span>[]
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">map_slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">slot</span>: <span class="kw-2">&amp;</span><span class="ident">Slot</span>, <span class="ident">slot_index</span>: <span class="ident">u32</span>) -&gt; <span class="ident">SyntaxSlot</span> {
-        <span class="kw">match</span> <span class="ident">slot</span> {
-            <span class="ident">Slot::Empty</span> { .. } =&gt; <span class="ident">SyntaxSlot::Empty</span> {
-                <span class="ident">parent</span>: <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">clone</span>(),
-                <span class="ident">index</span>: <span class="ident">slot_index</span>,
+    <span class="kw">fn </span>map_slot(<span class="kw-2">&amp;</span><span class="self">self</span>, slot: <span class="kw-2">&amp;</span>Slot, slot_index: u32) -&gt; SyntaxSlot {
+        <span class="kw">match </span>slot {
+            Slot::Empty { .. } =&gt; SyntaxSlot::Empty {
+                parent: <span class="self">self</span>.parent.clone(),
+                index: slot_index,
             },
-            <span class="ident">Slot::Token</span> { <span class="ident">rel_offset</span>, <span class="ident">token</span> } =&gt; <span class="ident">SyntaxSlot::Token</span>(<span class="ident">SyntaxToken::new</span>(
-                <span class="ident">token</span>,
-                <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">clone</span>(),
-                <span class="ident">slot_index</span>,
-                <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">rel_offset</span>,
+            Slot::Token { rel_offset, token } =&gt; SyntaxSlot::Token(SyntaxToken::new(
+                token,
+                <span class="self">self</span>.parent.clone(),
+                slot_index,
+                <span class="self">self</span>.parent.offset() + rel_offset,
             )),
-            <span class="ident">Slot::Node</span> { <span class="ident">rel_offset</span>, <span class="ident">node</span> } =&gt; <span class="ident">SyntaxSlot::Node</span>(<span class="ident">SyntaxNode::new_child</span>(
-                <span class="ident">node</span>,
-                <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">clone</span>(),
-                <span class="ident">slot_index</span>,
-                <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">rel_offset</span>,
+            Slot::Node { rel_offset, node } =&gt; SyntaxSlot::Node(SyntaxNode::new_child(
+                node,
+                <span class="self">self</span>.parent.clone(),
+                slot_index,
+                <span class="self">self</span>.parent.offset() + rel_offset,
             )),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SyntaxSlots</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxSlot</span>;
+<span class="kw">impl </span>Iterator <span class="kw">for </span>SyntaxSlots {
+    <span class="kw">type </span>Item = SyntaxSlot;
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">slice</span>().<span class="ident">first</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">mapped</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">map_slot</span>(<span class="ident">slot</span>, <span class="self">self</span>.<span class="ident">pos</span>);
-        <span class="self">self</span>.<span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Some</span>(<span class="ident">mapped</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>slot = <span class="self">self</span>.slice().first()<span class="question-mark">?</span>;
+        <span class="kw">let </span>mapped = <span class="self">self</span>.map_slot(slot, <span class="self">self</span>.pos);
+        <span class="self">self</span>.pos += <span class="number">1</span>;
+        <span class="prelude-val">Some</span>(mapped)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">slice</span>().<span class="ident">len</span>();
-        (<span class="ident">len</span>, <span class="prelude-val">Some</span>(<span class="ident">len</span>))
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="kw">let </span>len = <span class="self">self</span>.slice().len();
+        (len, <span class="prelude-val">Some</span>(len))
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">count</span>(<span class="self">self</span>) -&gt; <span class="ident">usize</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>count(<span class="self">self</span>) -&gt; usize
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="self">self</span>.<span class="ident">len</span>()
+        <span class="self">self</span>.len()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">last</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>last(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="self">self</span>.<span class="ident">next_back</span>()
+        <span class="self">self</span>.next_back()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">nth</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="ident">n</span> <span class="kw">as</span> <span class="ident">u32</span>;
-        <span class="self">self</span>.<span class="ident">next</span>()
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">SyntaxSlots</span> {
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">slice</span>().<span class="ident">len</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>nth(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="self">self</span>.pos += n <span class="kw">as </span>u32;
+        <span class="self">self</span>.next()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxSlots</span> {}
-
-<span class="kw">impl</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxSlots</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">slice</span>().<span class="ident">last</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">mapped</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">map_slot</span>(<span class="ident">slot</span>, <span class="self">self</span>.<span class="ident">back_pos</span> <span class="op">-</span> <span class="number">1</span>);
-        <span class="self">self</span>.<span class="ident">back_pos</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Some</span>(<span class="ident">mapped</span>)
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">nth_back</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">back_pos</span> <span class="op">-</span><span class="op">=</span> <span class="ident">n</span> <span class="kw">as</span> <span class="ident">u32</span>;
-        <span class="self">self</span>.<span class="ident">next_back</span>()
+<span class="kw">impl </span>ExactSizeIterator <span class="kw">for </span>SyntaxSlots {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.slice().len()
     }
 }
 
-<span class="doccomment">/// Iterator to visit a node&#39;s slots in pre-order.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">SlotsPreorder</span> {
-    <span class="ident">start</span>: <span class="ident">SyntaxNode</span>,
-    <span class="ident">next</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxSlot</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>SyntaxSlots {}
 
-<span class="kw">impl</span> <span class="ident">SlotsPreorder</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">start</span>: <span class="ident">SyntaxNode</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">WalkEvent::Enter</span>(<span class="ident">SyntaxSlot::Node</span>(<span class="ident">start</span>.<span class="ident">clone</span>())));
-        <span class="ident">SlotsPreorder</span> { <span class="ident">start</span>, <span class="ident">next</span> }
+<span class="kw">impl </span>DoubleEndedIterator <span class="kw">for </span>SyntaxSlots {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>slot = <span class="self">self</span>.slice().last()<span class="question-mark">?</span>;
+        <span class="kw">let </span>mapped = <span class="self">self</span>.map_slot(slot, <span class="self">self</span>.back_pos - <span class="number">1</span>);
+        <span class="self">self</span>.back_pos -= <span class="number">1</span>;
+        <span class="prelude-val">Some</span>(mapped)
+    }
+
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>nth_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="self">self</span>.back_pos -= n <span class="kw">as </span>u32;
+        <span class="self">self</span>.next_back()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SlotsPreorder</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxSlot</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Iterator to visit a node&#39;s slots in pre-order.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SlotsPreorder {
+    start: SyntaxNode,
+    next: <span class="prelude-ty">Option</span>&lt;WalkEvent&lt;SyntaxSlot&gt;&gt;,
+}
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxSlot</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span>.<span class="ident">take</span>();
-        <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">next</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">next</span><span class="op">|</span> {
-            <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="ident">next</span> {
-                <span class="ident">WalkEvent::Enter</span>(<span class="ident">slot</span>) =&gt; <span class="kw">match</span> <span class="ident">slot</span> {
-                    <span class="ident">SyntaxSlot::Empty</span> { .. } <span class="op">|</span> <span class="ident">SyntaxSlot::Token</span>(<span class="kw">_</span>) =&gt; {
-                        <span class="ident">WalkEvent::Leave</span>(<span class="ident">slot</span>.<span class="ident">clone</span>())
+<span class="kw">impl </span>SlotsPreorder {
+    <span class="kw">fn </span>new(start: SyntaxNode) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>next = <span class="prelude-val">Some</span>(WalkEvent::Enter(SyntaxSlot::Node(start.clone())));
+        SlotsPreorder { start, next }
+    }
+}
+
+<span class="kw">impl </span>Iterator <span class="kw">for </span>SlotsPreorder {
+    <span class="kw">type </span>Item = WalkEvent&lt;SyntaxSlot&gt;;
+
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;WalkEvent&lt;SyntaxSlot&gt;&gt; {
+        <span class="kw">let </span>next = <span class="self">self</span>.next.take();
+        <span class="self">self</span>.next = next.as_ref().and_then(|next| {
+            <span class="prelude-val">Some</span>(<span class="kw">match </span>next {
+                WalkEvent::Enter(slot) =&gt; <span class="kw">match </span>slot {
+                    SyntaxSlot::Empty { .. } | SyntaxSlot::Token(<span class="kw">_</span>) =&gt; {
+                        WalkEvent::Leave(slot.clone())
                     }
-                    <span class="ident">SyntaxSlot::Node</span>(<span class="ident">node</span>) =&gt; <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">slots</span>().<span class="ident">next</span>() {
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">SyntaxSlot::Node</span>(<span class="ident">node</span>.<span class="ident">clone</span>())),
-                        <span class="prelude-val">Some</span>(<span class="ident">first_slot</span>) =&gt; <span class="ident">WalkEvent::Enter</span>(<span class="ident">first_slot</span>),
+                    SyntaxSlot::Node(node) =&gt; <span class="kw">match </span>node.slots().next() {
+                        <span class="prelude-val">None </span>=&gt; WalkEvent::Leave(SyntaxSlot::Node(node.clone())),
+                        <span class="prelude-val">Some</span>(first_slot) =&gt; WalkEvent::Enter(first_slot),
                     },
                 },
-                <span class="ident">WalkEvent::Leave</span>(<span class="ident">slot</span>) =&gt; {
-                    <span class="kw">let</span> (<span class="ident">parent</span>, <span class="ident">slot_index</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">slot</span> {
-                        <span class="ident">SyntaxSlot::Empty</span> { <span class="ident">parent</span>, <span class="ident">index</span> } =&gt; (<span class="ident">parent</span>.<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>),
-                        <span class="ident">SyntaxSlot::Token</span>(<span class="ident">token</span>) =&gt; (<span class="ident">token</span>.<span class="ident">parent</span>()<span class="question-mark">?</span>, <span class="ident">token</span>.<span class="ident">index</span>()),
-                        <span class="ident">SyntaxSlot::Node</span>(<span class="ident">node</span>) =&gt; {
-                            <span class="kw">if</span> <span class="ident">node</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">start</span> {
-                                <span class="kw">return</span> <span class="prelude-val">None</span>;
+                WalkEvent::Leave(slot) =&gt; {
+                    <span class="kw">let </span>(parent, slot_index) = <span class="kw">match </span>slot {
+                        SyntaxSlot::Empty { parent, index } =&gt; (parent.clone(), <span class="kw-2">*</span>index <span class="kw">as </span>usize),
+                        SyntaxSlot::Token(token) =&gt; (token.parent()<span class="question-mark">?</span>, token.index()),
+                        SyntaxSlot::Node(node) =&gt; {
+                            <span class="kw">if </span>node == <span class="kw-2">&amp;</span><span class="self">self</span>.start {
+                                <span class="kw">return </span><span class="prelude-val">None</span>;
                             }
 
-                            (<span class="ident">node</span>.<span class="ident">parent</span>()<span class="question-mark">?</span>, <span class="ident">node</span>.<span class="ident">index</span>())
+                            (node.parent()<span class="question-mark">?</span>, node.index())
                         }
                     };
 
-                    <span class="kw">let</span> <span class="ident">next_slot</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">slots</span>().<span class="ident">nth</span>(<span class="ident">slot_index</span> <span class="op">+</span> <span class="number">1</span>);
-                    <span class="kw">match</span> <span class="ident">next_slot</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">slot</span>) =&gt; <span class="ident">WalkEvent::Enter</span>(<span class="ident">slot</span>),
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">WalkEvent::Leave</span>(<span class="ident">SyntaxSlot::Node</span>(<span class="ident">parent</span>)),
+                    <span class="kw">let </span>next_slot = parent.slots().nth(slot_index + <span class="number">1</span>);
+                    <span class="kw">match </span>next_slot {
+                        <span class="prelude-val">Some</span>(slot) =&gt; WalkEvent::Enter(slot),
+                        <span class="prelude-val">None </span>=&gt; WalkEvent::Leave(SyntaxSlot::Node(parent)),
                     }
                 }
             })
         });
-        <span class="ident">next</span>
+        next
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">SlotsPreorder</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>SlotsPreorder {}
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Siblings</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenNodeData</span>,
-    <span class="ident">start_slot</span>: <span class="ident">u32</span>,
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Siblings&lt;<span class="lifetime">&#39;a</span>&gt; {
+    parent: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenNodeData,
+    start_slot: u32,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Siblings</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">GreenNodeData</span>, <span class="ident">start_slot</span>: <span class="ident">u32</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Siblings&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>new(parent: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GreenNodeData, start_slot: u32) -&gt; <span class="self">Self </span>{
         <span class="macro">assert!</span>(
-            (<span class="ident">start_slot</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">&lt;</span> <span class="ident">parent</span>.<span class="ident">slots</span>().<span class="ident">len</span>(),
+            (start_slot <span class="kw">as </span>usize) &lt; parent.slots().len(),
             <span class="string">&quot;Start slot {} out of bounds {}&quot;</span>,
-            <span class="ident">start_slot</span>,
-            <span class="ident">parent</span>.<span class="ident">slots</span>().<span class="ident">len</span>()
+            start_slot,
+            parent.slots().len()
         );
 
-        <span class="self">Self</span> { <span class="ident">parent</span>, <span class="ident">start_slot</span> }
+        <span class="self">Self </span>{ parent, start_slot }
     }
 
-    <span class="doccomment">/// Creates an iterator over the siblings following the start node.</span>
-    <span class="doccomment">/// For example, the following siblings of the if statement&#39;s condition are</span>
-    <span class="doccomment">/// * the consequence</span>
-    <span class="doccomment">/// * potentially the else clause</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">following</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Children</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slots</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">slots</span>().<span class="ident">enumerate</span>();
+    <span class="doccomment">/// Creates an iterator over the siblings following the start node.
+    /// For example, the following siblings of the if statement&#39;s condition are
+    /// * the consequence
+    /// * potentially the else clause
+    </span><span class="kw">pub fn </span>following(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Children&lt;<span class="lifetime">&#39;a</span>&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>slots = <span class="self">self</span>.parent.slots().enumerate();
 
-        <span class="comment">// Navigate to the start slot so that calling `next` returns the first following sibling</span>
-        <span class="ident">slots</span>.<span class="ident">nth</span>(<span class="self">self</span>.<span class="ident">start_slot</span> <span class="kw">as</span> <span class="ident">usize</span>);
+        <span class="comment">// Navigate to the start slot so that calling `next` returns the first following sibling
+        </span>slots.nth(<span class="self">self</span>.start_slot <span class="kw">as </span>usize);
 
-        <span class="ident">Children::new</span>(<span class="ident">slots</span>)
+        Children::new(slots)
     }
 
-    <span class="doccomment">/// Creates an iterator over the siblings preceding the start node in reverse order.</span>
-    <span class="doccomment">/// For example, the preceding siblings of the if statement&#39;s condition are:</span>
-    <span class="doccomment">/// * opening parentheses: (</span>
-    <span class="doccomment">/// * if keyword: if</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">previous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Child</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slots</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">slots</span>().<span class="ident">enumerate</span>();
+    <span class="doccomment">/// Creates an iterator over the siblings preceding the start node in reverse order.
+    /// For example, the preceding siblings of the if statement&#39;s condition are:
+    /// * opening parentheses: (
+    /// * if keyword: if
+    </span><span class="kw">pub fn </span>previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = Child&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>slots = <span class="self">self</span>.parent.slots().enumerate();
 
-        <span class="comment">// Navigate to the start slot from the back so that calling `next_back` (or rev().next()) returns</span>
-        <span class="comment">// the first slot preceding the start node</span>
-        <span class="ident">slots</span>.<span class="ident">nth_back</span>(<span class="ident">slots</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">start_slot</span> <span class="kw">as</span> <span class="ident">usize</span>);
+        <span class="comment">// Navigate to the start slot from the back so that calling `next_back` (or rev().next()) returns
+        // the first slot preceding the start node
+        </span>slots.nth_back(slots.len() - <span class="number">1 </span>- <span class="self">self</span>.start_slot <span class="kw">as </span>usize);
 
-        <span class="ident">Children::new</span>(<span class="ident">slots</span>).<span class="ident">rev</span>()
+        Children::new(slots).rev()
     }
 }
 
-<span class="comment">// endregion</span>
+<span class="comment">// endregion
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::raw_language</span>::{<span class="ident">RawLanguageKind</span>, <span class="ident">RawSyntaxTreeBuilder</span>};
+</span><span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::raw_language::{RawLanguageKind, RawSyntaxTreeBuilder};
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">slots_iter</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::EXPRESSION_LIST</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>slots_iter() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
+        builder.start_node(RawLanguageKind::EXPRESSION_LIST);
 
-        <span class="kw">for</span> <span class="ident">number</span> <span class="kw">in</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>] {
-            <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-            <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="kw-2">&amp;</span><span class="ident">number</span>.<span class="ident">to_string</span>());
-            <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        <span class="kw">for </span>number <span class="kw">in </span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>] {
+            builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+            builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="kw-2">&amp;</span>number.to_string());
+            builder.finish_node();
         }
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span>list = builder.finish();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">slots</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = list.slots();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">size_hint</span>(), (<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>)));
+        <span class="macro">assert_eq!</span>(iter.size_hint(), (<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>)));
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">iter</span>.<span class="ident">next</span>()
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">slot</span><span class="op">|</span> <span class="ident">slot</span>.<span class="ident">into_node</span>())
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            iter.next()
+                .and_then(|slot| slot.into_node())
+                .map(|node| node.text().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;1&quot;</span>)
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">size_hint</span>(), (<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>)));
+        <span class="macro">assert_eq!</span>(iter.size_hint(), (<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>)));
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">iter</span>.<span class="ident">next_back</span>()
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">slot</span><span class="op">|</span> <span class="ident">slot</span>.<span class="ident">into_node</span>())
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            iter.next_back()
+                .and_then(|slot| slot.into_node())
+                .map(|node| node.text().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;4&quot;</span>)
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">size_hint</span>(), (<span class="number">2</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>)));
+        <span class="macro">assert_eq!</span>(iter.size_hint(), (<span class="number">2</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>)));
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">iter</span>.<span class="ident">last</span>()
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">slot</span><span class="op">|</span> <span class="ident">slot</span>.<span class="ident">into_node</span>())
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            iter.last()
+                .and_then(|slot| slot.into_node())
+                .map(|node| node.text().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;3&quot;</span>)
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

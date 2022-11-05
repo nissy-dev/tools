@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/formatter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>formatter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/formatter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>formatter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -286,293 +286,293 @@
 <span id="286">286</span>
 <span id="287">287</span>
 <span id="288">288</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::buffer::BufferSnapshot</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::builders</span>::{<span class="ident">FillBuilder</span>, <span class="ident">JoinBuilder</span>, <span class="ident">JoinNodesBuilder</span>, <span class="ident">Line</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">Arguments</span>, <span class="ident">Buffer</span>, <span class="ident">Comments</span>, <span class="ident">CstFormatContext</span>, <span class="ident">FormatContext</span>, <span class="ident">FormatState</span>, <span class="ident">FormatStateSnapshot</span>,
-    <span class="ident">GroupId</span>, <span class="ident">VecBuffer</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::buffer::BufferSnapshot;
+<span class="kw">use </span><span class="kw">crate</span>::builders::{FillBuilder, JoinBuilder, JoinNodesBuilder, Line};
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use crate</span>::{
+    Arguments, Buffer, Comments, CstFormatContext, FormatContext, FormatState, FormatStateSnapshot,
+    GroupId, VecBuffer,
 };
 
-<span class="doccomment">/// Handles the formatting of a CST and stores the context how the CST should be formatted (user preferences).</span>
-<span class="doccomment">/// The formatter is passed to the [Format] implementation of every node in the CST so that they</span>
-<span class="doccomment">/// can use it to format their children.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Handles the formatting of a CST and stores the context how the CST should be formatted (user preferences).
+/// The formatter is passed to the [Format] implementation of every node in the CST so that they
+/// can use it to format their children.
+</span><span class="kw">pub struct </span>Formatter&lt;<span class="lifetime">&#39;buf</span>, Context&gt; {
+    <span class="kw">pub</span>(<span class="kw">super</span>) buffer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf </span><span class="kw-2">mut </span><span class="kw">dyn </span>Buffer&lt;Context = Context&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;buf</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new context that uses the given formatter context</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf</span> <span class="kw-2">mut</span> (<span class="kw">dyn</span> <span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;buf</span>)) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">buffer</span> }
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;buf</span>, Context&gt; Formatter&lt;<span class="lifetime">&#39;buf</span>, Context&gt; {
+    <span class="doccomment">/// Creates a new context that uses the given formatter context
+    </span><span class="kw">pub fn </span>new(buffer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;buf </span><span class="kw-2">mut </span>(<span class="kw">dyn </span>Buffer&lt;Context = Context&gt; + <span class="lifetime">&#39;buf</span>)) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ buffer }
     }
 
-    <span class="doccomment">/// Returns the format options</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Context::Options</span>
-    <span class="kw">where</span>
-        <span class="ident">Context</span>: <span class="ident">FormatContext</span>,
+    <span class="doccomment">/// Returns the format options
+    </span><span class="kw">pub fn </span>options(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Context::Options
+    <span class="kw">where
+        </span>Context: FormatContext,
     {
-        <span class="self">self</span>.<span class="ident">context</span>().<span class="ident">options</span>()
+        <span class="self">self</span>.context().options()
     }
 
-    <span class="doccomment">/// Returns the Context specifying how to format the current CST</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Context</span> {
-        <span class="self">self</span>.<span class="ident">state</span>().<span class="ident">context</span>()
+    <span class="doccomment">/// Returns the Context specifying how to format the current CST
+    </span><span class="kw">pub fn </span>context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Context {
+        <span class="self">self</span>.state().context()
     }
 
-    <span class="doccomment">/// Returns a mutable reference to the context.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">context_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Context</span> {
-        <span class="self">self</span>.<span class="ident">state_mut</span>().<span class="ident">context_mut</span>()
+    <span class="doccomment">/// Returns a mutable reference to the context.
+    </span><span class="kw">pub fn </span>context_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Context {
+        <span class="self">self</span>.state_mut().context_mut()
     }
 
-    <span class="doccomment">/// Creates a new group id that is unique to this document. The passed debug name is used in the</span>
-    <span class="doccomment">/// [std::fmt::Debug] of the document if this is a debug build.</span>
-    <span class="doccomment">/// The name is unused for production builds and has no meaning on the equality of two group ids.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">group_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">debug_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="ident">GroupId</span> {
-        <span class="self">self</span>.<span class="ident">state</span>().<span class="ident">group_id</span>(<span class="ident">debug_name</span>)
+    <span class="doccomment">/// Creates a new group id that is unique to this document. The passed debug name is used in the
+    /// [std::fmt::Debug] of the document if this is a debug build.
+    /// The name is unused for production builds and has no meaning on the equality of two group ids.
+    </span><span class="kw">pub fn </span>group_id(<span class="kw-2">&amp;</span><span class="self">self</span>, debug_name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; GroupId {
+        <span class="self">self</span>.state().group_id(debug_name)
     }
 
-    <span class="doccomment">/// Joins multiple [Format] together without any separator</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// use rome_formatter::format;</span>
-    <span class="doccomment">/// use rome_formatter::prelude::*;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # fn main() -&gt; FormatResult&lt;()&gt; {</span>
-    <span class="doccomment">/// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {</span>
-    <span class="doccomment">///     f.join()</span>
-    <span class="doccomment">///         .entry(&amp;text(&quot;a&quot;))</span>
-    <span class="doccomment">///         .entry(&amp;space())</span>
-    <span class="doccomment">///         .entry(&amp;text(&quot;+&quot;))</span>
-    <span class="doccomment">///         .entry(&amp;space())</span>
-    <span class="doccomment">///         .entry(&amp;text(&quot;b&quot;))</span>
-    <span class="doccomment">///         .finish()</span>
-    <span class="doccomment">/// })])?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     &quot;a + b&quot;,</span>
-    <span class="doccomment">///     formatted.print()?.as_code()</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// # Ok(())</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">join</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">JoinBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, (), <span class="ident">Context</span><span class="op">&gt;</span> {
-        <span class="ident">JoinBuilder::new</span>(<span class="self">self</span>)
+    <span class="doccomment">/// Joins multiple [Format] together without any separator
+    ///
+    /// ## Examples
+    ///
+    /// ```rust
+    /// use rome_formatter::format;
+    /// use rome_formatter::prelude::*;
+    ///
+    /// # fn main() -&gt; FormatResult&lt;()&gt; {
+    /// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {
+    ///     f.join()
+    ///         .entry(&amp;text(&quot;a&quot;))
+    ///         .entry(&amp;space())
+    ///         .entry(&amp;text(&quot;+&quot;))
+    ///         .entry(&amp;space())
+    ///         .entry(&amp;text(&quot;b&quot;))
+    ///         .finish()
+    /// })])?;
+    ///
+    /// assert_eq!(
+    ///     &quot;a + b&quot;,
+    ///     formatted.print()?.as_code()
+    /// );
+    /// # Ok(())
+    /// # }
+    /// ```
+    </span><span class="kw">pub fn </span>join&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>) -&gt; JoinBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, (), Context&gt; {
+        JoinBuilder::new(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Joins the objects by placing the specified separator between every two items.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Joining different tokens by separating them with a comma and a space.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_formatter::{format, format_args};</span>
-    <span class="doccomment">/// use rome_formatter::prelude::*;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # fn main() -&gt; FormatResult&lt;()&gt; {</span>
-    <span class="doccomment">/// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {</span>
-    <span class="doccomment">///     f.join_with(&amp;format_args!(text(&quot;,&quot;), space()))</span>
-    <span class="doccomment">///         .entry(&amp;text(&quot;1&quot;))</span>
-    <span class="doccomment">///         .entry(&amp;text(&quot;2&quot;))</span>
-    <span class="doccomment">///         .entry(&amp;text(&quot;3&quot;))</span>
-    <span class="doccomment">///         .entry(&amp;text(&quot;4&quot;))</span>
-    <span class="doccomment">///         .finish()</span>
-    <span class="doccomment">/// })])?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     &quot;1, 2, 3, 4&quot;,</span>
-    <span class="doccomment">///     formatted.print()?.as_code()</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// # Ok(())</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">join_with</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Joiner</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">joiner</span>: <span class="ident">Joiner</span>,
-    ) -&gt; <span class="ident">JoinBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, <span class="ident">Joiner</span>, <span class="ident">Context</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">Joiner</span>: <span class="ident">Format</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Joins the objects by placing the specified separator between every two items.
+    ///
+    /// ## Examples
+    ///
+    /// Joining different tokens by separating them with a comma and a space.
+    ///
+    /// ```
+    /// use rome_formatter::{format, format_args};
+    /// use rome_formatter::prelude::*;
+    ///
+    /// # fn main() -&gt; FormatResult&lt;()&gt; {
+    /// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {
+    ///     f.join_with(&amp;format_args!(text(&quot;,&quot;), space()))
+    ///         .entry(&amp;text(&quot;1&quot;))
+    ///         .entry(&amp;text(&quot;2&quot;))
+    ///         .entry(&amp;text(&quot;3&quot;))
+    ///         .entry(&amp;text(&quot;4&quot;))
+    ///         .finish()
+    /// })])?;
+    ///
+    /// assert_eq!(
+    ///     &quot;1, 2, 3, 4&quot;,
+    ///     formatted.print()?.as_code()
+    /// );
+    /// # Ok(())
+    /// # }
+    /// ```
+    </span><span class="kw">pub fn </span>join_with&lt;<span class="lifetime">&#39;a</span>, Joiner&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>,
+        joiner: Joiner,
+    ) -&gt; JoinBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, Joiner, Context&gt;
+    <span class="kw">where
+        </span>Joiner: Format&lt;Context&gt;,
     {
-        <span class="ident">JoinBuilder::with_separator</span>(<span class="self">self</span>, <span class="ident">joiner</span>)
+        JoinBuilder::with_separator(<span class="self">self</span>, joiner)
     }
 
-    <span class="doccomment">/// Specialized version of [crate::Formatter::join_with] for joining SyntaxNodes separated by a space, soft</span>
-    <span class="doccomment">/// line break or empty line depending on the input file.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This functions inspects the input source and separates consecutive elements with either</span>
-    <span class="doccomment">/// a [crate::builders::soft_line_break_or_space] or [crate::builders::empty_line] depending on how many line breaks were</span>
-    <span class="doccomment">/// separating the elements in the original file.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">join_nodes_with_soft_line</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>,
-    ) -&gt; <span class="ident">JoinNodesBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, <span class="ident">Line</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-        <span class="ident">JoinNodesBuilder::new</span>(<span class="ident">soft_line_break_or_space</span>(), <span class="self">self</span>)
+    <span class="doccomment">/// Specialized version of [crate::Formatter::join_with] for joining SyntaxNodes separated by a space, soft
+    /// line break or empty line depending on the input file.
+    ///
+    /// This functions inspects the input source and separates consecutive elements with either
+    /// a [crate::builders::soft_line_break_or_space] or [crate::builders::empty_line] depending on how many line breaks were
+    /// separating the elements in the original file.
+    </span><span class="kw">pub fn </span>join_nodes_with_soft_line&lt;<span class="lifetime">&#39;a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>,
+    ) -&gt; JoinNodesBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, Line, Context&gt; {
+        JoinNodesBuilder::new(soft_line_break_or_space(), <span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Specialized version of [crate::Formatter::join_with] for joining SyntaxNodes separated by one or more</span>
-    <span class="doccomment">/// line breaks depending on the input file.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This functions inspects the input source and separates consecutive elements with either</span>
-    <span class="doccomment">/// a [crate::builders::hard_line_break] or [crate::builders::empty_line] depending on how many line breaks were separating the</span>
-    <span class="doccomment">/// elements in the original file.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">join_nodes_with_hardline</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">JoinNodesBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, <span class="ident">Line</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-        <span class="ident">JoinNodesBuilder::new</span>(<span class="ident">hard_line_break</span>(), <span class="self">self</span>)
+    <span class="doccomment">/// Specialized version of [crate::Formatter::join_with] for joining SyntaxNodes separated by one or more
+    /// line breaks depending on the input file.
+    ///
+    /// This functions inspects the input source and separates consecutive elements with either
+    /// a [crate::builders::hard_line_break] or [crate::builders::empty_line] depending on how many line breaks were separating the
+    /// elements in the original file.
+    </span><span class="kw">pub fn </span>join_nodes_with_hardline&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>) -&gt; JoinNodesBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, Line, Context&gt; {
+        JoinNodesBuilder::new(hard_line_break(), <span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Concatenates a list of [crate::Format] objects with spaces and line breaks to fit</span>
-    <span class="doccomment">/// them on as few lines as possible. Each element introduces a conceptual group. The printer</span>
-    <span class="doccomment">/// first tries to print the item in flat mode but then prints it in expanded mode if it doesn&#39;t fit.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// use rome_formatter::prelude::*;</span>
-    <span class="doccomment">/// use rome_formatter::{format, format_args};</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # fn main() -&gt; FormatResult&lt;()&gt; {</span>
-    <span class="doccomment">/// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {</span>
-    <span class="doccomment">///     f.fill()</span>
-    <span class="doccomment">///         .entry(&amp;soft_line_break_or_space(), &amp;text(&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;))</span>
-    <span class="doccomment">///         .entry(&amp;soft_line_break_or_space(), &amp;text(&quot;bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb&quot;))</span>
-    <span class="doccomment">///         .entry(&amp;soft_line_break_or_space(), &amp;text(&quot;cccccccccccccccccccccccccccccc&quot;))</span>
-    <span class="doccomment">///         .entry(&amp;soft_line_break_or_space(), &amp;text(&quot;dddddddddddddddddddddddddddddd&quot;))</span>
-    <span class="doccomment">///         .finish()</span>
-    <span class="doccomment">/// })])?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\ncccccccccccccccccccccccccccccc dddddddddddddddddddddddddddddd&quot;,</span>
-    <span class="doccomment">///     formatted.print()?.as_code()</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// # Ok(())</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// use rome_formatter::prelude::*;</span>
-    <span class="doccomment">/// use rome_formatter::{format, format_args};</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # fn main() -&gt; FormatResult&lt;()&gt; {</span>
-    <span class="doccomment">/// let entries = vec![</span>
-    <span class="doccomment">///     text(&quot;&lt;b&gt;Important: &lt;/b&gt;&quot;),</span>
-    <span class="doccomment">///     text(&quot;Please do not commit memory bugs such as segfaults, buffer overflows, etc. otherwise you &quot;),</span>
-    <span class="doccomment">///     text(&quot;&lt;em&gt;will&lt;/em&gt;&quot;),</span>
-    <span class="doccomment">///     text(&quot; be reprimanded&quot;)</span>
-    <span class="doccomment">/// ];</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {</span>
-    <span class="doccomment">///     f.fill().entries(&amp;soft_line_break(), entries.iter()).finish()</span>
-    <span class="doccomment">/// })])?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     &amp;std::format!(&quot;&lt;b&gt;Important: &lt;/b&gt;\nPlease do not commit memory bugs such as segfaults, buffer overflows, etc. otherwise you \n&lt;em&gt;will&lt;/em&gt; be reprimanded&quot;),</span>
-    <span class="doccomment">///     formatted.print()?.as_code()</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// # Ok(())</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fill</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">FillBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-        <span class="ident">FillBuilder::new</span>(<span class="self">self</span>)
+    <span class="doccomment">/// Concatenates a list of [crate::Format] objects with spaces and line breaks to fit
+    /// them on as few lines as possible. Each element introduces a conceptual group. The printer
+    /// first tries to print the item in flat mode but then prints it in expanded mode if it doesn&#39;t fit.
+    ///
+    /// ## Examples
+    ///
+    /// ```rust
+    /// use rome_formatter::prelude::*;
+    /// use rome_formatter::{format, format_args};
+    ///
+    /// # fn main() -&gt; FormatResult&lt;()&gt; {
+    /// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {
+    ///     f.fill()
+    ///         .entry(&amp;soft_line_break_or_space(), &amp;text(&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;))
+    ///         .entry(&amp;soft_line_break_or_space(), &amp;text(&quot;bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb&quot;))
+    ///         .entry(&amp;soft_line_break_or_space(), &amp;text(&quot;cccccccccccccccccccccccccccccc&quot;))
+    ///         .entry(&amp;soft_line_break_or_space(), &amp;text(&quot;dddddddddddddddddddddddddddddd&quot;))
+    ///         .finish()
+    /// })])?;
+    ///
+    /// assert_eq!(
+    ///     &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\ncccccccccccccccccccccccccccccc dddddddddddddddddddddddddddddd&quot;,
+    ///     formatted.print()?.as_code()
+    /// );
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ```rust
+    /// use rome_formatter::prelude::*;
+    /// use rome_formatter::{format, format_args};
+    ///
+    /// # fn main() -&gt; FormatResult&lt;()&gt; {
+    /// let entries = vec![
+    ///     text(&quot;&lt;b&gt;Important: &lt;/b&gt;&quot;),
+    ///     text(&quot;Please do not commit memory bugs such as segfaults, buffer overflows, etc. otherwise you &quot;),
+    ///     text(&quot;&lt;em&gt;will&lt;/em&gt;&quot;),
+    ///     text(&quot; be reprimanded&quot;)
+    /// ];
+    ///
+    /// let formatted = format!(SimpleFormatContext::default(), [format_with(|f| {
+    ///     f.fill().entries(&amp;soft_line_break(), entries.iter()).finish()
+    /// })])?;
+    ///
+    /// assert_eq!(
+    ///     &amp;std::format!(&quot;&lt;b&gt;Important: &lt;/b&gt;\nPlease do not commit memory bugs such as segfaults, buffer overflows, etc. otherwise you \n&lt;em&gt;will&lt;/em&gt; be reprimanded&quot;),
+    ///     formatted.print()?.as_code()
+    /// );
+    /// # Ok(())
+    /// # }
+    /// ```
+    </span><span class="kw">pub fn </span>fill&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>) -&gt; FillBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;buf</span>, Context&gt; {
+        FillBuilder::new(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Formats `content` into an interned element without writing it to the formatter&#39;s buffer.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">intern</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Format</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">VecBuffer::new</span>(<span class="self">self</span>.<span class="ident">state_mut</span>());
-        <span class="macro">crate::write!</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>, [<span class="ident">content</span>])<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">into_vec</span>();
+    <span class="doccomment">/// Formats `content` into an interned element without writing it to the formatter&#39;s buffer.
+    </span><span class="kw">pub fn </span>intern(<span class="kw-2">&amp;mut </span><span class="self">self</span>, content: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Format&lt;Context&gt;) -&gt; FormatResult&lt;<span class="prelude-ty">Option</span>&lt;FormatElement&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = VecBuffer::new(<span class="self">self</span>.state_mut());
+        <span class="macro">crate::write!</span>(<span class="kw-2">&amp;mut </span>buffer, [content])<span class="question-mark">?</span>;
+        <span class="kw">let </span>elements = buffer.into_vec();
 
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">intern_vec</span>(<span class="ident">elements</span>))
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.intern_vec(elements))
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">intern_vec</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">elements</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">elements</span>.<span class="ident">len</span>() {
-            <span class="number">0</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="comment">// Doesn&#39;t get cheaper than calling clone, use the element directly</span>
-            <span class="comment">// SAFETY: Safe because of the `len == 1` check in the match arm.</span>
-            <span class="number">1</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">elements</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>()),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">FormatElement::Interned</span>(<span class="ident">Interned::new</span>(<span class="ident">elements</span>))),
+    <span class="kw">pub fn </span>intern_vec(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>elements: Vec&lt;FormatElement&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;FormatElement&gt; {
+        <span class="kw">match </span>elements.len() {
+            <span class="number">0 </span>=&gt; <span class="prelude-val">None</span>,
+            <span class="comment">// Doesn&#39;t get cheaper than calling clone, use the element directly
+            // SAFETY: Safe because of the `len == 1` check in the match arm.
+            </span><span class="number">1 </span>=&gt; <span class="prelude-val">Some</span>(elements.pop().unwrap()),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(FormatElement::Interned(Interned::new(elements))),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Context</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Context</span>: <span class="ident">FormatContext</span>,
+<span class="kw">impl</span>&lt;Context&gt; Formatter&lt;<span class="lifetime">&#39;_</span>, Context&gt;
+<span class="kw">where
+    </span>Context: FormatContext,
 {
-    <span class="doccomment">/// Take a snapshot of the state of the formatter</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">state_snapshot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">FormatterSnapshot</span> {
-        <span class="ident">FormatterSnapshot</span> {
-            <span class="ident">buffer</span>: <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">snapshot</span>(),
-            <span class="ident">state</span>: <span class="self">self</span>.<span class="ident">state</span>().<span class="ident">snapshot</span>(),
+    <span class="doccomment">/// Take a snapshot of the state of the formatter
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>state_snapshot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FormatterSnapshot {
+        FormatterSnapshot {
+            buffer: <span class="self">self</span>.buffer.snapshot(),
+            state: <span class="self">self</span>.state().snapshot(),
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="doccomment">/// Restore the state of the formatter to a previous snapshot</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">restore_state_snapshot</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">snapshot</span>: <span class="ident">FormatterSnapshot</span>) {
-        <span class="self">self</span>.<span class="ident">state_mut</span>().<span class="ident">restore_snapshot</span>(<span class="ident">snapshot</span>.<span class="ident">state</span>);
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">restore_snapshot</span>(<span class="ident">snapshot</span>.<span class="ident">buffer</span>);
+    <span class="attribute">#[inline]
+    </span><span class="doccomment">/// Restore the state of the formatter to a previous snapshot
+    </span><span class="kw">pub fn </span>restore_state_snapshot(<span class="kw-2">&amp;mut </span><span class="self">self</span>, snapshot: FormatterSnapshot) {
+        <span class="self">self</span>.state_mut().restore_snapshot(snapshot.state);
+        <span class="self">self</span>.buffer.restore_snapshot(snapshot.buffer);
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Context</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Context</span>: <span class="ident">CstFormatContext</span>,
+<span class="kw">impl</span>&lt;Context&gt; Formatter&lt;<span class="lifetime">&#39;_</span>, Context&gt;
+<span class="kw">where
+    </span>Context: CstFormatContext,
 {
-    <span class="doccomment">/// Returns the comments from the context.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Comments</span><span class="op">&lt;</span><span class="ident">Context::Language</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">context</span>().<span class="ident">comments</span>()
+    <span class="doccomment">/// Returns the comments from the context.
+    </span><span class="kw">pub fn </span>comments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Comments&lt;Context::Language&gt; {
+        <span class="self">self</span>.context().comments()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Context</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Context</span> <span class="op">=</span> <span class="ident">Context</span>;
+<span class="kw">impl</span>&lt;Context&gt; Buffer <span class="kw">for </span>Formatter&lt;<span class="lifetime">&#39;_</span>, Context&gt; {
+    <span class="kw">type </span>Context = Context;
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">write_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="ident">FormatElement</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">write_element</span>(<span class="ident">element</span>)
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>write_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, element: FormatElement) -&gt; FormatResult&lt;()&gt; {
+        <span class="self">self</span>.buffer.write_element(element)
     }
 
-    <span class="kw">fn</span> <span class="ident">elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>] {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">elements</span>()
+    <span class="kw">fn </span>elements(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement] {
+        <span class="self">self</span>.buffer.elements()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">write_fmt</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">arguments</span>: <span class="ident">Arguments</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span>) -&gt; <span class="ident">FormatResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">for</span> <span class="ident">argument</span> <span class="kw">in</span> <span class="ident">arguments</span>.<span class="ident">items</span>() {
-            <span class="ident">argument</span>.<span class="ident">format</span>(<span class="self">self</span>)<span class="question-mark">?</span>;
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>write_fmt(<span class="kw-2">&amp;mut </span><span class="self">self</span>, arguments: Arguments&lt;<span class="self">Self</span>::Context&gt;) -&gt; FormatResult&lt;()&gt; {
+        <span class="kw">for </span>argument <span class="kw">in </span>arguments.items() {
+            argument.format(<span class="self">self</span>)<span class="question-mark">?</span>;
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">state</span>()
+    <span class="kw">fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.buffer.state()
     }
 
-    <span class="kw">fn</span> <span class="ident">state_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">FormatState</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Context</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">state_mut</span>()
+    <span class="kw">fn </span>state_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FormatState&lt;<span class="self">Self</span>::Context&gt; {
+        <span class="self">self</span>.buffer.state_mut()
     }
 
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BufferSnapshot</span> {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">snapshot</span>()
+    <span class="kw">fn </span>snapshot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BufferSnapshot {
+        <span class="self">self</span>.buffer.snapshot()
     }
 
-    <span class="kw">fn</span> <span class="ident">restore_snapshot</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">snapshot</span>: <span class="ident">BufferSnapshot</span>) {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">restore_snapshot</span>(<span class="ident">snapshot</span>)
+    <span class="kw">fn </span>restore_snapshot(<span class="kw-2">&amp;mut </span><span class="self">self</span>, snapshot: BufferSnapshot) {
+        <span class="self">self</span>.buffer.restore_snapshot(snapshot)
     }
 }
 
-<span class="doccomment">/// Snapshot of the formatter state  used to handle backtracking if</span>
-<span class="doccomment">/// errors are encountered in the formatting process and the formatter</span>
-<span class="doccomment">/// has to fallback to printing raw tokens</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// In practice this only saves the set of printed tokens in debug</span>
-<span class="doccomment">/// mode and compiled to nothing in release mode</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FormatterSnapshot</span> {
-    <span class="ident">buffer</span>: <span class="ident">BufferSnapshot</span>,
-    <span class="ident">state</span>: <span class="ident">FormatStateSnapshot</span>,
+<span class="doccomment">/// Snapshot of the formatter state  used to handle backtracking if
+/// errors are encountered in the formatting process and the formatter
+/// has to fallback to printing raw tokens
+///
+/// In practice this only saves the set of printed tokens in debug
+/// mode and compiled to nothing in release mode
+</span><span class="kw">pub struct </span>FormatterSnapshot {
+    buffer: BufferSnapshot,
+    state: FormatStateSnapshot,
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/display/frame.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>frame.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/display/frame.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>frame.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -662,669 +662,669 @@
 <span id="662">662</span>
 <span id="663">663</span>
 <span id="664">664</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">borrow::Cow</span>,
-    <span class="ident">io</span>,
-    <span class="ident">iter::FusedIterator</span>,
-    <span class="ident">num::NonZeroUsize</span>,
-    <span class="ident">ops</span>::{<span class="ident">Bound</span>, <span class="ident">RangeBounds</span>},
+</pre><pre class="rust"><code><span class="kw">use </span>std::{
+    borrow::Cow,
+    io,
+    iter::FusedIterator,
+    num::NonZeroUsize,
+    ops::{Bound, RangeBounds},
 };
 
-<span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">fmt</span>, <span class="ident">markup</span>};
-<span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextLen</span>, <span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">unicode_width::UnicodeWidthChar</span>;
+<span class="kw">use </span>rome_console::{fmt, markup};
+<span class="kw">use </span>rome_text_size::{TextLen, TextRange, TextSize};
+<span class="kw">use </span>unicode_width::UnicodeWidthChar;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::v2</span>::{
-    <span class="ident">location</span>::{<span class="ident">BorrowedSourceCode</span>, <span class="ident">LineIndex</span>},
-    <span class="ident">LineIndexBuf</span>, <span class="ident">Location</span>,
+<span class="kw">use </span><span class="kw">crate</span>::v2::{
+    location::{BorrowedSourceCode, LineIndex},
+    LineIndexBuf, Location,
 };
 
-<span class="comment">// SAFETY: These constants `NonZeroUsize` are being initialized with non-zero values</span>
-<span class="kw">const</span> <span class="ident">ONE</span>: <span class="ident">NonZeroUsize</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">NonZeroUsize::new_unchecked</span>(<span class="number">1</span>) };
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="ident">CODE_FRAME_CONTEXT_LINES</span>: <span class="ident">NonZeroUsize</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">NonZeroUsize::new_unchecked</span>(<span class="number">2</span>) };
+<span class="comment">// SAFETY: These constants `NonZeroUsize` are being initialized with non-zero values
+</span><span class="kw">const </span>ONE: NonZeroUsize = <span class="kw">unsafe </span>{ NonZeroUsize::new_unchecked(<span class="number">1</span>) };
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const </span>CODE_FRAME_CONTEXT_LINES: NonZeroUsize = <span class="kw">unsafe </span>{ NonZeroUsize::new_unchecked(<span class="number">2</span>) };
 
-<span class="kw">const</span> <span class="ident">MAX_CODE_FRAME_LINES</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8</span>;
-<span class="kw">const</span> <span class="ident">HALF_MAX_CODE_FRAME_LINES</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">MAX_CODE_FRAME_LINES</span> <span class="op">/</span> <span class="number">2</span>;
+<span class="kw">const </span>MAX_CODE_FRAME_LINES: usize = <span class="number">8</span>;
+<span class="kw">const </span>HALF_MAX_CODE_FRAME_LINES: usize = MAX_CODE_FRAME_LINES / <span class="number">2</span>;
 
-<span class="doccomment">/// Prints a code frame advice</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">print_frame</span>(<span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">location</span>: <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">source_span</span> <span class="op">=</span> <span class="ident">location</span>
-        .<span class="ident">source_code</span>
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">source_code</span><span class="op">|</span> <span class="prelude-val">Some</span>((<span class="ident">source_code</span>, <span class="ident">location</span>.<span class="ident">span</span><span class="question-mark">?</span>)));
+<span class="doccomment">/// Prints a code frame advice
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>print_frame(fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;, location: Location&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+    <span class="kw">let </span>source_span = location
+        .source_code
+        .and_then(|source_code| <span class="prelude-val">Some</span>((source_code, location.span<span class="question-mark">?</span>)));
 
-    <span class="kw">let</span> (<span class="ident">source_code</span>, <span class="ident">span</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">source_span</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">source_span</span>) =&gt; <span class="ident">source_span</span>,
-        <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(()),
+    <span class="kw">let </span>(source_code, span) = <span class="kw">match </span>source_span {
+        <span class="prelude-val">Some</span>(source_span) =&gt; source_span,
+        <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(()),
     };
 
-    <span class="kw">let</span> <span class="ident">source_file</span> <span class="op">=</span> <span class="ident">SourceFile::new</span>(<span class="ident">source_code</span>);
+    <span class="kw">let </span>source_file = SourceFile::new(source_code);
 
-    <span class="kw">let</span> <span class="ident">start_index</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">start</span>();
-    <span class="kw">let</span> <span class="ident">start_location</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">source_file</span>.<span class="ident">location</span>(<span class="ident">start_index</span>) {
-        <span class="prelude-val">Ok</span>(<span class="ident">location</span>) =&gt; <span class="ident">location</span>,
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(()),
+    <span class="kw">let </span>start_index = span.start();
+    <span class="kw">let </span>start_location = <span class="kw">match </span>source_file.location(start_index) {
+        <span class="prelude-val">Ok</span>(location) =&gt; location,
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(()),
     };
 
-    <span class="kw">let</span> <span class="ident">end_index</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">end</span>();
-    <span class="kw">let</span> <span class="ident">end_location</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">source_file</span>.<span class="ident">location</span>(<span class="ident">end_index</span>) {
-        <span class="prelude-val">Ok</span>(<span class="ident">location</span>) =&gt; <span class="ident">location</span>,
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(()),
+    <span class="kw">let </span>end_index = span.end();
+    <span class="kw">let </span>end_location = <span class="kw">match </span>source_file.location(end_index) {
+        <span class="prelude-val">Ok</span>(location) =&gt; location,
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(()),
     };
 
-    <span class="comment">// Increase the amount of lines we should show for &quot;context&quot;</span>
-    <span class="kw">let</span> <span class="ident">context_start</span> <span class="op">=</span> <span class="ident">start_location</span>
-        .<span class="ident">line_number</span>
-        .<span class="ident">saturating_sub</span>(<span class="ident">CODE_FRAME_CONTEXT_LINES</span>.<span class="ident">get</span>());
+    <span class="comment">// Increase the amount of lines we should show for &quot;context&quot;
+    </span><span class="kw">let </span>context_start = start_location
+        .line_number
+        .saturating_sub(CODE_FRAME_CONTEXT_LINES.get());
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context_end</span> <span class="op">=</span> <span class="ident">end_location</span>
-        .<span class="ident">line_number</span>
-        .<span class="ident">saturating_add</span>(<span class="ident">CODE_FRAME_CONTEXT_LINES</span>.<span class="ident">get</span>())
-        .<span class="ident">min</span>(<span class="ident">OneIndexed::new</span>(<span class="ident">source_file</span>.<span class="ident">line_starts</span>.<span class="ident">len</span>()).<span class="ident">unwrap_or</span>(<span class="ident">OneIndexed::MIN</span>));
+    <span class="kw">let </span><span class="kw-2">mut </span>context_end = end_location
+        .line_number
+        .saturating_add(CODE_FRAME_CONTEXT_LINES.get())
+        .min(OneIndexed::new(source_file.line_starts.len()).unwrap_or(OneIndexed::MIN));
 
-    <span class="comment">// Remove trailing blank lines</span>
-    <span class="kw">for</span> <span class="ident">line_index</span> <span class="kw">in</span> <span class="ident">IntoIter::new</span>(<span class="ident">context_start</span>..<span class="op">=</span><span class="ident">context_end</span>).<span class="ident">rev</span>() {
-        <span class="kw">if</span> <span class="ident">line_index</span> <span class="op">==</span> <span class="ident">end_location</span>.<span class="ident">line_number</span> {
+    <span class="comment">// Remove trailing blank lines
+    </span><span class="kw">for </span>line_index <span class="kw">in </span>IntoIter::new(context_start..=context_end).rev() {
+        <span class="kw">if </span>line_index == end_location.line_number {
             <span class="kw">break</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">line_start</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">source_file</span>.<span class="ident">line_start</span>(<span class="ident">line_index</span>.<span class="ident">to_zero_indexed</span>()) {
-            <span class="prelude-val">Ok</span>(<span class="ident">index</span>) =&gt; <span class="ident">index</span>,
+        <span class="kw">let </span>line_start = <span class="kw">match </span>source_file.line_start(line_index.to_zero_indexed()) {
+            <span class="prelude-val">Ok</span>(index) =&gt; index,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">continue</span>,
         };
-        <span class="kw">let</span> <span class="ident">line_end</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">source_file</span>.<span class="ident">line_start</span>(<span class="ident">line_index</span>.<span class="ident">to_zero_indexed</span>() <span class="op">+</span> <span class="number">1</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">index</span>) =&gt; <span class="ident">index</span>,
+        <span class="kw">let </span>line_end = <span class="kw">match </span>source_file.line_start(line_index.to_zero_indexed() + <span class="number">1</span>) {
+            <span class="prelude-val">Ok</span>(index) =&gt; index,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">continue</span>,
         };
 
-        <span class="kw">let</span> <span class="ident">line_range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">line_start</span>, <span class="ident">line_end</span>);
-        <span class="kw">let</span> <span class="ident">line_text</span> <span class="op">=</span> <span class="ident">source_file</span>.<span class="ident">source</span>[<span class="ident">line_range</span>].<span class="ident">trim</span>();
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">line_text</span>.<span class="ident">is_empty</span>() {
+        <span class="kw">let </span>line_range = TextRange::new(line_start, line_end);
+        <span class="kw">let </span>line_text = source_file.source[line_range].trim();
+        <span class="kw">if </span>!line_text.is_empty() {
             <span class="kw">break</span>;
         }
 
-        <span class="ident">context_end</span> <span class="op">=</span> <span class="ident">line_index</span>;
+        context_end = line_index;
     }
 
-    <span class="comment">// If we have too many lines in our selection, then collapse them to an ellipsis</span>
-    <span class="kw">let</span> <span class="ident">range_len</span> <span class="op">=</span> (<span class="ident">context_end</span>.<span class="ident">get</span>() <span class="op">+</span> <span class="number">1</span>).<span class="ident">saturating_sub</span>(<span class="ident">context_start</span>.<span class="ident">get</span>());
-    <span class="kw">let</span> <span class="ident">ellipsis_range</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">range_len</span> <span class="op">&gt;</span> <span class="ident">MAX_CODE_FRAME_LINES</span> <span class="op">+</span> <span class="number">2</span> {
-        <span class="kw">let</span> <span class="ident">ellipsis_start</span> <span class="op">=</span> <span class="ident">context_start</span>.<span class="ident">saturating_add</span>(<span class="ident">HALF_MAX_CODE_FRAME_LINES</span>);
-        <span class="kw">let</span> <span class="ident">ellipsis_end</span> <span class="op">=</span> <span class="ident">context_end</span>.<span class="ident">saturating_sub</span>(<span class="ident">HALF_MAX_CODE_FRAME_LINES</span>);
-        <span class="prelude-val">Some</span>(<span class="ident">ellipsis_start</span>..<span class="op">=</span><span class="ident">ellipsis_end</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
-    };
+    <span class="comment">// If we have too many lines in our selection, then collapse them to an ellipsis
+    </span><span class="kw">let </span>range_len = (context_end.get() + <span class="number">1</span>).saturating_sub(context_start.get());
+    <span class="kw">let </span>ellipsis_range = <span class="kw">if </span>range_len &gt; MAX_CODE_FRAME_LINES + <span class="number">2 </span>{
+        <span class="kw">let </span>ellipsis_start = context_start.saturating_add(HALF_MAX_CODE_FRAME_LINES);
+        <span class="kw">let </span>ellipsis_end = context_end.saturating_sub(HALF_MAX_CODE_FRAME_LINES);
+        <span class="prelude-val">Some</span>(ellipsis_start..=ellipsis_end)
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>};
 
-    <span class="comment">// Calculate the maximum width of the line number</span>
-    <span class="kw">let</span> <span class="ident">max_gutter_len</span> <span class="op">=</span> <span class="ident">calculate_print_width</span>(<span class="ident">context_end</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">printed_lines</span> <span class="op">=</span> <span class="bool-val">false</span>;
+    <span class="comment">// Calculate the maximum width of the line number
+    </span><span class="kw">let </span>max_gutter_len = calculate_print_width(context_end);
+    <span class="kw">let </span><span class="kw-2">mut </span>printed_lines = <span class="bool-val">false</span>;
 
-    <span class="kw">for</span> <span class="ident">line_index</span> <span class="kw">in</span> <span class="ident">IntoIter::new</span>(<span class="ident">context_start</span>..<span class="op">=</span><span class="ident">context_end</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ellipsis_range</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">ellipsis_range</span> {
-            <span class="kw">if</span> <span class="ident">ellipsis_range</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">line_index</span>) {
-                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">ellipsis_range</span>.<span class="ident">start</span>() <span class="op">==</span> <span class="ident">line_index</span> {
-                    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">max_gutter_len</span>.<span class="ident">get</span>() {
-                        <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">for </span>line_index <span class="kw">in </span>IntoIter::new(context_start..=context_end) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(ellipsis_range) = <span class="kw-2">&amp;</span>ellipsis_range {
+            <span class="kw">if </span>ellipsis_range.contains(<span class="kw-2">&amp;</span>line_index) {
+                <span class="kw">if </span><span class="kw-2">*</span>ellipsis_range.start() == line_index {
+                    <span class="kw">for _ in </span><span class="number">0</span>..max_gutter_len.get() {
+                        fmt.write_str(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
                     }
 
-                    <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> { <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;    ...\n&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span> })<span class="question-mark">?</span>;
-                    <span class="ident">printed_lines</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                    fmt.write_markup(<span class="macro">markup! </span>{ &lt;Emphasis&gt;<span class="string">&quot;    ...\n&quot;</span>&lt;/Emphasis&gt; })<span class="question-mark">?</span>;
+                    printed_lines = <span class="bool-val">true</span>;
                 }
                 <span class="kw">continue</span>;
             }
         }
 
-        <span class="kw">let</span> <span class="ident">line_start</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">source_file</span>.<span class="ident">line_start</span>(<span class="ident">line_index</span>.<span class="ident">to_zero_indexed</span>()) {
-            <span class="prelude-val">Ok</span>(<span class="ident">index</span>) =&gt; <span class="ident">index</span>,
+        <span class="kw">let </span>line_start = <span class="kw">match </span>source_file.line_start(line_index.to_zero_indexed()) {
+            <span class="prelude-val">Ok</span>(index) =&gt; index,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">continue</span>,
         };
-        <span class="kw">let</span> <span class="ident">line_end</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">source_file</span>.<span class="ident">line_start</span>(<span class="ident">line_index</span>.<span class="ident">to_zero_indexed</span>() <span class="op">+</span> <span class="number">1</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">index</span>) =&gt; <span class="ident">index</span>,
+        <span class="kw">let </span>line_end = <span class="kw">match </span>source_file.line_start(line_index.to_zero_indexed() + <span class="number">1</span>) {
+            <span class="prelude-val">Ok</span>(index) =&gt; index,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">continue</span>,
         };
 
-        <span class="kw">let</span> <span class="ident">line_range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">line_start</span>, <span class="ident">line_end</span>);
-        <span class="kw">let</span> <span class="ident">line_text</span> <span class="op">=</span> <span class="ident">source_file</span>.<span class="ident">source</span>[<span class="ident">line_range</span>].<span class="ident">trim_end_matches</span>([<span class="string">&#39;\r&#39;</span>, <span class="string">&#39;\n&#39;</span>]);
+        <span class="kw">let </span>line_range = TextRange::new(line_start, line_end);
+        <span class="kw">let </span>line_text = source_file.source[line_range].trim_end_matches([<span class="string">&#39;\r&#39;</span>, <span class="string">&#39;\n&#39;</span>]);
 
-        <span class="comment">// Ensure that the frame doesn&#39;t start with whitespace</span>
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">printed_lines</span> <span class="op">&amp;&amp;</span> <span class="ident">line_index</span> <span class="op">!</span><span class="op">=</span> <span class="ident">start_location</span>.<span class="ident">line_number</span> <span class="op">&amp;&amp;</span> <span class="ident">line_text</span>.<span class="ident">trim</span>().<span class="ident">is_empty</span>()
+        <span class="comment">// Ensure that the frame doesn&#39;t start with whitespace
+        </span><span class="kw">if </span>!printed_lines &amp;&amp; line_index != start_location.line_number &amp;&amp; line_text.trim().is_empty()
         {
             <span class="kw">continue</span>;
         }
 
-        <span class="ident">printed_lines</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        printed_lines = <span class="bool-val">true</span>;
 
-        <span class="comment">// If this is within the highlighted line range</span>
-        <span class="kw">let</span> <span class="ident">should_highlight</span> <span class="op">=</span>
-            <span class="ident">line_index</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">start_location</span>.<span class="ident">line_number</span> <span class="op">&amp;&amp;</span> <span class="ident">line_index</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end_location</span>.<span class="ident">line_number</span>;
+        <span class="comment">// If this is within the highlighted line range
+        </span><span class="kw">let </span>should_highlight =
+            line_index &gt;= start_location.line_number &amp;&amp; line_index &lt;= end_location.line_number;
 
-        <span class="kw">let</span> <span class="ident">padding_width</span> <span class="op">=</span> <span class="ident">max_gutter_len</span>
-            .<span class="ident">get</span>()
-            .<span class="ident">saturating_sub</span>(<span class="ident">calculate_print_width</span>(<span class="ident">line_index</span>).<span class="ident">get</span>());
+        <span class="kw">let </span>padding_width = max_gutter_len
+            .get()
+            .saturating_sub(calculate_print_width(line_index).get());
 
-        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">padding_width</span> {
-            <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">for _ in </span><span class="number">0</span>..padding_width {
+            fmt.write_str(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">should_highlight</span> {
-            <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&#39;&gt;&#39;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&#39; &#39;</span>
-            })<span class="question-mark">?</span>;
-        } <span class="kw">else</span> {
-            <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot;  &quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">if </span>should_highlight {
+            fmt.write_markup(<span class="macro">markup! </span>{
+                &lt;Emphasis&gt;&lt;Error&gt;<span class="string">&#39;&gt;&#39;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&#39; &#39;
+            </span>})<span class="question-mark">?</span>;
+        } <span class="kw">else </span>{
+            fmt.write_str(<span class="string">&quot;  &quot;</span>)<span class="question-mark">?</span>;
         }
 
-        <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span>{<span class="macro">format_args!</span>(<span class="string">&quot;{line_index} \u{2502} &quot;</span>)}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span>
+        fmt.write_markup(<span class="macro">markup! </span>{
+            &lt;Emphasis&gt;{<span class="macro">format_args!</span>(<span class="string">&quot;{line_index} \u{2502} &quot;</span>)}&lt;/Emphasis&gt;
         })<span class="question-mark">?</span>;
 
-        <span class="comment">// Show invisible characters</span>
-        <span class="ident">print_invisibles</span>(
-            <span class="ident">fmt</span>,
-            <span class="ident">line_text</span>,
-            <span class="ident">PrintInvisiblesOptions</span> {
-                <span class="ident">ignore_trailing_carriage_return</span>: <span class="bool-val">true</span>,
-                <span class="ident">ignore_leading_tabs</span>: <span class="bool-val">true</span>,
-                <span class="ident">ignore_lone_spaces</span>: <span class="bool-val">true</span>,
-                <span class="ident">at_line_start</span>: <span class="bool-val">true</span>,
-                <span class="ident">at_line_end</span>: <span class="bool-val">true</span>,
+        <span class="comment">// Show invisible characters
+        </span>print_invisibles(
+            fmt,
+            line_text,
+            PrintInvisiblesOptions {
+                ignore_trailing_carriage_return: <span class="bool-val">true</span>,
+                ignore_leading_tabs: <span class="bool-val">true</span>,
+                ignore_lone_spaces: <span class="bool-val">true</span>,
+                at_line_start: <span class="bool-val">true</span>,
+                at_line_end: <span class="bool-val">true</span>,
             },
         )<span class="question-mark">?</span>;
 
-        <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot;\n&quot;</span>)<span class="question-mark">?</span>;
+        fmt.write_str(<span class="string">&quot;\n&quot;</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="ident">should_highlight</span> {
-            <span class="kw">let</span> <span class="ident">is_first_line</span> <span class="op">=</span> <span class="ident">line_index</span> <span class="op">==</span> <span class="ident">start_location</span>.<span class="ident">line_number</span>;
-            <span class="kw">let</span> <span class="ident">is_last_line</span> <span class="op">=</span> <span class="ident">line_index</span> <span class="op">==</span> <span class="ident">end_location</span>.<span class="ident">line_number</span>;
+        <span class="kw">if </span>should_highlight {
+            <span class="kw">let </span>is_first_line = line_index == start_location.line_number;
+            <span class="kw">let </span>is_last_line = line_index == end_location.line_number;
 
-            <span class="kw">let</span> <span class="ident">start_index_relative_to_line</span> <span class="op">=</span>
-                <span class="ident">start_index</span>.<span class="ident">max</span>(<span class="ident">line_range</span>.<span class="ident">start</span>()) <span class="op">-</span> <span class="ident">line_range</span>.<span class="ident">start</span>();
-            <span class="kw">let</span> <span class="ident">end_index_relative_to_line</span> <span class="op">=</span> <span class="ident">end_index</span>.<span class="ident">min</span>(<span class="ident">line_range</span>.<span class="ident">end</span>()) <span class="op">-</span> <span class="ident">line_range</span>.<span class="ident">start</span>();
+            <span class="kw">let </span>start_index_relative_to_line =
+                start_index.max(line_range.start()) - line_range.start();
+            <span class="kw">let </span>end_index_relative_to_line = end_index.min(line_range.end()) - line_range.start();
 
-            <span class="kw">let</span> <span class="ident">marker</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_first_line</span> <span class="op">&amp;&amp;</span> <span class="ident">is_last_line</span> {
-                <span class="comment">// Only line in the selection</span>
-                <span class="prelude-val">Some</span>(<span class="ident">TextRange::new</span>(
-                    <span class="ident">start_index_relative_to_line</span>,
-                    <span class="ident">end_index_relative_to_line</span>,
+            <span class="kw">let </span>marker = <span class="kw">if </span>is_first_line &amp;&amp; is_last_line {
+                <span class="comment">// Only line in the selection
+                </span><span class="prelude-val">Some</span>(TextRange::new(
+                    start_index_relative_to_line,
+                    end_index_relative_to_line,
                 ))
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_first_line</span> {
-                <span class="comment">// First line in selection</span>
-                <span class="prelude-val">Some</span>(<span class="ident">TextRange::new</span>(
-                    <span class="ident">start_index_relative_to_line</span>,
-                    <span class="ident">line_text</span>.<span class="ident">text_len</span>(),
+            } <span class="kw">else if </span>is_first_line {
+                <span class="comment">// First line in selection
+                </span><span class="prelude-val">Some</span>(TextRange::new(
+                    start_index_relative_to_line,
+                    line_text.text_len(),
                 ))
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_last_line</span> {
-                <span class="comment">// Last line in selection</span>
-                <span class="kw">let</span> <span class="ident">start_index</span> <span class="op">=</span> <span class="ident">line_text</span>
-                    .<span class="ident">text_len</span>()
-                    .<span class="ident">checked_sub</span>(<span class="ident">line_text</span>.<span class="ident">trim_start</span>().<span class="ident">text_len</span>())
-                    <span class="comment">// SAFETY: The length of `line_text.trim_start()` should</span>
-                    <span class="comment">// never be larger than `line_text` itself</span>
-                    .<span class="ident">expect</span>(<span class="string">&quot;integer overflow&quot;</span>);
-                <span class="prelude-val">Some</span>(<span class="ident">TextRange::new</span>(<span class="ident">start_index</span>, <span class="ident">end_index_relative_to_line</span>))
-            } <span class="kw">else</span> {
-                <span class="prelude-val">None</span>
-            };
+            } <span class="kw">else if </span>is_last_line {
+                <span class="comment">// Last line in selection
+                </span><span class="kw">let </span>start_index = line_text
+                    .text_len()
+                    .checked_sub(line_text.trim_start().text_len())
+                    <span class="comment">// SAFETY: The length of `line_text.trim_start()` should
+                    // never be larger than `line_text` itself
+                    </span>.expect(<span class="string">&quot;integer overflow&quot;</span>);
+                <span class="prelude-val">Some</span>(TextRange::new(start_index, end_index_relative_to_line))
+            } <span class="kw">else </span>{
+                <span class="prelude-val">None
+            </span>};
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">marker</span>) <span class="op">=</span> <span class="ident">marker</span> {
-                <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">max_gutter_len</span>.<span class="ident">get</span>() {
-                    <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(marker) = marker {
+                <span class="kw">for _ in </span><span class="number">0</span>..max_gutter_len.get() {
+                    fmt.write_str(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
                 }
 
-                <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                    <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;   \u{2502} &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span>
+                fmt.write_markup(<span class="macro">markup! </span>{
+                    &lt;Emphasis&gt;<span class="string">&quot;   \u{2502} &quot;</span>&lt;/Emphasis&gt;
                 })<span class="question-mark">?</span>;
 
-                <span class="comment">// Align the start of the marker with the line above by a</span>
-                <span class="comment">// number of space characters equal to the unicode print width</span>
-                <span class="comment">// of the leading part of the line (before the start of the</span>
-                <span class="comment">// marker), with a special exception for tab characters that</span>
-                <span class="comment">// still get printed as tabs to respect the user-defined tab</span>
-                <span class="comment">// display width</span>
-                <span class="kw">let</span> <span class="ident">leading_range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">marker</span>.<span class="ident">start</span>());
-                <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">line_text</span>[<span class="ident">leading_range</span>].<span class="ident">chars</span>() {
-                    <span class="kw">match</span> <span class="ident">c</span> {
-                        <span class="string">&#39;\t&#39;</span> =&gt; <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot;\t&quot;</span>)<span class="question-mark">?</span>,
-                        <span class="kw">_</span> =&gt; {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">width</span>) <span class="op">=</span> <span class="ident">c</span>.<span class="ident">width</span>() {
-                                <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
-                                    <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
+                <span class="comment">// Align the start of the marker with the line above by a
+                // number of space characters equal to the unicode print width
+                // of the leading part of the line (before the start of the
+                // marker), with a special exception for tab characters that
+                // still get printed as tabs to respect the user-defined tab
+                // display width
+                </span><span class="kw">let </span>leading_range = TextRange::new(TextSize::from(<span class="number">0</span>), marker.start());
+                <span class="kw">for </span>c <span class="kw">in </span>line_text[leading_range].chars() {
+                    <span class="kw">match </span>c {
+                        <span class="string">&#39;\t&#39; </span>=&gt; fmt.write_str(<span class="string">&quot;\t&quot;</span>)<span class="question-mark">?</span>,
+                        <span class="kw">_ </span>=&gt; {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = c.width() {
+                                <span class="kw">for _ in </span><span class="number">0</span>..width {
+                                    fmt.write_str(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
                                 }
                             }
                         }
                     }
                 }
 
-                <span class="kw">let</span> <span class="ident">marker_width</span> <span class="op">=</span> <span class="ident">text_width</span>(<span class="kw-2">&amp;</span><span class="ident">line_text</span>[<span class="ident">marker</span>]);
-                <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">marker_width</span> {
-                    <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                        <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&#39;^&#39;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span>
+                <span class="kw">let </span>marker_width = text_width(<span class="kw-2">&amp;</span>line_text[marker]);
+                <span class="kw">for _ in </span><span class="number">0</span>..marker_width {
+                    fmt.write_markup(<span class="macro">markup! </span>{
+                        &lt;Emphasis&gt;&lt;Error&gt;<span class="string">&#39;^&#39;</span>&lt;/Error&gt;&lt;/Emphasis&gt;
                     })<span class="question-mark">?</span>;
                 }
 
-                <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot;\n&quot;</span>)<span class="question-mark">?</span>;
+                fmt.write_str(<span class="string">&quot;\n&quot;</span>)<span class="question-mark">?</span>;
             }
         }
     }
 
-    <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot;\n&quot;</span>)
+    fmt.write_str(<span class="string">&quot;\n&quot;</span>)
 }
 
-<span class="doccomment">/// Calculate the length of the string representation of `value`</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">calculate_print_width</span>(<span class="kw-2">mut</span> <span class="ident">value</span>: <span class="ident">OneIndexed</span>) -&gt; <span class="ident">NonZeroUsize</span> {
-    <span class="comment">// SAFETY: Constant is being initialized with a non-zero value</span>
-    <span class="kw">const</span> <span class="ident">TEN</span>: <span class="ident">OneIndexed</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">OneIndexed::new_unchecked</span>(<span class="number">10</span>) };
+<span class="doccomment">/// Calculate the length of the string representation of `value`
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>calculate_print_width(<span class="kw-2">mut </span>value: OneIndexed) -&gt; NonZeroUsize {
+    <span class="comment">// SAFETY: Constant is being initialized with a non-zero value
+    </span><span class="kw">const </span>TEN: OneIndexed = <span class="kw">unsafe </span>{ OneIndexed::new_unchecked(<span class="number">10</span>) };
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">ONE</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>width = ONE;
 
-    <span class="kw">while</span> <span class="ident">value</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">TEN</span> {
-        <span class="ident">value</span> <span class="op">=</span> <span class="ident">OneIndexed::new</span>(<span class="ident">value</span>.<span class="ident">get</span>() <span class="op">/</span> <span class="number">10</span>).<span class="ident">unwrap_or</span>(<span class="ident">OneIndexed::MIN</span>);
-        <span class="ident">width</span> <span class="op">=</span> <span class="ident">width</span>.<span class="ident">checked_add</span>(<span class="number">1</span>).<span class="ident">unwrap</span>();
+    <span class="kw">while </span>value &gt;= TEN {
+        value = OneIndexed::new(value.get() / <span class="number">10</span>).unwrap_or(OneIndexed::MIN);
+        width = width.checked_add(<span class="number">1</span>).unwrap();
     }
 
-    <span class="ident">width</span>
+    width
 }
 
-<span class="doccomment">/// We need to set a value here since we have no way of knowing what the user&#39;s</span>
-<span class="doccomment">/// preferred tab display width is, so this is set to `2` to match how tab</span>
-<span class="doccomment">/// characters are printed by [print_invisibles]</span>
-<span class="kw">const</span> <span class="ident">TAB_WIDTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">2</span>;
+<span class="doccomment">/// We need to set a value here since we have no way of knowing what the user&#39;s
+/// preferred tab display width is, so this is set to `2` to match how tab
+/// characters are printed by [print_invisibles]
+</span><span class="kw">const </span>TAB_WIDTH: usize = <span class="number">2</span>;
 
-<span class="doccomment">/// Compute the unicode display width of a string, with the width of tab</span>
-<span class="doccomment">/// characters set to [TAB_WIDTH] and the width of control characters set to 0</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">text_width</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">usize</span> {
-    <span class="ident">text</span>.<span class="ident">chars</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">char</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">char</span> {
-            <span class="string">&#39;\t&#39;</span> =&gt; <span class="ident">TAB_WIDTH</span>,
-            <span class="kw">_</span> =&gt; <span class="ident">char</span>.<span class="ident">width</span>().<span class="ident">unwrap_or</span>(<span class="number">0</span>),
+<span class="doccomment">/// Compute the unicode display width of a string, with the width of tab
+/// characters set to [TAB_WIDTH] and the width of control characters set to 0
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>text_width(text: <span class="kw-2">&amp;</span>str) -&gt; usize {
+    text.chars()
+        .map(|char| <span class="kw">match </span>char {
+            <span class="string">&#39;\t&#39; </span>=&gt; TAB_WIDTH,
+            <span class="kw">_ </span>=&gt; char.width().unwrap_or(<span class="number">0</span>),
         })
-        .<span class="ident">sum</span>()
+        .sum()
 }
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">PrintInvisiblesOptions</span> {
-    <span class="doccomment">/// Do not print tab characters at the start of the string</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">ignore_leading_tabs</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// If this is set to true, space characters will only be substituted when</span>
-    <span class="doccomment">/// at least two of them are found in a row</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">ignore_lone_spaces</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Do not print `&#39;\r&#39;` characters if they&#39;re followed by `&#39;\n&#39;`</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">ignore_trailing_carriage_return</span>: <span class="ident">bool</span>,
-    <span class="comment">// Set to `true` to show invisible characters at the start of the string</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">at_line_start</span>: <span class="ident">bool</span>,
-    <span class="comment">// Set to `true` to show invisible characters at the end of the string</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">at_line_end</span>: <span class="ident">bool</span>,
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>PrintInvisiblesOptions {
+    <span class="doccomment">/// Do not print tab characters at the start of the string
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) ignore_leading_tabs: bool,
+    <span class="doccomment">/// If this is set to true, space characters will only be substituted when
+    /// at least two of them are found in a row
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) ignore_lone_spaces: bool,
+    <span class="doccomment">/// Do not print `&#39;\r&#39;` characters if they&#39;re followed by `&#39;\n&#39;`
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) ignore_trailing_carriage_return: bool,
+    <span class="comment">// Set to `true` to show invisible characters at the start of the string
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) at_line_start: bool,
+    <span class="comment">// Set to `true` to show invisible characters at the end of the string
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) at_line_end: bool,
 }
 
-<span class="doccomment">/// Print `input` to `fmt` with invisible characters replaced with an</span>
-<span class="doccomment">/// appropriate visual representation. Return `true` if any non-whitespace</span>
-<span class="doccomment">/// character was printed</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">print_invisibles</span>(
-    <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">options</span>: <span class="ident">PrintInvisiblesOptions</span>,
-) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">had_non_whitespace</span> <span class="op">=</span> <span class="bool-val">false</span>;
+<span class="doccomment">/// Print `input` to `fmt` with invisible characters replaced with an
+/// appropriate visual representation. Return `true` if any non-whitespace
+/// character was printed
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>print_invisibles(
+    fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;,
+    input: <span class="kw-2">&amp;</span>str,
+    options: PrintInvisiblesOptions,
+) -&gt; io::Result&lt;bool&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>had_non_whitespace = <span class="bool-val">false</span>;
 
-    <span class="comment">// Get the first trailing whitespace character in the string</span>
-    <span class="kw">let</span> <span class="ident">trailing_whitespace_index</span> <span class="op">=</span> <span class="ident">input</span>
-        .<span class="ident">char_indices</span>()
-        .<span class="ident">rev</span>()
-        .<span class="ident">find_map</span>(<span class="op">|</span>(<span class="ident">index</span>, <span class="ident">char</span>)<span class="op">|</span> {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">char</span>.<span class="ident">is_ascii_whitespace</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">index</span>)
-            } <span class="kw">else</span> {
-                <span class="prelude-val">None</span>
-            }
+    <span class="comment">// Get the first trailing whitespace character in the string
+    </span><span class="kw">let </span>trailing_whitespace_index = input
+        .char_indices()
+        .rev()
+        .find_map(|(index, char)| {
+            <span class="kw">if </span>!char.is_ascii_whitespace() {
+                <span class="prelude-val">Some</span>(index)
+            } <span class="kw">else </span>{
+                <span class="prelude-val">None
+            </span>}
         })
-        .<span class="ident">unwrap_or</span>(<span class="ident">input</span>.<span class="ident">len</span>());
+        .unwrap_or(input.len());
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">char_indices</span>().<span class="ident">peekable</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_char_was_whitespace</span> <span class="op">=</span> <span class="bool-val">false</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>iter = input.char_indices().peekable();
+    <span class="kw">let </span><span class="kw-2">mut </span>prev_char_was_whitespace = <span class="bool-val">false</span>;
 
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">i</span>, <span class="ident">char</span>)) <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">show_invisible</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">while let </span><span class="prelude-val">Some</span>((i, char)) = iter.next() {
+        <span class="kw">let </span><span class="kw-2">mut </span>show_invisible = <span class="bool-val">true</span>;
 
-        <span class="comment">// Only highlight spaces when surrounded by other spaces</span>
-        <span class="kw">if</span> <span class="ident">char</span> <span class="op">==</span> <span class="string">&#39; &#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">options</span>.<span class="ident">ignore_lone_spaces</span> {
-            <span class="ident">show_invisible</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        <span class="comment">// Only highlight spaces when surrounded by other spaces
+        </span><span class="kw">if </span>char == <span class="string">&#39; &#39; </span>&amp;&amp; options.ignore_lone_spaces {
+            show_invisible = <span class="bool-val">false</span>;
 
-            <span class="kw">let</span> <span class="ident">next_char_is_whitespace</span> <span class="op">=</span> <span class="ident">iter</span>
-                .<span class="ident">peek</span>()
-                .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span>(<span class="kw">_</span>, <span class="ident">char</span>)<span class="op">|</span> <span class="ident">char</span>.<span class="ident">is_ascii_whitespace</span>());
+            <span class="kw">let </span>next_char_is_whitespace = iter
+                .peek()
+                .map_or(<span class="bool-val">false</span>, |(<span class="kw">_</span>, char)| char.is_ascii_whitespace());
 
-            <span class="kw">if</span> <span class="ident">prev_char_was_whitespace</span> <span class="op">|</span><span class="op">|</span> <span class="ident">next_char_is_whitespace</span> {
-                <span class="ident">show_invisible</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            <span class="kw">if </span>prev_char_was_whitespace || next_char_is_whitespace {
+                show_invisible = <span class="bool-val">false</span>;
             }
         }
 
-        <span class="ident">prev_char_was_whitespace</span> <span class="op">=</span> <span class="ident">char</span>.<span class="ident">is_ascii_whitespace</span>();
+        prev_char_was_whitespace = char.is_ascii_whitespace();
 
-        <span class="comment">// Don&#39;t show leading tabs</span>
-        <span class="kw">if</span> <span class="ident">options</span>.<span class="ident">at_line_start</span>
-            <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">had_non_whitespace</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">char</span> <span class="op">==</span> <span class="string">&#39;\t&#39;</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">options</span>.<span class="ident">ignore_leading_tabs</span>
+        <span class="comment">// Don&#39;t show leading tabs
+        </span><span class="kw">if </span>options.at_line_start
+            &amp;&amp; !had_non_whitespace
+            &amp;&amp; char == <span class="string">&#39;\t&#39;
+            </span>&amp;&amp; options.ignore_leading_tabs
         {
-            <span class="ident">show_invisible</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            show_invisible = <span class="bool-val">false</span>;
         }
 
-        <span class="comment">// Always show if at the end of line</span>
-        <span class="kw">if</span> <span class="ident">options</span>.<span class="ident">at_line_end</span> <span class="op">&amp;&amp;</span> <span class="ident">i</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">trailing_whitespace_index</span> {
-            <span class="ident">show_invisible</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="comment">// Always show if at the end of line
+        </span><span class="kw">if </span>options.at_line_end &amp;&amp; i &gt;= trailing_whitespace_index {
+            show_invisible = <span class="bool-val">true</span>;
         }
 
-        <span class="comment">// If we are a carriage return next to a \n then don&#39;t show the character as visible</span>
-        <span class="kw">if</span> <span class="ident">options</span>.<span class="ident">ignore_trailing_carriage_return</span> <span class="op">&amp;&amp;</span> <span class="ident">char</span> <span class="op">==</span> <span class="string">&#39;\r&#39;</span> {
-            <span class="kw">let</span> <span class="ident">next_char_is_line_feed</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">peek</span>().<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span>(<span class="kw">_</span>, <span class="ident">char</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">char</span> <span class="op">==</span> <span class="string">&#39;\n&#39;</span>);
-            <span class="kw">if</span> <span class="ident">next_char_is_line_feed</span> {
+        <span class="comment">// If we are a carriage return next to a \n then don&#39;t show the character as visible
+        </span><span class="kw">if </span>options.ignore_trailing_carriage_return &amp;&amp; char == <span class="string">&#39;\r&#39; </span>{
+            <span class="kw">let </span>next_char_is_line_feed = iter.peek().map_or(<span class="bool-val">false</span>, |(<span class="kw">_</span>, char)| <span class="kw-2">*</span>char == <span class="string">&#39;\n&#39;</span>);
+            <span class="kw">if </span>next_char_is_line_feed {
                 <span class="kw">continue</span>;
             }
         }
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">show_invisible</span> {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">char</span>.<span class="ident">is_ascii_whitespace</span>() {
-                <span class="ident">had_non_whitespace</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="kw">if </span>!show_invisible {
+            <span class="kw">if </span>!char.is_ascii_whitespace() {
+                had_non_whitespace = <span class="bool-val">true</span>;
             }
 
-            <span class="macro">write!</span>(<span class="ident">fmt</span>, <span class="string">&quot;{char}&quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(fmt, <span class="string">&quot;{char}&quot;</span>)<span class="question-mark">?</span>;
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visible</span>) <span class="op">=</span> <span class="ident">show_invisible_char</span>(<span class="ident">char</span>) {
-            <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> { <span class="op">&lt;</span><span class="ident">Dim</span><span class="op">&gt;</span>{<span class="ident">visible</span>}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Dim</span><span class="op">&gt;</span> })<span class="question-mark">?</span>;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(visible) = show_invisible_char(char) {
+            fmt.write_markup(<span class="macro">markup! </span>{ &lt;Dim&gt;{visible}&lt;/Dim&gt; })<span class="question-mark">?</span>;
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">if</span> (<span class="ident">char</span>.<span class="ident">is_whitespace</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">char</span>.<span class="ident">is_ascii_whitespace</span>()) <span class="op">|</span><span class="op">|</span> <span class="ident">char</span>.<span class="ident">is_control</span>() {
-            <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="ident">u32::from</span>(<span class="ident">char</span>);
-            <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> { <span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot;U+&quot;</span>{<span class="macro">format_args!</span>(<span class="string">&quot;{code:x}&quot;</span>)}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span> })<span class="question-mark">?</span>;
+        <span class="kw">if </span>(char.is_whitespace() &amp;&amp; !char.is_ascii_whitespace()) || char.is_control() {
+            <span class="kw">let </span>code = u32::from(char);
+            fmt.write_markup(<span class="macro">markup! </span>{ &lt;Inverse&gt;<span class="string">&quot;U+&quot;</span>{<span class="macro">format_args!</span>(<span class="string">&quot;{code:x}&quot;</span>)}&lt;/Inverse&gt; })<span class="question-mark">?</span>;
             <span class="kw">continue</span>;
         }
 
-        <span class="macro">write!</span>(<span class="ident">fmt</span>, <span class="string">&quot;{char}&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(fmt, <span class="string">&quot;{char}&quot;</span>)<span class="question-mark">?</span>;
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">had_non_whitespace</span>)
+    <span class="prelude-val">Ok</span>(had_non_whitespace)
 }
 
-<span class="kw">fn</span> <span class="ident">show_invisible_char</span>(<span class="ident">char</span>: <span class="ident">char</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-    <span class="kw">match</span> <span class="ident">char</span> {
-        <span class="string">&#39; &#39;</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{b7}&quot;</span>),      <span class="comment">// Middle Dot</span>
-        <span class="string">&#39;\r&#39;</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{240d}&quot;</span>),   <span class="comment">// Carriage Return Symbol</span>
-        <span class="string">&#39;\n&#39;</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{23ce}&quot;</span>),   <span class="comment">// Return Symbol</span>
-        <span class="string">&#39;\t&#39;</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{2192} &quot;</span>),  <span class="comment">// Rightwards Arrow</span>
-        <span class="string">&#39;\0&#39;</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{2400}&quot;</span>),   <span class="comment">// Null Symbol</span>
-        <span class="string">&#39;\x0b&#39;</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{240b}&quot;</span>), <span class="comment">// Vertical Tabulation Symbol</span>
-        <span class="string">&#39;\x08&#39;</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{232b}&quot;</span>), <span class="comment">// Backspace Symbol</span>
-        <span class="string">&#39;\x0c&#39;</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{21a1}&quot;</span>), <span class="comment">// Downards Two Headed Arrow</span>
-        <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+<span class="kw">fn </span>show_invisible_char(char: char) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+    <span class="kw">match </span>char {
+        <span class="string">&#39; &#39; </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{b7}&quot;</span>),      <span class="comment">// Middle Dot
+        </span><span class="string">&#39;\r&#39; </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{240d}&quot;</span>),   <span class="comment">// Carriage Return Symbol
+        </span><span class="string">&#39;\n&#39; </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{23ce}&quot;</span>),   <span class="comment">// Return Symbol
+        </span><span class="string">&#39;\t&#39; </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{2192} &quot;</span>),  <span class="comment">// Rightwards Arrow
+        </span><span class="string">&#39;\0&#39; </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{2400}&quot;</span>),   <span class="comment">// Null Symbol
+        </span><span class="string">&#39;\x0b&#39; </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{240b}&quot;</span>), <span class="comment">// Vertical Tabulation Symbol
+        </span><span class="string">&#39;\x08&#39; </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{232b}&quot;</span>), <span class="comment">// Backspace Symbol
+        </span><span class="string">&#39;\x0c&#39; </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;\u{21a1}&quot;</span>), <span class="comment">// Downards Two Headed Arrow
+        </span><span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
     }
 }
 
-<span class="doccomment">/// A user-facing location in a source file.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">SourceLocation</span> {
-    <span class="doccomment">/// The user-facing line number.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">line_number</span>: <span class="ident">OneIndexed</span>,
-    <span class="doccomment">/// The user-facing column number.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">column_number</span>: <span class="ident">OneIndexed</span>,
+<span class="doccomment">/// A user-facing location in a source file.
+</span><span class="attribute">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>SourceLocation {
+    <span class="doccomment">/// The user-facing line number.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) line_number: OneIndexed,
+    <span class="doccomment">/// The user-facing column number.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) column_number: OneIndexed,
 }
 
-<span class="doccomment">/// Representation of a single source file holding additional information for</span>
-<span class="doccomment">/// efficiently rendering code frames</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">SourceFile</span><span class="op">&lt;</span><span class="lifetime">&#39;diagnostic</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The source code of the file.</span>
-    <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;diagnostic</span> <span class="ident">str</span>,
-    <span class="doccomment">/// The starting byte indices in the source code.</span>
-    <span class="ident">line_starts</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;diagnostic</span>, <span class="ident">LineIndex</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Representation of a single source file holding additional information for
+/// efficiently rendering code frames
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>SourceFile&lt;<span class="lifetime">&#39;diagnostic</span>&gt; {
+    <span class="doccomment">/// The source code of the file.
+    </span>source: <span class="kw-2">&amp;</span><span class="lifetime">&#39;diagnostic </span>str,
+    <span class="doccomment">/// The starting byte indices in the source code.
+    </span>line_starts: Cow&lt;<span class="lifetime">&#39;diagnostic</span>, LineIndex&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;diagnostic</span><span class="op">&gt;</span> <span class="ident">SourceFile</span><span class="op">&lt;</span><span class="lifetime">&#39;diagnostic</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new [SourceFile] from a slice of text</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source_code</span>: <span class="ident">BorrowedSourceCode</span><span class="op">&lt;</span><span class="lifetime">&#39;diagnostic</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="comment">// Either re-use the existing line index provided by the diagnostic or create one</span>
-        <span class="self">Self</span> {
-            <span class="ident">source</span>: <span class="ident">source_code</span>.<span class="ident">text</span>,
-            <span class="ident">line_starts</span>: <span class="ident">source_code</span>.<span class="ident">line_starts</span>.<span class="ident">map_or_else</span>(
-                <span class="op">|</span><span class="op">|</span> <span class="ident">Cow::Owned</span>(<span class="ident">LineIndexBuf::from_source_text</span>(<span class="ident">source_code</span>.<span class="ident">text</span>)),
-                <span class="ident">Cow::Borrowed</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;diagnostic</span>&gt; SourceFile&lt;<span class="lifetime">&#39;diagnostic</span>&gt; {
+    <span class="doccomment">/// Create a new [SourceFile] from a slice of text
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(source_code: BorrowedSourceCode&lt;<span class="lifetime">&#39;diagnostic</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="comment">// Either re-use the existing line index provided by the diagnostic or create one
+        </span><span class="self">Self </span>{
+            source: source_code.text,
+            line_starts: source_code.line_starts.map_or_else(
+                || Cow::Owned(LineIndexBuf::from_source_text(source_code.text)),
+                Cow::Borrowed,
             ),
         }
     }
 
-    <span class="doccomment">/// Return the starting byte index of the line with the specified line index.</span>
-    <span class="doccomment">/// Convenience method that already generates errors if necessary.</span>
-    <span class="kw">fn</span> <span class="ident">line_start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line_index</span>: <span class="ident">usize</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="ident">std::cmp::Ordering</span>;
+    <span class="doccomment">/// Return the starting byte index of the line with the specified line index.
+    /// Convenience method that already generates errors if necessary.
+    </span><span class="kw">fn </span>line_start(<span class="kw-2">&amp;</span><span class="self">self</span>, line_index: usize) -&gt; io::Result&lt;TextSize&gt; {
+        <span class="kw">use </span>std::cmp::Ordering;
 
-        <span class="kw">match</span> <span class="ident">line_index</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">line_starts</span>.<span class="ident">len</span>()) {
-            <span class="ident">Ordering::Less</span> =&gt; <span class="prelude-val">Ok</span>(<span class="self">self</span>
-                .<span class="ident">line_starts</span>
-                .<span class="ident">get</span>(<span class="ident">line_index</span>)
-                .<span class="ident">cloned</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;failed despite previous check&quot;</span>)),
-            <span class="ident">Ordering::Equal</span> =&gt; <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">source</span>.<span class="ident">text_len</span>()),
-            <span class="ident">Ordering::Greater</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">io::Error::new</span>(
-                <span class="ident">io::ErrorKind::InvalidInput</span>,
+        <span class="kw">match </span>line_index.cmp(<span class="kw-2">&amp;</span><span class="self">self</span>.line_starts.len()) {
+            Ordering::Less =&gt; <span class="prelude-val">Ok</span>(<span class="self">self
+                </span>.line_starts
+                .get(line_index)
+                .cloned()
+                .expect(<span class="string">&quot;failed despite previous check&quot;</span>)),
+            Ordering::Equal =&gt; <span class="prelude-val">Ok</span>(<span class="self">self</span>.source.text_len()),
+            Ordering::Greater =&gt; <span class="prelude-val">Err</span>(io::Error::new(
+                io::ErrorKind::InvalidInput,
                 <span class="string">&quot;overflow error&quot;</span>,
             )),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">line_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">byte_index</span>: <span class="ident">TextSize</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">line_starts</span>
-            .<span class="ident">binary_search</span>(<span class="kw-2">&amp;</span><span class="ident">byte_index</span>)
-            .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">next_line</span><span class="op">|</span> <span class="ident">next_line</span> <span class="op">-</span> <span class="number">1</span>)
+    <span class="kw">fn </span>line_index(<span class="kw-2">&amp;</span><span class="self">self</span>, byte_index: TextSize) -&gt; usize {
+        <span class="self">self</span>.line_starts
+            .binary_search(<span class="kw-2">&amp;</span>byte_index)
+            .unwrap_or_else(|next_line| next_line - <span class="number">1</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">line_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line_index</span>: <span class="ident">usize</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">line_start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">line_start</span>(<span class="ident">line_index</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">next_line_start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">line_start</span>(<span class="ident">line_index</span> <span class="op">+</span> <span class="number">1</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn </span>line_range(<span class="kw-2">&amp;</span><span class="self">self</span>, line_index: usize) -&gt; io::Result&lt;TextRange&gt; {
+        <span class="kw">let </span>line_start = <span class="self">self</span>.line_start(line_index)<span class="question-mark">?</span>;
+        <span class="kw">let </span>next_line_start = <span class="self">self</span>.line_start(line_index + <span class="number">1</span>)<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">TextRange::new</span>(<span class="ident">line_start</span>, <span class="ident">next_line_start</span>))
+        <span class="prelude-val">Ok</span>(TextRange::new(line_start, next_line_start))
     }
 
-    <span class="kw">fn</span> <span class="ident">line_number</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line_index</span>: <span class="ident">usize</span>) -&gt; <span class="ident">OneIndexed</span> {
-        <span class="comment">// SAFETY: Adding `1` to the value of `line_index` ensures it&#39;s non-zero</span>
-        <span class="ident">OneIndexed::from_zero_indexed</span>(<span class="ident">line_index</span>)
+    <span class="kw">fn </span>line_number(<span class="kw-2">&amp;</span><span class="self">self</span>, line_index: usize) -&gt; OneIndexed {
+        <span class="comment">// SAFETY: Adding `1` to the value of `line_index` ensures it&#39;s non-zero
+        </span>OneIndexed::from_zero_indexed(line_index)
     }
 
-    <span class="kw">fn</span> <span class="ident">column_number</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line_index</span>: <span class="ident">usize</span>, <span class="ident">byte_index</span>: <span class="ident">TextSize</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">OneIndexed</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">source</span>;
-        <span class="kw">let</span> <span class="ident">line_range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">line_range</span>(<span class="ident">line_index</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">column_index</span> <span class="op">=</span> <span class="ident">column_index</span>(<span class="ident">source</span>, <span class="ident">line_range</span>, <span class="ident">byte_index</span>);
+    <span class="kw">fn </span>column_number(<span class="kw-2">&amp;</span><span class="self">self</span>, line_index: usize, byte_index: TextSize) -&gt; io::Result&lt;OneIndexed&gt; {
+        <span class="kw">let </span>source = <span class="self">self</span>.source;
+        <span class="kw">let </span>line_range = <span class="self">self</span>.line_range(line_index)<span class="question-mark">?</span>;
+        <span class="kw">let </span>column_index = column_index(source, line_range, byte_index);
 
-        <span class="comment">// SAFETY: Adding `1` to the value of `column_index` ensures it&#39;s non-zero</span>
-        <span class="prelude-val">Ok</span>(<span class="ident">OneIndexed::from_zero_indexed</span>(<span class="ident">column_index</span>))
+        <span class="comment">// SAFETY: Adding `1` to the value of `column_index` ensures it&#39;s non-zero
+        </span><span class="prelude-val">Ok</span>(OneIndexed::from_zero_indexed(column_index))
     }
 
-    <span class="doccomment">/// Get a source location from a byte index into the text of this file</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">location</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">byte_index</span>: <span class="ident">TextSize</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">SourceLocation</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">line_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">line_index</span>(<span class="ident">byte_index</span>);
+    <span class="doccomment">/// Get a source location from a byte index into the text of this file
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>location(<span class="kw-2">&amp;</span><span class="self">self</span>, byte_index: TextSize) -&gt; io::Result&lt;SourceLocation&gt; {
+        <span class="kw">let </span>line_index = <span class="self">self</span>.line_index(byte_index);
 
-        <span class="prelude-val">Ok</span>(<span class="ident">SourceLocation</span> {
-            <span class="ident">line_number</span>: <span class="self">self</span>.<span class="ident">line_number</span>(<span class="ident">line_index</span>),
-            <span class="ident">column_number</span>: <span class="self">self</span>.<span class="ident">column_number</span>(<span class="ident">line_index</span>, <span class="ident">byte_index</span>)<span class="question-mark">?</span>,
+        <span class="prelude-val">Ok</span>(SourceLocation {
+            line_number: <span class="self">self</span>.line_number(line_index),
+            column_number: <span class="self">self</span>.column_number(line_index, byte_index)<span class="question-mark">?</span>,
         })
     }
 }
 
-<span class="doccomment">/// The column index at the given byte index in the source file.</span>
-<span class="doccomment">/// This is the number of characters to the given byte index.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// If the byte index is smaller than the start of the line, then `0` is returned.</span>
-<span class="doccomment">/// If the byte index is past the end of the line, the column index of the last</span>
-<span class="doccomment">/// character `+ 1` is returned.</span>
-<span class="kw">fn</span> <span class="ident">column_index</span>(<span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">line_range</span>: <span class="ident">TextRange</span>, <span class="ident">byte_index</span>: <span class="ident">TextSize</span>) -&gt; <span class="ident">usize</span> {
-    <span class="kw">let</span> <span class="ident">end_index</span> <span class="op">=</span> <span class="ident">std::cmp::min</span>(
-        <span class="ident">byte_index</span>,
-        <span class="ident">std::cmp::min</span>(<span class="ident">line_range</span>.<span class="ident">end</span>(), <span class="ident">source</span>.<span class="ident">text_len</span>()),
+<span class="doccomment">/// The column index at the given byte index in the source file.
+/// This is the number of characters to the given byte index.
+///
+/// If the byte index is smaller than the start of the line, then `0` is returned.
+/// If the byte index is past the end of the line, the column index of the last
+/// character `+ 1` is returned.
+</span><span class="kw">fn </span>column_index(source: <span class="kw-2">&amp;</span>str, line_range: TextRange, byte_index: TextSize) -&gt; usize {
+    <span class="kw">let </span>end_index = std::cmp::min(
+        byte_index,
+        std::cmp::min(line_range.end(), source.text_len()),
     );
 
-    (<span class="ident">usize::from</span>(<span class="ident">line_range</span>.<span class="ident">start</span>())..<span class="ident">usize::from</span>(<span class="ident">end_index</span>))
-        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">byte_index</span><span class="op">|</span> <span class="ident">source</span>.<span class="ident">is_char_boundary</span>(<span class="ident">byte_index</span> <span class="op">+</span> <span class="number">1</span>))
-        .<span class="ident">count</span>()
+    (usize::from(line_range.start())..usize::from(end_index))
+        .filter(|byte_index| source.is_char_boundary(byte_index + <span class="number">1</span>))
+        .count()
 }
 
-<span class="doccomment">/// Type-safe wrapper for a value whose logical range starts at `1`, for</span>
-<span class="doccomment">/// instance the line or column numbers in a file</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Internally this is represented as a [NonZeroUsize], this enables some</span>
-<span class="doccomment">/// memory optimizations</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OneIndexed</span>(<span class="ident">NonZeroUsize</span>);
+<span class="doccomment">/// Type-safe wrapper for a value whose logical range starts at `1`, for
+/// instance the line or column numbers in a file
+///
+/// Internally this is represented as a [NonZeroUsize], this enables some
+/// memory optimizations
+</span><span class="attribute">#[repr(transparent)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub struct </span>OneIndexed(NonZeroUsize);
 
-<span class="kw">impl</span> <span class="ident">OneIndexed</span> {
-    <span class="comment">// SAFETY: These constants are being initialized with non-zero values</span>
-    <span class="doccomment">/// The smallest value that can be represented by this integer type.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MIN</span>: <span class="self">Self</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident"><span class="self">Self</span>::new_unchecked</span>(<span class="number">1</span>) };
-    <span class="doccomment">/// The largest value that can be represented by this integer type</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MAX</span>: <span class="self">Self</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident"><span class="self">Self</span>::new_unchecked</span>(<span class="ident">usize::MAX</span>) };
+<span class="kw">impl </span>OneIndexed {
+    <span class="comment">// SAFETY: These constants are being initialized with non-zero values
+    </span><span class="doccomment">/// The smallest value that can be represented by this integer type.
+    </span><span class="kw">pub const </span>MIN: <span class="self">Self </span>= <span class="kw">unsafe </span>{ <span class="self">Self</span>::new_unchecked(<span class="number">1</span>) };
+    <span class="doccomment">/// The largest value that can be represented by this integer type
+    </span><span class="kw">pub const </span>MAX: <span class="self">Self </span>= <span class="kw">unsafe </span>{ <span class="self">Self</span>::new_unchecked(usize::MAX) };
 
-    <span class="doccomment">/// Creates a non-zero if the given value is not zero.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">NonZeroUsize::new</span>(<span class="ident">value</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">value</span>) =&gt; <span class="prelude-val">Some</span>(<span class="self">Self</span>(<span class="ident">value</span>)),
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="doccomment">/// Creates a non-zero if the given value is not zero.
+    </span><span class="kw">pub const fn </span>new(value: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">match </span>NonZeroUsize::new(value) {
+            <span class="prelude-val">Some</span>(value) =&gt; <span class="prelude-val">Some</span>(<span class="self">Self</span>(value)),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Creates a non-zero without checking whether the value is non-zero.</span>
-    <span class="doccomment">/// This results in undefined behaviour if the value is zero.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Safety</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The value must not be zero.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_unchecked</span>(<span class="ident">value</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">NonZeroUsize::new_unchecked</span>(<span class="ident">value</span>))
+    <span class="doccomment">/// Creates a non-zero without checking whether the value is non-zero.
+    /// This results in undefined behaviour if the value is zero.
+    ///
+    /// # Safety
+    ///
+    /// The value must not be zero.
+    </span><span class="kw">pub const unsafe fn </span>new_unchecked(value: usize) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(NonZeroUsize::new_unchecked(value))
     }
 
-    <span class="doccomment">/// Construct a new [OneIndexed] from a zero-indexed value</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">from_zero_indexed</span>(<span class="ident">value</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="comment">// SAFETY: Adding `1` to `value` ensures it&#39;s non-zero</span>
-        <span class="self">Self</span>(<span class="kw">unsafe</span> { <span class="ident">NonZeroUsize::new_unchecked</span>(<span class="ident">value</span>.<span class="ident">saturating_add</span>(<span class="number">1</span>)) })
+    <span class="doccomment">/// Construct a new [OneIndexed] from a zero-indexed value
+    </span><span class="kw">pub const fn </span>from_zero_indexed(value: usize) -&gt; <span class="self">Self </span>{
+        <span class="comment">// SAFETY: Adding `1` to `value` ensures it&#39;s non-zero
+        </span><span class="self">Self</span>(<span class="kw">unsafe </span>{ NonZeroUsize::new_unchecked(value.saturating_add(<span class="number">1</span>)) })
     }
 
-    <span class="doccomment">/// Returns the value as a primitive type.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>()
+    <span class="doccomment">/// Returns the value as a primitive type.
+    </span><span class="kw">pub const fn </span>get(<span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.<span class="number">0</span>.get()
     }
 
-    <span class="doccomment">/// Return the zero-indexed primitive value for this [OneIndexed]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">to_zero_indexed</span>(<span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>() <span class="op">-</span> <span class="number">1</span>
-    }
+    <span class="doccomment">/// Return the zero-indexed primitive value for this [OneIndexed]
+    </span><span class="kw">pub const fn </span>to_zero_indexed(<span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.<span class="number">0</span>.get() - <span class="number">1
+    </span>}
 
-    <span class="doccomment">/// Saturating integer addition. Computes `self + rhs`, saturating at</span>
-    <span class="doccomment">/// the numeric bounds instead of overflowing.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">saturating_add</span>(<span class="self">self</span>, <span class="ident">rhs</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">NonZeroUsize::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>().<span class="ident">saturating_add</span>(<span class="ident">rhs</span>)) {
-            <span class="prelude-val">Some</span>(<span class="ident">value</span>) =&gt; <span class="self">Self</span>(<span class="ident">value</span>),
-            <span class="prelude-val">None</span> =&gt; <span class="ident"><span class="self">Self</span>::MAX</span>,
+    <span class="doccomment">/// Saturating integer addition. Computes `self + rhs`, saturating at
+    /// the numeric bounds instead of overflowing.
+    </span><span class="kw">pub const fn </span>saturating_add(<span class="self">self</span>, rhs: usize) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>NonZeroUsize::new(<span class="self">self</span>.<span class="number">0</span>.get().saturating_add(rhs)) {
+            <span class="prelude-val">Some</span>(value) =&gt; <span class="self">Self</span>(value),
+            <span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::MAX,
         }
     }
 
-    <span class="doccomment">/// Saturating integer subtraction. Computes `self - rhs`, saturating</span>
-    <span class="doccomment">/// at the numeric bounds instead of overflowing.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">saturating_sub</span>(<span class="self">self</span>, <span class="ident">rhs</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">NonZeroUsize::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>().<span class="ident">saturating_sub</span>(<span class="ident">rhs</span>)) {
-            <span class="prelude-val">Some</span>(<span class="ident">value</span>) =&gt; <span class="self">Self</span>(<span class="ident">value</span>),
-            <span class="prelude-val">None</span> =&gt; <span class="ident"><span class="self">Self</span>::MIN</span>,
+    <span class="doccomment">/// Saturating integer subtraction. Computes `self - rhs`, saturating
+    /// at the numeric bounds instead of overflowing.
+    </span><span class="kw">pub const fn </span>saturating_sub(<span class="self">self</span>, rhs: usize) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>NonZeroUsize::new(<span class="self">self</span>.<span class="number">0</span>.get().saturating_sub(rhs)) {
+            <span class="prelude-val">Some</span>(value) =&gt; <span class="self">Self</span>(value),
+            <span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::MIN,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">OneIndexed</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>().<span class="ident">fmt</span>(<span class="ident">f</span>)
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>OneIndexed {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.get().fmt(f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">OneIndexed</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>().<span class="ident">fmt</span>(<span class="ident">f</span>)
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>OneIndexed {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="self">self</span>.<span class="number">0</span>.get().fmt(f)
     }
 }
 
-<span class="doccomment">/// Adapter type implementing [Iterator] for ranges of [OneIndexed],</span>
-<span class="doccomment">/// since [std::iter::Step] is unstable</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IntoIter</span>(<span class="ident">std::ops::Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Adapter type implementing [Iterator] for ranges of [OneIndexed],
+/// since [std::iter::Step] is unstable
+</span><span class="kw">pub struct </span>IntoIter(std::ops::Range&lt;usize&gt;);
 
-<span class="kw">impl</span> <span class="ident">IntoIter</span> {
-    <span class="doccomment">/// Construct a new iterator over a range of [OneIndexed] of any kind</span>
-    <span class="doccomment">/// (`..`, `a..`, `..b`, `..=c`, `d..e`, or `f..=g`)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">RangeBounds</span><span class="op">&lt;</span><span class="ident">OneIndexed</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">range</span>: <span class="ident">R</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">start_bound</span>() {
-            <span class="ident">Bound::Included</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>.<span class="ident">get</span>(),
-            <span class="ident">Bound::Excluded</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>.<span class="ident">get</span>() <span class="op">+</span> <span class="number">1</span>,
-            <span class="ident">Bound::Unbounded</span> =&gt; <span class="number">1</span>,
+<span class="kw">impl </span>IntoIter {
+    <span class="doccomment">/// Construct a new iterator over a range of [OneIndexed] of any kind
+    /// (`..`, `a..`, `..b`, `..=c`, `d..e`, or `f..=g`)
+    </span><span class="kw">pub fn </span>new&lt;R: RangeBounds&lt;OneIndexed&gt;&gt;(range: R) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>start = <span class="kw">match </span>range.start_bound() {
+            Bound::Included(value) =&gt; value.get(),
+            Bound::Excluded(value) =&gt; value.get() + <span class="number">1</span>,
+            Bound::Unbounded =&gt; <span class="number">1</span>,
         };
 
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">end_bound</span>() {
-            <span class="ident">Bound::Included</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>.<span class="ident">get</span>() <span class="op">+</span> <span class="number">1</span>,
-            <span class="ident">Bound::Excluded</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>.<span class="ident">get</span>(),
-            <span class="ident">Bound::Unbounded</span> =&gt; <span class="ident">usize::MAX</span>,
+        <span class="kw">let </span>end = <span class="kw">match </span>range.end_bound() {
+            Bound::Included(value) =&gt; value.get() + <span class="number">1</span>,
+            Bound::Excluded(value) =&gt; value.get(),
+            Bound::Unbounded =&gt; usize::MAX,
         };
 
-        <span class="self">Self</span>(<span class="ident">start</span>..<span class="ident">end</span>)
+        <span class="self">Self</span>(start..end)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">IntoIter</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">OneIndexed</span>;
+<span class="kw">impl </span>Iterator <span class="kw">for </span>IntoIter {
+    <span class="kw">type </span>Item = OneIndexed;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> <span class="ident">OneIndexed::new</span>(<span class="ident">index</span>).<span class="ident">unwrap</span>())
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.next().map(|index| OneIndexed::new(index).unwrap())
     }
 
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">size_hint</span>()
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">IntoIter</span> {
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-            .<span class="ident">next_back</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> <span class="ident">OneIndexed::new</span>(<span class="ident">index</span>).<span class="ident">unwrap</span>())
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="self">self</span>.<span class="number">0</span>.size_hint()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">IntoIter</span> {}
+<span class="kw">impl </span>DoubleEndedIterator <span class="kw">for </span>IntoIter {
+    <span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="self">self</span>.<span class="number">0
+            </span>.next_back()
+            .map(|index| OneIndexed::new(index).unwrap())
+    }
+}
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">std::num::NonZeroUsize</span>;
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>IntoIter {}
 
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">calculate_print_width</span>, <span class="ident">OneIndexed</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>std::num::NonZeroUsize;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">print_width</span>() {
-        <span class="kw">let</span> <span class="ident">one</span> <span class="op">=</span> <span class="ident">NonZeroUsize::new</span>(<span class="number">1</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">two</span> <span class="op">=</span> <span class="ident">NonZeroUsize::new</span>(<span class="number">2</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">three</span> <span class="op">=</span> <span class="ident">NonZeroUsize::new</span>(<span class="number">3</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">four</span> <span class="op">=</span> <span class="ident">NonZeroUsize::new</span>(<span class="number">4</span>).<span class="ident">unwrap</span>();
+    <span class="kw">use super</span>::{calculate_print_width, OneIndexed};
 
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">1</span>).<span class="ident">unwrap</span>()), <span class="ident">one</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">9</span>).<span class="ident">unwrap</span>()), <span class="ident">one</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>print_width() {
+        <span class="kw">let </span>one = NonZeroUsize::new(<span class="number">1</span>).unwrap();
+        <span class="kw">let </span>two = NonZeroUsize::new(<span class="number">2</span>).unwrap();
+        <span class="kw">let </span>three = NonZeroUsize::new(<span class="number">3</span>).unwrap();
+        <span class="kw">let </span>four = NonZeroUsize::new(<span class="number">4</span>).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">10</span>).<span class="ident">unwrap</span>()), <span class="ident">two</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">11</span>).<span class="ident">unwrap</span>()), <span class="ident">two</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">19</span>).<span class="ident">unwrap</span>()), <span class="ident">two</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">20</span>).<span class="ident">unwrap</span>()), <span class="ident">two</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">21</span>).<span class="ident">unwrap</span>()), <span class="ident">two</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">99</span>).<span class="ident">unwrap</span>()), <span class="ident">two</span>);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">1</span>).unwrap()), one);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">9</span>).unwrap()), one);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">100</span>).<span class="ident">unwrap</span>()), <span class="ident">three</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">101</span>).<span class="ident">unwrap</span>()), <span class="ident">three</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">110</span>).<span class="ident">unwrap</span>()), <span class="ident">three</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">199</span>).<span class="ident">unwrap</span>()), <span class="ident">three</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">999</span>).<span class="ident">unwrap</span>()), <span class="ident">three</span>);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">10</span>).unwrap()), two);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">11</span>).unwrap()), two);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">19</span>).unwrap()), two);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">20</span>).unwrap()), two);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">21</span>).unwrap()), two);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">99</span>).unwrap()), two);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">calculate_print_width</span>(<span class="ident">OneIndexed::new</span>(<span class="number">1000</span>).<span class="ident">unwrap</span>()), <span class="ident">four</span>);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">100</span>).unwrap()), three);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">101</span>).unwrap()), three);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">110</span>).unwrap()), three);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">199</span>).unwrap()), three);
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">999</span>).unwrap()), three);
+
+        <span class="macro">assert_eq!</span>(calculate_print_width(OneIndexed::new(<span class="number">1000</span>).unwrap()), four);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

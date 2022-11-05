@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_console/src/write/termcolor.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>termcolor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_console/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_console/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_console/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_console/src/write/termcolor.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>termcolor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_console/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_console/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_console/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -236,62 +236,62 @@
 <span id="236">236</span>
 <span id="237">237</span>
 <span id="238">238</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Write</span> <span class="kw">as</span> <span class="kw">_</span>},
-    <span class="ident">io</span>,
+</pre><pre class="rust"><code><span class="kw">use </span>std::{
+    fmt::{<span class="self">self</span>, Write <span class="kw">as _</span>},
+    io,
 };
 
-<span class="kw">use</span> <span class="ident">termcolor</span>::{<span class="ident">Color</span>, <span class="ident">ColorSpec</span>, <span class="ident">WriteColor</span>};
-<span class="kw">use</span> <span class="ident">unicode_width::UnicodeWidthChar</span>;
+<span class="kw">use </span>termcolor::{Color, ColorSpec, WriteColor};
+<span class="kw">use </span>unicode_width::UnicodeWidthChar;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">fmt::MarkupElements</span>, <span class="ident">MarkupElement</span>};
+<span class="kw">use crate</span>::{fmt::MarkupElements, MarkupElement};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Write</span>;
+<span class="kw">use </span><span class="kw">super</span>::Write;
 
-<span class="doccomment">/// Adapter struct implementing [Write] over types implementing [WriteColor]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Termcolor</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="ident">W</span>);
+<span class="doccomment">/// Adapter struct implementing [Write] over types implementing [WriteColor]
+</span><span class="kw">pub struct </span>Termcolor&lt;W&gt;(<span class="kw">pub </span>W);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> <span class="ident">Write</span> <span class="kw">for</span> <span class="ident">Termcolor</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">W</span>: <span class="ident">WriteColor</span>,
+<span class="kw">impl</span>&lt;W&gt; Write <span class="kw">for </span>Termcolor&lt;W&gt;
+<span class="kw">where
+    </span>W: WriteColor,
 {
-    <span class="kw">fn</span> <span class="ident">write_str</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">elements</span>: <span class="kw-2">&amp;</span><span class="ident">MarkupElements</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">with_format</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>, <span class="ident">elements</span>, <span class="op">|</span><span class="ident">writer</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">adapter</span> <span class="op">=</span> <span class="ident">SanitizeAdapter</span> {
-                <span class="ident">writer</span>,
-                <span class="ident">error</span>: <span class="prelude-val">Ok</span>(()),
+    <span class="kw">fn </span>write_str(<span class="kw-2">&amp;mut </span><span class="self">self</span>, elements: <span class="kw-2">&amp;</span>MarkupElements, content: <span class="kw-2">&amp;</span>str) -&gt; io::Result&lt;()&gt; {
+        with_format(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>, elements, |writer| {
+            <span class="kw">let </span><span class="kw-2">mut </span>adapter = SanitizeAdapter {
+                writer,
+                error: <span class="prelude-val">Ok</span>(()),
             };
 
-            <span class="kw">match</span> <span class="ident">adapter</span>.<span class="ident">write_str</span>(<span class="ident">content</span>) {
+            <span class="kw">match </span>adapter.write_str(content) {
                 <span class="prelude-val">Ok</span>(()) =&gt; <span class="prelude-val">Ok</span>(()),
                 <span class="prelude-val">Err</span>(..) =&gt; {
-                    <span class="kw">if</span> <span class="ident">adapter</span>.<span class="ident">error</span>.<span class="ident">is_err</span>() {
-                        <span class="ident">adapter</span>.<span class="ident">error</span>
-                    } <span class="kw">else</span> {
-                        <span class="comment">// SanitizeAdapter can only fail if the underlying</span>
-                        <span class="comment">// writer returns an error</span>
-                        <span class="macro">unreachable!</span>()
+                    <span class="kw">if </span>adapter.error.is_err() {
+                        adapter.error
+                    } <span class="kw">else </span>{
+                        <span class="comment">// SanitizeAdapter can only fail if the underlying
+                        // writer returns an error
+                        </span><span class="macro">unreachable!</span>()
                     }
                 }
             }
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">write_fmt</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">elements</span>: <span class="kw-2">&amp;</span><span class="ident">MarkupElements</span>, <span class="ident">content</span>: <span class="ident">fmt::Arguments</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">with_format</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>, <span class="ident">elements</span>, <span class="op">|</span><span class="ident">writer</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">adapter</span> <span class="op">=</span> <span class="ident">SanitizeAdapter</span> {
-                <span class="ident">writer</span>,
-                <span class="ident">error</span>: <span class="prelude-val">Ok</span>(()),
+    <span class="kw">fn </span>write_fmt(<span class="kw-2">&amp;mut </span><span class="self">self</span>, elements: <span class="kw-2">&amp;</span>MarkupElements, content: fmt::Arguments) -&gt; io::Result&lt;()&gt; {
+        with_format(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>, elements, |writer| {
+            <span class="kw">let </span><span class="kw-2">mut </span>adapter = SanitizeAdapter {
+                writer,
+                error: <span class="prelude-val">Ok</span>(()),
             };
 
-            <span class="kw">match</span> <span class="ident">adapter</span>.<span class="ident">write_fmt</span>(<span class="ident">content</span>) {
+            <span class="kw">match </span>adapter.write_fmt(content) {
                 <span class="prelude-val">Ok</span>(()) =&gt; <span class="prelude-val">Ok</span>(()),
                 <span class="prelude-val">Err</span>(..) =&gt; {
-                    <span class="kw">if</span> <span class="ident">adapter</span>.<span class="ident">error</span>.<span class="ident">is_err</span>() {
-                        <span class="ident">adapter</span>.<span class="ident">error</span>
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">Err</span>(<span class="ident">io::Error::new</span>(
-                            <span class="ident">io::ErrorKind::Other</span>,
+                    <span class="kw">if </span>adapter.error.is_err() {
+                        adapter.error
+                    } <span class="kw">else </span>{
+                        <span class="prelude-val">Err</span>(io::Error::new(
+                            io::ErrorKind::Other,
                             <span class="string">&quot;a Display formatter returned an error&quot;</span>,
                         ))
                     }
@@ -301,31 +301,31 @@
     }
 }
 
-<span class="doccomment">/// Applies the current format in `state` to `writer`, calls `func` to</span>
-<span class="doccomment">/// print a piece of text, then reset the printing format</span>
-<span class="kw">fn</span> <span class="ident">with_format</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(
-    <span class="ident">writer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">W</span>,
-    <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident">MarkupElements</span>,
-    <span class="ident">func</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">W</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
-) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">W</span>: <span class="ident">WriteColor</span>,
+<span class="doccomment">/// Applies the current format in `state` to `writer`, calls `func` to
+/// print a piece of text, then reset the printing format
+</span><span class="kw">fn </span>with_format&lt;W&gt;(
+    writer: <span class="kw-2">&amp;mut </span>W,
+    state: <span class="kw-2">&amp;</span>MarkupElements,
+    func: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>W) -&gt; io::Result&lt;()&gt;,
+) -&gt; io::Result&lt;()&gt;
+<span class="kw">where
+    </span>W: WriteColor,
 {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">color</span> <span class="op">=</span> <span class="ident">ColorSpec::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">link</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inverse</span> <span class="op">=</span> <span class="bool-val">false</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>color = ColorSpec::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>link = <span class="prelude-val">None</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>inverse = <span class="bool-val">false</span>;
 
-    <span class="ident">state</span>.<span class="ident">for_each</span>(<span class="kw-2">&amp;mut</span> <span class="op">|</span><span class="ident">elements</span><span class="op">|</span> {
-        <span class="kw">for</span> <span class="ident">element</span> <span class="kw">in</span> <span class="ident">elements</span> {
-            <span class="kw">match</span> <span class="ident">element</span> {
-                <span class="ident">MarkupElement::Inverse</span> =&gt; {
-                    <span class="ident">inverse</span> <span class="op">=</span> <span class="op">!</span><span class="ident">inverse</span>;
+    state.for_each(<span class="kw-2">&amp;mut </span>|elements| {
+        <span class="kw">for </span>element <span class="kw">in </span>elements {
+            <span class="kw">match </span>element {
+                MarkupElement::Inverse =&gt; {
+                    inverse = !inverse;
                 }
-                <span class="ident">MarkupElement::Hyperlink</span> { <span class="ident">href</span> } =&gt; {
-                    <span class="ident">link</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">href</span>);
+                MarkupElement::Hyperlink { href } =&gt; {
+                    link = <span class="prelude-val">Some</span>(href);
                 }
-                <span class="kw">_</span> =&gt; {
-                    <span class="ident">element</span>.<span class="ident">update_color</span>(<span class="kw-2">&amp;mut</span> <span class="ident">color</span>);
+                <span class="kw">_ </span>=&gt; {
+                    element.update_color(<span class="kw-2">&amp;mut </span>color);
                 }
             }
         }
@@ -333,74 +333,74 @@
         <span class="prelude-val">Ok</span>(())
     })<span class="question-mark">?</span>;
 
-    <span class="kw">if</span> <span class="ident">inverse</span> {
-        <span class="kw">let</span> <span class="ident">fg</span> <span class="op">=</span> <span class="ident">color</span>.<span class="ident">fg</span>().<span class="ident">map_or</span>(<span class="ident">Color::White</span>, <span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">c</span>);
-        <span class="kw">let</span> <span class="ident">bg</span> <span class="op">=</span> <span class="ident">color</span>.<span class="ident">bg</span>().<span class="ident">map_or</span>(<span class="ident">Color::Black</span>, <span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">c</span>);
-        <span class="ident">color</span>.<span class="ident">set_bg</span>(<span class="prelude-val">Some</span>(<span class="ident">fg</span>));
-        <span class="ident">color</span>.<span class="ident">set_fg</span>(<span class="prelude-val">Some</span>(<span class="ident">bg</span>));
+    <span class="kw">if </span>inverse {
+        <span class="kw">let </span>fg = color.fg().map_or(Color::White, |c| <span class="kw-2">*</span>c);
+        <span class="kw">let </span>bg = color.bg().map_or(Color::Black, |c| <span class="kw-2">*</span>c);
+        color.set_bg(<span class="prelude-val">Some</span>(fg));
+        color.set_fg(<span class="prelude-val">Some</span>(bg));
     }
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">writer</span>.<span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="ident">color</span>) {
-        <span class="ident">writer</span>.<span class="ident">reset</span>()<span class="question-mark">?</span>;
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>);
+    <span class="kw">if let </span><span class="prelude-val">Err</span>(err) = writer.set_color(<span class="kw-2">&amp;</span>color) {
+        writer.reset()<span class="question-mark">?</span>;
+        <span class="kw">return </span><span class="prelude-val">Err</span>(err);
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reset_link</span> <span class="op">=</span> <span class="bool-val">false</span>;
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">href</span>) <span class="op">=</span> <span class="ident">link</span> {
-        <span class="comment">// `is_synchronous` is used to check if the underlying writer</span>
-        <span class="comment">// is using the Windows Console API, that does not support ANSI</span>
-        <span class="comment">// escape codes. Generally this would only be true when running</span>
-        <span class="comment">// in the legacy `cmd.exe` terminal emulator, since in modern</span>
-        <span class="comment">// clients like the Windows Terminal ANSI is used instead</span>
-        <span class="kw">if</span> <span class="ident">writer</span>.<span class="ident">supports_color</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">writer</span>.<span class="ident">is_synchronous</span>() {
-            <span class="macro">write!</span>(<span class="ident">writer</span>, <span class="string">&quot;\x1b]8;;{href}\x1b\\&quot;</span>)<span class="question-mark">?</span>;
-            <span class="ident">reset_link</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>reset_link = <span class="bool-val">false</span>;
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(href) = link {
+        <span class="comment">// `is_synchronous` is used to check if the underlying writer
+        // is using the Windows Console API, that does not support ANSI
+        // escape codes. Generally this would only be true when running
+        // in the legacy `cmd.exe` terminal emulator, since in modern
+        // clients like the Windows Terminal ANSI is used instead
+        </span><span class="kw">if </span>writer.supports_color() &amp;&amp; !writer.is_synchronous() {
+            <span class="macro">write!</span>(writer, <span class="string">&quot;\x1b]8;;{href}\x1b\\&quot;</span>)<span class="question-mark">?</span>;
+            reset_link = <span class="bool-val">true</span>;
         }
     }
 
-    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">func</span>(<span class="ident">writer</span>);
+    <span class="kw">let </span>result = func(writer);
 
-    <span class="kw">if</span> <span class="ident">reset_link</span> {
-        <span class="macro">write!</span>(<span class="ident">writer</span>, <span class="string">&quot;\x1b]8;;\x1b\\&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">if </span>reset_link {
+        <span class="macro">write!</span>(writer, <span class="string">&quot;\x1b]8;;\x1b\\&quot;</span>)<span class="question-mark">?</span>;
     }
 
-    <span class="ident">writer</span>.<span class="ident">reset</span>()<span class="question-mark">?</span>;
-    <span class="ident">result</span>
+    writer.reset()<span class="question-mark">?</span>;
+    result
 }
 
-<span class="doccomment">/// Adapter [fmt::Write] calls to [io::Write] with sanitization,</span>
-<span class="doccomment">/// implemented as an internal struct to avoid exposing [fmt::Write] on</span>
-<span class="doccomment">/// [Termcolor]</span>
-<span class="kw">struct</span> <span class="ident">SanitizeAdapter</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="ident">writer</span>: <span class="ident">W</span>,
-    <span class="ident">error</span>: <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
+<span class="doccomment">/// Adapter [fmt::Write] calls to [io::Write] with sanitization,
+/// implemented as an internal struct to avoid exposing [fmt::Write] on
+/// [Termcolor]
+</span><span class="kw">struct </span>SanitizeAdapter&lt;W&gt; {
+    writer: W,
+    error: io::Result&lt;()&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> <span class="ident">fmt::Write</span> <span class="kw">for</span> <span class="ident">SanitizeAdapter</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">W</span>: <span class="ident">WriteColor</span>,
+<span class="kw">impl</span>&lt;W&gt; fmt::Write <span class="kw">for </span>SanitizeAdapter&lt;W&gt;
+<span class="kw">where
+    </span>W: WriteColor,
 {
-    <span class="kw">fn</span> <span class="ident">write_str</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span>];
+    <span class="kw">fn </span>write_str(<span class="kw-2">&amp;mut </span><span class="self">self</span>, content: <span class="kw-2">&amp;</span>str) -&gt; fmt::Result {
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0</span>; <span class="number">4</span>];
 
-        <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">content</span>.<span class="ident">chars</span>() {
-            <span class="comment">// Replace non-whitespace, zero-width characters with the Unicode replacement character</span>
-            <span class="kw">let</span> <span class="ident">is_whitespace</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">is_whitespace</span>();
-            <span class="kw">let</span> <span class="ident">is_zero_width</span> <span class="op">=</span> <span class="ident">UnicodeWidthChar::width</span>(<span class="ident">item</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">width</span><span class="op">|</span> <span class="ident">width</span> <span class="op">==</span> <span class="number">0</span>);
-            <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">is_whitespace</span> <span class="op">&amp;&amp;</span> <span class="ident">is_zero_width</span> {
-                <span class="ident">char::REPLACEMENT_CHARACTER</span>
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">windows</span>) <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">supports_color</span>() {
-                <span class="comment">// Unicode is currently poorly supported on most Windows</span>
-                <span class="comment">// terminal clients, so we always strip emojis in Windows</span>
-                <span class="ident">unicode_to_ascii</span>(<span class="ident">item</span>)
-            } <span class="kw">else</span> {
-                <span class="ident">item</span>
+        <span class="kw">for </span>item <span class="kw">in </span>content.chars() {
+            <span class="comment">// Replace non-whitespace, zero-width characters with the Unicode replacement character
+            </span><span class="kw">let </span>is_whitespace = item.is_whitespace();
+            <span class="kw">let </span>is_zero_width = UnicodeWidthChar::width(item).map_or(<span class="bool-val">true</span>, |width| width == <span class="number">0</span>);
+            <span class="kw">let </span>item = <span class="kw">if </span>!is_whitespace &amp;&amp; is_zero_width {
+                char::REPLACEMENT_CHARACTER
+            } <span class="kw">else if </span><span class="macro">cfg!</span>(windows) || !<span class="self">self</span>.writer.supports_color() {
+                <span class="comment">// Unicode is currently poorly supported on most Windows
+                // terminal clients, so we always strip emojis in Windows
+                </span>unicode_to_ascii(item)
+            } <span class="kw">else </span>{
+                item
             };
 
-            <span class="ident">item</span>.<span class="ident">encode_utf8</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>);
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>[..<span class="ident">item</span>.<span class="ident">len_utf8</span>()]) {
-                <span class="self">self</span>.<span class="ident">error</span> <span class="op">=</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>);
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">fmt::Error</span>);
+            item.encode_utf8(<span class="kw-2">&amp;mut </span>buffer);
+            <span class="kw">if let </span><span class="prelude-val">Err</span>(err) = <span class="self">self</span>.writer.write_all(<span class="kw-2">&amp;</span>buffer[..item.len_utf8()]) {
+                <span class="self">self</span>.error = <span class="prelude-val">Err</span>(err);
+                <span class="kw">return </span><span class="prelude-val">Err</span>(fmt::Error);
             }
         }
 
@@ -408,71 +408,71 @@
     }
 }
 
-<span class="doccomment">/// Replace emoji characters with similar but more widely supported ASCII</span>
-<span class="doccomment">/// characters</span>
-<span class="kw">fn</span> <span class="ident">unicode_to_ascii</span>(<span class="ident">c</span>: <span class="ident">char</span>) -&gt; <span class="ident">char</span> {
-    <span class="kw">match</span> <span class="ident">c</span> {
-        <span class="string">&#39;\u{2714}&#39;</span> =&gt; <span class="string">&#39;\u{221a}&#39;</span>,
-        <span class="string">&#39;\u{2139}&#39;</span> =&gt; <span class="string">&#39;i&#39;</span>,
-        <span class="string">&#39;\u{26a0}&#39;</span> =&gt; <span class="string">&#39;!&#39;</span>,
-        <span class="string">&#39;\u{2716}&#39;</span> =&gt; <span class="string">&#39;\u{00d7}&#39;</span>,
-        <span class="kw">_</span> =&gt; <span class="ident">c</span>,
+<span class="doccomment">/// Replace emoji characters with similar but more widely supported ASCII
+/// characters
+</span><span class="kw">fn </span>unicode_to_ascii(c: char) -&gt; char {
+    <span class="kw">match </span>c {
+        <span class="string">&#39;\u{2714}&#39; </span>=&gt; <span class="string">&#39;\u{221a}&#39;</span>,
+        <span class="string">&#39;\u{2139}&#39; </span>=&gt; <span class="string">&#39;i&#39;</span>,
+        <span class="string">&#39;\u{26a0}&#39; </span>=&gt; <span class="string">&#39;!&#39;</span>,
+        <span class="string">&#39;\u{2716}&#39; </span>=&gt; <span class="string">&#39;\u{00d7}&#39;</span>,
+        <span class="kw">_ </span>=&gt; c,
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Write</span>, <span class="ident">str::from_utf8</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>std::{fmt::Write, str::from_utf8};
 
-    <span class="kw">use</span> <span class="ident">rome_markup::markup</span>;
-    <span class="kw">use</span> <span class="ident">termcolor::Ansi</span>;
+    <span class="kw">use </span>rome_markup::markup;
+    <span class="kw">use </span>termcolor::Ansi;
 
-    <span class="kw">use</span> <span class="kw">crate</span> <span class="kw">as</span> <span class="ident">rome_console</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::fmt::Formatter</span>;
+    <span class="kw">use crate as </span>rome_console;
+    <span class="kw">use </span><span class="kw">crate</span>::fmt::Formatter;
 
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">SanitizeAdapter</span>, <span class="ident">Termcolor</span>};
+    <span class="kw">use super</span>::{SanitizeAdapter, Termcolor};
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_sanitize</span>() {
-        <span class="comment">// Sanitization should leave whitespace control characters (space,</span>
-        <span class="comment">// tabs, newline, ...) and non-ASCII unicode characters as-is but</span>
-        <span class="comment">// redact zero-width characters (RTL override, null character, bell,</span>
-        <span class="comment">// zero-width space, ...)</span>
-        <span class="kw">const</span> <span class="ident">INPUT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;t\tes t\r\n\u{202D}t\0es\x07t\u{202E}\nt\u{200B}es🐛t&quot;</span>;
-        <span class="kw">const</span> <span class="ident">OUTPUT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;t\tes t\r\n\u{FFFD}t\u{FFFD}es\u{FFFD}t\u{FFFD}\nt\u{FFFD}es🐛t&quot;</span>;
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_sanitize() {
+        <span class="comment">// Sanitization should leave whitespace control characters (space,
+        // tabs, newline, ...) and non-ASCII unicode characters as-is but
+        // redact zero-width characters (RTL override, null character, bell,
+        // zero-width space, ...)
+        </span><span class="kw">const </span>INPUT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;t\tes t\r\n\u{202D}t\0es\x07t\u{202E}\nt\u{200B}es🐛t&quot;</span>;
+        <span class="kw">const </span>OUTPUT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;t\tes t\r\n\u{FFFD}t\u{FFFD}es\u{FFFD}t\u{FFFD}\nt\u{FFFD}es🐛t&quot;</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::new();
 
         {
-            <span class="kw">let</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">termcolor::Ansi::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">adapter</span> <span class="op">=</span> <span class="ident">SanitizeAdapter</span> {
-                <span class="ident">writer</span>,
-                <span class="ident">error</span>: <span class="prelude-val">Ok</span>(()),
+            <span class="kw">let </span>writer = termcolor::Ansi::new(<span class="kw-2">&amp;mut </span>buffer);
+            <span class="kw">let </span><span class="kw-2">mut </span>adapter = SanitizeAdapter {
+                writer,
+                error: <span class="prelude-val">Ok</span>(()),
             };
 
-            <span class="ident">adapter</span>.<span class="ident">write_str</span>(<span class="ident">INPUT</span>).<span class="ident">unwrap</span>();
-            <span class="ident">adapter</span>.<span class="ident">error</span>.<span class="ident">unwrap</span>();
+            adapter.write_str(INPUT).unwrap();
+            adapter.error.unwrap();
         }
 
-        <span class="macro">assert_eq!</span>(<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>).<span class="ident">unwrap</span>(), <span class="ident">OUTPUT</span>);
+        <span class="macro">assert_eq!</span>(from_utf8(<span class="kw-2">&amp;</span>buffer).unwrap(), OUTPUT);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_hyperlink</span>() {
-        <span class="kw">const</span> <span class="ident">OUTPUT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[0m\x1b]8;;https://rome.tools/\x1b\\link\x1b]8;;\x1b\\\x1b[0m&quot;</span>;
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_hyperlink() {
+        <span class="kw">const </span>OUTPUT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;\x1b[0m\x1b]8;;https://rome.tools/\x1b\\link\x1b]8;;\x1b\\\x1b[0m&quot;</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">Termcolor</span>(<span class="ident">Ansi::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>));
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">formatter</span> <span class="op">=</span> <span class="ident">Formatter::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">writer</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = Termcolor(Ansi::new(<span class="kw-2">&amp;mut </span>buffer));
+        <span class="kw">let </span><span class="kw-2">mut </span>formatter = Formatter::new(<span class="kw-2">&amp;mut </span>writer);
 
-        <span class="ident">formatter</span>
-            .<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                <span class="op">&lt;</span><span class="ident">Hyperlink</span> <span class="ident">href</span><span class="op">=</span><span class="string">&quot;https://rome.tools/&quot;</span><span class="op">&gt;</span><span class="string">&quot;link&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Hyperlink</span><span class="op">&gt;</span>
+        formatter
+            .write_markup(<span class="macro">markup! </span>{
+                &lt;Hyperlink href=<span class="string">&quot;https://rome.tools/&quot;</span>&gt;<span class="string">&quot;link&quot;</span>&lt;/Hyperlink&gt;
             })
-            .<span class="ident">unwrap</span>();
+            .unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>).<span class="ident">unwrap</span>(), <span class="ident">OUTPUT</span>);
+        <span class="macro">assert_eq!</span>(from_utf8(<span class="kw-2">&amp;</span>buffer).unwrap(), OUTPUT);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_console" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_console" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

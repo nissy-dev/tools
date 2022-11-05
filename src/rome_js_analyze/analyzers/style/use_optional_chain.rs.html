@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/style/use_optional_chain.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_optional_chain.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/style/use_optional_chain.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_optional_chain.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -857,462 +857,462 @@
 <span id="857">857</span>
 <span id="858">858</span>
 <span id="859">859</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">context::RuleContext</span>, <span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_factory::make</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsAnyExpression</span>, <span class="ident">JsAnyName</span>, <span class="ident">JsComputedMemberExpression</span>, <span class="ident">JsLogicalExpression</span>, <span class="ident">JsLogicalOperator</span>,
-    <span class="ident">JsStaticMemberExpression</span>, <span class="ident">OperatorPrecedence</span>, <span class="ident">T</span>,
+</pre><pre class="rust"><code><span class="kw">use </span>rome_analyze::{context::RuleContext, declare_rule, ActionCategory, Ast, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_factory::make;
+<span class="kw">use </span>rome_js_syntax::{
+    JsAnyExpression, JsAnyName, JsComputedMemberExpression, JsLogicalExpression, JsLogicalOperator,
+    JsStaticMemberExpression, OperatorPrecedence, T,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">declare_node_union</span>, <span class="ident">AstNode</span>, <span class="ident">AstNodeExt</span>, <span class="ident">BatchMutationExt</span>, <span class="ident">SyntaxResult</span>};
-<span class="kw">use</span> <span class="ident">std::cmp::Ordering</span>;
-<span class="kw">use</span> <span class="ident">std::collections::VecDeque</span>;
-<span class="kw">use</span> <span class="ident">std::iter</span>;
+<span class="kw">use </span>rome_rowan::{declare_node_union, AstNode, AstNodeExt, BatchMutationExt, SyntaxResult};
+<span class="kw">use </span>std::cmp::Ordering;
+<span class="kw">use </span>std::collections::VecDeque;
+<span class="kw">use </span>std::iter;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsRuleAction</span>;
+<span class="kw">use </span><span class="kw">crate</span>::JsRuleAction;
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Enforce using concise optional chain instead of chained logical expressions.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// TypeScript 3.7 added support for the optional chain operator.</span>
-    <span class="doccomment">/// This operator allows you to safely access properties and methods on objects when they are potentially `null` or `undefined`.</span>
-    <span class="doccomment">/// The optional chain operator only chains when the property value is `null` or `undefined`.</span>
-    <span class="doccomment">/// It is much safer than relying upon logical operator chaining; which chains on any truthy value.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.buzz</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// foo.bar &amp;&amp; foo.bar.baz.buzz</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// foo !== undefined &amp;&amp; foo.bar != undefined &amp;&amp; foo.bar.baz !== null &amp;&amp; foo.bar.baz.buzz</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// ((foo || {}).bar || {}).baz;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// (await (foo1 || {}).foo2 || {}).foo3;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ts,expect_diagnostic</span>
-    <span class="doccomment">/// (((typeof x) as string) || {}).bar;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Valid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// foo &amp;&amp; bar;</span>
-    <span class="doccomment">///```</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// foo || {};</span>
-    <span class="doccomment">///```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// (foo = 2 || {}).bar;</span>
-    <span class="doccomment">///```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// foo || foo.bar;</span>
-    <span class="doccomment">///```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// foo[&quot;some long&quot;] &amp;&amp; foo[&quot;some long string&quot;].baz</span>
-    <span class="doccomment">///```</span>
-    <span class="doccomment">///</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseOptionalChain</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.10.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;useOptionalChain&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">true</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Enforce using concise optional chain instead of chained logical expressions.
+    ///
+    /// TypeScript 3.7 added support for the optional chain operator.
+    /// This operator allows you to safely access properties and methods on objects when they are potentially `null` or `undefined`.
+    /// The optional chain operator only chains when the property value is `null` or `undefined`.
+    /// It is much safer than relying upon logical operator chaining; which chains on any truthy value.
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    /// foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.buzz
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// foo.bar &amp;&amp; foo.bar.baz.buzz
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// foo !== undefined &amp;&amp; foo.bar != undefined &amp;&amp; foo.bar.baz !== null &amp;&amp; foo.bar.baz.buzz
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// ((foo || {}).bar || {}).baz;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// (await (foo1 || {}).foo2 || {}).foo3;
+    /// ```
+    ///
+    /// ```ts,expect_diagnostic
+    /// (((typeof x) as string) || {}).bar;
+    /// ```
+    ///
+    /// ### Valid
+    ///
+    /// ```js
+    /// foo &amp;&amp; bar;
+    ///```
+    /// ```js
+    /// foo || {};
+    ///```
+    ///
+    /// ```js
+    /// (foo = 2 || {}).bar;
+    ///```
+    ///
+    /// ```js
+    /// foo || foo.bar;
+    ///```
+    ///
+    /// ```js
+    /// foo[&quot;some long&quot;] &amp;&amp; foo[&quot;some long string&quot;].baz
+    ///```
+    ///
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) UseOptionalChain {
+        version: <span class="string">&quot;0.10.0&quot;</span>,
+        name: <span class="string">&quot;useOptionalChain&quot;</span>,
+        recommended: <span class="bool-val">true</span>,
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">UseOptionalChainState</span> {
-    <span class="ident">LogicalAnd</span>(<span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span>),
-    <span class="ident">LogicalOrLike</span>(<span class="ident">LogicalOrLikeChain</span>),
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>UseOptionalChainState {
+    LogicalAnd(VecDeque&lt;JsAnyExpression&gt;),
+    LogicalOrLike(LogicalOrLikeChain),
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseOptionalChain</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">JsLogicalExpression</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> <span class="ident">UseOptionalChainState</span>;
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>UseOptionalChain {
+    <span class="kw">type </span>Query = Ast&lt;JsLogicalExpression&gt;;
+    <span class="kw">type </span>State = UseOptionalChainState;
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">logical</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="ident">operator</span> <span class="op">=</span> <span class="ident">logical</span>.<span class="ident">operator</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt; {
+        <span class="kw">let </span>logical = ctx.query();
+        <span class="kw">let </span>operator = logical.operator().ok()<span class="question-mark">?</span>;
 
-        <span class="kw">match</span> <span class="ident">operator</span> {
-            <span class="ident">JsLogicalOperator::LogicalAnd</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">head</span> <span class="op">=</span> <span class="ident">logical</span>.<span class="ident">right</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
+        <span class="kw">match </span>operator {
+            JsLogicalOperator::LogicalAnd =&gt; {
+                <span class="kw">let </span>head = logical.right().ok()<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="ident">LogicalAndChain::from_expression</span>(<span class="ident">head</span>).<span class="ident">ok</span>()<span class="question-mark">?</span>;
+                <span class="kw">let </span>chain = LogicalAndChain::from_expression(head).ok()<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="ident">chain</span>.<span class="ident">is_inside_another_chain</span>().<span class="ident">ok</span>()<span class="question-mark">?</span> {
-                    <span class="kw">return</span> <span class="prelude-val">None</span>;
+                <span class="kw">if </span>chain.is_inside_another_chain().ok()<span class="question-mark">? </span>{
+                    <span class="kw">return </span><span class="prelude-val">None</span>;
                 }
 
-                <span class="kw">let</span> <span class="ident">optional_chain_expression_nodes</span> <span class="op">=</span> <span class="ident">chain</span>.<span class="ident">optional_chain_expression_nodes</span>()<span class="question-mark">?</span>;
+                <span class="kw">let </span>optional_chain_expression_nodes = chain.optional_chain_expression_nodes()<span class="question-mark">?</span>;
 
-                <span class="prelude-val">Some</span>(<span class="ident">UseOptionalChainState::LogicalAnd</span>(
-                    <span class="ident">optional_chain_expression_nodes</span>,
+                <span class="prelude-val">Some</span>(UseOptionalChainState::LogicalAnd(
+                    optional_chain_expression_nodes,
                 ))
             }
-            <span class="ident">JsLogicalOperator::NullishCoalescing</span> <span class="op">|</span> <span class="ident">JsLogicalOperator::LogicalOr</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="ident">LogicalOrLikeChain::from_expression</span>(<span class="ident">logical</span>)<span class="question-mark">?</span>;
+            JsLogicalOperator::NullishCoalescing | JsLogicalOperator::LogicalOr =&gt; {
+                <span class="kw">let </span>chain = LogicalOrLikeChain::from_expression(logical)<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="ident">chain</span>.<span class="ident">is_inside_another_chain</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">None</span>;
+                <span class="kw">if </span>chain.is_inside_another_chain() {
+                    <span class="kw">return </span><span class="prelude-val">None</span>;
                 }
 
-                <span class="prelude-val">Some</span>(<span class="ident">UseOptionalChainState::LogicalOrLike</span>(<span class="ident">chain</span>))
+                <span class="prelude-val">Some</span>(UseOptionalChainState::LogicalOrLike(chain))
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">state</span> {
-            <span class="ident">UseOptionalChainState::LogicalAnd</span>(<span class="kw">_</span>) =&gt; <span class="ident">ctx</span>.<span class="ident">query</span>().<span class="ident">range</span>(),
-            <span class="ident">UseOptionalChainState::LogicalOrLike</span>(<span class="ident">state</span>) =&gt; <span class="ident">state</span>.<span class="ident">member</span>.<span class="ident">range</span>(),
+    <span class="kw">fn </span>diagnostic(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>range = <span class="kw">match </span>state {
+            UseOptionalChainState::LogicalAnd(<span class="kw">_</span>) =&gt; ctx.query().range(),
+            UseOptionalChainState::LogicalOrLike(state) =&gt; state.member.range(),
         };
 
-        <span class="prelude-val">Some</span>(<span class="ident">RuleDiagnostic::new</span>(
+        <span class="prelude-val">Some</span>(RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">range</span>,
-            <span class="macro">markup!</span> {
-                <span class="string">&quot;Change to an optional chain.&quot;</span>
-            }
-            .<span class="ident">to_owned</span>(),
+            range,
+            <span class="macro">markup! </span>{
+                <span class="string">&quot;Change to an optional chain.&quot;
+            </span>}
+            .to_owned(),
         ))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">state</span> {
-            <span class="ident">UseOptionalChainState::LogicalAnd</span>(<span class="ident">optional_chain_expression_nodes</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_expression</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="kw">fn </span>action(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">match </span>state {
+            UseOptionalChainState::LogicalAnd(optional_chain_expression_nodes) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>prev_expression = <span class="prelude-val">None</span>;
 
-                <span class="kw">for</span> <span class="ident">expression</span> <span class="kw">in</span> <span class="ident">optional_chain_expression_nodes</span> {
-                    <span class="kw">let</span> <span class="ident">next_expression</span> <span class="op">=</span> <span class="ident">prev_expression</span>
-                        .<span class="ident">take</span>()
-                        .<span class="ident">and_then</span>(<span class="op">|</span>(<span class="ident">prev_expression</span>, <span class="ident">new_expression</span>)<span class="op">|</span> {
-                            <span class="ident">expression</span>
-                                .<span class="ident">clone</span>()
-                                .<span class="ident">replace_node</span>(<span class="ident">prev_expression</span>, <span class="ident">new_expression</span>)
+                <span class="kw">for </span>expression <span class="kw">in </span>optional_chain_expression_nodes {
+                    <span class="kw">let </span>next_expression = prev_expression
+                        .take()
+                        .and_then(|(prev_expression, new_expression)| {
+                            expression
+                                .clone()
+                                .replace_node(prev_expression, new_expression)
                         })
-                        .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">expression</span>.<span class="ident">clone</span>());
+                        .unwrap_or_else(|| expression.clone());
 
-                    <span class="kw">let</span> <span class="ident">next_expression</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">next_expression</span> {
-                        <span class="ident">JsAnyExpression::JsCallExpression</span>(<span class="ident">call_expression</span>) =&gt; {
-                            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">call_expression_builder</span> <span class="op">=</span> <span class="ident">make::js_call_expression</span>(
-                                <span class="ident">call_expression</span>.<span class="ident">callee</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                                <span class="ident">call_expression</span>.<span class="ident">arguments</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
+                    <span class="kw">let </span>next_expression = <span class="kw">match </span>next_expression {
+                        JsAnyExpression::JsCallExpression(call_expression) =&gt; {
+                            <span class="kw">let </span><span class="kw-2">mut </span>call_expression_builder = make::js_call_expression(
+                                call_expression.callee().ok()<span class="question-mark">?</span>,
+                                call_expression.arguments().ok()<span class="question-mark">?</span>,
                             )
-                            .<span class="ident">with_optional_chain_token</span>(<span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>.]));
+                            .with_optional_chain_token(make::token(<span class="macro">T!</span>[<span class="question-mark">?</span>.]));
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">type_arguments</span>) <span class="op">=</span> <span class="ident">call_expression</span>.<span class="ident">type_arguments</span>() {
-                                <span class="ident">call_expression_builder</span> <span class="op">=</span>
-                                    <span class="ident">call_expression_builder</span>.<span class="ident">with_type_arguments</span>(<span class="ident">type_arguments</span>);
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(type_arguments) = call_expression.type_arguments() {
+                                call_expression_builder =
+                                    call_expression_builder.with_type_arguments(type_arguments);
                             }
 
-                            <span class="kw">let</span> <span class="ident">call_expression</span> <span class="op">=</span> <span class="ident">call_expression_builder</span>.<span class="ident">build</span>();
+                            <span class="kw">let </span>call_expression = call_expression_builder.build();
 
-                            <span class="ident">JsAnyExpression::from</span>(<span class="ident">call_expression</span>)
+                            JsAnyExpression::from(call_expression)
                         }
-                        <span class="ident">JsAnyExpression::JsStaticMemberExpression</span>(<span class="ident">member_expression</span>) =&gt; {
-                            <span class="kw">let</span> <span class="ident">operator_token</span> <span class="op">=</span> <span class="ident">member_expression</span>.<span class="ident">operator_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
+                        JsAnyExpression::JsStaticMemberExpression(member_expression) =&gt; {
+                            <span class="kw">let </span>operator_token = member_expression.operator_token().ok()<span class="question-mark">?</span>;
 
-                            <span class="ident">JsAnyExpression::from</span>(<span class="ident">make::js_static_member_expression</span>(
-                                <span class="ident">member_expression</span>.<span class="ident">object</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                                <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>.])
-                                    .<span class="ident">with_leading_trivia_pieces</span>(
-                                        <span class="ident">operator_token</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>(),
+                            JsAnyExpression::from(make::js_static_member_expression(
+                                member_expression.object().ok()<span class="question-mark">?</span>,
+                                make::token(<span class="macro">T!</span>[<span class="question-mark">?</span>.])
+                                    .with_leading_trivia_pieces(
+                                        operator_token.leading_trivia().pieces(),
                                     )
-                                    .<span class="ident">with_trailing_trivia_pieces</span>(
-                                        <span class="ident">operator_token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>(),
+                                    .with_trailing_trivia_pieces(
+                                        operator_token.trailing_trivia().pieces(),
                                     ),
-                                <span class="ident">member_expression</span>.<span class="ident">member</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
+                                member_expression.member().ok()<span class="question-mark">?</span>,
                             ))
                         }
-                        <span class="ident">JsAnyExpression::JsComputedMemberExpression</span>(<span class="ident">member_expression</span>) =&gt; {
-                            <span class="kw">let</span> <span class="ident">operator_token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">member_expression</span>.<span class="ident">optional_chain_token</span>() {
-                                <span class="prelude-val">Some</span>(<span class="ident">token</span>) =&gt; <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>.])
-                                    .<span class="ident">with_leading_trivia_pieces</span>(<span class="ident">token</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>())
-                                    .<span class="ident">with_trailing_trivia_pieces</span>(<span class="ident">token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>()),
-                                <span class="prelude-val">None</span> =&gt; <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>.]),
+                        JsAnyExpression::JsComputedMemberExpression(member_expression) =&gt; {
+                            <span class="kw">let </span>operator_token = <span class="kw">match </span>member_expression.optional_chain_token() {
+                                <span class="prelude-val">Some</span>(token) =&gt; make::token(<span class="macro">T!</span>[<span class="question-mark">?</span>.])
+                                    .with_leading_trivia_pieces(token.leading_trivia().pieces())
+                                    .with_trailing_trivia_pieces(token.trailing_trivia().pieces()),
+                                <span class="prelude-val">None </span>=&gt; make::token(<span class="macro">T!</span>[<span class="question-mark">?</span>.]),
                             };
 
-                            <span class="ident">JsAnyExpression::from</span>(
-                                <span class="ident">make::js_computed_member_expression</span>(
-                                    <span class="ident">member_expression</span>.<span class="ident">object</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                                    <span class="ident">member_expression</span>.<span class="ident">l_brack_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                                    <span class="ident">member_expression</span>.<span class="ident">member</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                                    <span class="ident">member_expression</span>.<span class="ident">r_brack_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
+                            JsAnyExpression::from(
+                                make::js_computed_member_expression(
+                                    member_expression.object().ok()<span class="question-mark">?</span>,
+                                    member_expression.l_brack_token().ok()<span class="question-mark">?</span>,
+                                    member_expression.member().ok()<span class="question-mark">?</span>,
+                                    member_expression.r_brack_token().ok()<span class="question-mark">?</span>,
                                 )
-                                .<span class="ident">with_optional_chain_token</span>(<span class="ident">operator_token</span>)
-                                .<span class="ident">build</span>(),
+                                .with_optional_chain_token(operator_token)
+                                .build(),
                             )
                         }
-                        <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+                        <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
                     };
 
-                    <span class="ident">prev_expression</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">expression</span>.<span class="ident">clone</span>(), <span class="ident">next_expression</span>));
+                    prev_expression = <span class="prelude-val">Some</span>((expression.clone(), next_expression));
                 }
 
-                <span class="kw">let</span> (<span class="ident">prev_expression</span>, <span class="ident">new_expression</span>) <span class="op">=</span> <span class="ident">prev_expression</span><span class="question-mark">?</span>;
+                <span class="kw">let </span>(prev_expression, new_expression) = prev_expression<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">logical</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-                <span class="kw">let</span> <span class="ident">next_right</span> <span class="op">=</span> <span class="ident">logical</span>
-                    .<span class="ident">right</span>()
-                    .<span class="ident">ok</span>()<span class="question-mark">?</span>
-                    .<span class="ident">replace_node</span>(<span class="ident">prev_expression</span>, <span class="ident">new_expression</span>.<span class="ident">clone</span>())
-                    .<span class="ident">unwrap_or</span>(<span class="ident">new_expression</span>);
+                <span class="kw">let </span>logical = ctx.query();
+                <span class="kw">let </span>next_right = logical
+                    .right()
+                    .ok()<span class="question-mark">?
+                    </span>.replace_node(prev_expression, new_expression.clone())
+                    .unwrap_or(new_expression);
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
+                <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
 
-                <span class="ident">mutation</span>.<span class="ident">replace_node</span>(<span class="ident">JsAnyExpression::from</span>(<span class="ident">logical</span>.<span class="ident">clone</span>()), <span class="ident">next_right</span>);
+                mutation.replace_node(JsAnyExpression::from(logical.clone()), next_right);
 
-                <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-                    <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
-                    <span class="ident">applicability</span>: <span class="ident">Applicability::MaybeIncorrect</span>,
-                    <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;Change to an optional chain.&quot;</span> }.<span class="ident">to_owned</span>(),
-                    <span class="ident">mutation</span>,
+                <span class="prelude-val">Some</span>(JsRuleAction {
+                    category: ActionCategory::QuickFix,
+                    applicability: Applicability::MaybeIncorrect,
+                    message: <span class="macro">markup! </span>{ <span class="string">&quot;Change to an optional chain.&quot; </span>}.to_owned(),
+                    mutation,
                 })
             }
-            <span class="ident">UseOptionalChainState::LogicalOrLike</span>(<span class="ident">chain</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="ident">chain</span>.<span class="ident">optional_chain_expression_nodes</span>();
+            UseOptionalChainState::LogicalOrLike(chain) =&gt; {
+                <span class="kw">let </span>chain = chain.optional_chain_expression_nodes();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_chain</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">JsAnyMemberExpression</span>, <span class="ident">JsAnyMemberExpression</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>prev_chain: <span class="prelude-ty">Option</span>&lt;(JsAnyMemberExpression, JsAnyMemberExpression)&gt; = <span class="prelude-val">None</span>;
 
-                <span class="kw">for</span> (<span class="ident">left</span>, <span class="ident">member</span>) <span class="kw">in</span> <span class="ident">chain</span> {
-                    <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">prev_member</span>, <span class="ident">next_member</span>)) <span class="op">=</span> <span class="ident">prev_chain</span>.<span class="ident">take</span>() {
-                        <span class="ident">left</span>.<span class="ident">replace_node</span>(<span class="ident">prev_member</span>, <span class="ident">next_member</span>.<span class="ident">clone</span>())
-                            .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">next_member</span>.<span class="ident">into</span>())
-                    } <span class="kw">else</span> {
-                        <span class="ident">left</span>
+                <span class="kw">for </span>(left, member) <span class="kw">in </span>chain {
+                    <span class="kw">let </span>left = <span class="kw">if let </span><span class="prelude-val">Some</span>((prev_member, next_member)) = prev_chain.take() {
+                        left.replace_node(prev_member, next_member.clone())
+                            .unwrap_or_else(|| next_member.into())
+                    } <span class="kw">else </span>{
+                        left
                     };
 
-                    <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">trim_trailing_space</span>(<span class="ident">left</span>)<span class="question-mark">?</span>;
-                    <span class="kw">let</span> <span class="ident">need_parenthesis</span> <span class="op">=</span>
-                        <span class="ident">left</span>.<span class="ident">precedence</span>().<span class="ident">ok</span>()<span class="question-mark">?</span> <span class="op">&lt;</span> <span class="ident">OperatorPrecedence::LeftHandSide</span>;
+                    <span class="kw">let </span>left = trim_trailing_space(left)<span class="question-mark">?</span>;
+                    <span class="kw">let </span>need_parenthesis =
+                        left.precedence().ok()<span class="question-mark">? </span>&lt; OperatorPrecedence::LeftHandSide;
 
-                    <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">need_parenthesis</span> {
-                        <span class="ident">make::js_parenthesized_expression</span>(
-                            <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]),
-                            <span class="ident">left</span>,
-                            <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]),
+                    <span class="kw">let </span>left = <span class="kw">if </span>need_parenthesis {
+                        make::js_parenthesized_expression(
+                            make::token(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]),
+                            left,
+                            make::token(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]),
                         )
-                        .<span class="ident">into</span>()
-                    } <span class="kw">else</span> {
-                        <span class="ident">left</span>
+                        .into()
+                    } <span class="kw">else </span>{
+                        left
                     };
 
-                    <span class="kw">let</span> <span class="ident">next_member</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">member</span>.<span class="ident">clone</span>() {
-                        <span class="ident">JsAnyMemberExpression::JsStaticMemberExpression</span>(<span class="ident">expression</span>) =&gt; {
-                            <span class="kw">let</span> <span class="ident">static_member_expression</span> <span class="op">=</span> <span class="ident">make::js_static_member_expression</span>(
-                                <span class="ident">left</span>,
-                                <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>.]),
-                                <span class="ident">expression</span>.<span class="ident">member</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
+                    <span class="kw">let </span>next_member = <span class="kw">match </span>member.clone() {
+                        JsAnyMemberExpression::JsStaticMemberExpression(expression) =&gt; {
+                            <span class="kw">let </span>static_member_expression = make::js_static_member_expression(
+                                left,
+                                make::token(<span class="macro">T!</span>[<span class="question-mark">?</span>.]),
+                                expression.member().ok()<span class="question-mark">?</span>,
                             );
-                            <span class="ident">JsAnyMemberExpression::from</span>(<span class="ident">static_member_expression</span>)
+                            JsAnyMemberExpression::from(static_member_expression)
                         }
-                        <span class="ident">JsAnyMemberExpression::JsComputedMemberExpression</span>(<span class="ident">expression</span>) =&gt; {
-                            <span class="kw">let</span> <span class="ident">computed_member_expression</span> <span class="op">=</span> <span class="ident">make::js_computed_member_expression</span>(
-                                <span class="ident">left</span>,
-                                <span class="ident">expression</span>.<span class="ident">l_brack_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                                <span class="ident">expression</span>.<span class="ident">member</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                                <span class="ident">expression</span>.<span class="ident">r_brack_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
+                        JsAnyMemberExpression::JsComputedMemberExpression(expression) =&gt; {
+                            <span class="kw">let </span>computed_member_expression = make::js_computed_member_expression(
+                                left,
+                                expression.l_brack_token().ok()<span class="question-mark">?</span>,
+                                expression.member().ok()<span class="question-mark">?</span>,
+                                expression.r_brack_token().ok()<span class="question-mark">?</span>,
                             )
-                            .<span class="ident">with_optional_chain_token</span>(<span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>.]))
-                            .<span class="ident">build</span>();
+                            .with_optional_chain_token(make::token(<span class="macro">T!</span>[<span class="question-mark">?</span>.]))
+                            .build();
 
-                            <span class="ident">computed_member_expression</span>.<span class="ident">into</span>()
+                            computed_member_expression.into()
                         }
                     };
 
-                    <span class="ident">prev_chain</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">member</span>, <span class="ident">next_member</span>));
+                    prev_chain = <span class="prelude-val">Some</span>((member, next_member));
                 }
 
-                <span class="kw">let</span> (<span class="ident">prev_member</span>, <span class="ident">new_member</span>) <span class="op">=</span> <span class="ident">prev_chain</span><span class="question-mark">?</span>;
+                <span class="kw">let </span>(prev_member, new_member) = prev_chain<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
+                <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
 
-                <span class="ident">mutation</span>.<span class="ident">replace_node</span>(<span class="ident">prev_member</span>, <span class="ident">new_member</span>);
+                mutation.replace_node(prev_member, new_member);
 
-                <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-                    <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
-                    <span class="ident">applicability</span>: <span class="ident">Applicability::MaybeIncorrect</span>,
-                    <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;Change to an optional chain.&quot;</span> }.<span class="ident">to_owned</span>(),
-                    <span class="ident">mutation</span>,
+                <span class="prelude-val">Some</span>(JsRuleAction {
+                    category: ActionCategory::QuickFix,
+                    applicability: Applicability::MaybeIncorrect,
+                    message: <span class="macro">markup! </span>{ <span class="string">&quot;Change to an optional chain.&quot; </span>}.to_owned(),
+                    mutation,
                 })
             }
         }
     }
 }
 
-<span class="doccomment">/// `LogicalAndChainOrdering` is the result of a comparison between two logical and chain.</span>
-<span class="kw">enum</span> <span class="ident">LogicalAndChainOrdering</span> {
-    <span class="doccomment">/// An ordering where a chain is a sub-chain of another.</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// (foo &amp;&amp; foo.bar) /* is sub-chain of */ (foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz)</span>
-    <span class="doccomment">/// ```</span>
-    <span class="ident">SubChain</span>,
-    <span class="doccomment">/// An ordering where a chain is equal to another.</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// (foo &amp;&amp; foo.bar) /* is equal */ (foo &amp;&amp; foo.bar)</span>
-    <span class="doccomment">/// ```</span>
-    <span class="ident">Equal</span>,
-    <span class="doccomment">/// An ordering where a chain is different to another.</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// (foo &amp;&amp; foo.bar) /* is different */ (bar &amp;&amp; bar.bar &amp;&amp; bar.bar.baz)</span>
-    <span class="doccomment">/// ```</span>
-    <span class="ident">Different</span>,
+<span class="doccomment">/// `LogicalAndChainOrdering` is the result of a comparison between two logical and chain.
+</span><span class="kw">enum </span>LogicalAndChainOrdering {
+    <span class="doccomment">/// An ordering where a chain is a sub-chain of another.
+    /// ```js
+    /// (foo &amp;&amp; foo.bar) /* is sub-chain of */ (foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz)
+    /// ```
+    </span>SubChain,
+    <span class="doccomment">/// An ordering where a chain is equal to another.
+    /// ```js
+    /// (foo &amp;&amp; foo.bar) /* is equal */ (foo &amp;&amp; foo.bar)
+    /// ```
+    </span>Equal,
+    <span class="doccomment">/// An ordering where a chain is different to another.
+    /// ```js
+    /// (foo &amp;&amp; foo.bar) /* is different */ (bar &amp;&amp; bar.bar &amp;&amp; bar.bar.baz)
+    /// ```
+    </span>Different,
 }
 
-<span class="doccomment">/// `LogicalAndChain` handles cases with `JsLogicalExpression` which has `JsLogicalOperator::LogicalAnd` operator:</span>
-<span class="doccomment">/// ```js</span>
-<span class="doccomment">/// foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.buzz;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// foo.bar &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.buzz;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// foo !== undefined &amp;&amp; foo.bar;</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// The main idea of the `LogicalAndChain`:</span>
-<span class="doccomment">/// 1. Check that the current chain isn&#39;t in another `LogicalAndChain`. We need to find the topmost logical expression which will be the head of the first current chain.</span>
-<span class="doccomment">/// 2. Go down thought logical expressions and collect other chains and compare them with the current one.</span>
-<span class="doccomment">/// 3. If a chain is a sub-chain of the current chain, we assign that sub-chain to new current one. Difference between current chain and sub-chain is a tail.</span>
-<span class="doccomment">/// 4. Save the first tail `JsAnyExpression` to the buffer.</span>
-<span class="doccomment">/// 5. Transform every `JsAnyExpression` from the buffer to optional expression.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// E.g. `foo &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.zoo;`.</span>
-<span class="doccomment">/// The logical expression `foo &amp;&amp; foo.bar.baz` isn&#39;t the topmost. We skip it.</span>
-<span class="doccomment">/// `foo &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.zoo;` is the topmost and it&#39;ll be a start point.</span>
-<span class="doccomment">/// We start collecting a chain. We collect `JsAnyExpression` but for clarity let&#39;s use string identifiers.</span>
-<span class="doccomment">/// `foo.bar.baz.zoo;` -&gt; `[foo, bar, baz, zoo]`</span>
-<span class="doccomment">/// Next step we take a next chain and also collect it.</span>
-<span class="doccomment">/// `foo.bar.baz` -&gt; `[foo, bar, baz]`</span>
-<span class="doccomment">/// By comparing them we understand that one is a sub-chain of the other. `[foo, bar, baz]` is new current chain. `[zoo]` is a tail.</span>
-<span class="doccomment">/// We save `zoo` expression to the buffer.</span>
-<span class="doccomment">/// Next step we take a next chain and also collect it.</span>
-<span class="doccomment">/// `foo` -&gt; `[foo]`</span>
-<span class="doccomment">/// By comparing them we understand that one is a sub-chain of the other. `[foo]` is new current chain. `[bar, baz]` is a tail.</span>
-<span class="doccomment">/// We save `bar` expression to the buffer.</span>
-<span class="doccomment">/// Iterate buffer `[bar, zoo]` we need to make every `JsAnyExpression` optional: `foo?.bar.baz?.zoo;`</span>
-<span class="doccomment">///</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">LogicalAndChain</span> {
-    <span class="ident">head</span>: <span class="ident">JsAnyExpression</span>,
-    <span class="doccomment">/// The buffer of `JsAnyExpression` which need to make optional chain.</span>
-    <span class="ident">buf</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span>,
+<span class="doccomment">/// `LogicalAndChain` handles cases with `JsLogicalExpression` which has `JsLogicalOperator::LogicalAnd` operator:
+/// ```js
+/// foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.buzz;
+///
+/// foo.bar &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.buzz;
+///
+/// foo !== undefined &amp;&amp; foo.bar;
+/// ```
+/// The main idea of the `LogicalAndChain`:
+/// 1. Check that the current chain isn&#39;t in another `LogicalAndChain`. We need to find the topmost logical expression which will be the head of the first current chain.
+/// 2. Go down thought logical expressions and collect other chains and compare them with the current one.
+/// 3. If a chain is a sub-chain of the current chain, we assign that sub-chain to new current one. Difference between current chain and sub-chain is a tail.
+/// 4. Save the first tail `JsAnyExpression` to the buffer.
+/// 5. Transform every `JsAnyExpression` from the buffer to optional expression.
+///
+/// E.g. `foo &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.zoo;`.
+/// The logical expression `foo &amp;&amp; foo.bar.baz` isn&#39;t the topmost. We skip it.
+/// `foo &amp;&amp; foo.bar.baz &amp;&amp; foo.bar.baz.zoo;` is the topmost and it&#39;ll be a start point.
+/// We start collecting a chain. We collect `JsAnyExpression` but for clarity let&#39;s use string identifiers.
+/// `foo.bar.baz.zoo;` -&gt; `[foo, bar, baz, zoo]`
+/// Next step we take a next chain and also collect it.
+/// `foo.bar.baz` -&gt; `[foo, bar, baz]`
+/// By comparing them we understand that one is a sub-chain of the other. `[foo, bar, baz]` is new current chain. `[zoo]` is a tail.
+/// We save `zoo` expression to the buffer.
+/// Next step we take a next chain and also collect it.
+/// `foo` -&gt; `[foo]`
+/// By comparing them we understand that one is a sub-chain of the other. `[foo]` is new current chain. `[bar, baz]` is a tail.
+/// We save `bar` expression to the buffer.
+/// Iterate buffer `[bar, zoo]` we need to make every `JsAnyExpression` optional: `foo?.bar.baz?.zoo;`
+///
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>LogicalAndChain {
+    head: JsAnyExpression,
+    <span class="doccomment">/// The buffer of `JsAnyExpression` which need to make optional chain.
+    </span>buf: VecDeque&lt;JsAnyExpression&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">LogicalAndChain</span> {
-    <span class="kw">fn</span> <span class="ident">from_expression</span>(<span class="ident">head</span>: <span class="ident">JsAnyExpression</span>) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="ident">LogicalAndChain</span><span class="op">&gt;</span> {
-        <span class="doccomment">/// Iterate over `JsAnyExpression` and collect every expression which is a part of the chain:</span>
-        <span class="doccomment">/// ```js</span>
-        <span class="doccomment">/// foo.bar[baz];</span>
-        <span class="doccomment">/// ```</span>
-        <span class="doccomment">/// `[JsReferenceIdentifier, JsStaticMemberExpression, JsComputedMemberExpression]`</span>
-        <span class="kw">fn</span> <span class="ident">collect_chain</span>(<span class="ident">expression</span>: <span class="ident">JsAnyExpression</span>) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">VecDeque::new</span>();
+<span class="kw">impl </span>LogicalAndChain {
+    <span class="kw">fn </span>from_expression(head: JsAnyExpression) -&gt; SyntaxResult&lt;LogicalAndChain&gt; {
+        <span class="doccomment">/// Iterate over `JsAnyExpression` and collect every expression which is a part of the chain:
+        /// ```js
+        /// foo.bar[baz];
+        /// ```
+        /// `[JsReferenceIdentifier, JsStaticMemberExpression, JsComputedMemberExpression]`
+        </span><span class="kw">fn </span>collect_chain(expression: JsAnyExpression) -&gt; SyntaxResult&lt;VecDeque&lt;JsAnyExpression&gt;&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>buf = VecDeque::new();
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_expression</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">expression</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>current_expression = <span class="prelude-val">Some</span>(expression);
 
-            <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">expression</span>) <span class="op">=</span> <span class="ident">current_expression</span>.<span class="ident">take</span>() {
-                <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">expression</span> {
-                    <span class="comment">// Extract a left `JsAnyExpression` from `JsBinaryExpression` if it&#39;s optional chain like</span>
-                    <span class="comment">// ```js</span>
-                    <span class="comment">// (foo === undefined) &amp;&amp; foo.bar;</span>
-                    <span class="comment">// ```</span>
-                    <span class="comment">// is roughly equivalent to</span>
-                    <span class="comment">// ```js</span>
-                    <span class="comment">// foo &amp;&amp; foo.bar;</span>
-                    <span class="comment">// ```</span>
-                    <span class="ident">JsAnyExpression::JsBinaryExpression</span>(<span class="ident">expression</span>) =&gt; {
-                        <span class="kw">if</span> <span class="ident">expression</span>.<span class="ident">is_optional_chain_like</span>()<span class="question-mark">?</span> {
-                            <span class="ident">expression</span>.<span class="ident">left</span>()<span class="question-mark">?</span>
-                        } <span class="kw">else</span> {
-                            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">buf</span>);
+            <span class="kw">while let </span><span class="prelude-val">Some</span>(expression) = current_expression.take() {
+                <span class="kw">let </span>expression = <span class="kw">match </span>expression {
+                    <span class="comment">// Extract a left `JsAnyExpression` from `JsBinaryExpression` if it&#39;s optional chain like
+                    // ```js
+                    // (foo === undefined) &amp;&amp; foo.bar;
+                    // ```
+                    // is roughly equivalent to
+                    // ```js
+                    // foo &amp;&amp; foo.bar;
+                    // ```
+                    </span>JsAnyExpression::JsBinaryExpression(expression) =&gt; {
+                        <span class="kw">if </span>expression.is_optional_chain_like()<span class="question-mark">? </span>{
+                            expression.left()<span class="question-mark">?
+                        </span>} <span class="kw">else </span>{
+                            <span class="kw">return </span><span class="prelude-val">Ok</span>(buf);
                         }
                     }
-                    <span class="ident">expression</span> =&gt; <span class="ident">expression</span>,
+                    expression =&gt; expression,
                 };
 
-                <span class="ident">current_expression</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">expression</span> {
-                    <span class="ident">JsAnyExpression::JsStaticMemberExpression</span>(<span class="ident">member_expression</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">member_expression</span>.<span class="ident">object</span>()<span class="question-mark">?</span>;
-                        <span class="ident">buf</span>.<span class="ident">push_front</span>(<span class="ident">expression</span>);
+                current_expression = <span class="kw">match </span><span class="kw-2">&amp;</span>expression {
+                    JsAnyExpression::JsStaticMemberExpression(member_expression) =&gt; {
+                        <span class="kw">let </span>object = member_expression.object()<span class="question-mark">?</span>;
+                        buf.push_front(expression);
 
-                        <span class="prelude-val">Some</span>(<span class="ident">object</span>)
+                        <span class="prelude-val">Some</span>(object)
                     }
-                    <span class="ident">JsAnyExpression::JsComputedMemberExpression</span>(<span class="ident">member_expression</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">member_expression</span>.<span class="ident">object</span>()<span class="question-mark">?</span>;
-                        <span class="ident">buf</span>.<span class="ident">push_front</span>(<span class="ident">expression</span>);
+                    JsAnyExpression::JsComputedMemberExpression(member_expression) =&gt; {
+                        <span class="kw">let </span>object = member_expression.object()<span class="question-mark">?</span>;
+                        buf.push_front(expression);
 
-                        <span class="prelude-val">Some</span>(<span class="ident">object</span>)
+                        <span class="prelude-val">Some</span>(object)
                     }
-                    <span class="ident">JsAnyExpression::JsCallExpression</span>(<span class="ident">call_expression</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">callee</span> <span class="op">=</span> <span class="ident">call_expression</span>.<span class="ident">callee</span>()<span class="question-mark">?</span>;
-                        <span class="ident">buf</span>.<span class="ident">push_front</span>(<span class="ident">expression</span>);
+                    JsAnyExpression::JsCallExpression(call_expression) =&gt; {
+                        <span class="kw">let </span>callee = call_expression.callee()<span class="question-mark">?</span>;
+                        buf.push_front(expression);
 
-                        <span class="prelude-val">Some</span>(<span class="ident">callee</span>)
+                        <span class="prelude-val">Some</span>(callee)
                     }
-                    <span class="ident">JsAnyExpression::JsIdentifierExpression</span>(<span class="kw">_</span>) =&gt; {
-                        <span class="ident">buf</span>.<span class="ident">push_front</span>(<span class="ident">expression</span>);
+                    JsAnyExpression::JsIdentifierExpression(<span class="kw">_</span>) =&gt; {
+                        buf.push_front(expression);
 
-                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">buf</span>);
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(buf);
                     }
-                    <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">buf</span>),
+                    <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(buf),
                 };
             }
 
-            <span class="prelude-val">Ok</span>(<span class="ident">buf</span>)
+            <span class="prelude-val">Ok</span>(buf)
         }
 
-        <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">collect_chain</span>(<span class="ident">head</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>;
+        <span class="kw">let </span>buf = collect_chain(head.clone())<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">LogicalAndChain</span> { <span class="ident">head</span>, <span class="ident">buf</span> })
+        <span class="prelude-val">Ok</span>(LogicalAndChain { head, buf })
     }
 
-    <span class="doccomment">/// This function checks if `LogicalAndChain` is inside another parent `LogicalAndChain`</span>
-    <span class="doccomment">/// and the chain is sub-chain of parent chain.</span>
-    <span class="kw">fn</span> <span class="ident">is_inside_another_chain</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="comment">// Because head of the chain is right expression of logical expression we need to take a parent and a grand-parent.</span>
-        <span class="comment">// E.g. `foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz`</span>
-        <span class="comment">// The head of the sub-chain is `foo.bar`.</span>
-        <span class="comment">// The parent of the head is logical expression `foo &amp;&amp; foo.bar`</span>
-        <span class="comment">// The grand-parent of the head is logical expression `foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz`</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">head</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsLogicalExpression</span><span class="op">&gt;</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">grand_parent</span>) <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsLogicalExpression</span><span class="op">&gt;</span>() {
-                <span class="kw">let</span> <span class="ident">grand_parent_operator</span> <span class="op">=</span> <span class="ident">grand_parent</span>.<span class="ident">operator</span>()<span class="question-mark">?</span>;
+    <span class="doccomment">/// This function checks if `LogicalAndChain` is inside another parent `LogicalAndChain`
+    /// and the chain is sub-chain of parent chain.
+    </span><span class="kw">fn </span>is_inside_another_chain(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxResult&lt;bool&gt; {
+        <span class="comment">// Because head of the chain is right expression of logical expression we need to take a parent and a grand-parent.
+        // E.g. `foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz`
+        // The head of the sub-chain is `foo.bar`.
+        // The parent of the head is logical expression `foo &amp;&amp; foo.bar`
+        // The grand-parent of the head is logical expression `foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz`
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = <span class="self">self</span>.head.parent::&lt;JsLogicalExpression&gt;() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(grand_parent) = parent.parent::&lt;JsLogicalExpression&gt;() {
+                <span class="kw">let </span>grand_parent_operator = grand_parent.operator()<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">grand_parent_operator</span>, <span class="ident">JsLogicalOperator::LogicalAnd</span>) {
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>);
+                <span class="kw">if </span>!<span class="macro">matches!</span>(grand_parent_operator, JsLogicalOperator::LogicalAnd) {
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">false</span>);
                 }
 
-                <span class="kw">let</span> <span class="ident">grand_parent_logical_left</span> <span class="op">=</span> <span class="ident">grand_parent</span>.<span class="ident">left</span>()<span class="question-mark">?</span>;
+                <span class="kw">let </span>grand_parent_logical_left = grand_parent.left()<span class="question-mark">?</span>;
 
-                <span class="comment">// Here we check that we came from the left side of the logical expression.</span>
-                <span class="comment">// Because only the left-hand parts can be sub-chains.</span>
-                <span class="kw">if</span> <span class="ident">grand_parent_logical_left</span>.<span class="ident">as_js_logical_expression</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">parent</span>) {
-                    <span class="kw">let</span> <span class="ident">grand_parent_right_chain</span> <span class="op">=</span>
-                        <span class="ident">LogicalAndChain::from_expression</span>(<span class="ident">grand_parent</span>.<span class="ident">right</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+                <span class="comment">// Here we check that we came from the left side of the logical expression.
+                // Because only the left-hand parts can be sub-chains.
+                </span><span class="kw">if </span>grand_parent_logical_left.as_js_logical_expression() == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>parent) {
+                    <span class="kw">let </span>grand_parent_right_chain =
+                        LogicalAndChain::from_expression(grand_parent.right()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
-                    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">grand_parent_right_chain</span>.<span class="ident">cmp_chain</span>(<span class="self">self</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let </span>result = grand_parent_right_chain.cmp_chain(<span class="self">self</span>)<span class="question-mark">?</span>;
 
-                    <span class="kw">return</span> <span class="kw">match</span> <span class="ident">result</span> {
-                        <span class="ident">LogicalAndChainOrdering::SubChain</span> <span class="op">|</span> <span class="ident">LogicalAndChainOrdering::Equal</span> =&gt; {
+                    <span class="kw">return match </span>result {
+                        LogicalAndChainOrdering::SubChain | LogicalAndChainOrdering::Equal =&gt; {
                             <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
                         }
-                        <span class="ident">LogicalAndChainOrdering::Different</span> =&gt; <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
+                        LogicalAndChainOrdering::Different =&gt; <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
                     };
                 }
             }
@@ -1320,401 +1320,401 @@
         <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
     }
 
-    <span class="doccomment">/// This function compares two `LogicalAndChain` and returns `LogicalAndChainOrdering`</span>
-    <span class="doccomment">/// by comparing their `token_text_trimmed` for every `JsAnyExpression` node.</span>
-    <span class="kw">fn</span> <span class="ident">cmp_chain</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">LogicalAndChain</span>) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="ident">LogicalAndChainOrdering</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">chain_ordering</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">len</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">buf</span>.<span class="ident">len</span>()) {
-            <span class="ident">Ordering::Less</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">LogicalAndChainOrdering::Different</span>),
-            <span class="ident">Ordering::Equal</span> =&gt; <span class="ident">LogicalAndChainOrdering::Equal</span>,
-            <span class="ident">Ordering::Greater</span> =&gt; <span class="ident">LogicalAndChainOrdering::SubChain</span>,
+    <span class="doccomment">/// This function compares two `LogicalAndChain` and returns `LogicalAndChainOrdering`
+    /// by comparing their `token_text_trimmed` for every `JsAnyExpression` node.
+    </span><span class="kw">fn </span>cmp_chain(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>LogicalAndChain) -&gt; SyntaxResult&lt;LogicalAndChainOrdering&gt; {
+        <span class="kw">let </span>chain_ordering = <span class="kw">match </span><span class="self">self</span>.buf.len().cmp(<span class="kw-2">&amp;</span>other.buf.len()) {
+            Ordering::Less =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(LogicalAndChainOrdering::Different),
+            Ordering::Equal =&gt; LogicalAndChainOrdering::Equal,
+            Ordering::Greater =&gt; LogicalAndChainOrdering::SubChain,
         };
 
-        <span class="kw">for</span> (<span class="ident">main_expression</span>, <span class="ident">branch_expression</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">buf</span>) {
-            <span class="kw">let</span> (<span class="ident">main_expression</span>, <span class="ident">branch_expression</span>) <span class="op">=</span> <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="ident">main_expression</span>, <span class="kw-2">&amp;</span><span class="ident">branch_expression</span>)
+        <span class="kw">for </span>(main_expression, branch_expression) <span class="kw">in </span><span class="self">self</span>.buf.iter().zip(<span class="kw-2">&amp;</span>other.buf) {
+            <span class="kw">let </span>(main_expression, branch_expression) = <span class="kw">match </span>(<span class="kw-2">&amp;</span>main_expression, <span class="kw-2">&amp;</span>branch_expression)
             {
                 (
-                    <span class="ident">JsAnyExpression::JsCallExpression</span>(<span class="ident">main_expression</span>),
-                    <span class="ident">JsAnyExpression::JsCallExpression</span>(<span class="ident">branch_expression</span>),
-                ) =&gt; (<span class="ident">main_expression</span>.<span class="ident">callee</span>()<span class="question-mark">?</span>, <span class="ident">branch_expression</span>.<span class="ident">callee</span>()<span class="question-mark">?</span>),
-                <span class="kw">_</span> =&gt; (<span class="ident">main_expression</span>.<span class="ident">clone</span>(), <span class="ident">branch_expression</span>.<span class="ident">clone</span>()),
+                    JsAnyExpression::JsCallExpression(main_expression),
+                    JsAnyExpression::JsCallExpression(branch_expression),
+                ) =&gt; (main_expression.callee()<span class="question-mark">?</span>, branch_expression.callee()<span class="question-mark">?</span>),
+                <span class="kw">_ </span>=&gt; (main_expression.clone(), branch_expression.clone()),
             };
 
-            <span class="kw">let</span> (<span class="ident">main_value_token</span>, <span class="ident">branch_value_token</span>) <span class="op">=</span> <span class="kw">match</span> (<span class="ident">main_expression</span>, <span class="ident">branch_expression</span>)
+            <span class="kw">let </span>(main_value_token, branch_value_token) = <span class="kw">match </span>(main_expression, branch_expression)
             {
                 (
-                    <span class="ident">JsAnyExpression::JsComputedMemberExpression</span>(<span class="ident">main_expression</span>),
-                    <span class="ident">JsAnyExpression::JsComputedMemberExpression</span>(<span class="ident">branch_expression</span>),
-                ) =&gt; <span class="kw">match</span> (<span class="ident">main_expression</span>.<span class="ident">member</span>()<span class="question-mark">?</span>, <span class="ident">branch_expression</span>.<span class="ident">member</span>()<span class="question-mark">?</span>) {
+                    JsAnyExpression::JsComputedMemberExpression(main_expression),
+                    JsAnyExpression::JsComputedMemberExpression(branch_expression),
+                ) =&gt; <span class="kw">match </span>(main_expression.member()<span class="question-mark">?</span>, branch_expression.member()<span class="question-mark">?</span>) {
                     (
-                        <span class="ident">JsAnyExpression::JsIdentifierExpression</span>(<span class="ident">main_identifier</span>),
-                        <span class="ident">JsAnyExpression::JsIdentifierExpression</span>(<span class="ident">branch_identifier</span>),
+                        JsAnyExpression::JsIdentifierExpression(main_identifier),
+                        JsAnyExpression::JsIdentifierExpression(branch_identifier),
                     ) =&gt; (
-                        <span class="ident">main_identifier</span>.<span class="ident">name</span>()<span class="question-mark">?</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>,
-                        <span class="ident">branch_identifier</span>.<span class="ident">name</span>()<span class="question-mark">?</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>,
+                        main_identifier.name()<span class="question-mark">?</span>.value_token()<span class="question-mark">?</span>,
+                        branch_identifier.name()<span class="question-mark">?</span>.value_token()<span class="question-mark">?</span>,
                     ),
                     (
-                        <span class="ident">JsAnyExpression::JsAnyLiteralExpression</span>(<span class="ident">main_expression</span>),
-                        <span class="ident">JsAnyExpression::JsAnyLiteralExpression</span>(<span class="ident">branch_expression</span>),
+                        JsAnyExpression::JsAnyLiteralExpression(main_expression),
+                        JsAnyExpression::JsAnyLiteralExpression(branch_expression),
                     ) =&gt; (
-                        <span class="ident">main_expression</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>,
-                        <span class="ident">branch_expression</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>,
+                        main_expression.value_token()<span class="question-mark">?</span>,
+                        branch_expression.value_token()<span class="question-mark">?</span>,
                     ),
-                    <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">LogicalAndChainOrdering::Different</span>),
+                    <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(LogicalAndChainOrdering::Different),
                 },
                 (
-                    <span class="ident">JsAnyExpression::JsStaticMemberExpression</span>(<span class="ident">main_expression</span>),
-                    <span class="ident">JsAnyExpression::JsStaticMemberExpression</span>(<span class="ident">branch_expression</span>),
-                ) =&gt; <span class="kw">match</span> (<span class="ident">main_expression</span>.<span class="ident">member</span>()<span class="question-mark">?</span>, <span class="ident">branch_expression</span>.<span class="ident">member</span>()<span class="question-mark">?</span>) {
-                    (<span class="ident">JsAnyName::JsName</span>(<span class="ident">main_name</span>), <span class="ident">JsAnyName::JsName</span>(<span class="ident">branch_name</span>)) =&gt; {
-                        (<span class="ident">main_name</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>, <span class="ident">branch_name</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>)
+                    JsAnyExpression::JsStaticMemberExpression(main_expression),
+                    JsAnyExpression::JsStaticMemberExpression(branch_expression),
+                ) =&gt; <span class="kw">match </span>(main_expression.member()<span class="question-mark">?</span>, branch_expression.member()<span class="question-mark">?</span>) {
+                    (JsAnyName::JsName(main_name), JsAnyName::JsName(branch_name)) =&gt; {
+                        (main_name.value_token()<span class="question-mark">?</span>, branch_name.value_token()<span class="question-mark">?</span>)
                     }
                     (
-                        <span class="ident">JsAnyName::JsPrivateName</span>(<span class="ident">main_name</span>),
-                        <span class="ident">JsAnyName::JsPrivateName</span>(<span class="ident">branch_name</span>),
-                    ) =&gt; (<span class="ident">main_name</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>, <span class="ident">branch_name</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>),
-                    <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">LogicalAndChainOrdering::Different</span>),
+                        JsAnyName::JsPrivateName(main_name),
+                        JsAnyName::JsPrivateName(branch_name),
+                    ) =&gt; (main_name.value_token()<span class="question-mark">?</span>, branch_name.value_token()<span class="question-mark">?</span>),
+                    <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(LogicalAndChainOrdering::Different),
                 },
                 (
-                    <span class="ident">JsAnyExpression::JsIdentifierExpression</span>(<span class="ident">main_expression</span>),
-                    <span class="ident">JsAnyExpression::JsIdentifierExpression</span>(<span class="ident">branch_expression</span>),
+                    JsAnyExpression::JsIdentifierExpression(main_expression),
+                    JsAnyExpression::JsIdentifierExpression(branch_expression),
                 ) =&gt; (
-                    <span class="ident">main_expression</span>.<span class="ident">name</span>()<span class="question-mark">?</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>,
-                    <span class="ident">branch_expression</span>.<span class="ident">name</span>()<span class="question-mark">?</span>.<span class="ident">value_token</span>()<span class="question-mark">?</span>,
+                    main_expression.name()<span class="question-mark">?</span>.value_token()<span class="question-mark">?</span>,
+                    branch_expression.name()<span class="question-mark">?</span>.value_token()<span class="question-mark">?</span>,
                 ),
-                <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">LogicalAndChainOrdering::Different</span>),
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(LogicalAndChainOrdering::Different),
             };
 
-            <span class="kw">if</span> <span class="ident">main_value_token</span>.<span class="ident">token_text_trimmed</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">branch_value_token</span>.<span class="ident">token_text_trimmed</span>() {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">LogicalAndChainOrdering::Different</span>);
+            <span class="kw">if </span>main_value_token.token_text_trimmed() != branch_value_token.token_text_trimmed() {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(LogicalAndChainOrdering::Different);
             }
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">chain_ordering</span>)
+        <span class="prelude-val">Ok</span>(chain_ordering)
     }
 
-    <span class="doccomment">/// This function returns a list of `JsAnyExpression` which we need to transform into an option chain expression.</span>
-    <span class="kw">fn</span> <span class="ident">optional_chain_expression_nodes</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">optional_chain_expression_nodes</span> <span class="op">=</span> <span class="ident">VecDeque::with_capacity</span>(<span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">len</span>());
+    <span class="doccomment">/// This function returns a list of `JsAnyExpression` which we need to transform into an option chain expression.
+    </span><span class="kw">fn </span>optional_chain_expression_nodes(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;VecDeque&lt;JsAnyExpression&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>optional_chain_expression_nodes = VecDeque::with_capacity(<span class="self">self</span>.buf.len());
 
-        <span class="comment">// Take a head of a next sub-chain</span>
-        <span class="comment">// E.g. `foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz`</span>
-        <span class="comment">// The head is `foo.bar.baz` expression.</span>
-        <span class="comment">// The parent of the head is a logical expression `foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz`.</span>
-        <span class="comment">// The next chain head is a left part of the logical expression `foo &amp;&amp; foo.bar`</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_chain_head</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">head</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsLogicalExpression</span><span class="op">&gt;</span>()<span class="question-mark">?</span>.<span class="ident">left</span>().<span class="ident">ok</span>();
+        <span class="comment">// Take a head of a next sub-chain
+        // E.g. `foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz`
+        // The head is `foo.bar.baz` expression.
+        // The parent of the head is a logical expression `foo &amp;&amp; foo.bar &amp;&amp; foo.bar.baz`.
+        // The next chain head is a left part of the logical expression `foo &amp;&amp; foo.bar`
+        </span><span class="kw">let </span><span class="kw-2">mut </span>next_chain_head = <span class="self">self</span>.head.parent::&lt;JsLogicalExpression&gt;()<span class="question-mark">?</span>.left().ok();
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">expression</span>) <span class="op">=</span> <span class="ident">next_chain_head</span>.<span class="ident">take</span>() {
-            <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">expression</span> {
-                <span class="comment">// Extract a left `JsAnyExpression` from `JsBinaryExpression` if it&#39;s optional chain like</span>
-                <span class="comment">// ```js</span>
-                <span class="comment">// (foo === undefined) &amp;&amp; foo.bar;</span>
-                <span class="comment">// ```</span>
-                <span class="comment">// is roughly equivalent to</span>
-                <span class="comment">// ```js</span>
-                <span class="comment">// foo &amp;&amp; foo.bar;</span>
-                <span class="comment">// ```</span>
-                <span class="ident">JsAnyExpression::JsBinaryExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>
-                    .<span class="ident">is_optional_chain_like</span>()
-                    .<span class="ident">ok</span>()<span class="question-mark">?</span>
-                    .<span class="ident">then_some</span>(<span class="ident">expression</span>.<span class="ident">left</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>,
-                <span class="ident">expression</span> =&gt; <span class="ident">expression</span>,
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(expression) = next_chain_head.take() {
+            <span class="kw">let </span>expression = <span class="kw">match </span>expression {
+                <span class="comment">// Extract a left `JsAnyExpression` from `JsBinaryExpression` if it&#39;s optional chain like
+                // ```js
+                // (foo === undefined) &amp;&amp; foo.bar;
+                // ```
+                // is roughly equivalent to
+                // ```js
+                // foo &amp;&amp; foo.bar;
+                // ```
+                </span>JsAnyExpression::JsBinaryExpression(expression) =&gt; expression
+                    .is_optional_chain_like()
+                    .ok()<span class="question-mark">?
+                    </span>.then_some(expression.left().ok()<span class="question-mark">?</span>)<span class="question-mark">?</span>,
+                expression =&gt; expression,
             };
 
-            <span class="kw">let</span> <span class="ident">head</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">expression</span> {
-                <span class="ident">JsAnyExpression::JsLogicalExpression</span>(<span class="ident">logical</span>) =&gt; {
-                    <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">logical</span>.<span class="ident">operator</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>, <span class="ident">JsLogicalOperator::LogicalAnd</span>) {
-                        <span class="comment">// Here we move our sub-chain head over the chains of logical expression</span>
-                        <span class="ident">next_chain_head</span> <span class="op">=</span> <span class="ident">logical</span>.<span class="ident">left</span>().<span class="ident">ok</span>();
+            <span class="kw">let </span>head = <span class="kw">match </span>expression {
+                JsAnyExpression::JsLogicalExpression(logical) =&gt; {
+                    <span class="kw">if </span><span class="macro">matches!</span>(logical.operator().ok()<span class="question-mark">?</span>, JsLogicalOperator::LogicalAnd) {
+                        <span class="comment">// Here we move our sub-chain head over the chains of logical expression
+                        </span>next_chain_head = logical.left().ok();
 
-                        <span class="ident">logical</span>.<span class="ident">right</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">None</span>;
+                        logical.right().ok()<span class="question-mark">?
+                    </span>} <span class="kw">else </span>{
+                        <span class="kw">return </span><span class="prelude-val">None</span>;
                     }
                 }
-                <span class="ident">JsAnyExpression::JsIdentifierExpression</span>(<span class="kw">_</span>)
-                <span class="op">|</span> <span class="ident">JsAnyExpression::JsStaticMemberExpression</span>(<span class="kw">_</span>)
-                <span class="op">|</span> <span class="ident">JsAnyExpression::JsComputedMemberExpression</span>(<span class="kw">_</span>)
-                <span class="op">|</span> <span class="ident">JsAnyExpression::JsCallExpression</span>(<span class="kw">_</span>) =&gt; <span class="ident">expression</span>,
-                <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+                JsAnyExpression::JsIdentifierExpression(<span class="kw">_</span>)
+                | JsAnyExpression::JsStaticMemberExpression(<span class="kw">_</span>)
+                | JsAnyExpression::JsComputedMemberExpression(<span class="kw">_</span>)
+                | JsAnyExpression::JsCallExpression(<span class="kw">_</span>) =&gt; expression,
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
             };
 
-            <span class="kw">let</span> <span class="ident">branch</span> <span class="op">=</span> <span class="ident">LogicalAndChain::from_expression</span>(<span class="ident">head</span>).<span class="ident">ok</span>()<span class="question-mark">?</span>;
+            <span class="kw">let </span>branch = LogicalAndChain::from_expression(head).ok()<span class="question-mark">?</span>;
 
-            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">cmp_chain</span>(<span class="kw-2">&amp;</span><span class="ident">branch</span>).<span class="ident">ok</span>()<span class="question-mark">?</span> {
-                <span class="ident">LogicalAndChainOrdering::SubChain</span> =&gt; {
-                    <span class="comment">// Here we reduce our main `JsAnyExpression` buffer by splitting the main buffer.</span>
-                    <span class="comment">// Let&#39;s say that we have two buffers:</span>
-                    <span class="comment">// The main is `[foo, bar, baz]` and a branch is `[foo]`</span>
-                    <span class="comment">// After splitting the main buffer will be `[foo]` and the tail will be `[bar, baz]`.</span>
-                    <span class="comment">// It means that we need to transform `bar` (first tail expression) into the optional one.</span>
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tail</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">split_off</span>(<span class="ident">branch</span>.<span class="ident">buf</span>.<span class="ident">len</span>());
+            <span class="kw">match </span><span class="self">self</span>.cmp_chain(<span class="kw-2">&amp;</span>branch).ok()<span class="question-mark">? </span>{
+                LogicalAndChainOrdering::SubChain =&gt; {
+                    <span class="comment">// Here we reduce our main `JsAnyExpression` buffer by splitting the main buffer.
+                    // Let&#39;s say that we have two buffers:
+                    // The main is `[foo, bar, baz]` and a branch is `[foo]`
+                    // After splitting the main buffer will be `[foo]` and the tail will be `[bar, baz]`.
+                    // It means that we need to transform `bar` (first tail expression) into the optional one.
+                    </span><span class="kw">let </span><span class="kw-2">mut </span>tail = <span class="self">self</span>.buf.split_off(branch.buf.len());
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">part</span>) <span class="op">=</span> <span class="ident">tail</span>.<span class="ident">pop_front</span>() {
-                        <span class="ident">optional_chain_expression_nodes</span>.<span class="ident">push_front</span>(<span class="ident">part</span>)
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(part) = tail.pop_front() {
+                        optional_chain_expression_nodes.push_front(part)
                     };
                 }
-                <span class="ident">LogicalAndChainOrdering::Equal</span> =&gt; <span class="kw">continue</span>,
-                <span class="ident">LogicalAndChainOrdering::Different</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+                LogicalAndChainOrdering::Equal =&gt; <span class="kw">continue</span>,
+                LogicalAndChainOrdering::Different =&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
             }
         }
 
-        <span class="kw">if</span> <span class="ident">optional_chain_expression_nodes</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">return</span> <span class="prelude-val">None</span>;
+        <span class="kw">if </span>optional_chain_expression_nodes.is_empty() {
+            <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="prelude-val">Some</span>(<span class="ident">optional_chain_expression_nodes</span>)
+        <span class="prelude-val">Some</span>(optional_chain_expression_nodes)
     }
 }
 
-<span class="doccomment">/// `LogicalOrLikeChain` handles cases with `JsLogicalExpression` which has `JsLogicalOperator::NullishCoalescing` or `JsLogicalOperator::LogicalOr` operator:</span>
-<span class="doccomment">/// ```js</span>
-<span class="doccomment">/// (foo || {}).bar;</span>
-<span class="doccomment">/// (foo ?? {}).bar;</span>
-<span class="doccomment">/// ((foo ?? {}).bar || {}).baz;</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// The main idea of the `LogicalOrLikeChain`:</span>
-<span class="doccomment">/// 1. Check that the current member expressions isn&#39;t in another `LogicalOrLikeChain`. We need to find the topmost member expression.</span>
-<span class="doccomment">/// 2. Go down thought logical expressions and collect left and member expressions to buffer.</span>
-<span class="doccomment">/// 3. Transform every left `JsAnyExpression` and member `JsAnyMemberExpression` expressions into optional `JsAnyMemberExpression`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// E.g. `((foo ?? {}).bar || {}).baz;`.</span>
-<span class="doccomment">/// The member expression `(foo ?? {}).bar` isn&#39;t the topmost. We skip it.</span>
-<span class="doccomment">/// `((foo ?? {}).bar || {}).baz;` is the topmost and it&#39;ll be a start point.</span>
-<span class="doccomment">/// We start collecting pairs of a left and member expressions to buffer.</span>
-<span class="doccomment">/// First expression is `((foo ?? {}).bar || {}).baz;`:</span>
-<span class="doccomment">/// Buffer is `[((foo ?? {}).bar, ((foo ?? {}).bar || {}).baz;)]`</span>
-<span class="doccomment">/// Next expressions is `((foo ?? {}).bar || {}).baz;`:</span>
-<span class="doccomment">/// Buffer is `[(foo, (foo ?? {}).bar), ((foo ?? {}).bar, ((foo ?? {}).bar || {}).baz;)]`</span>
-<span class="doccomment">/// Iterate buffer, take member expressions and replace object with left parts and make the expression optional chain:</span>
-<span class="doccomment">/// `foo?.bar?.baz;`</span>
-<span class="doccomment">///</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">LogicalOrLikeChain</span> {
-    <span class="ident">member</span>: <span class="ident">JsAnyMemberExpression</span>,
+<span class="doccomment">/// `LogicalOrLikeChain` handles cases with `JsLogicalExpression` which has `JsLogicalOperator::NullishCoalescing` or `JsLogicalOperator::LogicalOr` operator:
+/// ```js
+/// (foo || {}).bar;
+/// (foo ?? {}).bar;
+/// ((foo ?? {}).bar || {}).baz;
+/// ```
+/// The main idea of the `LogicalOrLikeChain`:
+/// 1. Check that the current member expressions isn&#39;t in another `LogicalOrLikeChain`. We need to find the topmost member expression.
+/// 2. Go down thought logical expressions and collect left and member expressions to buffer.
+/// 3. Transform every left `JsAnyExpression` and member `JsAnyMemberExpression` expressions into optional `JsAnyMemberExpression`.
+///
+/// E.g. `((foo ?? {}).bar || {}).baz;`.
+/// The member expression `(foo ?? {}).bar` isn&#39;t the topmost. We skip it.
+/// `((foo ?? {}).bar || {}).baz;` is the topmost and it&#39;ll be a start point.
+/// We start collecting pairs of a left and member expressions to buffer.
+/// First expression is `((foo ?? {}).bar || {}).baz;`:
+/// Buffer is `[((foo ?? {}).bar, ((foo ?? {}).bar || {}).baz;)]`
+/// Next expressions is `((foo ?? {}).bar || {}).baz;`:
+/// Buffer is `[(foo, (foo ?? {}).bar), ((foo ?? {}).bar, ((foo ?? {}).bar || {}).baz;)]`
+/// Iterate buffer, take member expressions and replace object with left parts and make the expression optional chain:
+/// `foo?.bar?.baz;`
+///
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>LogicalOrLikeChain {
+    member: JsAnyMemberExpression,
 }
 
-<span class="kw">impl</span> <span class="ident">LogicalOrLikeChain</span> {
-    <span class="doccomment">/// Create a `LogicalOrLikeChain` if `JsLogicalExpression` is optional chain like and the `JsLogicalExpression` is inside member expression.</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// (foo || {}).bar;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">from_expression</span>(<span class="ident">logical</span>: <span class="kw-2">&amp;</span><span class="ident">JsLogicalExpression</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LogicalOrLikeChain</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">is_right_empty_object</span> <span class="op">=</span> <span class="ident">logical</span>
-            .<span class="ident">right</span>()
-            .<span class="ident">ok</span>()<span class="question-mark">?</span>
-            <span class="comment">// Handle case when a right expression is inside parentheses</span>
-            <span class="comment">// E.g. (foo || (({}))).bar;</span>
-            .<span class="ident">omit_parentheses</span>()
-            .<span class="ident">as_js_object_expression</span>()<span class="question-mark">?</span>
-            .<span class="ident">is_empty</span>();
+<span class="kw">impl </span>LogicalOrLikeChain {
+    <span class="doccomment">/// Create a `LogicalOrLikeChain` if `JsLogicalExpression` is optional chain like and the `JsLogicalExpression` is inside member expression.
+    /// ```js
+    /// (foo || {}).bar;
+    /// ```
+    </span><span class="kw">fn </span>from_expression(logical: <span class="kw-2">&amp;</span>JsLogicalExpression) -&gt; <span class="prelude-ty">Option</span>&lt;LogicalOrLikeChain&gt; {
+        <span class="kw">let </span>is_right_empty_object = logical
+            .right()
+            .ok()<span class="question-mark">?
+            </span><span class="comment">// Handle case when a right expression is inside parentheses
+            // E.g. (foo || (({}))).bar;
+            </span>.omit_parentheses()
+            .as_js_object_expression()<span class="question-mark">?
+            </span>.is_empty();
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">is_right_empty_object</span> {
-            <span class="kw">return</span> <span class="prelude-val">None</span>;
+        <span class="kw">if </span>!is_right_empty_object {
+            <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span>
-            <span class="ident">LogicalOrLikeChain::get_chain_parent_member</span>(<span class="ident">JsAnyExpression::from</span>(<span class="ident">logical</span>.<span class="ident">clone</span>()))<span class="question-mark">?</span>;
+        <span class="kw">let </span>member =
+            LogicalOrLikeChain::get_chain_parent_member(JsAnyExpression::from(logical.clone()))<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(<span class="ident">LogicalOrLikeChain</span> { <span class="ident">member</span> })
+        <span class="prelude-val">Some</span>(LogicalOrLikeChain { member })
     }
 
-    <span class="doccomment">/// This function checks if `LogicalOrLikeChain` is inside another parent `LogicalOrLikeChain`.</span>
-    <span class="doccomment">/// E.g.</span>
-    <span class="doccomment">/// `(foo ?? {}).bar` is inside `((foo ?? {}).bar || {}).baz;`</span>
-    <span class="kw">fn</span> <span class="ident">is_inside_another_chain</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">LogicalOrLikeChain::get_chain_parent</span>(<span class="ident">JsAnyExpression::from</span>(<span class="self">self</span>.<span class="ident">member</span>.<span class="ident">clone</span>())).<span class="ident">map_or</span>(
+    <span class="doccomment">/// This function checks if `LogicalOrLikeChain` is inside another parent `LogicalOrLikeChain`.
+    /// E.g.
+    /// `(foo ?? {}).bar` is inside `((foo ?? {}).bar || {}).baz;`
+    </span><span class="kw">fn </span>is_inside_another_chain(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        LogicalOrLikeChain::get_chain_parent(JsAnyExpression::from(<span class="self">self</span>.member.clone())).map_or(
             <span class="bool-val">false</span>,
-            <span class="op">|</span><span class="ident">parent</span><span class="op">|</span> {
-                <span class="ident">parent</span>
-                    .<span class="ident">as_js_logical_expression</span>()
-                    .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">parent_expression</span><span class="op">|</span> {
+            |parent| {
+                parent
+                    .as_js_logical_expression()
+                    .filter(|parent_expression| {
                         <span class="macro">matches!</span>(
-                            <span class="ident">parent_expression</span>.<span class="ident">operator</span>(),
-                            <span class="prelude-val">Ok</span>(<span class="ident">JsLogicalOperator::NullishCoalescing</span> <span class="op">|</span> <span class="ident">JsLogicalOperator::LogicalOr</span>)
+                            parent_expression.operator(),
+                            <span class="prelude-val">Ok</span>(JsLogicalOperator::NullishCoalescing | JsLogicalOperator::LogicalOr)
                         )
                     })
-                    .<span class="ident">and_then</span>(<span class="ident">LogicalOrLikeChain::from_expression</span>)
-                    .<span class="ident">is_some</span>()
+                    .and_then(LogicalOrLikeChain::from_expression)
+                    .is_some()
             },
         )
     }
 
-    <span class="doccomment">/// This function returns a list of pairs `(JsAnyExpression, JsAnyMemberExpression)` which we need to transform into an option chain expression.</span>
-    <span class="kw">fn</span> <span class="ident">optional_chain_expression_nodes</span>(
+    <span class="doccomment">/// This function returns a list of pairs `(JsAnyExpression, JsAnyMemberExpression)` which we need to transform into an option chain expression.
+    </span><span class="kw">fn </span>optional_chain_expression_nodes(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; <span class="ident">VecDeque</span><span class="op">&lt;</span>(<span class="ident">JsAnyExpression</span>, <span class="ident">JsAnyMemberExpression</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chain</span> <span class="op">=</span> <span class="ident">VecDeque::new</span>();
+    ) -&gt; VecDeque&lt;(JsAnyExpression, JsAnyMemberExpression)&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>chain = VecDeque::new();
 
-        <span class="comment">// Start from the topmost member expression</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_member_chain</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">member</span>.<span class="ident">clone</span>());
+        <span class="comment">// Start from the topmost member expression
+        </span><span class="kw">let </span><span class="kw-2">mut </span>next_member_chain = <span class="prelude-val">Some</span>(<span class="self">self</span>.member.clone());
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">member</span>) <span class="op">=</span> <span class="ident">next_member_chain</span>.<span class="ident">take</span>() {
-            <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">member</span>.<span class="ident">object</span>() {
-                <span class="prelude-val">Ok</span>(<span class="ident">object</span>) =&gt; <span class="ident">object</span>,
-                <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="ident">chain</span>,
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(member) = next_member_chain.take() {
+            <span class="kw">let </span>object = <span class="kw">match </span>member.object() {
+                <span class="prelude-val">Ok</span>(object) =&gt; object,
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span>chain,
             };
 
-            <span class="comment">// Handle case when a object expression is inside parentheses</span>
-            <span class="comment">// E.g. (((foo || {}))).bar;</span>
-            <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">omit_parentheses</span>();
+            <span class="comment">// Handle case when a object expression is inside parentheses
+            // E.g. (((foo || {}))).bar;
+            </span><span class="kw">let </span>object = object.omit_parentheses();
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">JsAnyExpression::JsLogicalExpression</span>(<span class="ident">logical</span>) <span class="op">=</span> <span class="ident">object</span> {
-                <span class="kw">let</span> <span class="ident">is_valid_operator</span> <span class="op">=</span> <span class="ident">logical</span>.<span class="ident">operator</span>().<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">operator</span><span class="op">|</span> {
+            <span class="kw">if let </span>JsAnyExpression::JsLogicalExpression(logical) = object {
+                <span class="kw">let </span>is_valid_operator = logical.operator().map_or(<span class="bool-val">false</span>, |operator| {
                     <span class="macro">matches!</span>(
-                        <span class="ident">operator</span>,
-                        <span class="ident">JsLogicalOperator::NullishCoalescing</span> <span class="op">|</span> <span class="ident">JsLogicalOperator::LogicalOr</span>
+                        operator,
+                        JsLogicalOperator::NullishCoalescing | JsLogicalOperator::LogicalOr
                     )
                 });
 
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">is_valid_operator</span> {
-                    <span class="kw">return</span> <span class="ident">chain</span>;
+                <span class="kw">if </span>!is_valid_operator {
+                    <span class="kw">return </span>chain;
                 }
 
-                <span class="kw">let</span> <span class="ident">is_right_empty_object</span> <span class="op">=</span> <span class="ident">logical</span>
-                    .<span class="ident">right</span>()
-                    .<span class="ident">ok</span>()
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">right</span><span class="op">|</span> {
-                        <span class="ident">right</span>
-                            <span class="comment">// Handle case when a right expression is inside parentheses</span>
-                            <span class="comment">// E.g. (foo || (({}))).bar;</span>
-                            .<span class="ident">omit_parentheses</span>()
-                            .<span class="ident">as_js_object_expression</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">object</span><span class="op">|</span> <span class="ident">object</span>.<span class="ident">is_empty</span>())
+                <span class="kw">let </span>is_right_empty_object = logical
+                    .right()
+                    .ok()
+                    .and_then(|right| {
+                        right
+                            <span class="comment">// Handle case when a right expression is inside parentheses
+                            // E.g. (foo || (({}))).bar;
+                            </span>.omit_parentheses()
+                            .as_js_object_expression()
+                            .map(|object| object.is_empty())
                     })
-                    .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>);
+                    .unwrap_or(<span class="bool-val">false</span>);
 
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">is_right_empty_object</span> {
-                    <span class="kw">return</span> <span class="ident">chain</span>;
+                <span class="kw">if </span>!is_right_empty_object {
+                    <span class="kw">return </span>chain;
                 }
 
-                <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">logical</span>.<span class="ident">left</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">left</span>) =&gt; <span class="ident">left</span>,
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="ident">chain</span>,
+                <span class="kw">let </span>left = <span class="kw">match </span>logical.left() {
+                    <span class="prelude-val">Ok</span>(left) =&gt; left,
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span>chain,
                 };
 
-                <span class="comment">// Set next member expression from the left part</span>
-                <span class="comment">// Find next member expression</span>
-                <span class="comment">// E.g. `((foo || {}).baz() || {}).bar`</span>
-                <span class="comment">// If current member chain is `bar` the next member chain is baz.</span>
-                <span class="comment">// Need to downward traversal to find first `JsAnyExpression` which we can&#39;t include in chain</span>
-                <span class="ident">next_member_chain</span> <span class="op">=</span> <span class="ident">LogicalOrLikeChain::get_member</span>(<span class="ident">left</span>.<span class="ident">clone</span>());
+                <span class="comment">// Set next member expression from the left part
+                // Find next member expression
+                // E.g. `((foo || {}).baz() || {}).bar`
+                // If current member chain is `bar` the next member chain is baz.
+                // Need to downward traversal to find first `JsAnyExpression` which we can&#39;t include in chain
+                </span>next_member_chain = LogicalOrLikeChain::get_member(left.clone());
 
-                <span class="ident">chain</span>.<span class="ident">push_front</span>((<span class="ident">left</span>, <span class="ident">member</span>))
+                chain.push_front((left, member))
             }
         }
 
-        <span class="ident">chain</span>
+        chain
     }
 
-    <span class="doccomment">/// Traversal by parent to find the parent member of a chain.</span>
-    <span class="kw">fn</span> <span class="ident">get_chain_parent_member</span>(<span class="ident">expression</span>: <span class="ident">JsAnyExpression</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsAnyMemberExpression</span><span class="op">&gt;</span> {
-        <span class="ident">iter::successors</span>(<span class="ident">expression</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span>(), <span class="op">|</span><span class="ident">expression</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">expression</span>, <span class="ident">JsAnyExpression::JsParenthesizedExpression</span>(<span class="kw">_</span>)) {
-                <span class="ident">expression</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span>()
-            } <span class="kw">else</span> {
-                <span class="prelude-val">None</span>
-            }
+    <span class="doccomment">/// Traversal by parent to find the parent member of a chain.
+    </span><span class="kw">fn </span>get_chain_parent_member(expression: JsAnyExpression) -&gt; <span class="prelude-ty">Option</span>&lt;JsAnyMemberExpression&gt; {
+        iter::successors(expression.parent::&lt;JsAnyExpression&gt;(), |expression| {
+            <span class="kw">if </span><span class="macro">matches!</span>(expression, JsAnyExpression::JsParenthesizedExpression(<span class="kw">_</span>)) {
+                expression.parent::&lt;JsAnyExpression&gt;()
+            } <span class="kw">else </span>{
+                <span class="prelude-val">None
+            </span>}
         })
-        .<span class="ident">last</span>()
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">parent</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">parent</span> {
-                <span class="ident">JsAnyExpression::JsComputedMemberExpression</span>(<span class="ident">expression</span>) =&gt; {
-                    <span class="ident">JsAnyMemberExpression::from</span>(<span class="ident">expression</span>)
+        .last()
+        .and_then(|parent| {
+            <span class="kw">let </span>member = <span class="kw">match </span>parent {
+                JsAnyExpression::JsComputedMemberExpression(expression) =&gt; {
+                    JsAnyMemberExpression::from(expression)
                 }
-                <span class="ident">JsAnyExpression::JsStaticMemberExpression</span>(<span class="ident">expression</span>) =&gt; {
-                    <span class="ident">JsAnyMemberExpression::from</span>(<span class="ident">expression</span>)
+                JsAnyExpression::JsStaticMemberExpression(expression) =&gt; {
+                    JsAnyMemberExpression::from(expression)
                 }
-                <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
             };
-            <span class="prelude-val">Some</span>(<span class="ident">member</span>)
+            <span class="prelude-val">Some</span>(member)
         })
     }
 
-    <span class="doccomment">/// Traversal by parent to find the parent of a chain.</span>
-    <span class="doccomment">/// This function is opposite to the `get_member` function.</span>
-    <span class="kw">fn</span> <span class="ident">get_chain_parent</span>(<span class="ident">expression</span>: <span class="ident">JsAnyExpression</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span> {
-        <span class="ident">iter::successors</span>(<span class="ident">expression</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span>(), <span class="op">|</span><span class="ident">expression</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="macro">matches!</span>(
-                <span class="ident">expression</span>,
-                <span class="ident">JsAnyExpression::JsParenthesizedExpression</span>(<span class="kw">_</span>)
-                    <span class="op">|</span> <span class="ident">JsAnyExpression::JsAwaitExpression</span>(<span class="kw">_</span>)
-                    <span class="op">|</span> <span class="ident">JsAnyExpression::JsCallExpression</span>(<span class="kw">_</span>)
-                    <span class="op">|</span> <span class="ident">JsAnyExpression::JsNewExpression</span>(<span class="kw">_</span>)
-                    <span class="op">|</span> <span class="ident">JsAnyExpression::TsAsExpression</span>(<span class="kw">_</span>)
-                    <span class="op">|</span> <span class="ident">JsAnyExpression::TsNonNullAssertionExpression</span>(<span class="kw">_</span>)
-                    <span class="op">|</span> <span class="ident">JsAnyExpression::TsTypeAssertionExpression</span>(<span class="kw">_</span>)
+    <span class="doccomment">/// Traversal by parent to find the parent of a chain.
+    /// This function is opposite to the `get_member` function.
+    </span><span class="kw">fn </span>get_chain_parent(expression: JsAnyExpression) -&gt; <span class="prelude-ty">Option</span>&lt;JsAnyExpression&gt; {
+        iter::successors(expression.parent::&lt;JsAnyExpression&gt;(), |expression| {
+            <span class="kw">if </span><span class="macro">matches!</span>(
+                expression,
+                JsAnyExpression::JsParenthesizedExpression(<span class="kw">_</span>)
+                    | JsAnyExpression::JsAwaitExpression(<span class="kw">_</span>)
+                    | JsAnyExpression::JsCallExpression(<span class="kw">_</span>)
+                    | JsAnyExpression::JsNewExpression(<span class="kw">_</span>)
+                    | JsAnyExpression::TsAsExpression(<span class="kw">_</span>)
+                    | JsAnyExpression::TsNonNullAssertionExpression(<span class="kw">_</span>)
+                    | JsAnyExpression::TsTypeAssertionExpression(<span class="kw">_</span>)
             ) {
-                <span class="ident">expression</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span>()
-            } <span class="kw">else</span> {
-                <span class="prelude-val">None</span>
-            }
+                expression.parent::&lt;JsAnyExpression&gt;()
+            } <span class="kw">else </span>{
+                <span class="prelude-val">None
+            </span>}
         })
-        .<span class="ident">last</span>()
+        .last()
     }
 
-    <span class="doccomment">/// Downward traversal to find the member.</span>
-    <span class="doccomment">/// E.g. `((foo || {}).baz() || {}).bar`</span>
-    <span class="doccomment">/// If current member chain is `bar` the next member chain is baz.</span>
-    <span class="doccomment">/// Need to downward traversal to find first `JsAnyExpression` which we can&#39;t include in chain.</span>
-    <span class="kw">fn</span> <span class="ident">get_member</span>(<span class="ident">expression</span>: <span class="ident">JsAnyExpression</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsAnyMemberExpression</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="ident">iter::successors</span>(<span class="prelude-val">Some</span>(<span class="ident">expression</span>), <span class="op">|</span><span class="ident">expression</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">expression</span> {
-            <span class="ident">JsAnyExpression::JsParenthesizedExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">expression</span>().<span class="ident">ok</span>(),
-            <span class="ident">JsAnyExpression::JsAwaitExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">argument</span>().<span class="ident">ok</span>(),
-            <span class="ident">JsAnyExpression::JsCallExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">callee</span>().<span class="ident">ok</span>(),
-            <span class="ident">JsAnyExpression::JsNewExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">callee</span>().<span class="ident">ok</span>(),
-            <span class="ident">JsAnyExpression::TsAsExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">expression</span>().<span class="ident">ok</span>(),
-            <span class="ident">JsAnyExpression::TsNonNullAssertionExpression</span>(<span class="ident">expression</span>) =&gt; {
-                <span class="ident">expression</span>.<span class="ident">expression</span>().<span class="ident">ok</span>()
+    <span class="doccomment">/// Downward traversal to find the member.
+    /// E.g. `((foo || {}).baz() || {}).bar`
+    /// If current member chain is `bar` the next member chain is baz.
+    /// Need to downward traversal to find first `JsAnyExpression` which we can&#39;t include in chain.
+    </span><span class="kw">fn </span>get_member(expression: JsAnyExpression) -&gt; <span class="prelude-ty">Option</span>&lt;JsAnyMemberExpression&gt; {
+        <span class="kw">let </span>expression = iter::successors(<span class="prelude-val">Some</span>(expression), |expression| <span class="kw">match </span>expression {
+            JsAnyExpression::JsParenthesizedExpression(expression) =&gt; expression.expression().ok(),
+            JsAnyExpression::JsAwaitExpression(expression) =&gt; expression.argument().ok(),
+            JsAnyExpression::JsCallExpression(expression) =&gt; expression.callee().ok(),
+            JsAnyExpression::JsNewExpression(expression) =&gt; expression.callee().ok(),
+            JsAnyExpression::TsAsExpression(expression) =&gt; expression.expression().ok(),
+            JsAnyExpression::TsNonNullAssertionExpression(expression) =&gt; {
+                expression.expression().ok()
             }
-            <span class="ident">JsAnyExpression::TsTypeAssertionExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">expression</span>().<span class="ident">ok</span>(),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+            JsAnyExpression::TsTypeAssertionExpression(expression) =&gt; expression.expression().ok(),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         })
-        .<span class="ident">last</span>()<span class="question-mark">?</span>;
+        .last()<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">expression</span> {
-            <span class="ident">JsAnyExpression::JsComputedMemberExpression</span>(<span class="ident">expression</span>) =&gt; {
-                <span class="ident">JsAnyMemberExpression::from</span>(<span class="ident">expression</span>)
+        <span class="kw">let </span>expression = <span class="kw">match </span>expression {
+            JsAnyExpression::JsComputedMemberExpression(expression) =&gt; {
+                JsAnyMemberExpression::from(expression)
             }
-            <span class="ident">JsAnyExpression::JsStaticMemberExpression</span>(<span class="ident">expression</span>) =&gt; {
-                <span class="ident">JsAnyMemberExpression::from</span>(<span class="ident">expression</span>)
+            JsAnyExpression::JsStaticMemberExpression(expression) =&gt; {
+                JsAnyMemberExpression::from(expression)
             }
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
         };
 
-        <span class="prelude-val">Some</span>(<span class="ident">expression</span>)
+        <span class="prelude-val">Some</span>(expression)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">trim_trailing_space</span>(<span class="ident">node</span>: <span class="ident">JsAnyExpression</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last_token_of_left_syntax</span>) <span class="op">=</span> <span class="ident">node</span>.<span class="ident">syntax</span>().<span class="ident">last_token</span>() {
-        <span class="kw">let</span> <span class="ident">next_token_of_left_syntax</span> <span class="op">=</span>
-            <span class="ident">last_token_of_left_syntax</span>.<span class="ident">with_trailing_trivia</span>(<span class="ident">std::iter::empty</span>());
-        <span class="ident">node</span>.<span class="ident">replace_token_discard_trivia</span>(<span class="ident">last_token_of_left_syntax</span>, <span class="ident">next_token_of_left_syntax</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">node</span>)
+<span class="kw">fn </span>trim_trailing_space(node: JsAnyExpression) -&gt; <span class="prelude-ty">Option</span>&lt;JsAnyExpression&gt; {
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(last_token_of_left_syntax) = node.syntax().last_token() {
+        <span class="kw">let </span>next_token_of_left_syntax =
+            last_token_of_left_syntax.with_trailing_trivia(std::iter::empty());
+        node.replace_token_discard_trivia(last_token_of_left_syntax, next_token_of_left_syntax)
+    } <span class="kw">else </span>{
+        <span class="prelude-val">Some</span>(node)
     }
 }
 
-<span class="macro">declare_node_union!</span> {
-    <span class="kw">pub</span> (<span class="kw">crate</span>) <span class="ident">JsAnyMemberExpression</span> <span class="op">=</span> <span class="ident">JsComputedMemberExpression</span> <span class="op">|</span> <span class="ident">JsStaticMemberExpression</span>
+<span class="macro">declare_node_union! </span>{
+    <span class="kw">pub </span>(<span class="kw">crate</span>) JsAnyMemberExpression = JsComputedMemberExpression | JsStaticMemberExpression
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">JsAnyMemberExpression</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JsAnyExpression</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">expression</span>: <span class="ident">JsAnyMemberExpression</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">expression</span> {
-            <span class="ident">JsAnyMemberExpression::JsComputedMemberExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">into</span>(),
-            <span class="ident">JsAnyMemberExpression::JsStaticMemberExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">into</span>(),
+<span class="kw">impl </span>From&lt;JsAnyMemberExpression&gt; <span class="kw">for </span>JsAnyExpression {
+    <span class="kw">fn </span>from(expression: JsAnyMemberExpression) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>expression {
+            JsAnyMemberExpression::JsComputedMemberExpression(expression) =&gt; expression.into(),
+            JsAnyMemberExpression::JsStaticMemberExpression(expression) =&gt; expression.into(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">JsAnyMemberExpression</span> {
-    <span class="kw">fn</span> <span class="ident">object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">JsAnyMemberExpression::JsComputedMemberExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">object</span>(),
-            <span class="ident">JsAnyMemberExpression::JsStaticMemberExpression</span>(<span class="ident">expression</span>) =&gt; <span class="ident">expression</span>.<span class="ident">object</span>(),
+<span class="kw">impl </span>JsAnyMemberExpression {
+    <span class="kw">fn </span>object(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxResult&lt;JsAnyExpression&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            JsAnyMemberExpression::JsComputedMemberExpression(expression) =&gt; expression.object(),
+            JsAnyMemberExpression::JsStaticMemberExpression(expression) =&gt; expression.object(),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

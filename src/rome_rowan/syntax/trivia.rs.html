@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax/trivia.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>trivia.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax/trivia.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>trivia.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -672,679 +672,679 @@
 <span id="672">672</span>
 <span id="673">673</span>
 <span id="674">674</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">cursor</span>, <span class="ident">Language</span>, <span class="ident">SyntaxToken</span>};
-<span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Formatter</span>;
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{cursor, Language, SyntaxToken};
+<span class="kw">use </span>rome_text_size::{TextRange, TextSize};
+<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>std::fmt::Formatter;
+<span class="kw">use </span>std::marker::PhantomData;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Hash</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TriviaPieceKind</span> {
-    <span class="doccomment">/// A line break (`\n`, `\r`, `\r\n`, ...)</span>
-    <span class="ident">Newline</span>,
-    <span class="doccomment">/// Any whitespace character</span>
-    <span class="ident">Whitespace</span>,
-    <span class="doccomment">/// Comment that does not contain any line breaks</span>
-    <span class="ident">SingleLineComment</span>,
-    <span class="doccomment">/// Comment that contains at least one line break</span>
-    <span class="ident">MultiLineComment</span>,
-    <span class="doccomment">/// Token that the parser skipped for some reason.</span>
-    <span class="ident">Skipped</span>,
+<span class="attribute">#[derive(Clone, Copy, Eq, PartialEq, Hash, Debug)]
+</span><span class="kw">pub enum </span>TriviaPieceKind {
+    <span class="doccomment">/// A line break (`\n`, `\r`, `\r\n`, ...)
+    </span>Newline,
+    <span class="doccomment">/// Any whitespace character
+    </span>Whitespace,
+    <span class="doccomment">/// Comment that does not contain any line breaks
+    </span>SingleLineComment,
+    <span class="doccomment">/// Comment that contains at least one line break
+    </span>MultiLineComment,
+    <span class="doccomment">/// Token that the parser skipped for some reason.
+    </span>Skipped,
 }
 
-<span class="kw">impl</span> <span class="ident">TriviaPieceKind</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_newline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">TriviaPieceKind::Newline</span>)
+<span class="kw">impl </span>TriviaPieceKind {
+    <span class="kw">pub const fn </span>is_newline(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, TriviaPieceKind::Newline)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">TriviaPieceKind::Whitespace</span>)
+    <span class="kw">pub const fn </span>is_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, TriviaPieceKind::Whitespace)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_single_line_comment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">TriviaPieceKind::SingleLineComment</span>)
+    <span class="kw">pub const fn </span>is_single_line_comment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, TriviaPieceKind::SingleLineComment)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_multiline_comment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">TriviaPieceKind::MultiLineComment</span>)
+    <span class="kw">pub const fn </span>is_multiline_comment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, TriviaPieceKind::MultiLineComment)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_skipped</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">TriviaPieceKind::Skipped</span>)
+    <span class="kw">pub const fn </span>is_skipped(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, TriviaPieceKind::Skipped)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TriviaPiece</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">kind</span>: <span class="ident">TriviaPieceKind</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">length</span>: <span class="ident">TextSize</span>,
+<span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+</span><span class="kw">pub struct </span>TriviaPiece {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) kind: TriviaPieceKind,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) length: TextSize,
 }
 
-<span class="kw">impl</span> <span class="ident">TriviaPiece</span> {
-    <span class="doccomment">/// Creates a new whitespace trivia piece with the given length</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">whitespace</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">len</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="ident">len</span>)
+<span class="kw">impl </span>TriviaPiece {
+    <span class="doccomment">/// Creates a new whitespace trivia piece with the given length
+    </span><span class="kw">pub fn </span>whitespace&lt;L: Into&lt;TextSize&gt;&gt;(len: L) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(TriviaPieceKind::Whitespace, len)
     }
 
-    <span class="doccomment">/// Creates a new newline trivia piece with the given text length</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">newline</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">len</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">TriviaPieceKind::Newline</span>, <span class="ident">len</span>)
+    <span class="doccomment">/// Creates a new newline trivia piece with the given text length
+    </span><span class="kw">pub fn </span>newline&lt;L: Into&lt;TextSize&gt;&gt;(len: L) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(TriviaPieceKind::Newline, len)
     }
 
-    <span class="doccomment">/// Creates a new comment trivia piece that does not contain any line breaks.</span>
-    <span class="doccomment">/// For example, JavaScript&#39;s `//` comments are guaranteed to not spawn multiple lines. However,</span>
-    <span class="doccomment">/// this can also be a `/* ... */` comment if it doesn&#39;t contain any line break characters.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">single_line_comment</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">len</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">TriviaPieceKind::SingleLineComment</span>, <span class="ident">len</span>)
+    <span class="doccomment">/// Creates a new comment trivia piece that does not contain any line breaks.
+    /// For example, JavaScript&#39;s `//` comments are guaranteed to not spawn multiple lines. However,
+    /// this can also be a `/* ... */` comment if it doesn&#39;t contain any line break characters.
+    </span><span class="kw">pub fn </span>single_line_comment&lt;L: Into&lt;TextSize&gt;&gt;(len: L) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(TriviaPieceKind::SingleLineComment, len)
     }
 
-    <span class="doccomment">/// Creates a new comment trivia piece that contains at least one line breaks.</span>
-    <span class="doccomment">/// For example, a JavaScript `/* ... */` comment that spawns at least two lines (contains at least one line break character).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">multi_line_comment</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">len</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">TriviaPieceKind::MultiLineComment</span>, <span class="ident">len</span>)
+    <span class="doccomment">/// Creates a new comment trivia piece that contains at least one line breaks.
+    /// For example, a JavaScript `/* ... */` comment that spawns at least two lines (contains at least one line break character).
+    </span><span class="kw">pub fn </span>multi_line_comment&lt;L: Into&lt;TextSize&gt;&gt;(len: L) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(TriviaPieceKind::MultiLineComment, len)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">kind</span>: <span class="ident">TriviaPieceKind</span>, <span class="ident">length</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">kind</span>,
-            <span class="ident">length</span>: <span class="ident">length</span>.<span class="ident">into</span>(),
+    <span class="kw">pub fn </span>new&lt;L: Into&lt;TextSize&gt;&gt;(kind: TriviaPieceKind, length: L) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            kind,
+            length: length.into(),
         }
     }
 
-    <span class="doccomment">/// Returns the trivia&#39;s length</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">length</span>
+    <span class="doccomment">/// Returns the trivia&#39;s length
+    </span><span class="kw">pub fn </span>text_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.length
     }
 
-    <span class="doccomment">/// Returns the trivia&#39;s kind</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TriviaPieceKind</span> {
-        <span class="self">self</span>.<span class="ident">kind</span>
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxTriviaPieceNewline</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span>(<span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>);
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxTriviaPieceWhitespace</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span>(<span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>);
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span>(<span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>);
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxTriviaPieceSkipped</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span>(<span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>);
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxTriviaPieceNewline</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text</span>()
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_len</span>()
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_range</span>()
-    }
-
-    <span class="doccomment">/// Returns a reference to its [SyntaxTriviaPiece]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_piece</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
-    }
-
-    <span class="doccomment">/// Returns its [SyntaxTriviaPiece]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_piece</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>
+    <span class="doccomment">/// Returns the trivia&#39;s kind
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TriviaPieceKind {
+        <span class="self">self</span>.kind
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxTriviaPieceWhitespace</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text</span>()
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>SyntaxTriviaPieceNewline&lt;L: Language&gt;(SyntaxTriviaPiece&lt;L&gt;);
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>SyntaxTriviaPieceWhitespace&lt;L: Language&gt;(SyntaxTriviaPiece&lt;L&gt;);
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>SyntaxTriviaPieceComments&lt;L: Language&gt;(SyntaxTriviaPiece&lt;L&gt;);
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>SyntaxTriviaPieceSkipped&lt;L: Language&gt;(SyntaxTriviaPiece&lt;L&gt;);
+
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxTriviaPieceNewline&lt;L&gt; {
+    <span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.<span class="number">0</span>.text()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_len</span>()
+    <span class="kw">pub fn </span>text_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.<span class="number">0</span>.text_len()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_range</span>()
+    <span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.<span class="number">0</span>.text_range()
     }
 
-    <span class="doccomment">/// Returns a reference to its [SyntaxTriviaPiece]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_piece</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
-    }
+    <span class="doccomment">/// Returns a reference to its [SyntaxTriviaPiece]
+    </span><span class="kw">pub fn </span>as_piece(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxTriviaPiece&lt;L&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
+    </span>}
 
-    <span class="doccomment">/// Returns its [SyntaxTriviaPiece]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_piece</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-    }
+    <span class="doccomment">/// Returns its [SyntaxTriviaPiece]
+    </span><span class="kw">pub fn </span>into_piece(<span class="self">self</span>) -&gt; SyntaxTriviaPiece&lt;L&gt; {
+        <span class="self">self</span>.<span class="number">0
+    </span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text</span>()
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxTriviaPieceWhitespace&lt;L&gt; {
+    <span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.<span class="number">0</span>.text()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_len</span>()
+    <span class="kw">pub fn </span>text_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.<span class="number">0</span>.text_len()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_range</span>()
+    <span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.<span class="number">0</span>.text_range()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_newline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">trivia</span>.<span class="ident">kind</span>.<span class="ident">is_multiline_comment</span>()
-    }
+    <span class="doccomment">/// Returns a reference to its [SyntaxTriviaPiece]
+    </span><span class="kw">pub fn </span>as_piece(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxTriviaPiece&lt;L&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
+    </span>}
 
-    <span class="doccomment">/// Returns a reference to its [SyntaxTriviaPiece]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_piece</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
-    }
-
-    <span class="doccomment">/// Returns its [SyntaxTriviaPiece]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_piece</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-    }
+    <span class="doccomment">/// Returns its [SyntaxTriviaPiece]
+    </span><span class="kw">pub fn </span>into_piece(<span class="self">self</span>) -&gt; SyntaxTriviaPiece&lt;L&gt; {
+        <span class="self">self</span>.<span class="number">0
+    </span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxTriviaPieceSkipped</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text</span>()
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxTriviaPieceComments&lt;L&gt; {
+    <span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.<span class="number">0</span>.text()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_len</span>()
+    <span class="kw">pub fn </span>text_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.<span class="number">0</span>.text_len()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_range</span>()
+    <span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.<span class="number">0</span>.text_range()
     }
 
-    <span class="doccomment">/// Returns a reference to its [SyntaxTriviaPiece]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_piece</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    <span class="kw">pub fn </span>has_newline(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.trivia.kind.is_multiline_comment()
     }
 
-    <span class="doccomment">/// Returns its [SyntaxTriviaPiece]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_piece</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-    }
+    <span class="doccomment">/// Returns a reference to its [SyntaxTriviaPiece]
+    </span><span class="kw">pub fn </span>as_piece(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxTriviaPiece&lt;L&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
+    </span>}
+
+    <span class="doccomment">/// Returns its [SyntaxTriviaPiece]
+    </span><span class="kw">pub fn </span>into_piece(<span class="self">self</span>) -&gt; SyntaxTriviaPiece&lt;L&gt; {
+        <span class="self">self</span>.<span class="number">0
+    </span>}
 }
 
-<span class="doccomment">/// [SyntaxTriviaPiece] gives access to the most granular information about the trivia</span>
-<span class="doccomment">/// that was specified by the lexer at the token creation time.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// For example:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_test</span>
-<span class="doccomment">/// builder.token_with_trivia(</span>
-<span class="doccomment">///     RawSyntaxKind(1),</span>
-<span class="doccomment">///     &quot;\n\t /**/let \t\t&quot;,</span>
-<span class="doccomment">///     &amp;[TriviaPiece::whitespace(3), TriviaPiece::single_line_comment(4)],</span>
-<span class="doccomment">///     &amp;[TriviaPiece::whitespace(3)],</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">/// });</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// This token has two pieces in the leading trivia, and one piece at the trailing trivia. Each</span>
-<span class="doccomment">/// piece is defined by the [TriviaPiece]; its content is irrelevant.</span>
-<span class="doccomment">///</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">raw</span>: <span class="ident">cursor::SyntaxTrivia</span>,
-    <span class="doccomment">/// Absolute offset from the beginning of the file</span>
-    <span class="ident">offset</span>: <span class="ident">TextSize</span>,
-    <span class="ident">trivia</span>: <span class="ident">TriviaPiece</span>,
-    <span class="ident">_p</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxTriviaPieceSkipped&lt;L&gt; {
+    <span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.<span class="number">0</span>.text()
+    }
+
+    <span class="kw">pub fn </span>text_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.<span class="number">0</span>.text_len()
+    }
+
+    <span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.<span class="number">0</span>.text_range()
+    }
+
+    <span class="doccomment">/// Returns a reference to its [SyntaxTriviaPiece]
+    </span><span class="kw">pub fn </span>as_piece(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxTriviaPiece&lt;L&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
+    </span>}
+
+    <span class="doccomment">/// Returns its [SyntaxTriviaPiece]
+    </span><span class="kw">pub fn </span>into_piece(<span class="self">self</span>) -&gt; SyntaxTriviaPiece&lt;L&gt; {
+        <span class="self">self</span>.<span class="number">0
+    </span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_raw_piece</span>(<span class="self">self</span>) -&gt; <span class="ident">TriviaPiece</span> {
-        <span class="self">self</span>.<span class="ident">trivia</span>
+<span class="doccomment">/// [SyntaxTriviaPiece] gives access to the most granular information about the trivia
+/// that was specified by the lexer at the token creation time.
+///
+/// For example:
+///
+/// ```no_test
+/// builder.token_with_trivia(
+///     RawSyntaxKind(1),
+///     &quot;\n\t /**/let \t\t&quot;,
+///     &amp;[TriviaPiece::whitespace(3), TriviaPiece::single_line_comment(4)],
+///     &amp;[TriviaPiece::whitespace(3)],
+/// );
+/// });
+/// ```
+/// This token has two pieces in the leading trivia, and one piece at the trailing trivia. Each
+/// piece is defined by the [TriviaPiece]; its content is irrelevant.
+///
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>SyntaxTriviaPiece&lt;L: Language&gt; {
+    raw: cursor::SyntaxTrivia,
+    <span class="doccomment">/// Absolute offset from the beginning of the file
+    </span>offset: TextSize,
+    trivia: TriviaPiece,
+    _p: PhantomData&lt;L&gt;,
+}
+
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxTriviaPiece&lt;L&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>into_raw_piece(<span class="self">self</span>) -&gt; TriviaPiece {
+        <span class="self">self</span>.trivia
     }
 
-    <span class="doccomment">/// Returns the internal kind of this trivia piece</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TriviaPieceKind</span> {
-        <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span>()
+    <span class="doccomment">/// Returns the internal kind of this trivia piece
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TriviaPieceKind {
+        <span class="self">self</span>.trivia.kind()
     }
 
-    <span class="doccomment">/// Returns the associated text just for this trivia piece. This is different from [SyntaxTrivia::text()],</span>
-    <span class="doccomment">/// which returns the text of the whole trivia.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t /**/let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(3),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let leading: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert_eq!(&quot;\n\t &quot;, leading[0].text());</span>
-    <span class="doccomment">/// assert_eq!(&quot;/**/&quot;, leading[1].text());</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let trailing: Vec&lt;_&gt; = node.last_trailing_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert_eq!(&quot; \t\t&quot;, trailing[0].text());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">token</span>();
-        <span class="kw">let</span> <span class="ident">txt</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">text</span>();
+    <span class="doccomment">/// Returns the associated text just for this trivia piece. This is different from [SyntaxTrivia::text()],
+    /// which returns the text of the whole trivia.
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t /**/let \t\t&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::whitespace(3),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// });
+    /// let leading: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// assert_eq!(&quot;\n\t &quot;, leading[0].text());
+    /// assert_eq!(&quot;/**/&quot;, leading[1].text());
+    ///
+    /// let trailing: Vec&lt;_&gt; = node.last_trailing_trivia().unwrap().pieces().collect();
+    /// assert_eq!(&quot; \t\t&quot;, trailing[0].text());
+    /// ```
+    </span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">let </span>token = <span class="self">self</span>.raw.token();
+        <span class="kw">let </span>txt = token.text();
 
-        <span class="comment">// Compute the offset relative to the token</span>
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">offset</span> <span class="op">-</span> <span class="ident">token</span>.<span class="ident">text_range</span>().<span class="ident">start</span>();
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">start</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">text_len</span>();
+        <span class="comment">// Compute the offset relative to the token
+        </span><span class="kw">let </span>start = <span class="self">self</span>.offset - token.text_range().start();
+        <span class="kw">let </span>end = start + <span class="self">self</span>.text_len();
 
-        <span class="comment">// Don&#39;t use self.raw.text(). It iterates over all pieces</span>
-        <span class="kw-2">&amp;</span><span class="ident">txt</span>[<span class="ident">start</span>.<span class="ident">into</span>()..<span class="ident">end</span>.<span class="ident">into</span>()]
+        <span class="comment">// Don&#39;t use self.raw.text(). It iterates over all pieces
+        </span><span class="kw-2">&amp;</span>txt[start.into()..end.into()]
     }
 
-    <span class="doccomment">/// Returns the associated text length just for this trivia piece. This is different from `SyntaxTrivia::len()`,</span>
-    <span class="doccomment">/// which returns the text length of the whole trivia.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t /**/let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(3),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert_eq!(TextSize::from(3), pieces[0].text_len());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">text_len</span>()
+    <span class="doccomment">/// Returns the associated text length just for this trivia piece. This is different from `SyntaxTrivia::len()`,
+    /// which returns the text length of the whole trivia.
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t /**/let \t\t&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::whitespace(3),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// assert_eq!(TextSize::from(3), pieces[0].text_len());
+    /// ```
+    </span><span class="kw">pub fn </span>text_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.trivia.text_len()
     }
 
-    <span class="doccomment">/// Returns the associated text range just for this trivia piece. This is different from [SyntaxTrivia::text_range()],</span>
-    <span class="doccomment">/// which returns the text range of the whole trivia.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t /**/let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(3),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert_eq!(TextRange::new(0.into(), 3.into()), pieces[0].text_range());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="ident">TextRange::at</span>(<span class="self">self</span>.<span class="ident">offset</span>, <span class="self">self</span>.<span class="ident">text_len</span>())
+    <span class="doccomment">/// Returns the associated text range just for this trivia piece. This is different from [SyntaxTrivia::text_range()],
+    /// which returns the text range of the whole trivia.
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t /**/let \t\t&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::whitespace(3),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// assert_eq!(TextRange::new(0.into(), 3.into()), pieces[0].text_range());
+    /// ```
+    </span><span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        TextRange::at(<span class="self">self</span>.offset, <span class="self">self</span>.text_len())
     }
 
-    <span class="doccomment">/// Returns true if this trivia piece is a [SyntaxTriviaPieceNewline].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t/**/let&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::newline(1),</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(1),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert!(pieces[0].is_newline())</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_newline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span>.<span class="ident">is_newline</span>()
+    <span class="doccomment">/// Returns true if this trivia piece is a [SyntaxTriviaPieceNewline].
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t/**/let&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::newline(1),
+    ///             TriviaPiece::whitespace(1),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// assert!(pieces[0].is_newline())
+    /// ```
+    </span><span class="kw">pub fn </span>is_newline(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.trivia.kind.is_newline()
     }
 
-    <span class="doccomment">/// Returns true if this trivia piece is a [SyntaxTriviaPieceWhitespace].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t/**/let&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::newline(1),</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(1),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert!(pieces[1].is_whitespace())</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span>.<span class="ident">is_whitespace</span>()
+    <span class="doccomment">/// Returns true if this trivia piece is a [SyntaxTriviaPieceWhitespace].
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t/**/let&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::newline(1),
+    ///             TriviaPiece::whitespace(1),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// assert!(pieces[1].is_whitespace())
+    /// ```
+    </span><span class="kw">pub fn </span>is_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.trivia.kind.is_whitespace()
     }
 
-    <span class="doccomment">/// Returns true if this trivia piece is a [SyntaxTriviaPieceComments].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t/**/let&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::newline(1),</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(1),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert!(pieces[2].is_comments())</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+    <span class="doccomment">/// Returns true if this trivia piece is a [SyntaxTriviaPieceComments].
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t/**/let&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::newline(1),
+    ///             TriviaPiece::whitespace(1),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// assert!(pieces[2].is_comments())
+    /// ```
+    </span><span class="kw">pub fn </span>is_comments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="macro">matches!</span>(
-            <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span>,
-            <span class="ident">TriviaPieceKind::SingleLineComment</span> <span class="op">|</span> <span class="ident">TriviaPieceKind::MultiLineComment</span>
+            <span class="self">self</span>.trivia.kind,
+            TriviaPieceKind::SingleLineComment | TriviaPieceKind::MultiLineComment
         )
     }
 
-    <span class="doccomment">/// Returns true if this trivia piece is a [SyntaxTriviaPieceSkipped].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_skipped</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span>.<span class="ident">is_skipped</span>()
+    <span class="doccomment">/// Returns true if this trivia piece is a [SyntaxTriviaPieceSkipped].
+    </span><span class="kw">pub fn </span>is_skipped(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.trivia.kind.is_skipped()
     }
 
-    <span class="doccomment">/// Cast this trivia piece to [SyntaxTriviaPieceNewline].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n/**/let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::newline(1), TriviaPiece::single_line_comment(4)],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::newline(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// let w = pieces[0].as_newline();</span>
-    <span class="doccomment">/// assert!(w.is_some());</span>
-    <span class="doccomment">/// let w = pieces[1].as_newline();</span>
-    <span class="doccomment">/// assert!(w.is_none());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_newline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxTriviaPieceNewline</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span> {
-            <span class="ident">TriviaPieceKind::Newline</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">SyntaxTriviaPieceNewline</span>(<span class="self">self</span>.<span class="ident">clone</span>())),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="doccomment">/// Cast this trivia piece to [SyntaxTriviaPieceNewline].
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n/**/let \t\t&quot;,
+    ///         &amp;[TriviaPiece::newline(1), TriviaPiece::single_line_comment(4)],
+    ///         &amp;[TriviaPiece::newline(3)],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// let w = pieces[0].as_newline();
+    /// assert!(w.is_some());
+    /// let w = pieces[1].as_newline();
+    /// assert!(w.is_none());
+    /// ```
+    </span><span class="kw">pub fn </span>as_newline(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxTriviaPieceNewline&lt;L&gt;&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.trivia.kind {
+            TriviaPieceKind::Newline =&gt; <span class="prelude-val">Some</span>(SyntaxTriviaPieceNewline(<span class="self">self</span>.clone())),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Cast this trivia piece to [SyntaxTriviaPieceWhitespace].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\t /**/let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(2),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// let w = pieces[0].as_whitespace();</span>
-    <span class="doccomment">/// assert!(w.is_some());</span>
-    <span class="doccomment">/// let w = pieces[1].as_whitespace();</span>
-    <span class="doccomment">/// assert!(w.is_none());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxTriviaPieceWhitespace</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span> {
-            <span class="ident">TriviaPieceKind::Whitespace</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">SyntaxTriviaPieceWhitespace</span>(<span class="self">self</span>.<span class="ident">clone</span>())),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="doccomment">/// Cast this trivia piece to [SyntaxTriviaPieceWhitespace].
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\t /**/let \t\t&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::whitespace(2),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// let w = pieces[0].as_whitespace();
+    /// assert!(w.is_some());
+    /// let w = pieces[1].as_whitespace();
+    /// assert!(w.is_none());
+    /// ```
+    </span><span class="kw">pub fn </span>as_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxTriviaPieceWhitespace&lt;L&gt;&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.trivia.kind {
+            TriviaPieceKind::Whitespace =&gt; <span class="prelude-val">Some</span>(SyntaxTriviaPieceWhitespace(<span class="self">self</span>.clone())),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Cast this trivia piece to [SyntaxTriviaPieceComments].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t /**/let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(3),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// let w = pieces[0].as_comments();</span>
-    <span class="doccomment">/// assert!(w.is_none());</span>
-    <span class="doccomment">/// let w = pieces[1].as_comments();</span>
-    <span class="doccomment">/// assert!(w.is_some());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_comments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span> {
-            <span class="ident">TriviaPieceKind::SingleLineComment</span> <span class="op">|</span> <span class="ident">TriviaPieceKind::MultiLineComment</span> =&gt; {
-                <span class="prelude-val">Some</span>(<span class="ident">SyntaxTriviaPieceComments</span>(<span class="self">self</span>.<span class="ident">clone</span>()))
+    <span class="doccomment">/// Cast this trivia piece to [SyntaxTriviaPieceComments].
+    ///
+    /// ```
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t /**/let \t\t&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::whitespace(3),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// let w = pieces[0].as_comments();
+    /// assert!(w.is_none());
+    /// let w = pieces[1].as_comments();
+    /// assert!(w.is_some());
+    /// ```
+    </span><span class="kw">pub fn </span>as_comments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxTriviaPieceComments&lt;L&gt;&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.trivia.kind {
+            TriviaPieceKind::SingleLineComment | TriviaPieceKind::MultiLineComment =&gt; {
+                <span class="prelude-val">Some</span>(SyntaxTriviaPieceComments(<span class="self">self</span>.clone()))
             }
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Casts this piece to a skipped trivia piece.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_skipped</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxTriviaPieceSkipped</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span> {
-            <span class="ident">TriviaPieceKind::Skipped</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">SyntaxTriviaPieceSkipped</span>(<span class="self">self</span>.<span class="ident">clone</span>())),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="doccomment">/// Casts this piece to a skipped trivia piece.
+    </span><span class="kw">pub fn </span>as_skipped(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxTriviaPieceSkipped&lt;L&gt;&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.trivia.kind {
+            TriviaPieceKind::Skipped =&gt; <span class="prelude-val">Some</span>(SyntaxTriviaPieceSkipped(<span class="self">self</span>.clone())),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">SyntaxToken::from</span>(<span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">token</span>().<span class="ident">clone</span>())
+    <span class="kw">pub fn </span>token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxToken&lt;L&gt; {
+        SyntaxToken::from(<span class="self">self</span>.raw.token().clone())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">kind</span> {
-            <span class="ident">TriviaPieceKind::Newline</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Newline(&quot;</span>)<span class="question-mark">?</span>,
-            <span class="ident">TriviaPieceKind::Whitespace</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Whitespace(&quot;</span>)<span class="question-mark">?</span>,
-            <span class="ident">TriviaPieceKind::SingleLineComment</span> <span class="op">|</span> <span class="ident">TriviaPieceKind::MultiLineComment</span> =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Comments(&quot;</span>)<span class="question-mark">?</span>
-            }
-            <span class="ident">TriviaPieceKind::Skipped</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Skipped(&quot;</span>)<span class="question-mark">?</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; fmt::Debug <span class="kw">for </span>SyntaxTriviaPiece&lt;L&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">match </span><span class="self">self</span>.trivia.kind {
+            TriviaPieceKind::Newline =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Newline(&quot;</span>)<span class="question-mark">?</span>,
+            TriviaPieceKind::Whitespace =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Whitespace(&quot;</span>)<span class="question-mark">?</span>,
+            TriviaPieceKind::SingleLineComment | TriviaPieceKind::MultiLineComment =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;Comments(&quot;</span>)<span class="question-mark">?
+            </span>}
+            TriviaPieceKind::Skipped =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Skipped(&quot;</span>)<span class="question-mark">?</span>,
         }
-        <span class="ident">print_debug_str</span>(<span class="self">self</span>.<span class="ident">text</span>(), <span class="ident">f</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;)&quot;</span>)
+        print_debug_str(<span class="self">self</span>.text(), f)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">&quot;)&quot;</span>)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxTrivia</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">raw</span>: <span class="ident">cursor::SyntaxTrivia</span>,
-    <span class="ident">_p</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Clone, PartialEq, Eq, Hash)]
+</span><span class="kw">pub struct </span>SyntaxTrivia&lt;L: Language&gt; {
+    raw: cursor::SyntaxTrivia,
+    _p: PhantomData&lt;L&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">iter</span>: <span class="ident">cursor::SyntaxTriviaPiecesIterator</span>,
-    <span class="ident">_p</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>SyntaxTriviaPiecesIterator&lt;L: Language&gt; {
+    iter: cursor::SyntaxTriviaPiecesIterator,
+    _p: PhantomData&lt;L&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SyntaxTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;L: Language&gt; Iterator <span class="kw">for </span>SyntaxTriviaPiecesIterator&lt;L&gt; {
+    <span class="kw">type </span>Item = SyntaxTriviaPiece&lt;L&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">offset</span>, <span class="ident">trivia</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>()<span class="question-mark">?</span>;
-        <span class="prelude-val">Some</span>(<span class="ident">SyntaxTriviaPiece</span> {
-            <span class="ident">raw</span>: <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">raw</span>.<span class="ident">clone</span>(),
-            <span class="ident">offset</span>,
-            <span class="ident">trivia</span>,
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>(offset, trivia) = <span class="self">self</span>.iter.next()<span class="question-mark">?</span>;
+        <span class="prelude-val">Some</span>(SyntaxTriviaPiece {
+            raw: <span class="self">self</span>.iter.raw.clone(),
+            offset,
+            trivia,
+            _p: PhantomData,
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">size_hint</span>()
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="self">self</span>.iter.size_hint()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">offset</span>, <span class="ident">trivia</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next_back</span>()<span class="question-mark">?</span>;
-        <span class="prelude-val">Some</span>(<span class="ident">SyntaxTriviaPiece</span> {
-            <span class="ident">raw</span>: <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">raw</span>.<span class="ident">clone</span>(),
-            <span class="ident">offset</span>,
-            <span class="ident">trivia</span>,
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; DoubleEndedIterator <span class="kw">for </span>SyntaxTriviaPiecesIterator&lt;L&gt; {
+    <span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>(offset, trivia) = <span class="self">self</span>.iter.next_back()<span class="question-mark">?</span>;
+        <span class="prelude-val">Some</span>(SyntaxTriviaPiece {
+            raw: <span class="self">self</span>.iter.raw.clone(),
+            offset,
+            trivia,
+            _p: PhantomData,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">SyntaxTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;L: Language&gt; ExactSizeIterator <span class="kw">for </span>SyntaxTriviaPiecesIterator&lt;L&gt; {}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxTrivia</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">raw</span>: <span class="ident">cursor::SyntaxTrivia</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">raw</span>,
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxTrivia&lt;L&gt; {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(raw: cursor::SyntaxTrivia) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            raw,
+            _p: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Returns all [SyntaxTriviaPiece] of this trivia.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use crate::*;</span>
-    <span class="doccomment">/// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};</span>
-    <span class="doccomment">/// use rome_rowan::*;</span>
-    <span class="doccomment">/// use std::iter::Iterator;</span>
-    <span class="doccomment">/// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {</span>
-    <span class="doccomment">///     builder.token_with_trivia(</span>
-    <span class="doccomment">///         RawLanguageKind::LET_TOKEN,</span>
-    <span class="doccomment">///         &quot;\n\t /**/let \t\t&quot;,</span>
-    <span class="doccomment">///         &amp;[</span>
-    <span class="doccomment">///             TriviaPiece::whitespace(3),</span>
-    <span class="doccomment">///             TriviaPiece::single_line_comment(4),</span>
-    <span class="doccomment">///         ],</span>
-    <span class="doccomment">///         &amp;[TriviaPiece::whitespace(3)],</span>
-    <span class="doccomment">///     );</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert_eq!(2, pieces.len());</span>
-    <span class="doccomment">/// let pieces: Vec&lt;_&gt; = node.last_trailing_trivia().unwrap().pieces().collect();</span>
-    <span class="doccomment">/// assert_eq!(1, pieces.len());</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pieces</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxTriviaPiecesIterator</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">SyntaxTriviaPiecesIterator</span> {
-            <span class="ident">iter</span>: <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">pieces</span>(),
-            <span class="ident">_p</span>: <span class="ident">PhantomData</span>,
+    <span class="doccomment">/// Returns all [SyntaxTriviaPiece] of this trivia.
+    ///
+    /// ```
+    /// use crate::*;
+    /// use rome_rowan::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    /// use rome_rowan::*;
+    /// use std::iter::Iterator;
+    /// let mut node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+    ///     builder.token_with_trivia(
+    ///         RawLanguageKind::LET_TOKEN,
+    ///         &quot;\n\t /**/let \t\t&quot;,
+    ///         &amp;[
+    ///             TriviaPiece::whitespace(3),
+    ///             TriviaPiece::single_line_comment(4),
+    ///         ],
+    ///         &amp;[TriviaPiece::whitespace(3)],
+    ///     );
+    /// });
+    /// let pieces: Vec&lt;_&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+    /// assert_eq!(2, pieces.len());
+    /// let pieces: Vec&lt;_&gt; = node.last_trailing_trivia().unwrap().pieces().collect();
+    /// assert_eq!(1, pieces.len());
+    /// ```
+    </span><span class="kw">pub fn </span>pieces(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxTriviaPiecesIterator&lt;L&gt; {
+        SyntaxTriviaPiecesIterator {
+            iter: <span class="self">self</span>.raw.pieces(),
+            _p: PhantomData,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">piece</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">last</span>()<span class="question-mark">?</span>;
+    <span class="kw">pub fn </span>last(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxTriviaPiece&lt;L&gt;&gt; {
+        <span class="kw">let </span>piece = <span class="self">self</span>.raw.last()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(<span class="ident">SyntaxTriviaPiece</span> {
-            <span class="ident">raw</span>: <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">clone</span>(),
-            <span class="ident">offset</span>: <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">text_range</span>().<span class="ident">end</span>() <span class="op">-</span> <span class="ident">piece</span>.<span class="ident">length</span>,
-            <span class="ident">trivia</span>: <span class="kw-2">*</span><span class="ident">piece</span>,
-            <span class="ident">_p</span>: <span class="ident">Default::default</span>(),
+        <span class="prelude-val">Some</span>(SyntaxTriviaPiece {
+            raw: <span class="self">self</span>.raw.clone(),
+            offset: <span class="self">self</span>.raw.text_range().end() - piece.length,
+            trivia: <span class="kw-2">*</span>piece,
+            _p: Default::default(),
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">piece</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">first</span>()<span class="question-mark">?</span>;
+    <span class="kw">pub fn </span>first(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxTriviaPiece&lt;L&gt;&gt; {
+        <span class="kw">let </span>piece = <span class="self">self</span>.raw.first()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(<span class="ident">SyntaxTriviaPiece</span> {
-            <span class="ident">raw</span>: <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">clone</span>(),
-            <span class="ident">offset</span>: <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">text_range</span>().<span class="ident">end</span>() <span class="op">-</span> <span class="ident">piece</span>.<span class="ident">length</span>,
-            <span class="ident">trivia</span>: <span class="kw-2">*</span><span class="ident">piece</span>,
-            <span class="ident">_p</span>: <span class="ident">Default::default</span>(),
+        <span class="prelude-val">Some</span>(SyntaxTriviaPiece {
+            raw: <span class="self">self</span>.raw.clone(),
+            offset: <span class="self">self</span>.raw.text_range().end() - piece.length,
+            trivia: <span class="kw-2">*</span>piece,
+            _p: Default::default(),
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">text</span>()
+    <span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.raw.text()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">text_range</span>()
+    <span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.raw.text_range()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span>
-    }
+    <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.raw.len() == <span class="number">0
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_skipped</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">pieces</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_skipped</span>())
+    <span class="kw">pub fn </span>has_skipped(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.pieces().any(|piece| piece.is_skipped())
     }
 }
 
-<span class="kw">fn</span> <span class="ident">print_debug_str</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">text</span>: <span class="ident">S</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">as_ref</span>();
-    <span class="kw">if</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="number">25</span> {
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:?}&quot;</span>, <span class="ident">text</span>)
-    } <span class="kw">else</span> {
-        <span class="kw">for</span> <span class="ident">idx</span> <span class="kw">in</span> <span class="number">21</span>..<span class="number">25</span> {
-            <span class="kw">if</span> <span class="ident">text</span>.<span class="ident">is_char_boundary</span>(<span class="ident">idx</span>) {
-                <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{} ...&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">text</span>[..<span class="ident">idx</span>]);
-                <span class="kw">return</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:?}&quot;</span>, <span class="ident">text</span>);
+<span class="kw">fn </span>print_debug_str&lt;S: AsRef&lt;str&gt;&gt;(text: S, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">let </span>text = text.as_ref();
+    <span class="kw">if </span>text.len() &lt; <span class="number">25 </span>{
+        <span class="macro">write!</span>(f, <span class="string">&quot;{:?}&quot;</span>, text)
+    } <span class="kw">else </span>{
+        <span class="kw">for </span>idx <span class="kw">in </span><span class="number">21</span>..<span class="number">25 </span>{
+            <span class="kw">if </span>text.is_char_boundary(idx) {
+                <span class="kw">let </span>text = <span class="macro">format!</span>(<span class="string">&quot;{} ...&quot;</span>, <span class="kw-2">&amp;</span>text[..idx]);
+                <span class="kw">return </span><span class="macro">write!</span>(f, <span class="string">&quot;{:?}&quot;</span>, text);
             }
         }
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">&quot;&quot;</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">SyntaxTrivia</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">first_piece</span> <span class="op">=</span> <span class="bool-val">true</span>;
+<span class="kw">impl</span>&lt;L: Language&gt; std::fmt::Debug <span class="kw">for </span>SyntaxTrivia&lt;L&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>first_piece = <span class="bool-val">true</span>;
 
-        <span class="kw">for</span> <span class="ident">piece</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">pieces</span>() {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">first_piece</span> {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">for </span>piece <span class="kw">in </span><span class="self">self</span>.pieces() {
+            <span class="kw">if </span>!first_piece {
+                <span class="macro">write!</span>(f, <span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
             }
-            <span class="ident">first_piece</span> <span class="op">=</span> <span class="bool-val">false</span>;
-            <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:?}&quot;</span>, <span class="ident">piece</span>)<span class="question-mark">?</span>;
+            first_piece = <span class="bool-val">false</span>;
+            <span class="macro">write!</span>(f, <span class="string">&quot;{:?}&quot;</span>, piece)<span class="question-mark">?</span>;
         }
 
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;]&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">&quot;]&quot;</span>)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>syntax.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>syntax.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -497,504 +497,504 @@
 <span id="497">497</span>
 <span id="498">498</span>
 <span id="499">499</span>
-</pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">element</span>;
-<span class="kw">mod</span> <span class="ident">node</span>;
-<span class="kw">mod</span> <span class="ident">token</span>;
-<span class="kw">mod</span> <span class="ident">trivia</span>;
+</pre><pre class="rust"><code><span class="kw">mod </span>element;
+<span class="kw">mod </span>node;
+<span class="kw">mod </span>token;
+<span class="kw">mod </span>trivia;
 
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+<span class="kw">use </span>std::fmt::Debug;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">trivia</span>::{
-    <span class="ident">SyntaxTrivia</span>, <span class="ident">SyntaxTriviaPiece</span>, <span class="ident">SyntaxTriviaPieceComments</span>, <span class="ident">SyntaxTriviaPieceNewline</span>,
-    <span class="ident">SyntaxTriviaPieceSkipped</span>, <span class="ident">SyntaxTriviaPieceWhitespace</span>, <span class="ident">SyntaxTriviaPiecesIterator</span>, <span class="ident">TriviaPiece</span>,
-    <span class="ident">TriviaPieceKind</span>,
+<span class="kw">pub use </span>trivia::{
+    SyntaxTrivia, SyntaxTriviaPiece, SyntaxTriviaPieceComments, SyntaxTriviaPieceNewline,
+    SyntaxTriviaPieceSkipped, SyntaxTriviaPieceWhitespace, SyntaxTriviaPiecesIterator, TriviaPiece,
+    TriviaPieceKind,
 };
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">element</span>::{<span class="ident">SyntaxElement</span>, <span class="ident">SyntaxElementKey</span>};
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">node::SyntaxSlots</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">node</span>::{
-    <span class="ident">Preorder</span>, <span class="ident">PreorderWithTokens</span>, <span class="ident">SendNode</span>, <span class="ident">SyntaxElementChildren</span>, <span class="ident">SyntaxNode</span>, <span class="ident">SyntaxNodeChildren</span>,
-    <span class="ident">SyntaxNodeOptionExt</span>, <span class="ident">SyntaxSlot</span>,
+<span class="kw">pub use </span>element::{SyntaxElement, SyntaxElementKey};
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>node::SyntaxSlots;
+<span class="kw">pub use </span>node::{
+    Preorder, PreorderWithTokens, SendNode, SyntaxElementChildren, SyntaxNode, SyntaxNodeChildren,
+    SyntaxNodeOptionExt, SyntaxSlot,
 };
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">token::SyntaxToken</span>;
+<span class="kw">pub use </span>token::SyntaxToken;
 
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
+<span class="kw">use </span>std::fmt;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">AstNode</span>, <span class="ident">RawSyntaxKind</span>};
+<span class="kw">use crate</span>::{AstNode, RawSyntaxKind};
 
-<span class="doccomment">/// Type tag for each node or token of a language</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SyntaxKind</span>: <span class="ident">fmt::Debug</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Copy</span> {
-    <span class="doccomment">/// Returns `true` if this is an unknown node kind.</span>
-    <span class="kw">fn</span> <span class="ident">is_unknown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
+<span class="doccomment">/// Type tag for each node or token of a language
+</span><span class="kw">pub trait </span>SyntaxKind: fmt::Debug + PartialEq + Copy {
+    <span class="doccomment">/// Returns `true` if this is an unknown node kind.
+    </span><span class="kw">fn </span>is_unknown(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool;
 
-    <span class="doccomment">/// Converts this into to the best matching unknown node kind.</span>
-    <span class="kw">fn</span> <span class="ident">to_unknown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>;
+    <span class="doccomment">/// Converts this into to the best matching unknown node kind.
+    </span><span class="kw">fn </span>to_unknown(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>;
 
-    <span class="doccomment">/// Converts this kind to a raw syntax kind.</span>
-    <span class="kw">fn</span> <span class="ident">to_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RawSyntaxKind</span>;
+    <span class="doccomment">/// Converts this kind to a raw syntax kind.
+    </span><span class="kw">fn </span>to_raw(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RawSyntaxKind;
 
-    <span class="doccomment">/// Creates a syntax kind from a raw kind.</span>
-    <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">raw</span>: <span class="ident">RawSyntaxKind</span>) -&gt; <span class="self">Self</span>;
+    <span class="doccomment">/// Creates a syntax kind from a raw kind.
+    </span><span class="kw">fn </span>from_raw(raw: RawSyntaxKind) -&gt; <span class="self">Self</span>;
 
-    <span class="doccomment">/// Returns `true` if this kind is for a root node.</span>
-    <span class="kw">fn</span> <span class="ident">is_root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// Returns `true` if this kind is for a root node.
+    </span><span class="kw">fn </span>is_root(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool;
 
-    <span class="doccomment">/// Returns `true` if this kind is a list node.</span>
-    <span class="kw">fn</span> <span class="ident">is_list</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// Returns `true` if this kind is a list node.
+    </span><span class="kw">fn </span>is_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool;
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Language</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">fmt::Debug</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Ord</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> {
-    <span class="kw">type</span> <span class="ident">Kind</span>: <span class="ident">SyntaxKind</span>;
-    <span class="kw">type</span> <span class="ident">Root</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="self">Self</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">fmt::Debug</span>;
+<span class="kw">pub trait </span>Language: Sized + Clone + Copy + fmt::Debug + Eq + Ord + std::hash::Hash {
+    <span class="kw">type </span>Kind: SyntaxKind;
+    <span class="kw">type </span>Root: AstNode&lt;Language = <span class="self">Self</span>&gt; + Clone + Eq + fmt::Debug;
 }
 
-<span class="doccomment">/// A list of `SyntaxNode`s and/or `SyntaxToken`s</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxList</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">list</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A list of `SyntaxNode`s and/or `SyntaxToken`s
+</span><span class="attribute">#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+</span><span class="kw">pub struct </span>SyntaxList&lt;L: Language&gt; {
+    list: SyntaxNode&lt;L&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxList</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new list wrapping a List `SyntaxNode`</span>
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">list</span>: <span class="ident">node</span> }
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxList&lt;L&gt; {
+    <span class="doccomment">/// Creates a new list wrapping a List `SyntaxNode`
+    </span><span class="kw">fn </span>new(node: SyntaxNode&lt;L&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ list: node }
     }
 
-    <span class="doccomment">/// Iterates over the elements in the list.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyntaxSlots</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">slots</span>()
+    <span class="doccomment">/// Iterates over the elements in the list.
+    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyntaxSlots&lt;L&gt; {
+        <span class="self">self</span>.list.slots()
     }
 
-    <span class="doccomment">/// Returns the number of items in this list</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">slots</span>().<span class="ident">len</span>()
+    <span class="doccomment">/// Returns the number of items in this list
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.list.slots().len()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span>
+    <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.len() == <span class="number">0
+    </span>}
+
+    <span class="kw">pub fn </span>first(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxSlot&lt;L&gt;&gt; {
+        <span class="self">self</span>.list.slots().next()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxSlot</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">slots</span>().<span class="ident">next</span>()
+    <span class="kw">pub fn </span>last(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxSlot&lt;L&gt;&gt; {
+        <span class="self">self</span>.list.slots().last()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxSlot</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">slots</span>().<span class="ident">last</span>()
+    <span class="kw">pub fn </span>node(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.list
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">list</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_node</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">list</span>
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">SyntaxList</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxSlot</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">SyntaxSlots</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>;
-
-    <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::IntoIter</span> {
-        <span class="self">self</span>.<span class="ident">iter</span>()
+    <span class="kw">pub fn </span>into_node(<span class="self">self</span>) -&gt; SyntaxNode&lt;L&gt; {
+        <span class="self">self</span>.list
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="ident">SyntaxList</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">SyntaxSlot</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">SyntaxSlots</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;L: Language&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span>SyntaxList&lt;L&gt; {
+    <span class="kw">type </span>Item = SyntaxSlot&lt;L&gt;;
+    <span class="kw">type </span>IntoIter = SyntaxSlots&lt;L&gt;;
 
-    <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::IntoIter</span> {
-        <span class="self">self</span>.<span class="ident">iter</span>()
+    <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
+        <span class="self">self</span>.iter()
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">rome_text_size::TextRange</span>;
+<span class="kw">impl</span>&lt;L: Language&gt; IntoIterator <span class="kw">for </span>SyntaxList&lt;L&gt; {
+    <span class="kw">type </span>Item = SyntaxSlot&lt;L&gt;;
+    <span class="kw">type </span>IntoIter = SyntaxSlots&lt;L&gt;;
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::raw_language</span>::{<span class="ident">RawLanguageKind</span>, <span class="ident">RawSyntaxTreeBuilder</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::TriviaPiece</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Direction</span>;
+    <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
+        <span class="self">self</span>.iter()
+    }
+}
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">empty_list</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span>: <span class="ident">RawSyntaxTreeBuilder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::EXPRESSION_LIST</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
-        <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>().<span class="ident">into_list</span>();
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>rome_text_size::TextRange;
 
-        <span class="macro">assert!</span>(<span class="ident">list</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">list</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+    <span class="kw">use </span><span class="kw">crate</span>::raw_language::{RawLanguageKind, RawSyntaxTreeBuilder};
+    <span class="kw">use </span><span class="kw">crate</span>::syntax::TriviaPiece;
+    <span class="kw">use </span><span class="kw">crate</span>::Direction;
 
-        <span class="macro">assert_eq!</span>(<span class="ident">list</span>.<span class="ident">first</span>(), <span class="prelude-val">None</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">list</span>.<span class="ident">last</span>(), <span class="prelude-val">None</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>empty_list() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder: RawSyntaxTreeBuilder = RawSyntaxTreeBuilder::new();
+        builder.start_node(RawLanguageKind::EXPRESSION_LIST);
+        builder.finish_node();
+        <span class="kw">let </span>list = builder.finish().into_list();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="ident">Vec::default</span>());
+        <span class="macro">assert!</span>(list.is_empty());
+        <span class="macro">assert_eq!</span>(list.len(), <span class="number">0</span>);
+
+        <span class="macro">assert_eq!</span>(list.first(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(list.last(), <span class="prelude-val">None</span>);
+
+        <span class="macro">assert_eq!</span>(list.iter().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(), Vec::default());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">node_list</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>node_list() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::EXPRESSION_LIST</span>);
+        builder.start_node(RawLanguageKind::EXPRESSION_LIST);
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;1&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;1&quot;</span>);
+        builder.finish_node();
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;2&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;2&quot;</span>);
+        builder.finish_node();
 
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
-        <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">into_list</span>();
+        <span class="kw">let </span>node = builder.finish();
+        <span class="kw">let </span>list = node.into_list();
 
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">list</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">list</span>.<span class="ident">len</span>(), <span class="number">2</span>);
+        <span class="macro">assert!</span>(!list.is_empty());
+        <span class="macro">assert_eq!</span>(list.len(), <span class="number">2</span>);
 
-        <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">first</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_node</span>()).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">kind</span>(), <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">text</span>(), <span class="string">&quot;1&quot;</span>);
+        <span class="kw">let </span>first = list.first().and_then(|e| e.into_node()).unwrap();
+        <span class="macro">assert_eq!</span>(first.kind(), RawLanguageKind::LITERAL_EXPRESSION);
+        <span class="macro">assert_eq!</span>(first.text(), <span class="string">&quot;1&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">last</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_node</span>()).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">last</span>.<span class="ident">kind</span>(), <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">last</span>.<span class="ident">text</span>(), <span class="string">&quot;2&quot;</span>);
+        <span class="kw">let </span>last = list.last().and_then(|e| e.into_node()).unwrap();
+        <span class="macro">assert_eq!</span>(last.kind(), RawLanguageKind::LITERAL_EXPRESSION);
+        <span class="macro">assert_eq!</span>(last.text(), <span class="string">&quot;2&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">node_texts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_node</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">text</span>().<span class="ident">to_string</span>()))
-            .<span class="ident">collect</span>();
+        <span class="kw">let </span>node_texts: Vec&lt;<span class="kw">_</span>&gt; = list
+            .iter()
+            .map(|e| e.into_node().map(|n| n.text().to_string()))
+            .collect();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">node_texts</span>,
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;1&quot;</span>)), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;2&quot;</span>))]
+            node_texts,
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(String::from(<span class="string">&quot;1&quot;</span>)), <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;2&quot;</span>))]
         )
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">node_or_token_list</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>node_or_token_list() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::SEPARATED_EXPRESSION_LIST</span>);
+        builder.start_node(RawLanguageKind::SEPARATED_EXPRESSION_LIST);
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;1&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;1&quot;</span>);
+        builder.finish_node();
 
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;,&quot;</span>);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;,&quot;</span>);
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;2&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;2&quot;</span>);
+        builder.finish_node();
 
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
-        <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">into_list</span>();
+        <span class="kw">let </span>node = builder.finish();
+        <span class="kw">let </span>list = node.into_list();
 
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">list</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">list</span>.<span class="ident">len</span>(), <span class="number">3</span>);
+        <span class="macro">assert!</span>(!list.is_empty());
+        <span class="macro">assert_eq!</span>(list.len(), <span class="number">3</span>);
 
-        <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">first</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_node</span>()).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">kind</span>(), <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">text</span>(), <span class="string">&quot;1&quot;</span>);
+        <span class="kw">let </span>first = list.first().and_then(|e| e.into_node()).unwrap();
+        <span class="macro">assert_eq!</span>(first.kind(), RawLanguageKind::LITERAL_EXPRESSION);
+        <span class="macro">assert_eq!</span>(first.text(), <span class="string">&quot;1&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">last</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_node</span>()).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">last</span>.<span class="ident">kind</span>(), <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">last</span>.<span class="ident">text</span>(), <span class="string">&quot;2&quot;</span>);
+        <span class="kw">let </span>last = list.last().and_then(|e| e.into_node()).unwrap();
+        <span class="macro">assert_eq!</span>(last.kind(), RawLanguageKind::LITERAL_EXPRESSION);
+        <span class="macro">assert_eq!</span>(last.text(), <span class="string">&quot;2&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">kinds</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">kind</span>()).<span class="ident">collect</span>();
+        <span class="kw">let </span>kinds: Vec&lt;<span class="kw">_</span>&gt; = list.iter().map(|e| e.kind()).collect();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">kinds</span>,
+            kinds,
             <span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>),
-                <span class="prelude-val">Some</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>),
-                <span class="prelude-val">Some</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>)
+                <span class="prelude-val">Some</span>(RawLanguageKind::LITERAL_EXPRESSION),
+                <span class="prelude-val">Some</span>(RawLanguageKind::NUMBER_TOKEN),
+                <span class="prelude-val">Some</span>(RawLanguageKind::LITERAL_EXPRESSION)
             ]
         )
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">siblings</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>siblings() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
 
-        <span class="comment">// list</span>
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::SEPARATED_EXPRESSION_LIST</span>);
+        <span class="comment">// list
+        </span>builder.start_node(RawLanguageKind::SEPARATED_EXPRESSION_LIST);
 
-        <span class="comment">// element 1</span>
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;a&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        <span class="comment">// element 1
+        </span>builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;a&quot;</span>);
+        builder.finish_node();
 
-        <span class="comment">// element 2</span>
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;b&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        <span class="comment">// element 2
+        </span>builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;b&quot;</span>);
+        builder.finish_node();
 
-        <span class="comment">// Missing ,</span>
+        <span class="comment">// Missing ,
 
-        <span class="comment">// element 3</span>
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;c&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        // element 3
+        </span>builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;c&quot;</span>);
+        builder.finish_node();
 
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span>root = builder.finish();
 
-        <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">children</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">text</span>().<span class="ident">to_string</span>(), <span class="string">&quot;a&quot;</span>);
+        <span class="kw">let </span>first = root.children().next().unwrap();
+        <span class="macro">assert_eq!</span>(first.text().to_string(), <span class="string">&quot;a&quot;</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">first</span>.<span class="ident">next_sibling</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">text</span>().<span class="ident">to_string</span>()),
-            <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;b&quot;</span>))
+            first.next_sibling().map(|e| e.text().to_string()),
+            <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;b&quot;</span>))
         );
 
-        <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">children</span>().<span class="ident">nth</span>(<span class="number">1</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">second</span>.<span class="ident">text</span>().<span class="ident">to_string</span>(), <span class="string">&quot;b&quot;</span>);
+        <span class="kw">let </span>second = root.children().nth(<span class="number">1</span>).unwrap();
+        <span class="macro">assert_eq!</span>(second.text().to_string(), <span class="string">&quot;b&quot;</span>);
 
-        <span class="comment">// Skips the missing element</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">second</span>.<span class="ident">next_sibling</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">text</span>().<span class="ident">to_string</span>()),
-            <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;c&quot;</span>))
-        );
-
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">second</span>.<span class="ident">prev_sibling</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">text</span>().<span class="ident">to_string</span>()),
-            <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;a&quot;</span>))
-        );
-
-        <span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">children</span>().<span class="ident">last</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">last</span>.<span class="ident">text</span>(), <span class="string">&quot;c&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">last</span>.<span class="ident">next_sibling</span>(), <span class="prelude-val">None</span>);
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">last</span>.<span class="ident">prev_sibling</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">text</span>().<span class="ident">to_string</span>()),
-            <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;b&quot;</span>))
+        <span class="comment">// Skips the missing element
+        </span><span class="macro">assert_eq!</span>(
+            second.next_sibling().map(|e| e.text().to_string()),
+            <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;c&quot;</span>))
         );
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">first</span>
-                .<span class="ident">siblings</span>(<span class="ident">Direction::Next</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">text</span>().<span class="ident">to_string</span>())
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+            second.prev_sibling().map(|e| e.text().to_string()),
+            <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;a&quot;</span>))
+        );
+
+        <span class="kw">let </span>last = root.children().last().unwrap();
+        <span class="macro">assert_eq!</span>(last.text(), <span class="string">&quot;c&quot;</span>);
+        <span class="macro">assert_eq!</span>(last.next_sibling(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(
+            last.prev_sibling().map(|e| e.text().to_string()),
+            <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;b&quot;</span>))
+        );
+
+        <span class="macro">assert_eq!</span>(
+            first
+                .siblings(Direction::Next)
+                .map(|s| s.text().to_string())
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
             <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>]
         );
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">last</span>.<span class="ident">siblings</span>(<span class="ident">Direction::Prev</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">text</span>().<span class="ident">to_string</span>())
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+            last.siblings(Direction::Prev)
+                .map(|s| s.text().to_string())
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
             <span class="macro">vec!</span>[<span class="string">&quot;c&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;a&quot;</span>]
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">siblings_with_tokens</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>siblings_with_tokens() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
+        builder.start_node(RawLanguageKind::ROOT);
 
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::FOR_KW</span>, <span class="string">&quot;for&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::L_PAREN_TOKEN</span>, <span class="string">&quot;(&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::SEMICOLON_TOKEN</span>, <span class="string">&quot;;&quot;</span>);
+        builder.token(RawLanguageKind::FOR_KW, <span class="string">&quot;for&quot;</span>);
+        builder.token(RawLanguageKind::L_PAREN_TOKEN, <span class="string">&quot;(&quot;</span>);
+        builder.token(RawLanguageKind::SEMICOLON_TOKEN, <span class="string">&quot;;&quot;</span>);
 
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="string">&quot;x&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        builder.token(RawLanguageKind::STRING_TOKEN, <span class="string">&quot;x&quot;</span>);
+        builder.finish_node();
 
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::SEMICOLON_TOKEN</span>, <span class="string">&quot;;&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::R_PAREN_TOKEN</span>, <span class="string">&quot;)&quot;</span>);
+        builder.token(RawLanguageKind::SEMICOLON_TOKEN, <span class="string">&quot;;&quot;</span>);
+        builder.token(RawLanguageKind::R_PAREN_TOKEN, <span class="string">&quot;)&quot;</span>);
 
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span>root = builder.finish();
 
-        <span class="kw">let</span> <span class="ident">first_semicolon</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">children_with_tokens</span>()
-            .<span class="ident">nth</span>(<span class="number">2</span>)
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_token</span>())
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>first_semicolon = root
+            .children_with_tokens()
+            .nth(<span class="number">2</span>)
+            .and_then(|e| e.into_token())
+            .unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">first_semicolon</span>.<span class="ident">text</span>(), <span class="string">&quot;;&quot;</span>);
+        <span class="macro">assert_eq!</span>(first_semicolon.text(), <span class="string">&quot;;&quot;</span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">first_semicolon</span>
-                .<span class="ident">siblings_with_tokens</span>(<span class="ident">Direction::Next</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+            first_semicolon
+                .siblings_with_tokens(Direction::Next)
+                .map(|e| e.to_string())
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
             <span class="macro">vec!</span>[<span class="string">&quot;x&quot;</span>, <span class="string">&quot;;&quot;</span>, <span class="string">&quot;)&quot;</span>]
         );
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">first_semicolon</span>.<span class="ident">next_sibling_or_token</span>(),
-            <span class="ident">first_semicolon</span>.<span class="ident">siblings_with_tokens</span>(<span class="ident">Direction::Next</span>).<span class="ident">next</span>()
+            first_semicolon.next_sibling_or_token(),
+            first_semicolon.siblings_with_tokens(Direction::Next).next()
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">first_semicolon</span>.<span class="ident">prev_sibling_or_token</span>(),
-            <span class="ident">first_semicolon</span>.<span class="ident">siblings_with_tokens</span>(<span class="ident">Direction::Prev</span>).<span class="ident">next</span>()
+            first_semicolon.prev_sibling_or_token(),
+            first_semicolon.siblings_with_tokens(Direction::Prev).next()
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">syntax_text_and_len</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-        <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-            <span class="ident">RawLanguageKind::LET_TOKEN</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">pub fn </span>syntax_text_and_len() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
+        builder.start_node(RawLanguageKind::ROOT);
+        builder.token_with_trivia(
+            RawLanguageKind::LET_TOKEN,
             <span class="string">&quot;\n\t let \t\t&quot;</span>,
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">3</span>)],
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">3</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">3</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">3</span>)],
         );
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="comment">// // Node texts</span>
+        <span class="comment">// // Node texts
 
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t let \t\t&quot;</span>, <span class="ident">node</span>.<span class="ident">text</span>());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;let&quot;</span>, <span class="ident">node</span>.<span class="ident">text_trimmed</span>());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t &quot;</span>, <span class="ident">node</span>.<span class="ident">first_leading_trivia</span>().<span class="ident">unwrap</span>().<span class="ident">text</span>());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot; \t\t&quot;</span>, <span class="ident">node</span>.<span class="ident">last_trailing_trivia</span>().<span class="ident">unwrap</span>().<span class="ident">text</span>());
+        </span><span class="kw">let </span>node = builder.finish();
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t let \t\t&quot;</span>, node.text());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;let&quot;</span>, node.text_trimmed());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t &quot;</span>, node.first_leading_trivia().unwrap().text());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot; \t\t&quot;</span>, node.last_trailing_trivia().unwrap().text());
 
-        <span class="comment">// Token texts</span>
+        <span class="comment">// Token texts
 
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">first_token</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t let \t\t&quot;</span>, <span class="ident">token</span>.<span class="ident">text</span>());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;let&quot;</span>, <span class="ident">token</span>.<span class="ident">text_trimmed</span>());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t &quot;</span>, <span class="ident">token</span>.<span class="ident">leading_trivia</span>().<span class="ident">text</span>());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot; \t\t&quot;</span>, <span class="ident">token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">text</span>());
+        </span><span class="kw">let </span>token = node.first_token().unwrap();
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t let \t\t&quot;</span>, token.text());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;let&quot;</span>, token.text_trimmed());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t &quot;</span>, token.leading_trivia().text());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot; \t\t&quot;</span>, token.trailing_trivia().text());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">syntax_range</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-        <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-            <span class="ident">RawLanguageKind::LET_TOKEN</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">pub fn </span>syntax_range() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
+        builder.start_node(RawLanguageKind::ROOT);
+        builder.token_with_trivia(
+            RawLanguageKind::LET_TOKEN,
             <span class="string">&quot;\n\t let \t\t&quot;</span>,
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">3</span>)],
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">3</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">3</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">3</span>)],
         );
-        <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-            <span class="ident">RawLanguageKind::LET_TOKEN</span>,
+        builder.token_with_trivia(
+            RawLanguageKind::LET_TOKEN,
             <span class="string">&quot;a &quot;</span>,
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">0</span>)],
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">1</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">0</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">1</span>)],
         );
-        <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-            <span class="ident">RawLanguageKind::EQUAL_TOKEN</span>,
+        builder.token_with_trivia(
+            RawLanguageKind::EQUAL_TOKEN,
             <span class="string">&quot;\n=\n&quot;</span>,
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">1</span>)],
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">1</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">1</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">1</span>)],
         );
-        <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::NUMBER_TOKEN</span>, <span class="string">&quot;1&quot;</span>);
-        <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-            <span class="ident">RawLanguageKind::SEMICOLON_TOKEN</span>,
+        builder.token(RawLanguageKind::NUMBER_TOKEN, <span class="string">&quot;1&quot;</span>);
+        builder.token_with_trivia(
+            RawLanguageKind::SEMICOLON_TOKEN,
             <span class="string">&quot;;\t\t&quot;</span>,
             <span class="kw-2">&amp;</span>[],
-            <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">2</span>)],
+            <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">2</span>)],
         );
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
+        builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span>node = builder.finish();
 
-        <span class="comment">// Node Ranges</span>
+        <span class="comment">// Node Ranges
 
-        <span class="macro">assert_eq!</span>(<span class="ident">TextRange::new</span>(<span class="number">0</span>.<span class="ident">into</span>(), <span class="number">18</span>.<span class="ident">into</span>()), <span class="ident">node</span>.<span class="ident">text_range</span>());
+        </span><span class="macro">assert_eq!</span>(TextRange::new(<span class="number">0</span>.into(), <span class="number">18</span>.into()), node.text_range());
         <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">3</span>.<span class="ident">into</span>(), <span class="number">16</span>.<span class="ident">into</span>()),
-            <span class="ident">node</span>.<span class="ident">text_trimmed_range</span>()
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">0</span>.<span class="ident">into</span>(), <span class="number">3</span>.<span class="ident">into</span>()),
-            <span class="ident">node</span>.<span class="ident">first_leading_trivia</span>().<span class="ident">unwrap</span>().<span class="ident">text_range</span>()
+            TextRange::new(<span class="number">3</span>.into(), <span class="number">16</span>.into()),
+            node.text_trimmed_range()
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">16</span>.<span class="ident">into</span>(), <span class="number">18</span>.<span class="ident">into</span>()),
-            <span class="ident">node</span>.<span class="ident">last_trailing_trivia</span>().<span class="ident">unwrap</span>().<span class="ident">text_range</span>()
-        );
-
-        <span class="comment">// as NodeOrToken</span>
-
-        <span class="kw">let</span> <span class="ident">eq_token</span> <span class="op">=</span> <span class="ident">node</span>
-            .<span class="ident">descendants_with_tokens</span>(<span class="ident">Direction::Next</span>)
-            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::EQUAL_TOKEN</span>)
-            .<span class="ident">unwrap</span>();
-
-        <span class="macro">assert_eq!</span>(<span class="ident">TextRange::new</span>(<span class="number">11</span>.<span class="ident">into</span>(), <span class="number">14</span>.<span class="ident">into</span>()), <span class="ident">eq_token</span>.<span class="ident">text_range</span>());
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">12</span>.<span class="ident">into</span>(), <span class="number">13</span>.<span class="ident">into</span>()),
-            <span class="ident">eq_token</span>.<span class="ident">text_trimmed_range</span>()
+            TextRange::new(<span class="number">0</span>.into(), <span class="number">3</span>.into()),
+            node.first_leading_trivia().unwrap().text_range()
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">11</span>.<span class="ident">into</span>(), <span class="number">12</span>.<span class="ident">into</span>()),
-            <span class="ident">eq_token</span>.<span class="ident">leading_trivia</span>().<span class="ident">unwrap</span>().<span class="ident">text_range</span>()
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">13</span>.<span class="ident">into</span>(), <span class="number">14</span>.<span class="ident">into</span>()),
-            <span class="ident">eq_token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">unwrap</span>().<span class="ident">text_range</span>()
+            TextRange::new(<span class="number">16</span>.into(), <span class="number">18</span>.into()),
+            node.last_trailing_trivia().unwrap().text_range()
         );
 
-        <span class="comment">// as Token</span>
+        <span class="comment">// as NodeOrToken
 
-        <span class="kw">let</span> <span class="ident">eq_token</span> <span class="op">=</span> <span class="ident">eq_token</span>.<span class="ident">as_token</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">TextRange::new</span>(<span class="number">11</span>.<span class="ident">into</span>(), <span class="number">14</span>.<span class="ident">into</span>()), <span class="ident">eq_token</span>.<span class="ident">text_range</span>());
+        </span><span class="kw">let </span>eq_token = node
+            .descendants_with_tokens(Direction::Next)
+            .find(|x| x.kind() == RawLanguageKind::EQUAL_TOKEN)
+            .unwrap();
+
+        <span class="macro">assert_eq!</span>(TextRange::new(<span class="number">11</span>.into(), <span class="number">14</span>.into()), eq_token.text_range());
         <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">12</span>.<span class="ident">into</span>(), <span class="number">13</span>.<span class="ident">into</span>()),
-            <span class="ident">eq_token</span>.<span class="ident">text_trimmed_range</span>()
+            TextRange::new(<span class="number">12</span>.into(), <span class="number">13</span>.into()),
+            eq_token.text_trimmed_range()
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">11</span>.<span class="ident">into</span>(), <span class="number">12</span>.<span class="ident">into</span>()),
-            <span class="ident">eq_token</span>.<span class="ident">leading_trivia</span>().<span class="ident">text_range</span>()
+            TextRange::new(<span class="number">11</span>.into(), <span class="number">12</span>.into()),
+            eq_token.leading_trivia().unwrap().text_range()
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">TextRange::new</span>(<span class="number">13</span>.<span class="ident">into</span>(), <span class="number">14</span>.<span class="ident">into</span>()),
-            <span class="ident">eq_token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">text_range</span>()
+            TextRange::new(<span class="number">13</span>.into(), <span class="number">14</span>.into()),
+            eq_token.trailing_trivia().unwrap().text_range()
+        );
+
+        <span class="comment">// as Token
+
+        </span><span class="kw">let </span>eq_token = eq_token.as_token().unwrap();
+        <span class="macro">assert_eq!</span>(TextRange::new(<span class="number">11</span>.into(), <span class="number">14</span>.into()), eq_token.text_range());
+        <span class="macro">assert_eq!</span>(
+            TextRange::new(<span class="number">12</span>.into(), <span class="number">13</span>.into()),
+            eq_token.text_trimmed_range()
+        );
+        <span class="macro">assert_eq!</span>(
+            TextRange::new(<span class="number">11</span>.into(), <span class="number">12</span>.into()),
+            eq_token.leading_trivia().text_range()
+        );
+        <span class="macro">assert_eq!</span>(
+            TextRange::new(<span class="number">13</span>.into(), <span class="number">14</span>.into()),
+            eq_token.trailing_trivia().text_range()
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">syntax_trivia_pieces</span>() {
-        <span class="kw">use</span> <span class="kw">crate</span>::<span class="kw-2">*</span>;
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::wrap_with_node</span>(<span class="ident">RawLanguageKind::ROOT</span>, <span class="op">|</span><span class="ident">builder</span><span class="op">|</span> {
-            <span class="ident">builder</span>.<span class="ident">token_with_trivia</span>(
-                <span class="ident">RawLanguageKind::LET_TOKEN</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">pub fn </span>syntax_trivia_pieces() {
+        <span class="kw">use crate</span>::<span class="kw-2">*</span>;
+        <span class="kw">let </span>node = RawSyntaxTreeBuilder::wrap_with_node(RawLanguageKind::ROOT, |builder| {
+            builder.token_with_trivia(
+                RawLanguageKind::LET_TOKEN,
                 <span class="string">&quot;\n\t /**/let \t\t&quot;</span>,
                 <span class="kw-2">&amp;</span>[
-                    <span class="ident">TriviaPiece::whitespace</span>(<span class="number">3</span>),
-                    <span class="ident">TriviaPiece::single_line_comment</span>(<span class="number">4</span>),
+                    TriviaPiece::whitespace(<span class="number">3</span>),
+                    TriviaPiece::single_line_comment(<span class="number">4</span>),
                 ],
-                <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece::whitespace</span>(<span class="number">3</span>)],
+                <span class="kw-2">&amp;</span>[TriviaPiece::whitespace(<span class="number">3</span>)],
             );
         });
 
-        <span class="kw">let</span> <span class="ident">pieces</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">first_leading_trivia</span>().<span class="ident">unwrap</span>().<span class="ident">pieces</span>().<span class="ident">collect</span>();
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">pieces</span>.<span class="ident">len</span>());
+        <span class="kw">let </span>pieces: Vec&lt;<span class="kw">_</span>&gt; = node.first_leading_trivia().unwrap().pieces().collect();
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, pieces.len());
 
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t &quot;</span>, <span class="ident">pieces</span>[<span class="number">0</span>].<span class="ident">text</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">TextSize::from</span>(<span class="number">3</span>), <span class="ident">pieces</span>[<span class="number">0</span>].<span class="ident">text_len</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">TextRange::new</span>(<span class="number">0</span>.<span class="ident">into</span>(), <span class="number">3</span>.<span class="ident">into</span>()), <span class="ident">pieces</span>[<span class="number">0</span>].<span class="ident">text_range</span>());
-        <span class="macro">assert!</span>(<span class="ident">pieces</span>[<span class="number">0</span>].<span class="ident">is_whitespace</span>());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t &quot;</span>, pieces[<span class="number">0</span>].text());
+        <span class="macro">assert_eq!</span>(TextSize::from(<span class="number">3</span>), pieces[<span class="number">0</span>].text_len());
+        <span class="macro">assert_eq!</span>(TextRange::new(<span class="number">0</span>.into(), <span class="number">3</span>.into()), pieces[<span class="number">0</span>].text_range());
+        <span class="macro">assert!</span>(pieces[<span class="number">0</span>].is_whitespace());
 
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;/**/&quot;</span>, <span class="ident">pieces</span>[<span class="number">1</span>].<span class="ident">text</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">TextSize::from</span>(<span class="number">4</span>), <span class="ident">pieces</span>[<span class="number">1</span>].<span class="ident">text_len</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">TextRange::new</span>(<span class="number">3</span>.<span class="ident">into</span>(), <span class="number">7</span>.<span class="ident">into</span>()), <span class="ident">pieces</span>[<span class="number">1</span>].<span class="ident">text_range</span>());
-        <span class="macro">assert!</span>(<span class="ident">pieces</span>[<span class="number">1</span>].<span class="ident">is_comments</span>());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;/**/&quot;</span>, pieces[<span class="number">1</span>].text());
+        <span class="macro">assert_eq!</span>(TextSize::from(<span class="number">4</span>), pieces[<span class="number">1</span>].text_len());
+        <span class="macro">assert_eq!</span>(TextRange::new(<span class="number">3</span>.into(), <span class="number">7</span>.into()), pieces[<span class="number">1</span>].text_range());
+        <span class="macro">assert!</span>(pieces[<span class="number">1</span>].is_comments());
 
-        <span class="kw">let</span> <span class="ident">pieces_rev</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">node</span>
-            .<span class="ident">first_leading_trivia</span>()
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">pieces</span>()
-            .<span class="ident">rev</span>()
-            .<span class="ident">collect</span>();
+        <span class="kw">let </span>pieces_rev: Vec&lt;<span class="kw">_</span>&gt; = node
+            .first_leading_trivia()
+            .unwrap()
+            .pieces()
+            .rev()
+            .collect();
 
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">pieces_rev</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;/**/&quot;</span>, <span class="ident">pieces_rev</span>[<span class="number">0</span>].<span class="ident">text</span>());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t &quot;</span>, <span class="ident">pieces_rev</span>[<span class="number">1</span>].<span class="ident">text</span>());
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, pieces_rev.len());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;/**/&quot;</span>, pieces_rev[<span class="number">0</span>].text());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;\n\t &quot;</span>, pieces_rev[<span class="number">1</span>].text());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

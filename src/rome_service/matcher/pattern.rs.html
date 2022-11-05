@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/matcher/pattern.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pattern.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/matcher/pattern.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pattern.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -836,843 +836,843 @@
 <span id="836">836</span>
 <span id="837">837</span>
 <span id="838">838</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::matcher::pattern::CharSpecifier</span>::{<span class="ident">CharRange</span>, <span class="ident">SingleChar</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::matcher::pattern::MatchResult</span>::{
-    <span class="ident">EntirePatternDoesntMatch</span>, <span class="ident">Match</span>, <span class="ident">SubPatternDoesntMatch</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::matcher::pattern::CharSpecifier::{CharRange, SingleChar};
+<span class="kw">use </span><span class="kw">crate</span>::matcher::pattern::MatchResult::{
+    EntirePatternDoesntMatch, Match, SubPatternDoesntMatch,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::matcher::pattern::PatternToken</span>::{
-    <span class="ident">AnyChar</span>, <span class="ident">AnyExcept</span>, <span class="ident">AnyRecursiveSequence</span>, <span class="ident">AnySequence</span>, <span class="ident">AnyWithin</span>, <span class="ident">Char</span>,
+<span class="kw">use </span><span class="kw">crate</span>::matcher::pattern::PatternToken::{
+    AnyChar, AnyExcept, AnyRecursiveSequence, AnySequence, AnyWithin, Char,
 };
-<span class="kw">use</span> <span class="ident">std::error::Error</span>;
-<span class="kw">use</span> <span class="ident">std::path::Path</span>;
-<span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>, <span class="ident">path</span>};
+<span class="kw">use </span>std::error::Error;
+<span class="kw">use </span>std::path::Path;
+<span class="kw">use </span>std::str::FromStr;
+<span class="kw">use </span>std::{fmt, path};
 
-<span class="doccomment">/// A pattern parsing error.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_copy_implementations</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PatternError</span> {
-    <span class="doccomment">/// The approximate character index of where the error occurred.</span>
-    <span class="kw">pub</span> <span class="ident">pos</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// A pattern parsing error.
+</span><span class="attribute">#[derive(Debug)]
+#[allow(missing_copy_implementations)]
+</span><span class="kw">pub struct </span>PatternError {
+    <span class="doccomment">/// The approximate character index of where the error occurred.
+    </span><span class="kw">pub </span>pos: usize,
 
-    <span class="doccomment">/// A message describing the error.</span>
-    <span class="kw">pub</span> <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+    <span class="doccomment">/// A message describing the error.
+    </span><span class="kw">pub </span>msg: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">PatternError</span> {
-    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">msg</span>
+<span class="kw">impl </span>Error <span class="kw">for </span>PatternError {
+    <span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.msg
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">PatternError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>PatternError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         <span class="macro">write!</span>(
-            <span class="ident">f</span>,
+            f,
             <span class="string">&quot;Pattern syntax error near position {}: {}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">pos</span>, <span class="self">self</span>.<span class="ident">msg</span>
+            <span class="self">self</span>.pos, <span class="self">self</span>.msg
         )
     }
 }
 
-<span class="doccomment">/// A compiled Unix shell style pattern.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `?` matches any single character.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `*` matches any (possibly empty) sequence of characters.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `**` matches the current directory and arbitrary subdirectories. This</span>
-<span class="doccomment">///   sequence **must** form a single path component, so both `**a` and `b**`</span>
-<span class="doccomment">///   are invalid and will result in an error.  A sequence of more than two</span>
-<span class="doccomment">///   consecutive `*` characters is also invalid.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `[...]` matches any character inside the brackets.  Character sequences</span>
-<span class="doccomment">///   can also specify ranges of characters, as ordered by Unicode, so e.g.</span>
-<span class="doccomment">///   `[0-9]` specifies any character between 0 and 9 inclusive. An unclosed</span>
-<span class="doccomment">///   bracket is invalid.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `[!...]` is the negation of `[...]`, i.e. it matches any characters</span>
-<span class="doccomment">///   **not** in the brackets.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - The metacharacters `?`, `*`, `[`, `]` can be matched by using brackets</span>
-<span class="doccomment">///   (e.g. `[?]`).  When a `]` occurs immediately following `[` or `[!` then it</span>
-<span class="doccomment">///   is interpreted as being part of, rather then ending, the character set, so</span>
-<span class="doccomment">///   `]` and NOT `]` can be matched by `[]]` and `[!]]` respectively.  The `-`</span>
-<span class="doccomment">///   character can be specified inside a character sequence pattern by placing</span>
-<span class="doccomment">///   it at the start or the end, e.g. `[abc-]`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pattern</span> {
-    <span class="ident">original</span>: <span class="ident">String</span>,
-    <span class="ident">tokens</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PatternToken</span><span class="op">&gt;</span>,
-    <span class="ident">is_recursive</span>: <span class="ident">bool</span>,
+<span class="doccomment">/// A compiled Unix shell style pattern.
+///
+/// - `?` matches any single character.
+///
+/// - `*` matches any (possibly empty) sequence of characters.
+///
+/// - `**` matches the current directory and arbitrary subdirectories. This
+///   sequence **must** form a single path component, so both `**a` and `b**`
+///   are invalid and will result in an error.  A sequence of more than two
+///   consecutive `*` characters is also invalid.
+///
+/// - `[...]` matches any character inside the brackets.  Character sequences
+///   can also specify ranges of characters, as ordered by Unicode, so e.g.
+///   `[0-9]` specifies any character between 0 and 9 inclusive. An unclosed
+///   bracket is invalid.
+///
+/// - `[!...]` is the negation of `[...]`, i.e. it matches any characters
+///   **not** in the brackets.
+///
+/// - The metacharacters `?`, `*`, `[`, `]` can be matched by using brackets
+///   (e.g. `[?]`).  When a `]` occurs immediately following `[` or `[!` then it
+///   is interpreted as being part of, rather then ending, the character set, so
+///   `]` and NOT `]` can be matched by `[]]` and `[!]]` respectively.  The `-`
+///   character can be specified inside a character sequence pattern by placing
+///   it at the start or the end, e.g. `[abc-]`.
+</span><span class="attribute">#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug)]
+</span><span class="kw">pub struct </span>Pattern {
+    original: String,
+    tokens: Vec&lt;PatternToken&gt;,
+    is_recursive: bool,
 }
 
-<span class="doccomment">/// Show the original glob pattern.</span>
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Pattern</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="self">self</span>.<span class="ident">original</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
+<span class="doccomment">/// Show the original glob pattern.
+</span><span class="kw">impl </span>fmt::Display <span class="kw">for </span>Pattern {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        <span class="self">self</span>.original.fmt(f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Pattern</span> {
-    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident">PatternError</span>;
+<span class="kw">impl </span>FromStr <span class="kw">for </span>Pattern {
+    <span class="kw">type </span><span class="prelude-val">Err </span>= PatternError;
 
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">PatternError</span><span class="op">&gt;</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">s</span>)
+    <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, PatternError&gt; {
+        <span class="self">Self</span>::new(s)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">enum</span> <span class="ident">PatternToken</span> {
-    <span class="ident">Char</span>(<span class="ident">char</span>),
-    <span class="ident">AnyChar</span>,
-    <span class="ident">AnySequence</span>,
-    <span class="ident">AnyRecursiveSequence</span>,
-    <span class="ident">AnyWithin</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CharSpecifier</span><span class="op">&gt;</span>),
-    <span class="ident">AnyExcept</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CharSpecifier</span><span class="op">&gt;</span>),
+<span class="attribute">#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+</span><span class="kw">enum </span>PatternToken {
+    Char(char),
+    AnyChar,
+    AnySequence,
+    AnyRecursiveSequence,
+    AnyWithin(Vec&lt;CharSpecifier&gt;),
+    AnyExcept(Vec&lt;CharSpecifier&gt;),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">enum</span> <span class="ident">CharSpecifier</span> {
-    <span class="ident">SingleChar</span>(<span class="ident">char</span>),
-    <span class="ident">CharRange</span>(<span class="ident">char</span>, <span class="ident">char</span>),
+<span class="attribute">#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+</span><span class="kw">enum </span>CharSpecifier {
+    SingleChar(char),
+    CharRange(char, char),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">enum</span> <span class="ident">MatchResult</span> {
-    <span class="ident">Match</span>,
-    <span class="ident">SubPatternDoesntMatch</span>,
-    <span class="ident">EntirePatternDoesntMatch</span>,
+<span class="attribute">#[derive(Copy, Clone, PartialEq)]
+</span><span class="kw">enum </span>MatchResult {
+    Match,
+    SubPatternDoesntMatch,
+    EntirePatternDoesntMatch,
 }
 
-<span class="kw">const</span> <span class="ident">ERROR_WILDCARDS</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;wildcards are either regular `*` or recursive `**`&quot;</span>;
-<span class="kw">const</span> <span class="ident">ERROR_RECURSIVE_WILDCARDS</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;recursive wildcards must form a single path \
+<span class="kw">const </span>ERROR_WILDCARDS: <span class="kw-2">&amp;</span>str = <span class="string">&quot;wildcards are either regular `*` or recursive `**`&quot;</span>;
+<span class="kw">const </span>ERROR_RECURSIVE_WILDCARDS: <span class="kw-2">&amp;</span>str = <span class="string">&quot;recursive wildcards must form a single path \
                                          component&quot;</span>;
-<span class="kw">const</span> <span class="ident">ERROR_INVALID_RANGE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;invalid range pattern&quot;</span>;
+<span class="kw">const </span>ERROR_INVALID_RANGE: <span class="kw-2">&amp;</span>str = <span class="string">&quot;invalid range pattern&quot;</span>;
 
-<span class="kw">impl</span> <span class="ident">Pattern</span> {
-    <span class="doccomment">/// This function compiles Unix shell style patterns.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// An invalid glob pattern will yield a `PatternError`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">pattern</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">PatternError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">chars</span> <span class="op">=</span> <span class="ident">pattern</span>.<span class="ident">chars</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tokens</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">is_recursive</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
+<span class="kw">impl </span>Pattern {
+    <span class="doccomment">/// This function compiles Unix shell style patterns.
+    ///
+    /// An invalid glob pattern will yield a `PatternError`.
+    </span><span class="kw">pub fn </span>new(pattern: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, PatternError&gt; {
+        <span class="kw">let </span>chars = pattern.chars().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span><span class="kw-2">mut </span>tokens = Vec::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>is_recursive = <span class="bool-val">false</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
 
-        <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">chars</span>.<span class="ident">len</span>() {
-            <span class="kw">match</span> <span class="ident">chars</span>[<span class="ident">i</span>] {
-                <span class="string">&#39;?&#39;</span> =&gt; {
-                    <span class="ident">tokens</span>.<span class="ident">push</span>(<span class="ident">AnyChar</span>);
-                    <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">while </span>i &lt; chars.len() {
+            <span class="kw">match </span>chars[i] {
+                <span class="string">&#39;?&#39; </span>=&gt; {
+                    tokens.push(AnyChar);
+                    i += <span class="number">1</span>;
                 }
-                <span class="string">&#39;*&#39;</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span> <span class="ident">i</span>;
+                <span class="string">&#39;*&#39; </span>=&gt; {
+                    <span class="kw">let </span>old = i;
 
-                    <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">chars</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">chars</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">&#39;*&#39;</span> {
-                        <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="kw">while </span>i &lt; chars.len() &amp;&amp; chars[i] == <span class="string">&#39;*&#39; </span>{
+                        i += <span class="number">1</span>;
                     }
 
-                    <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">i</span> <span class="op">-</span> <span class="ident">old</span>;
+                    <span class="kw">let </span>count = i - old;
 
-                    <span class="kw">match</span> <span class="ident">count</span> {
-                        <span class="ident">count</span> <span class="kw">if</span> <span class="ident">count</span> <span class="op">&gt;</span> <span class="number">2</span> =&gt; {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PatternError</span> {
-                                <span class="ident">pos</span>: <span class="ident">old</span> <span class="op">+</span> <span class="number">2</span>,
-                                <span class="ident">msg</span>: <span class="ident">ERROR_WILDCARDS</span>,
+                    <span class="kw">match </span>count {
+                        count <span class="kw">if </span>count &gt; <span class="number">2 </span>=&gt; {
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(PatternError {
+                                pos: old + <span class="number">2</span>,
+                                msg: ERROR_WILDCARDS,
                             });
                         }
-                        <span class="ident">count</span> <span class="kw">if</span> <span class="ident">count</span> <span class="op">==</span> <span class="number">2</span> =&gt; {
-                            <span class="comment">// ** can only be an entire path component</span>
-                            <span class="comment">// i.e. a/**/b is valid, but a**/b or a/**b is not</span>
-                            <span class="comment">// invalid matches are treated literally</span>
-                            <span class="kw">let</span> <span class="ident">is_valid</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">i</span> <span class="op">==</span> <span class="number">2</span> <span class="op">|</span><span class="op">|</span> <span class="ident">path::is_separator</span>(<span class="ident">chars</span>[<span class="ident">i</span> <span class="op">-</span> <span class="ident">count</span> <span class="op">-</span> <span class="number">1</span>]) {
-                                <span class="comment">// it ends in a &#39;/&#39;</span>
-                                <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">chars</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">path::is_separator</span>(<span class="ident">chars</span>[<span class="ident">i</span>]) {
-                                    <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                                    <span class="bool-val">true</span>
-                                    <span class="comment">// or the pattern ends here</span>
-                                    <span class="comment">// this enables the existing globbing mechanism</span>
-                                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">i</span> <span class="op">==</span> <span class="ident">chars</span>.<span class="ident">len</span>() {
-                                    <span class="bool-val">true</span>
-                                    <span class="comment">// `**` ends in non-separator</span>
-                                } <span class="kw">else</span> {
-                                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PatternError</span> {
-                                        <span class="ident">pos</span>: <span class="ident">i</span>,
-                                        <span class="ident">msg</span>: <span class="ident">ERROR_RECURSIVE_WILDCARDS</span>,
+                        count <span class="kw">if </span>count == <span class="number">2 </span>=&gt; {
+                            <span class="comment">// ** can only be an entire path component
+                            // i.e. a/**/b is valid, but a**/b or a/**b is not
+                            // invalid matches are treated literally
+                            </span><span class="kw">let </span>is_valid = <span class="kw">if </span>i == <span class="number">2 </span>|| path::is_separator(chars[i - count - <span class="number">1</span>]) {
+                                <span class="comment">// it ends in a &#39;/&#39;
+                                </span><span class="kw">if </span>i &lt; chars.len() &amp;&amp; path::is_separator(chars[i]) {
+                                    i += <span class="number">1</span>;
+                                    <span class="bool-val">true
+                                    </span><span class="comment">// or the pattern ends here
+                                    // this enables the existing globbing mechanism
+                                </span>} <span class="kw">else if </span>i == chars.len() {
+                                    <span class="bool-val">true
+                                    </span><span class="comment">// `**` ends in non-separator
+                                </span>} <span class="kw">else </span>{
+                                    <span class="kw">return </span><span class="prelude-val">Err</span>(PatternError {
+                                        pos: i,
+                                        msg: ERROR_RECURSIVE_WILDCARDS,
                                     });
                                 }
-                                <span class="comment">// `**` begins with non-separator</span>
-                            } <span class="kw">else</span> {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PatternError</span> {
-                                    <span class="ident">pos</span>: <span class="ident">old</span> <span class="op">-</span> <span class="number">1</span>,
-                                    <span class="ident">msg</span>: <span class="ident">ERROR_RECURSIVE_WILDCARDS</span>,
+                                <span class="comment">// `**` begins with non-separator
+                            </span>} <span class="kw">else </span>{
+                                <span class="kw">return </span><span class="prelude-val">Err</span>(PatternError {
+                                    pos: old - <span class="number">1</span>,
+                                    msg: ERROR_RECURSIVE_WILDCARDS,
                                 });
                             };
 
-                            <span class="kw">if</span> <span class="ident">is_valid</span> {
-                                <span class="comment">// collapse consecutive AnyRecursiveSequence to a</span>
-                                <span class="comment">// single one</span>
+                            <span class="kw">if </span>is_valid {
+                                <span class="comment">// collapse consecutive AnyRecursiveSequence to a
+                                // single one
 
-                                <span class="kw">let</span> <span class="ident">tokens_len</span> <span class="op">=</span> <span class="ident">tokens</span>.<span class="ident">len</span>();
+                                </span><span class="kw">let </span>tokens_len = tokens.len();
 
-                                <span class="kw">if</span> <span class="op">!</span>(<span class="ident">tokens_len</span> <span class="op">&gt;</span> <span class="number">1</span>
-                                    <span class="op">&amp;&amp;</span> <span class="ident">tokens</span>[<span class="ident">tokens_len</span> <span class="op">-</span> <span class="number">1</span>] <span class="op">==</span> <span class="ident">AnyRecursiveSequence</span>)
+                                <span class="kw">if </span>!(tokens_len &gt; <span class="number">1
+                                    </span>&amp;&amp; tokens[tokens_len - <span class="number">1</span>] == AnyRecursiveSequence)
                                 {
-                                    <span class="ident">is_recursive</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                                    <span class="ident">tokens</span>.<span class="ident">push</span>(<span class="ident">AnyRecursiveSequence</span>);
+                                    is_recursive = <span class="bool-val">true</span>;
+                                    tokens.push(AnyRecursiveSequence);
                                 }
                             }
                         }
-                        <span class="kw">_</span> =&gt; {
-                            <span class="ident">tokens</span>.<span class="ident">push</span>(<span class="ident">AnySequence</span>);
+                        <span class="kw">_ </span>=&gt; {
+                            tokens.push(AnySequence);
                         }
                     }
                 }
-                <span class="string">&#39;[&#39;</span> =&gt; {
-                    <span class="kw">if</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">4</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">chars</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">chars</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;!&#39;</span> {
-                        <span class="kw">match</span> <span class="ident">chars</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">3</span>..].<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="string">&#39;]&#39;</span>) {
-                            <span class="prelude-val">None</span> =&gt; (),
-                            <span class="prelude-val">Some</span>(<span class="ident">j</span>) =&gt; {
-                                <span class="kw">let</span> <span class="ident">chars</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">chars</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">2</span>..<span class="ident">i</span> <span class="op">+</span> <span class="number">3</span> <span class="op">+</span> <span class="ident">j</span>];
-                                <span class="kw">let</span> <span class="ident">cs</span> <span class="op">=</span> <span class="ident">parse_char_specifiers</span>(<span class="ident">chars</span>);
-                                <span class="ident">tokens</span>.<span class="ident">push</span>(<span class="ident">AnyExcept</span>(<span class="ident">cs</span>));
-                                <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="ident">j</span> <span class="op">+</span> <span class="number">4</span>;
+                <span class="string">&#39;[&#39; </span>=&gt; {
+                    <span class="kw">if </span>i + <span class="number">4 </span>&lt;= chars.len() &amp;&amp; chars[i + <span class="number">1</span>] == <span class="string">&#39;!&#39; </span>{
+                        <span class="kw">match </span>chars[i + <span class="number">3</span>..].iter().position(|x| <span class="kw-2">*</span>x == <span class="string">&#39;]&#39;</span>) {
+                            <span class="prelude-val">None </span>=&gt; (),
+                            <span class="prelude-val">Some</span>(j) =&gt; {
+                                <span class="kw">let </span>chars = <span class="kw-2">&amp;</span>chars[i + <span class="number">2</span>..i + <span class="number">3 </span>+ j];
+                                <span class="kw">let </span>cs = parse_char_specifiers(chars);
+                                tokens.push(AnyExcept(cs));
+                                i += j + <span class="number">4</span>;
                                 <span class="kw">continue</span>;
                             }
                         }
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">3</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">chars</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">chars</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">!</span><span class="op">=</span> <span class="string">&#39;!&#39;</span> {
-                        <span class="kw">match</span> <span class="ident">chars</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">2</span>..].<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="string">&#39;]&#39;</span>) {
-                            <span class="prelude-val">None</span> =&gt; (),
-                            <span class="prelude-val">Some</span>(<span class="ident">j</span>) =&gt; {
-                                <span class="kw">let</span> <span class="ident">cs</span> <span class="op">=</span> <span class="ident">parse_char_specifiers</span>(<span class="kw-2">&amp;</span><span class="ident">chars</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>..<span class="ident">i</span> <span class="op">+</span> <span class="number">2</span> <span class="op">+</span> <span class="ident">j</span>]);
-                                <span class="ident">tokens</span>.<span class="ident">push</span>(<span class="ident">AnyWithin</span>(<span class="ident">cs</span>));
-                                <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="ident">j</span> <span class="op">+</span> <span class="number">3</span>;
+                    } <span class="kw">else if </span>i + <span class="number">3 </span>&lt;= chars.len() &amp;&amp; chars[i + <span class="number">1</span>] != <span class="string">&#39;!&#39; </span>{
+                        <span class="kw">match </span>chars[i + <span class="number">2</span>..].iter().position(|x| <span class="kw-2">*</span>x == <span class="string">&#39;]&#39;</span>) {
+                            <span class="prelude-val">None </span>=&gt; (),
+                            <span class="prelude-val">Some</span>(j) =&gt; {
+                                <span class="kw">let </span>cs = parse_char_specifiers(<span class="kw-2">&amp;</span>chars[i + <span class="number">1</span>..i + <span class="number">2 </span>+ j]);
+                                tokens.push(AnyWithin(cs));
+                                i += j + <span class="number">3</span>;
                                 <span class="kw">continue</span>;
                             }
                         }
                     }
 
-                    <span class="comment">// if we get here then this is not a valid range pattern</span>
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PatternError</span> {
-                        <span class="ident">pos</span>: <span class="ident">i</span>,
-                        <span class="ident">msg</span>: <span class="ident">ERROR_INVALID_RANGE</span>,
+                    <span class="comment">// if we get here then this is not a valid range pattern
+                    </span><span class="kw">return </span><span class="prelude-val">Err</span>(PatternError {
+                        pos: i,
+                        msg: ERROR_INVALID_RANGE,
                     });
                 }
-                <span class="ident">c</span> =&gt; {
-                    <span class="ident">tokens</span>.<span class="ident">push</span>(<span class="ident">Char</span>(<span class="ident">c</span>));
-                    <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                c =&gt; {
+                    tokens.push(Char(c));
+                    i += <span class="number">1</span>;
                 }
             }
         }
 
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">tokens</span>,
-            <span class="ident">original</span>: <span class="ident">pattern</span>.<span class="ident">to_string</span>(),
-            <span class="ident">is_recursive</span>,
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            tokens,
+            original: pattern.to_string(),
+            is_recursive,
         })
     }
 
-    <span class="doccomment">/// Escape metacharacters within the given string by surrounding them in</span>
-    <span class="doccomment">/// brackets. The resulting string will, when compiled into a `Pattern`,</span>
-    <span class="doccomment">/// match the input string and nothing else.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">escape</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">escaped</span> <span class="op">=</span> <span class="ident">String::new</span>();
-        <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">s</span>.<span class="ident">chars</span>() {
-            <span class="kw">match</span> <span class="ident">c</span> {
-                <span class="comment">// note that ! does not need escaping because it is only special</span>
-                <span class="comment">// inside brackets</span>
-                <span class="string">&#39;?&#39;</span> <span class="op">|</span> <span class="string">&#39;*&#39;</span> <span class="op">|</span> <span class="string">&#39;[&#39;</span> <span class="op">|</span> <span class="string">&#39;]&#39;</span> =&gt; {
-                    <span class="ident">escaped</span>.<span class="ident">push</span>(<span class="string">&#39;[&#39;</span>);
-                    <span class="ident">escaped</span>.<span class="ident">push</span>(<span class="ident">c</span>);
-                    <span class="ident">escaped</span>.<span class="ident">push</span>(<span class="string">&#39;]&#39;</span>);
+    <span class="doccomment">/// Escape metacharacters within the given string by surrounding them in
+    /// brackets. The resulting string will, when compiled into a `Pattern`,
+    /// match the input string and nothing else.
+    </span><span class="kw">pub fn </span>escape(s: <span class="kw-2">&amp;</span>str) -&gt; String {
+        <span class="kw">let </span><span class="kw-2">mut </span>escaped = String::new();
+        <span class="kw">for </span>c <span class="kw">in </span>s.chars() {
+            <span class="kw">match </span>c {
+                <span class="comment">// note that ! does not need escaping because it is only special
+                // inside brackets
+                </span><span class="string">&#39;?&#39; </span>| <span class="string">&#39;*&#39; </span>| <span class="string">&#39;[&#39; </span>| <span class="string">&#39;]&#39; </span>=&gt; {
+                    escaped.push(<span class="string">&#39;[&#39;</span>);
+                    escaped.push(c);
+                    escaped.push(<span class="string">&#39;]&#39;</span>);
                 }
-                <span class="ident">c</span> =&gt; {
-                    <span class="ident">escaped</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+                c =&gt; {
+                    escaped.push(c);
                 }
             }
         }
-        <span class="ident">escaped</span>
+        escaped
     }
 
-    <span class="doccomment">/// Return if the given `str` matches this `Pattern` using the default</span>
-    <span class="doccomment">/// match options (i.e. `MatchOptions::new()`).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// use crate::rome_service::Pattern;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert!(Pattern::new(&quot;c?t&quot;).unwrap().matches(&quot;cat&quot;));</span>
-    <span class="doccomment">/// assert!(Pattern::new(&quot;k[!e]tteh&quot;).unwrap().matches(&quot;kitteh&quot;));</span>
-    <span class="doccomment">/// assert!(Pattern::new(&quot;d*g&quot;).unwrap().matches(&quot;doog&quot;));</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">matches_with</span>(<span class="ident">str</span>, <span class="ident">MatchOptions::new</span>())
+    <span class="doccomment">/// Return if the given `str` matches this `Pattern` using the default
+    /// match options (i.e. `MatchOptions::new()`).
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use crate::rome_service::Pattern;
+    ///
+    /// assert!(Pattern::new(&quot;c?t&quot;).unwrap().matches(&quot;cat&quot;));
+    /// assert!(Pattern::new(&quot;k[!e]tteh&quot;).unwrap().matches(&quot;kitteh&quot;));
+    /// assert!(Pattern::new(&quot;d*g&quot;).unwrap().matches(&quot;doog&quot;));
+    /// ```
+    </span><span class="kw">pub fn </span>matches(<span class="kw-2">&amp;</span><span class="self">self</span>, str: <span class="kw-2">&amp;</span>str) -&gt; bool {
+        <span class="self">self</span>.matches_with(str, MatchOptions::new())
     }
 
-    <span class="doccomment">/// Return if the given `Path`, when converted to a `str`, matches this</span>
-    <span class="doccomment">/// `Pattern` using the default match options (i.e. `MatchOptions::new()`).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matches_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">bool</span> {
-        <span class="comment">// FIXME (#9639): This needs to handle non-utf8 paths</span>
-        <span class="ident">path</span>.<span class="ident">to_str</span>().<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">matches</span>(<span class="ident">s</span>))
+    <span class="doccomment">/// Return if the given `Path`, when converted to a `str`, matches this
+    /// `Pattern` using the default match options (i.e. `MatchOptions::new()`).
+    </span><span class="kw">pub fn </span>matches_path(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path) -&gt; bool {
+        <span class="comment">// FIXME (#9639): This needs to handle non-utf8 paths
+        </span>path.to_str().map_or(<span class="bool-val">false</span>, |s| <span class="self">self</span>.matches(s))
     }
 
-    <span class="doccomment">/// Return if the given `str` matches this `Pattern` using the specified</span>
-    <span class="doccomment">/// match options.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matches_with</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">options</span>: <span class="ident">MatchOptions</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">matches_from</span>(<span class="bool-val">true</span>, <span class="ident">str</span>.<span class="ident">chars</span>(), <span class="number">0</span>, <span class="ident">options</span>) <span class="op">==</span> <span class="ident">Match</span>
+    <span class="doccomment">/// Return if the given `str` matches this `Pattern` using the specified
+    /// match options.
+    </span><span class="kw">pub fn </span>matches_with(<span class="kw-2">&amp;</span><span class="self">self</span>, str: <span class="kw-2">&amp;</span>str, options: MatchOptions) -&gt; bool {
+        <span class="self">self</span>.matches_from(<span class="bool-val">true</span>, str.chars(), <span class="number">0</span>, options) == Match
     }
 
-    <span class="doccomment">/// Return if the given `Path`, when converted to a `str`, matches this</span>
-    <span class="doccomment">/// `Pattern` using the specified match options.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matches_path_with</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">options</span>: <span class="ident">MatchOptions</span>) -&gt; <span class="ident">bool</span> {
-        <span class="comment">// FIXME (#9639): This needs to handle non-utf8 paths</span>
-        <span class="ident">path</span>.<span class="ident">to_str</span>()
-            .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">matches_with</span>(<span class="ident">s</span>, <span class="ident">options</span>))
+    <span class="doccomment">/// Return if the given `Path`, when converted to a `str`, matches this
+    /// `Pattern` using the specified match options.
+    </span><span class="kw">pub fn </span>matches_path_with(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path, options: MatchOptions) -&gt; bool {
+        <span class="comment">// FIXME (#9639): This needs to handle non-utf8 paths
+        </span>path.to_str()
+            .map_or(<span class="bool-val">false</span>, |s| <span class="self">self</span>.matches_with(s, options))
     }
 
-    <span class="doccomment">/// Access the original glob pattern.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">original</span>
+    <span class="doccomment">/// Access the original glob pattern.
+    </span><span class="kw">pub fn </span>as_str(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.original
     }
 
-    <span class="kw">fn</span> <span class="ident">matches_from</span>(
+    <span class="kw">fn </span>matches_from(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="kw-2">mut</span> <span class="ident">follows_separator</span>: <span class="ident">bool</span>,
-        <span class="kw-2">mut</span> <span class="ident">file</span>: <span class="ident">std::str::Chars</span>,
-        <span class="ident">i</span>: <span class="ident">usize</span>,
-        <span class="ident">options</span>: <span class="ident">MatchOptions</span>,
-    ) -&gt; <span class="ident">MatchResult</span> {
-        <span class="kw">for</span> (<span class="ident">ti</span>, <span class="ident">token</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">tokens</span>[<span class="ident">i</span>..].<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">token</span> {
-                <span class="ident">AnySequence</span> <span class="op">|</span> <span class="ident">AnyRecursiveSequence</span> =&gt; {
-                    <span class="comment">// ** must be at the start.</span>
-                    <span class="macro">debug_assert!</span>(<span class="kw">match</span> <span class="kw-2">*</span><span class="ident">token</span> {
-                        <span class="ident">AnyRecursiveSequence</span> =&gt; <span class="ident">follows_separator</span>,
-                        <span class="kw">_</span> =&gt; <span class="bool-val">true</span>,
+        <span class="kw-2">mut </span>follows_separator: bool,
+        <span class="kw-2">mut </span>file: std::str::Chars,
+        i: usize,
+        options: MatchOptions,
+    ) -&gt; MatchResult {
+        <span class="kw">for </span>(ti, token) <span class="kw">in </span><span class="self">self</span>.tokens[i..].iter().enumerate() {
+            <span class="kw">match </span><span class="kw-2">*</span>token {
+                AnySequence | AnyRecursiveSequence =&gt; {
+                    <span class="comment">// ** must be at the start.
+                    </span><span class="macro">debug_assert!</span>(<span class="kw">match </span><span class="kw-2">*</span>token {
+                        AnyRecursiveSequence =&gt; follows_separator,
+                        <span class="kw">_ </span>=&gt; <span class="bool-val">true</span>,
                     });
 
-                    <span class="comment">// Empty match</span>
-                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">matches_from</span>(<span class="ident">follows_separator</span>, <span class="ident">file</span>.<span class="ident">clone</span>(), <span class="ident">i</span> <span class="op">+</span> <span class="ident">ti</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">options</span>) {
-                        <span class="ident">SubPatternDoesntMatch</span> =&gt; (), <span class="comment">// keep trying</span>
-                        <span class="ident">m</span> =&gt; <span class="kw">return</span> <span class="ident">m</span>,
+                    <span class="comment">// Empty match
+                    </span><span class="kw">match </span><span class="self">self</span>.matches_from(follows_separator, file.clone(), i + ti + <span class="number">1</span>, options) {
+                        SubPatternDoesntMatch =&gt; (), <span class="comment">// keep trying
+                        </span>m =&gt; <span class="kw">return </span>m,
                     };
 
-                    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="ident">file</span>.<span class="ident">next</span>() {
-                        <span class="kw">if</span> <span class="ident">follows_separator</span> <span class="op">&amp;&amp;</span> <span class="ident">options</span>.<span class="ident">require_literal_leading_dot</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;.&#39;</span> {
-                            <span class="kw">return</span> <span class="ident">SubPatternDoesntMatch</span>;
+                    <span class="kw">while let </span><span class="prelude-val">Some</span>(c) = file.next() {
+                        <span class="kw">if </span>follows_separator &amp;&amp; options.require_literal_leading_dot &amp;&amp; c == <span class="string">&#39;.&#39; </span>{
+                            <span class="kw">return </span>SubPatternDoesntMatch;
                         }
-                        <span class="ident">follows_separator</span> <span class="op">=</span> <span class="ident">path::is_separator</span>(<span class="ident">c</span>);
-                        <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">token</span> {
-                            <span class="ident">AnyRecursiveSequence</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">follows_separator</span> =&gt; <span class="kw">continue</span>,
-                            <span class="ident">AnySequence</span>
-                                <span class="kw">if</span> <span class="ident">options</span>.<span class="ident">require_literal_separator</span> <span class="op">&amp;&amp;</span> <span class="ident">follows_separator</span> =&gt;
+                        follows_separator = path::is_separator(c);
+                        <span class="kw">match </span><span class="kw-2">*</span>token {
+                            AnyRecursiveSequence <span class="kw">if </span>!follows_separator =&gt; <span class="kw">continue</span>,
+                            AnySequence
+                                <span class="kw">if </span>options.require_literal_separator &amp;&amp; follows_separator =&gt;
                             {
-                                <span class="kw">return</span> <span class="ident">SubPatternDoesntMatch</span>
+                                <span class="kw">return </span>SubPatternDoesntMatch
                             }
-                            <span class="kw">_</span> =&gt; (),
+                            <span class="kw">_ </span>=&gt; (),
                         }
-                        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">matches_from</span>(
-                            <span class="ident">follows_separator</span>,
-                            <span class="ident">file</span>.<span class="ident">clone</span>(),
-                            <span class="ident">i</span> <span class="op">+</span> <span class="ident">ti</span> <span class="op">+</span> <span class="number">1</span>,
-                            <span class="ident">options</span>,
+                        <span class="kw">match </span><span class="self">self</span>.matches_from(
+                            follows_separator,
+                            file.clone(),
+                            i + ti + <span class="number">1</span>,
+                            options,
                         ) {
-                            <span class="ident">SubPatternDoesntMatch</span> =&gt; (), <span class="comment">// keep trying</span>
-                            <span class="ident">m</span> =&gt; <span class="kw">return</span> <span class="ident">m</span>,
+                            SubPatternDoesntMatch =&gt; (), <span class="comment">// keep trying
+                            </span>m =&gt; <span class="kw">return </span>m,
                         }
                     }
                 }
-                <span class="kw">_</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">file</span>.<span class="ident">next</span>() {
-                        <span class="prelude-val">Some</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>,
-                        <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="ident">EntirePatternDoesntMatch</span>,
+                <span class="kw">_ </span>=&gt; {
+                    <span class="kw">let </span>c = <span class="kw">match </span>file.next() {
+                        <span class="prelude-val">Some</span>(c) =&gt; c,
+                        <span class="prelude-val">None </span>=&gt; <span class="kw">return </span>EntirePatternDoesntMatch,
                     };
 
-                    <span class="kw">let</span> <span class="ident">is_sep</span> <span class="op">=</span> <span class="ident">path::is_separator</span>(<span class="ident">c</span>);
+                    <span class="kw">let </span>is_sep = path::is_separator(c);
 
-                    <span class="kw">if</span> <span class="op">!</span><span class="kw">match</span> <span class="kw-2">*</span><span class="ident">token</span> {
-                        <span class="ident">AnyChar</span> <span class="op">|</span> <span class="ident">AnyWithin</span>(..) <span class="op">|</span> <span class="ident">AnyExcept</span>(..)
-                            <span class="kw">if</span> (<span class="ident">options</span>.<span class="ident">require_literal_separator</span> <span class="op">&amp;&amp;</span> <span class="ident">is_sep</span>)
-                                <span class="op">|</span><span class="op">|</span> (<span class="ident">follows_separator</span>
-                                    <span class="op">&amp;&amp;</span> <span class="ident">options</span>.<span class="ident">require_literal_leading_dot</span>
-                                    <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;.&#39;</span>) =&gt;
+                    <span class="kw">if </span>!<span class="kw">match </span><span class="kw-2">*</span>token {
+                        AnyChar | AnyWithin(..) | AnyExcept(..)
+                            <span class="kw">if </span>(options.require_literal_separator &amp;&amp; is_sep)
+                                || (follows_separator
+                                    &amp;&amp; options.require_literal_leading_dot
+                                    &amp;&amp; c == <span class="string">&#39;.&#39;</span>) =&gt;
                         {
-                            <span class="bool-val">false</span>
-                        }
-                        <span class="ident">AnyChar</span> =&gt; <span class="bool-val">true</span>,
-                        <span class="ident">AnyWithin</span>(<span class="kw-2">ref</span> <span class="ident">specifiers</span>) =&gt; <span class="ident">in_char_specifiers</span>(<span class="ident">specifiers</span>, <span class="ident">c</span>, <span class="ident">options</span>),
-                        <span class="ident">AnyExcept</span>(<span class="kw-2">ref</span> <span class="ident">specifiers</span>) =&gt; <span class="op">!</span><span class="ident">in_char_specifiers</span>(<span class="ident">specifiers</span>, <span class="ident">c</span>, <span class="ident">options</span>),
-                        <span class="ident">Char</span>(<span class="ident">c2</span>) =&gt; <span class="ident">chars_eq</span>(<span class="ident">c</span>, <span class="ident">c2</span>, <span class="ident">options</span>.<span class="ident">case_sensitive</span>),
-                        <span class="ident">AnySequence</span> <span class="op">|</span> <span class="ident">AnyRecursiveSequence</span> =&gt; <span class="macro">unreachable!</span>(),
+                            <span class="bool-val">false
+                        </span>}
+                        AnyChar =&gt; <span class="bool-val">true</span>,
+                        AnyWithin(<span class="kw-2">ref </span>specifiers) =&gt; in_char_specifiers(specifiers, c, options),
+                        AnyExcept(<span class="kw-2">ref </span>specifiers) =&gt; !in_char_specifiers(specifiers, c, options),
+                        Char(c2) =&gt; chars_eq(c, c2, options.case_sensitive),
+                        AnySequence | AnyRecursiveSequence =&gt; <span class="macro">unreachable!</span>(),
                     } {
-                        <span class="kw">return</span> <span class="ident">SubPatternDoesntMatch</span>;
+                        <span class="kw">return </span>SubPatternDoesntMatch;
                     }
-                    <span class="ident">follows_separator</span> <span class="op">=</span> <span class="ident">is_sep</span>;
+                    follows_separator = is_sep;
                 }
             }
         }
 
-        <span class="comment">// Iter is fused.</span>
-        <span class="kw">if</span> <span class="ident">file</span>.<span class="ident">next</span>().<span class="ident">is_none</span>() {
-            <span class="ident">Match</span>
-        } <span class="kw">else</span> {
-            <span class="ident">SubPatternDoesntMatch</span>
+        <span class="comment">// Iter is fused.
+        </span><span class="kw">if </span>file.next().is_none() {
+            Match
+        } <span class="kw">else </span>{
+            SubPatternDoesntMatch
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">parse_char_specifiers</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span>[<span class="ident">char</span>]) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CharSpecifier</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cs</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">s</span>.<span class="ident">len</span>() {
-        <span class="kw">if</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">3</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">s</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">s</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span> {
-            <span class="ident">cs</span>.<span class="ident">push</span>(<span class="ident">CharRange</span>(<span class="ident">s</span>[<span class="ident">i</span>], <span class="ident">s</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">2</span>]));
-            <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">3</span>;
-        } <span class="kw">else</span> {
-            <span class="ident">cs</span>.<span class="ident">push</span>(<span class="ident">SingleChar</span>(<span class="ident">s</span>[<span class="ident">i</span>]));
-            <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+<span class="kw">fn </span>parse_char_specifiers(s: <span class="kw-2">&amp;</span>[char]) -&gt; Vec&lt;CharSpecifier&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>cs = Vec::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
+    <span class="kw">while </span>i &lt; s.len() {
+        <span class="kw">if </span>i + <span class="number">3 </span>&lt;= s.len() &amp;&amp; s[i + <span class="number">1</span>] == <span class="string">&#39;-&#39; </span>{
+            cs.push(CharRange(s[i], s[i + <span class="number">2</span>]));
+            i += <span class="number">3</span>;
+        } <span class="kw">else </span>{
+            cs.push(SingleChar(s[i]));
+            i += <span class="number">1</span>;
         }
     }
-    <span class="ident">cs</span>
+    cs
 }
 
-<span class="kw">fn</span> <span class="ident">in_char_specifiers</span>(<span class="ident">specifiers</span>: <span class="kw-2">&amp;</span>[<span class="ident">CharSpecifier</span>], <span class="ident">c</span>: <span class="ident">char</span>, <span class="ident">options</span>: <span class="ident">MatchOptions</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">specifier</span> <span class="kw">in</span> <span class="ident">specifiers</span>.<span class="ident">iter</span>() {
-        <span class="kw">match</span> <span class="ident">specifier</span> {
-            <span class="ident">SingleChar</span>(<span class="ident">sc</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">chars_eq</span>(<span class="ident">c</span>, <span class="ident">sc</span>, <span class="ident">options</span>.<span class="ident">case_sensitive</span>) {
-                    <span class="kw">return</span> <span class="bool-val">true</span>;
+<span class="kw">fn </span>in_char_specifiers(specifiers: <span class="kw-2">&amp;</span>[CharSpecifier], c: char, options: MatchOptions) -&gt; bool {
+    <span class="kw">for </span><span class="kw-2">&amp;</span>specifier <span class="kw">in </span>specifiers.iter() {
+        <span class="kw">match </span>specifier {
+            SingleChar(sc) =&gt; {
+                <span class="kw">if </span>chars_eq(c, sc, options.case_sensitive) {
+                    <span class="kw">return </span><span class="bool-val">true</span>;
                 }
             }
-            <span class="ident">CharRange</span>(<span class="ident">start</span>, <span class="ident">end</span>) =&gt; {
-                <span class="comment">// FIXME: work with non-ascii chars properly (issue #1347)</span>
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">options</span>.<span class="ident">case_sensitive</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span>.<span class="ident">is_ascii</span>() <span class="op">&amp;&amp;</span> <span class="ident">start</span>.<span class="ident">is_ascii</span>() <span class="op">&amp;&amp;</span> <span class="ident">end</span>.<span class="ident">is_ascii</span>() {
-                    <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">start</span>.<span class="ident">to_ascii_lowercase</span>();
-                    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">end</span>.<span class="ident">to_ascii_lowercase</span>();
+            CharRange(start, end) =&gt; {
+                <span class="comment">// FIXME: work with non-ascii chars properly (issue #1347)
+                </span><span class="kw">if </span>!options.case_sensitive &amp;&amp; c.is_ascii() &amp;&amp; start.is_ascii() &amp;&amp; end.is_ascii() {
+                    <span class="kw">let </span>start = start.to_ascii_lowercase();
+                    <span class="kw">let </span>end = end.to_ascii_lowercase();
 
-                    <span class="kw">let</span> <span class="ident">start_up</span> <span class="op">=</span> <span class="ident">start</span>.<span class="ident">to_uppercase</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
-                    <span class="kw">let</span> <span class="ident">end_up</span> <span class="op">=</span> <span class="ident">end</span>.<span class="ident">to_uppercase</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
+                    <span class="kw">let </span>start_up = start.to_uppercase().next().unwrap();
+                    <span class="kw">let </span>end_up = end.to_uppercase().next().unwrap();
 
-                    <span class="comment">// only allow case insensitive matching when</span>
-                    <span class="comment">// both start and end are within a-z or A-Z</span>
-                    <span class="kw">if</span> <span class="ident">start</span> <span class="op">!</span><span class="op">=</span> <span class="ident">start_up</span> <span class="op">&amp;&amp;</span> <span class="ident">end</span> <span class="op">!</span><span class="op">=</span> <span class="ident">end_up</span> {
-                        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">to_ascii_lowercase</span>();
-                        <span class="kw">if</span> <span class="ident">c</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">start</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end</span> {
-                            <span class="kw">return</span> <span class="bool-val">true</span>;
+                    <span class="comment">// only allow case insensitive matching when
+                    // both start and end are within a-z or A-Z
+                    </span><span class="kw">if </span>start != start_up &amp;&amp; end != end_up {
+                        <span class="kw">let </span>c = c.to_ascii_lowercase();
+                        <span class="kw">if </span>c &gt;= start &amp;&amp; c &lt;= end {
+                            <span class="kw">return </span><span class="bool-val">true</span>;
                         }
                     }
                 }
 
-                <span class="kw">if</span> <span class="ident">c</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">start</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end</span> {
-                    <span class="kw">return</span> <span class="bool-val">true</span>;
+                <span class="kw">if </span>c &gt;= start &amp;&amp; c &lt;= end {
+                    <span class="kw">return </span><span class="bool-val">true</span>;
                 }
             }
         }
     }
 
-    <span class="bool-val">false</span>
-}
+    <span class="bool-val">false
+</span>}
 
-<span class="doccomment">/// A helper function to determine if two chars are (possibly case-insensitively) equal.</span>
-<span class="kw">fn</span> <span class="ident">chars_eq</span>(<span class="ident">a</span>: <span class="ident">char</span>, <span class="ident">b</span>: <span class="ident">char</span>, <span class="ident">case_sensitive</span>: <span class="ident">bool</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">windows</span>) <span class="op">&amp;&amp;</span> <span class="ident">path::is_separator</span>(<span class="ident">a</span>) <span class="op">&amp;&amp;</span> <span class="ident">path::is_separator</span>(<span class="ident">b</span>) {
-        <span class="bool-val">true</span>
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">case_sensitive</span> <span class="op">&amp;&amp;</span> <span class="ident">a</span>.<span class="ident">is_ascii</span>() <span class="op">&amp;&amp;</span> <span class="ident">b</span>.<span class="ident">is_ascii</span>() {
-        <span class="comment">// FIXME: work with non-ascii chars properly (issue #9084)</span>
-        <span class="ident">a</span>.<span class="ident">to_ascii_lowercase</span>() <span class="op">==</span> <span class="ident">b</span>.<span class="ident">to_ascii_lowercase</span>()
-    } <span class="kw">else</span> {
-        <span class="ident">a</span> <span class="op">==</span> <span class="ident">b</span>
+<span class="doccomment">/// A helper function to determine if two chars are (possibly case-insensitively) equal.
+</span><span class="kw">fn </span>chars_eq(a: char, b: char, case_sensitive: bool) -&gt; bool {
+    <span class="kw">if </span><span class="macro">cfg!</span>(windows) &amp;&amp; path::is_separator(a) &amp;&amp; path::is_separator(b) {
+        <span class="bool-val">true
+    </span>} <span class="kw">else if </span>!case_sensitive &amp;&amp; a.is_ascii() &amp;&amp; b.is_ascii() {
+        <span class="comment">// FIXME: work with non-ascii chars properly (issue #9084)
+        </span>a.to_ascii_lowercase() == b.to_ascii_lowercase()
+    } <span class="kw">else </span>{
+        a == b
     }
 }
 
-<span class="doccomment">/// Configuration options to modify the behaviour of `Pattern::matches_with(..)`.</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_copy_implementations</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchOptions</span> {
-    <span class="doccomment">/// Whether or not patterns should be matched in a case-sensitive manner.</span>
-    <span class="doccomment">/// This currently only considers upper/lower case relationships between</span>
-    <span class="doccomment">/// ASCII characters, but in future this might be extended to work with</span>
-    <span class="doccomment">/// Unicode.</span>
-    <span class="kw">pub</span> <span class="ident">case_sensitive</span>: <span class="ident">bool</span>,
+<span class="doccomment">/// Configuration options to modify the behaviour of `Pattern::matches_with(..)`.
+</span><span class="attribute">#[allow(missing_copy_implementations)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+</span><span class="kw">pub struct </span>MatchOptions {
+    <span class="doccomment">/// Whether or not patterns should be matched in a case-sensitive manner.
+    /// This currently only considers upper/lower case relationships between
+    /// ASCII characters, but in future this might be extended to work with
+    /// Unicode.
+    </span><span class="kw">pub </span>case_sensitive: bool,
 
-    <span class="doccomment">/// Whether or not path-component separator characters (e.g. `/` on</span>
-    <span class="doccomment">/// Posix) must be matched by a literal `/`, rather than by `*` or `?` or</span>
-    <span class="doccomment">/// `[...]`.</span>
-    <span class="kw">pub</span> <span class="ident">require_literal_separator</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Whether or not path-component separator characters (e.g. `/` on
+    /// Posix) must be matched by a literal `/`, rather than by `*` or `?` or
+    /// `[...]`.
+    </span><span class="kw">pub </span>require_literal_separator: bool,
 
-    <span class="doccomment">/// Whether or not paths that contain components that start with a `.`</span>
-    <span class="doccomment">/// will require that `.` appears literally in the pattern; `*`, `?`, `**`,</span>
-    <span class="doccomment">/// or `[...]` will not match. This is useful because such files are</span>
-    <span class="doccomment">/// conventionally considered hidden on Unix systems and it might be</span>
-    <span class="doccomment">/// desirable to skip them when listing files.</span>
-    <span class="kw">pub</span> <span class="ident">require_literal_leading_dot</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Whether or not paths that contain components that start with a `.`
+    /// will require that `.` appears literally in the pattern; `*`, `?`, `**`,
+    /// or `[...]` will not match. This is useful because such files are
+    /// conventionally considered hidden on Unix systems and it might be
+    /// desirable to skip them when listing files.
+    </span><span class="kw">pub </span>require_literal_leading_dot: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">MatchOptions</span> {
-    <span class="doccomment">/// Constructs a new `MatchOptions` with default field values. This is used</span>
-    <span class="doccomment">/// when calling functions that do not take an explicit `MatchOptions`</span>
-    <span class="doccomment">/// parameter.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This function always returns this value:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust,ignore</span>
-    <span class="doccomment">/// MatchOptions {</span>
-    <span class="doccomment">///     case_sensitive: true,</span>
-    <span class="doccomment">///     require_literal_separator: false,</span>
-    <span class="doccomment">///     require_literal_leading_dot: false</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">case_sensitive</span>: <span class="bool-val">true</span>,
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">false</span>,
+<span class="kw">impl </span>MatchOptions {
+    <span class="doccomment">/// Constructs a new `MatchOptions` with default field values. This is used
+    /// when calling functions that do not take an explicit `MatchOptions`
+    /// parameter.
+    ///
+    /// This function always returns this value:
+    ///
+    /// ```rust,ignore
+    /// MatchOptions {
+    ///     case_sensitive: true,
+    ///     require_literal_separator: false,
+    ///     require_literal_leading_dot: false
+    /// }
+    /// ```
+    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            case_sensitive: <span class="bool-val">true</span>,
+            require_literal_separator: <span class="bool-val">false</span>,
+            require_literal_leading_dot: <span class="bool-val">false</span>,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">MatchOptions</span>, <span class="ident">Pattern</span>};
-    <span class="kw">use</span> <span class="ident">std::path::Path</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use super</span>::{MatchOptions, Pattern};
+    <span class="kw">use </span>std::path::Path;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_pattern_from_str</span>() {
-        <span class="macro">assert!</span>(<span class="string">&quot;a*b&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Pattern</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;a_b&quot;</span>));
-        <span class="macro">assert!</span>(<span class="string">&quot;a/**b&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Pattern</span><span class="op">&gt;</span>().<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">4</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_pattern_from_str() {
+        <span class="macro">assert!</span>(<span class="string">&quot;a*b&quot;</span>.parse::&lt;Pattern&gt;().unwrap().matches(<span class="string">&quot;a_b&quot;</span>));
+        <span class="macro">assert!</span>(<span class="string">&quot;a/**b&quot;</span>.parse::&lt;Pattern&gt;().unwrap_err().pos == <span class="number">4</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_wildcard_errors</span>() {
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a/**b&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">4</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a/bc**&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a/*****&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">4</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a/b**c**d&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">2</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a**b&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">0</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_wildcard_errors() {
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a/**b&quot;</span>).unwrap_err().pos == <span class="number">4</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a/bc**&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a/*****&quot;</span>).unwrap_err().pos == <span class="number">4</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a/b**c**d&quot;</span>).unwrap_err().pos == <span class="number">2</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a**b&quot;</span>).unwrap_err().pos == <span class="number">0</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_unclosed_bracket_errors</span>() {
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[def&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[!def&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[!&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[d&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[!d&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[]&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[!]&quot;</span>).<span class="ident">unwrap_err</span>().<span class="ident">pos</span> <span class="op">==</span> <span class="number">3</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_unclosed_bracket_errors() {
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[def&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[!def&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[!&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[d&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[!d&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[]&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[!]&quot;</span>).unwrap_err().pos == <span class="number">3</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_wildcards</span>() {
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a*b&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;a_b&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a*b*c&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;abc&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">Pattern::new</span>(<span class="string">&quot;a*b*c&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;abcd&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a*b*c&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;a_b_c&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a*b*c&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;a___b___c&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc*abc*abc&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches</span>(<span class="string">&quot;abcabcabcabcabcabcabc&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">Pattern::new</span>(<span class="string">&quot;abc*abc*abc&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches</span>(<span class="string">&quot;abcabcabcabcabcabcabca&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a*a*a*a*a*a*a*a*a&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a*b[xyz]c*d&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;abxcdbxcddd&quot;</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_wildcards() {
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a*b&quot;</span>).unwrap().matches(<span class="string">&quot;a_b&quot;</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a*b*c&quot;</span>).unwrap().matches(<span class="string">&quot;abc&quot;</span>));
+        <span class="macro">assert!</span>(!Pattern::new(<span class="string">&quot;a*b*c&quot;</span>).unwrap().matches(<span class="string">&quot;abcd&quot;</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a*b*c&quot;</span>).unwrap().matches(<span class="string">&quot;a_b_c&quot;</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a*b*c&quot;</span>).unwrap().matches(<span class="string">&quot;a___b___c&quot;</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc*abc*abc&quot;</span>)
+            .unwrap()
+            .matches(<span class="string">&quot;abcabcabcabcabcabcabc&quot;</span>));
+        <span class="macro">assert!</span>(!Pattern::new(<span class="string">&quot;abc*abc*abc&quot;</span>)
+            .unwrap()
+            .matches(<span class="string">&quot;abcabcabcabcabcabcabca&quot;</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a*a*a*a*a*a*a*a*a&quot;</span>)
+            .unwrap()
+            .matches(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a*b[xyz]c*d&quot;</span>).unwrap().matches(<span class="string">&quot;abxcdbxcddd&quot;</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_recursive_wildcards</span>() {
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;some/**/needle.txt&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/needle.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/one/needle.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/one/two/needle.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/other/needle.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/other/notthis.txt&quot;</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_recursive_wildcards() {
+        <span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;some/**/needle.txt&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;some/needle.txt&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;some/one/needle.txt&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;some/one/two/needle.txt&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;some/other/needle.txt&quot;</span>));
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;some/other/notthis.txt&quot;</span>));
 
-        <span class="comment">// a single ** should be valid, for globs</span>
-        <span class="comment">// Should accept anything</span>
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;**&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">is_recursive</span>);
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;abcde&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;.asdf&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;/x/.asdf&quot;</span>));
+        <span class="comment">// a single ** should be valid, for globs
+        // Should accept anything
+        </span><span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;**&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(pat.is_recursive);
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;abcde&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;.asdf&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;/x/.asdf&quot;</span>));
 
-        <span class="comment">// collapse consecutive wildcards</span>
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;some/**/**/needle.txt&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/needle.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/one/needle.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/one/two/needle.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/other/needle.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/other/notthis.txt&quot;</span>));
+        <span class="comment">// collapse consecutive wildcards
+        </span><span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;some/**/**/needle.txt&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;some/needle.txt&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;some/one/needle.txt&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;some/one/two/needle.txt&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;some/other/needle.txt&quot;</span>));
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;some/other/notthis.txt&quot;</span>));
 
-        <span class="comment">// ** can begin the pattern</span>
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;**/test&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;one/two/test&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;one/test&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;test&quot;</span>));
+        <span class="comment">// ** can begin the pattern
+        </span><span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;**/test&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;one/two/test&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;one/test&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;test&quot;</span>));
 
-        <span class="comment">// /** can begin the pattern</span>
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;/**/test&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;/one/two/test&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;/one/test&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;/test&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;/one/notthis&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;/notthis&quot;</span>));
+        <span class="comment">// /** can begin the pattern
+        </span><span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;/**/test&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;/one/two/test&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;/one/test&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;/test&quot;</span>));
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;/one/notthis&quot;</span>));
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;/notthis&quot;</span>));
 
-        <span class="comment">// Only start sub-patterns on start of path segment.</span>
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;**/.*&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;.abc&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;abc/.abc&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;ab.c&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;abc/ab.c&quot;</span>));
+        <span class="comment">// Only start sub-patterns on start of path segment.
+        </span><span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;**/.*&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;.abc&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;abc/.abc&quot;</span>));
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;ab.c&quot;</span>));
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;abc/ab.c&quot;</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_range_pattern</span>() {
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;a[0-9]b&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">10</span> {
-            <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;a{}b&quot;</span>, <span class="ident">i</span>)));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_range_pattern() {
+        <span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;a[0-9]b&quot;</span>).unwrap();
+        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">10 </span>{
+            <span class="macro">assert!</span>(pat.matches(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;a{}b&quot;</span>, i)));
         }
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;a_b&quot;</span>));
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;a_b&quot;</span>));
 
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;a[!0-9]b&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">10</span> {
-            <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;a{}b&quot;</span>, <span class="ident">i</span>)));
+        <span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;a[!0-9]b&quot;</span>).unwrap();
+        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">10 </span>{
+            <span class="macro">assert!</span>(!pat.matches(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;a{}b&quot;</span>, i)));
         }
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;a_b&quot;</span>));
+        <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;a_b&quot;</span>));
 
-        <span class="kw">let</span> <span class="ident">pats</span> <span class="op">=</span> [<span class="string">&quot;[a-z123]&quot;</span>, <span class="string">&quot;[1a-z23]&quot;</span>, <span class="string">&quot;[123a-z]&quot;</span>];
-        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">p</span> <span class="kw">in</span> <span class="ident">pats</span>.<span class="ident">iter</span>() {
-            <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="ident">p</span>).<span class="ident">unwrap</span>();
-            <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="string">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span>.<span class="ident">chars</span>() {
-                <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>.<span class="ident">to_string</span>()));
+        <span class="kw">let </span>pats = [<span class="string">&quot;[a-z123]&quot;</span>, <span class="string">&quot;[1a-z23]&quot;</span>, <span class="string">&quot;[123a-z]&quot;</span>];
+        <span class="kw">for </span><span class="kw-2">&amp;</span>p <span class="kw">in </span>pats.iter() {
+            <span class="kw">let </span>pat = Pattern::new(p).unwrap();
+            <span class="kw">for </span>c <span class="kw">in </span><span class="string">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span>.chars() {
+                <span class="macro">assert!</span>(pat.matches(<span class="kw-2">&amp;</span>c.to_string()));
             }
-            <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>.<span class="ident">chars</span>() {
-                <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">MatchOptions</span> {
-                    <span class="ident">case_sensitive</span>: <span class="bool-val">false</span>,
-                    ..<span class="ident">MatchOptions::new</span>()
+            <span class="kw">for </span>c <span class="kw">in </span><span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>.chars() {
+                <span class="kw">let </span>options = MatchOptions {
+                    case_sensitive: <span class="bool-val">false</span>,
+                    ..MatchOptions::new()
                 };
-                <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches_with</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>.<span class="ident">to_string</span>(), <span class="ident">options</span>));
+                <span class="macro">assert!</span>(pat.matches_with(<span class="kw-2">&amp;</span>c.to_string(), options));
             }
-            <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;1&quot;</span>));
-            <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;2&quot;</span>));
-            <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;3&quot;</span>));
+            <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;1&quot;</span>));
+            <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;2&quot;</span>));
+            <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;3&quot;</span>));
         }
 
-        <span class="kw">let</span> <span class="ident">pats</span> <span class="op">=</span> [<span class="string">&quot;[abc-]&quot;</span>, <span class="string">&quot;[-abc]&quot;</span>, <span class="string">&quot;[a-c-]&quot;</span>];
-        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">p</span> <span class="kw">in</span> <span class="ident">pats</span>.<span class="ident">iter</span>() {
-            <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="ident">p</span>).<span class="ident">unwrap</span>();
-            <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;a&quot;</span>));
-            <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;b&quot;</span>));
-            <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;c&quot;</span>));
-            <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;-&quot;</span>));
-            <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;d&quot;</span>));
+        <span class="kw">let </span>pats = [<span class="string">&quot;[abc-]&quot;</span>, <span class="string">&quot;[-abc]&quot;</span>, <span class="string">&quot;[a-c-]&quot;</span>];
+        <span class="kw">for </span><span class="kw-2">&amp;</span>p <span class="kw">in </span>pats.iter() {
+            <span class="kw">let </span>pat = Pattern::new(p).unwrap();
+            <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;a&quot;</span>));
+            <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;b&quot;</span>));
+            <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;c&quot;</span>));
+            <span class="macro">assert!</span>(pat.matches(<span class="string">&quot;-&quot;</span>));
+            <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;d&quot;</span>));
         }
 
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;[2-1]&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;1&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat</span>.<span class="ident">matches</span>(<span class="string">&quot;2&quot;</span>));
+        <span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;[2-1]&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;1&quot;</span>));
+        <span class="macro">assert!</span>(!pat.matches(<span class="string">&quot;2&quot;</span>));
 
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;[-]&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;-&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">Pattern::new</span>(<span class="string">&quot;[!-]&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="string">&quot;-&quot;</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;[-]&quot;</span>).unwrap().matches(<span class="string">&quot;-&quot;</span>));
+        <span class="macro">assert!</span>(!Pattern::new(<span class="string">&quot;[!-]&quot;</span>).unwrap().matches(<span class="string">&quot;-&quot;</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_pattern_matches</span>() {
-        <span class="kw">let</span> <span class="ident">txt_pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;*hello.txt&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">txt_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;hello.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">txt_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;gareth_says_hello.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">txt_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/path/to/hello.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">txt_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some\\path\\to\\hello.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">txt_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;/an/absolute/path/to/hello.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">txt_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;hello.txt-and-then-some&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">txt_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;goodbye.txt&quot;</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_pattern_matches() {
+        <span class="kw">let </span>txt_pat = Pattern::new(<span class="string">&quot;*hello.txt&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(txt_pat.matches(<span class="string">&quot;hello.txt&quot;</span>));
+        <span class="macro">assert!</span>(txt_pat.matches(<span class="string">&quot;gareth_says_hello.txt&quot;</span>));
+        <span class="macro">assert!</span>(txt_pat.matches(<span class="string">&quot;some/path/to/hello.txt&quot;</span>));
+        <span class="macro">assert!</span>(txt_pat.matches(<span class="string">&quot;some\\path\\to\\hello.txt&quot;</span>));
+        <span class="macro">assert!</span>(txt_pat.matches(<span class="string">&quot;/an/absolute/path/to/hello.txt&quot;</span>));
+        <span class="macro">assert!</span>(!txt_pat.matches(<span class="string">&quot;hello.txt-and-then-some&quot;</span>));
+        <span class="macro">assert!</span>(!txt_pat.matches(<span class="string">&quot;goodbye.txt&quot;</span>));
 
-        <span class="kw">let</span> <span class="ident">dir_pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;*some/path/to/hello.txt&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">dir_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/path/to/hello.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">dir_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;a/bigger/some/path/to/hello.txt&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">dir_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/path/to/hello.txt-and-then-some&quot;</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">dir_pat</span>.<span class="ident">matches</span>(<span class="string">&quot;some/other/path/to/hello.txt&quot;</span>));
+        <span class="kw">let </span>dir_pat = Pattern::new(<span class="string">&quot;*some/path/to/hello.txt&quot;</span>).unwrap();
+        <span class="macro">assert!</span>(dir_pat.matches(<span class="string">&quot;some/path/to/hello.txt&quot;</span>));
+        <span class="macro">assert!</span>(dir_pat.matches(<span class="string">&quot;a/bigger/some/path/to/hello.txt&quot;</span>));
+        <span class="macro">assert!</span>(!dir_pat.matches(<span class="string">&quot;some/path/to/hello.txt-and-then-some&quot;</span>));
+        <span class="macro">assert!</span>(!dir_pat.matches(<span class="string">&quot;some/other/path/to/hello.txt&quot;</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_pattern_escape</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;_[_]_?_*_!_&quot;</span>;
-        <span class="macro">assert_eq!</span>(<span class="ident">Pattern::escape</span>(<span class="ident">s</span>), <span class="string">&quot;_[[]_[]]_[?]_[*]_!_&quot;</span>.<span class="ident">to_string</span>());
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="kw-2">&amp;</span><span class="ident">Pattern::escape</span>(<span class="ident">s</span>)).<span class="ident">unwrap</span>().<span class="ident">matches</span>(<span class="ident">s</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_pattern_escape() {
+        <span class="kw">let </span>s = <span class="string">&quot;_[_]_?_*_!_&quot;</span>;
+        <span class="macro">assert_eq!</span>(Pattern::escape(s), <span class="string">&quot;_[[]_[]]_[?]_[*]_!_&quot;</span>.to_string());
+        <span class="macro">assert!</span>(Pattern::new(<span class="kw-2">&amp;</span>Pattern::escape(s)).unwrap().matches(s));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_pattern_matches_case_insensitive</span>() {
-        <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;aBcDeFg&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">MatchOptions</span> {
-            <span class="ident">case_sensitive</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">false</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_pattern_matches_case_insensitive() {
+        <span class="kw">let </span>pat = Pattern::new(<span class="string">&quot;aBcDeFg&quot;</span>).unwrap();
+        <span class="kw">let </span>options = MatchOptions {
+            case_sensitive: <span class="bool-val">false</span>,
+            require_literal_separator: <span class="bool-val">false</span>,
+            require_literal_leading_dot: <span class="bool-val">false</span>,
         };
 
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches_with</span>(<span class="string">&quot;aBcDeFg&quot;</span>, <span class="ident">options</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches_with</span>(<span class="string">&quot;abcdefg&quot;</span>, <span class="ident">options</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches_with</span>(<span class="string">&quot;ABCDEFG&quot;</span>, <span class="ident">options</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat</span>.<span class="ident">matches_with</span>(<span class="string">&quot;AbCdEfG&quot;</span>, <span class="ident">options</span>));
+        <span class="macro">assert!</span>(pat.matches_with(<span class="string">&quot;aBcDeFg&quot;</span>, options));
+        <span class="macro">assert!</span>(pat.matches_with(<span class="string">&quot;abcdefg&quot;</span>, options));
+        <span class="macro">assert!</span>(pat.matches_with(<span class="string">&quot;ABCDEFG&quot;</span>, options));
+        <span class="macro">assert!</span>(pat.matches_with(<span class="string">&quot;AbCdEfG&quot;</span>, options));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_pattern_matches_case_insensitive_range</span>() {
-        <span class="kw">let</span> <span class="ident">pat_within</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;[a]&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">pat_except</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;[!a]&quot;</span>).<span class="ident">unwrap</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_pattern_matches_case_insensitive_range() {
+        <span class="kw">let </span>pat_within = Pattern::new(<span class="string">&quot;[a]&quot;</span>).unwrap();
+        <span class="kw">let </span>pat_except = Pattern::new(<span class="string">&quot;[!a]&quot;</span>).unwrap();
 
-        <span class="kw">let</span> <span class="ident">options_case_insensitive</span> <span class="op">=</span> <span class="ident">MatchOptions</span> {
-            <span class="ident">case_sensitive</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">false</span>,
+        <span class="kw">let </span>options_case_insensitive = MatchOptions {
+            case_sensitive: <span class="bool-val">false</span>,
+            require_literal_separator: <span class="bool-val">false</span>,
+            require_literal_leading_dot: <span class="bool-val">false</span>,
         };
-        <span class="kw">let</span> <span class="ident">options_case_sensitive</span> <span class="op">=</span> <span class="ident">MatchOptions</span> {
-            <span class="ident">case_sensitive</span>: <span class="bool-val">true</span>,
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">false</span>,
+        <span class="kw">let </span>options_case_sensitive = MatchOptions {
+            case_sensitive: <span class="bool-val">true</span>,
+            require_literal_separator: <span class="bool-val">false</span>,
+            require_literal_leading_dot: <span class="bool-val">false</span>,
         };
 
-        <span class="macro">assert!</span>(<span class="ident">pat_within</span>.<span class="ident">matches_with</span>(<span class="string">&quot;a&quot;</span>, <span class="ident">options_case_insensitive</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat_within</span>.<span class="ident">matches_with</span>(<span class="string">&quot;A&quot;</span>, <span class="ident">options_case_insensitive</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat_within</span>.<span class="ident">matches_with</span>(<span class="string">&quot;A&quot;</span>, <span class="ident">options_case_sensitive</span>));
+        <span class="macro">assert!</span>(pat_within.matches_with(<span class="string">&quot;a&quot;</span>, options_case_insensitive));
+        <span class="macro">assert!</span>(pat_within.matches_with(<span class="string">&quot;A&quot;</span>, options_case_insensitive));
+        <span class="macro">assert!</span>(!pat_within.matches_with(<span class="string">&quot;A&quot;</span>, options_case_sensitive));
 
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat_except</span>.<span class="ident">matches_with</span>(<span class="string">&quot;a&quot;</span>, <span class="ident">options_case_insensitive</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">pat_except</span>.<span class="ident">matches_with</span>(<span class="string">&quot;A&quot;</span>, <span class="ident">options_case_insensitive</span>));
-        <span class="macro">assert!</span>(<span class="ident">pat_except</span>.<span class="ident">matches_with</span>(<span class="string">&quot;A&quot;</span>, <span class="ident">options_case_sensitive</span>));
+        <span class="macro">assert!</span>(!pat_except.matches_with(<span class="string">&quot;a&quot;</span>, options_case_insensitive));
+        <span class="macro">assert!</span>(!pat_except.matches_with(<span class="string">&quot;A&quot;</span>, options_case_insensitive));
+        <span class="macro">assert!</span>(pat_except.matches_with(<span class="string">&quot;A&quot;</span>, options_case_sensitive));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_pattern_matches_require_literal_separator</span>() {
-        <span class="kw">let</span> <span class="ident">options_require_literal</span> <span class="op">=</span> <span class="ident">MatchOptions</span> {
-            <span class="ident">case_sensitive</span>: <span class="bool-val">true</span>,
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">true</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">false</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_pattern_matches_require_literal_separator() {
+        <span class="kw">let </span>options_require_literal = MatchOptions {
+            case_sensitive: <span class="bool-val">true</span>,
+            require_literal_separator: <span class="bool-val">true</span>,
+            require_literal_leading_dot: <span class="bool-val">false</span>,
         };
-        <span class="kw">let</span> <span class="ident">options_not_require_literal</span> <span class="op">=</span> <span class="ident">MatchOptions</span> {
-            <span class="ident">case_sensitive</span>: <span class="bool-val">true</span>,
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">false</span>,
+        <span class="kw">let </span>options_not_require_literal = MatchOptions {
+            case_sensitive: <span class="bool-val">true</span>,
+            require_literal_separator: <span class="bool-val">false</span>,
+            require_literal_leading_dot: <span class="bool-val">false</span>,
         };
 
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc/def&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches_with</span>(<span class="string">&quot;abc/def&quot;</span>, <span class="ident">options_require_literal</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">Pattern::new</span>(<span class="string">&quot;abc?def&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches_with</span>(<span class="string">&quot;abc/def&quot;</span>, <span class="ident">options_require_literal</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">Pattern::new</span>(<span class="string">&quot;abc*def&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches_with</span>(<span class="string">&quot;abc/def&quot;</span>, <span class="ident">options_require_literal</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">Pattern::new</span>(<span class="string">&quot;abc[/]def&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches_with</span>(<span class="string">&quot;abc/def&quot;</span>, <span class="ident">options_require_literal</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc/def&quot;</span>)
+            .unwrap()
+            .matches_with(<span class="string">&quot;abc/def&quot;</span>, options_require_literal));
+        <span class="macro">assert!</span>(!Pattern::new(<span class="string">&quot;abc?def&quot;</span>)
+            .unwrap()
+            .matches_with(<span class="string">&quot;abc/def&quot;</span>, options_require_literal));
+        <span class="macro">assert!</span>(!Pattern::new(<span class="string">&quot;abc*def&quot;</span>)
+            .unwrap()
+            .matches_with(<span class="string">&quot;abc/def&quot;</span>, options_require_literal));
+        <span class="macro">assert!</span>(!Pattern::new(<span class="string">&quot;abc[/]def&quot;</span>)
+            .unwrap()
+            .matches_with(<span class="string">&quot;abc/def&quot;</span>, options_require_literal));
 
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc/def&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches_with</span>(<span class="string">&quot;abc/def&quot;</span>, <span class="ident">options_not_require_literal</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc?def&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches_with</span>(<span class="string">&quot;abc/def&quot;</span>, <span class="ident">options_not_require_literal</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc*def&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches_with</span>(<span class="string">&quot;abc/def&quot;</span>, <span class="ident">options_not_require_literal</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;abc[/]def&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">matches_with</span>(<span class="string">&quot;abc/def&quot;</span>, <span class="ident">options_not_require_literal</span>));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc/def&quot;</span>)
+            .unwrap()
+            .matches_with(<span class="string">&quot;abc/def&quot;</span>, options_not_require_literal));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc?def&quot;</span>)
+            .unwrap()
+            .matches_with(<span class="string">&quot;abc/def&quot;</span>, options_not_require_literal));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc*def&quot;</span>)
+            .unwrap()
+            .matches_with(<span class="string">&quot;abc/def&quot;</span>, options_not_require_literal));
+        <span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;abc[/]def&quot;</span>)
+            .unwrap()
+            .matches_with(<span class="string">&quot;abc/def&quot;</span>, options_not_require_literal));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_pattern_matches_require_literal_leading_dot</span>() {
-        <span class="kw">let</span> <span class="ident">options_require_literal_leading_dot</span> <span class="op">=</span> <span class="ident">MatchOptions</span> {
-            <span class="ident">case_sensitive</span>: <span class="bool-val">true</span>,
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">true</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_pattern_matches_require_literal_leading_dot() {
+        <span class="kw">let </span>options_require_literal_leading_dot = MatchOptions {
+            case_sensitive: <span class="bool-val">true</span>,
+            require_literal_separator: <span class="bool-val">false</span>,
+            require_literal_leading_dot: <span class="bool-val">true</span>,
         };
-        <span class="kw">let</span> <span class="ident">options_not_require_literal_leading_dot</span> <span class="op">=</span> <span class="ident">MatchOptions</span> {
-            <span class="ident">case_sensitive</span>: <span class="bool-val">true</span>,
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">false</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">false</span>,
+        <span class="kw">let </span>options_not_require_literal_leading_dot = MatchOptions {
+            case_sensitive: <span class="bool-val">true</span>,
+            require_literal_separator: <span class="bool-val">false</span>,
+            require_literal_leading_dot: <span class="bool-val">false</span>,
         };
 
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="op">|</span><span class="ident">options</span><span class="op">|</span> {
-            <span class="ident">Pattern::new</span>(<span class="string">&quot;*.txt&quot;</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">matches_with</span>(<span class="string">&quot;.hello.txt&quot;</span>, <span class="ident">options</span>)
+        <span class="kw">let </span>f = |options| {
+            Pattern::new(<span class="string">&quot;*.txt&quot;</span>)
+                .unwrap()
+                .matches_with(<span class="string">&quot;.hello.txt&quot;</span>, options)
         };
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_not_require_literal_leading_dot</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">f</span>(<span class="ident">options_require_literal_leading_dot</span>));
+        <span class="macro">assert!</span>(f(options_not_require_literal_leading_dot));
+        <span class="macro">assert!</span>(!f(options_require_literal_leading_dot));
 
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="op">|</span><span class="ident">options</span><span class="op">|</span> {
-            <span class="ident">Pattern::new</span>(<span class="string">&quot;.*.*&quot;</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">matches_with</span>(<span class="string">&quot;.hello.txt&quot;</span>, <span class="ident">options</span>)
+        <span class="kw">let </span>f = |options| {
+            Pattern::new(<span class="string">&quot;.*.*&quot;</span>)
+                .unwrap()
+                .matches_with(<span class="string">&quot;.hello.txt&quot;</span>, options)
         };
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_not_require_literal_leading_dot</span>));
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_require_literal_leading_dot</span>));
+        <span class="macro">assert!</span>(f(options_not_require_literal_leading_dot));
+        <span class="macro">assert!</span>(f(options_require_literal_leading_dot));
 
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="op">|</span><span class="ident">options</span><span class="op">|</span> {
-            <span class="ident">Pattern::new</span>(<span class="string">&quot;aaa/bbb/*&quot;</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">matches_with</span>(<span class="string">&quot;aaa/bbb/.ccc&quot;</span>, <span class="ident">options</span>)
+        <span class="kw">let </span>f = |options| {
+            Pattern::new(<span class="string">&quot;aaa/bbb/*&quot;</span>)
+                .unwrap()
+                .matches_with(<span class="string">&quot;aaa/bbb/.ccc&quot;</span>, options)
         };
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_not_require_literal_leading_dot</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">f</span>(<span class="ident">options_require_literal_leading_dot</span>));
+        <span class="macro">assert!</span>(f(options_not_require_literal_leading_dot));
+        <span class="macro">assert!</span>(!f(options_require_literal_leading_dot));
 
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="op">|</span><span class="ident">options</span><span class="op">|</span> {
-            <span class="ident">Pattern::new</span>(<span class="string">&quot;aaa/bbb/*&quot;</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">matches_with</span>(<span class="string">&quot;aaa/bbb/c.c.c.&quot;</span>, <span class="ident">options</span>)
+        <span class="kw">let </span>f = |options| {
+            Pattern::new(<span class="string">&quot;aaa/bbb/*&quot;</span>)
+                .unwrap()
+                .matches_with(<span class="string">&quot;aaa/bbb/c.c.c.&quot;</span>, options)
         };
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_not_require_literal_leading_dot</span>));
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_require_literal_leading_dot</span>));
+        <span class="macro">assert!</span>(f(options_not_require_literal_leading_dot));
+        <span class="macro">assert!</span>(f(options_require_literal_leading_dot));
 
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="op">|</span><span class="ident">options</span><span class="op">|</span> {
-            <span class="ident">Pattern::new</span>(<span class="string">&quot;aaa/bbb/.*&quot;</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">matches_with</span>(<span class="string">&quot;aaa/bbb/.ccc&quot;</span>, <span class="ident">options</span>)
+        <span class="kw">let </span>f = |options| {
+            Pattern::new(<span class="string">&quot;aaa/bbb/.*&quot;</span>)
+                .unwrap()
+                .matches_with(<span class="string">&quot;aaa/bbb/.ccc&quot;</span>, options)
         };
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_not_require_literal_leading_dot</span>));
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_require_literal_leading_dot</span>));
+        <span class="macro">assert!</span>(f(options_not_require_literal_leading_dot));
+        <span class="macro">assert!</span>(f(options_require_literal_leading_dot));
 
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="op">|</span><span class="ident">options</span><span class="op">|</span> {
-            <span class="ident">Pattern::new</span>(<span class="string">&quot;aaa/?bbb&quot;</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">matches_with</span>(<span class="string">&quot;aaa/.bbb&quot;</span>, <span class="ident">options</span>)
+        <span class="kw">let </span>f = |options| {
+            Pattern::new(<span class="string">&quot;aaa/?bbb&quot;</span>)
+                .unwrap()
+                .matches_with(<span class="string">&quot;aaa/.bbb&quot;</span>, options)
         };
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_not_require_literal_leading_dot</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">f</span>(<span class="ident">options_require_literal_leading_dot</span>));
+        <span class="macro">assert!</span>(f(options_not_require_literal_leading_dot));
+        <span class="macro">assert!</span>(!f(options_require_literal_leading_dot));
 
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="op">|</span><span class="ident">options</span><span class="op">|</span> {
-            <span class="ident">Pattern::new</span>(<span class="string">&quot;aaa/[.]bbb&quot;</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">matches_with</span>(<span class="string">&quot;aaa/.bbb&quot;</span>, <span class="ident">options</span>)
+        <span class="kw">let </span>f = |options| {
+            Pattern::new(<span class="string">&quot;aaa/[.]bbb&quot;</span>)
+                .unwrap()
+                .matches_with(<span class="string">&quot;aaa/.bbb&quot;</span>, options)
         };
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_not_require_literal_leading_dot</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">f</span>(<span class="ident">options_require_literal_leading_dot</span>));
+        <span class="macro">assert!</span>(f(options_not_require_literal_leading_dot));
+        <span class="macro">assert!</span>(!f(options_require_literal_leading_dot));
 
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="op">|</span><span class="ident">options</span><span class="op">|</span> <span class="ident">Pattern::new</span>(<span class="string">&quot;**/*&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches_with</span>(<span class="string">&quot;.bbb&quot;</span>, <span class="ident">options</span>);
-        <span class="macro">assert!</span>(<span class="ident">f</span>(<span class="ident">options_not_require_literal_leading_dot</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">f</span>(<span class="ident">options_require_literal_leading_dot</span>));
+        <span class="kw">let </span>f = |options| Pattern::new(<span class="string">&quot;**/*&quot;</span>).unwrap().matches_with(<span class="string">&quot;.bbb&quot;</span>, options);
+        <span class="macro">assert!</span>(f(options_not_require_literal_leading_dot));
+        <span class="macro">assert!</span>(!f(options_require_literal_leading_dot));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_matches_path</span>() {
-        <span class="comment">// on windows, (Path::new(&quot;a/b&quot;).as_str().unwrap() == &quot;a\\b&quot;), so this</span>
-        <span class="comment">// tests that / and \ are considered equivalent on windows</span>
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="string">&quot;a/b&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">matches_path</span>(<span class="ident">Path::new</span>(<span class="string">&quot;a/b&quot;</span>)));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_matches_path() {
+        <span class="comment">// on windows, (Path::new(&quot;a/b&quot;).as_str().unwrap() == &quot;a\\b&quot;), so this
+        // tests that / and \ are considered equivalent on windows
+        </span><span class="macro">assert!</span>(Pattern::new(<span class="string">&quot;a/b&quot;</span>).unwrap().matches_path(Path::new(<span class="string">&quot;a/b&quot;</span>)));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_path_join</span>() {
-        <span class="kw">let</span> <span class="ident">pattern</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;one&quot;</span>).<span class="ident">join</span>(<span class="ident">Path::new</span>(<span class="string">&quot;**/*.rs&quot;</span>));
-        <span class="macro">assert!</span>(<span class="ident">Pattern::new</span>(<span class="ident">pattern</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>()).<span class="ident">is_ok</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_path_join() {
+        <span class="kw">let </span>pattern = Path::new(<span class="string">&quot;one&quot;</span>).join(Path::new(<span class="string">&quot;**/*.rs&quot;</span>));
+        <span class="macro">assert!</span>(Pattern::new(pattern.to_str().unwrap()).is_ok());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

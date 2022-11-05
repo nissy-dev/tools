@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/source_map.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>source_map.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/source_map.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>source_map.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -768,775 +768,775 @@
 <span id="768">768</span>
 <span id="769">769</span>
 <span id="770">770</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Printed</span>, <span class="ident">SourceMarker</span>, <span class="ident">TextRange</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan::TextLen</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">Language</span>, <span class="ident">SyntaxNode</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">rustc_hash::FxHashMap</span>;
-<span class="kw">use</span> <span class="ident">std::cmp::Ordering</span>;
-<span class="kw">use</span> <span class="ident">std::iter::FusedIterator</span>;
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{Printed, SourceMarker, TextRange};
+<span class="kw">use </span>rome_rowan::TextLen;
+<span class="kw">use </span>rome_rowan::{Language, SyntaxNode, TextSize};
+<span class="kw">use </span>rustc_hash::FxHashMap;
+<span class="kw">use </span>std::cmp::Ordering;
+<span class="kw">use </span>std::iter::FusedIterator;
 
-<span class="doccomment">/// A source map for mapping positions of a pre-processed tree back to the locations in the source tree.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is not a generic purpose source map but instead focused on supporting the case where</span>
-<span class="doccomment">/// a language removes or re-orders nodes that would otherwise complicate the formatting logic.</span>
-<span class="doccomment">/// A common use case for pre-processing is the removal of all parenthesized nodes.</span>
-<span class="doccomment">/// Removing parenthesized nodes simplifies the formatting logic when it has different behaviour</span>
-<span class="doccomment">/// depending if a child or parent is of a specific node kind. Performing such a test with parenthesized</span>
-<span class="doccomment">/// nodes present in the source code means that the formatting logic has to skip over all parenthesized nodes</span>
-<span class="doccomment">/// until it finds the first non-parenthesized node and then test if that node is of the expected kind.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This source map implementation supports removing tokens or re-structuring nodes</span>
-<span class="doccomment">/// without changing the order of the tokens in the tree (requires no source map).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The following section uses parentheses as a concrete example to explain the functionality of the source map.</span>
-<span class="doccomment">/// However, the source map implementation isn&#39;t restricted to removing parentheses only, it supports mapping</span>
-<span class="doccomment">/// transformed to source position for any use case where a transform deletes text from the source tree.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Position Mapping</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The source map internally tracks all the ranges that have been deleted from the source code sorted by the start of the deleted range.</span>
-<span class="doccomment">/// It further stores the absolute count of deleted bytes preceding a range. The deleted range together</span>
-<span class="doccomment">/// with the absolute count allows to re-compute the source location for every transformed location</span>
-<span class="doccomment">/// and has the benefit that it requires significantly fewer memory</span>
-<span class="doccomment">/// than source maps that use a source to destination position marker for every token.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Map Node Ranges</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Only having the deleted ranges to resolve the original text of a node isn&#39;t sufficient.</span>
-<span class="doccomment">/// Resolving the original text of a node is needed when formatting a node as verbatim, either because</span>
-<span class="doccomment">/// formatting the node failed because of a syntax error, or formatting is suppressed with a `rome-ignore format:` comment.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```text</span>
-<span class="doccomment">/// // Source           // Transformed</span>
-<span class="doccomment">///  (a+b) + (c + d)   a + b + c + d;</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Using the above example, the following source ranges should be returned when quering with the transformed ranges:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// * `a` -&gt; `a`: Should not include the leading `(`</span>
-<span class="doccomment">/// * `b` -&gt; `b`: Should not include the trailing `)`</span>
-<span class="doccomment">/// * `a + b` -&gt; `(a + b)`: Should include the leading `(` and trailing `)`.</span>
-<span class="doccomment">/// * `a + b + c + d` -&gt; `(a + b) + (c + d)`: Should include the fist `(` token and the last `)` token because the expression statement</span>
-<span class="doccomment">///   fully encloses the `a + b` and `c + d` nodes.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is why the source map also tracks the mapped trimmed ranges for every node.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TransformSourceMap</span> {
-    <span class="ident">source_text</span>: <span class="ident">String</span>,
+<span class="doccomment">/// A source map for mapping positions of a pre-processed tree back to the locations in the source tree.
+///
+/// This is not a generic purpose source map but instead focused on supporting the case where
+/// a language removes or re-orders nodes that would otherwise complicate the formatting logic.
+/// A common use case for pre-processing is the removal of all parenthesized nodes.
+/// Removing parenthesized nodes simplifies the formatting logic when it has different behaviour
+/// depending if a child or parent is of a specific node kind. Performing such a test with parenthesized
+/// nodes present in the source code means that the formatting logic has to skip over all parenthesized nodes
+/// until it finds the first non-parenthesized node and then test if that node is of the expected kind.
+///
+/// This source map implementation supports removing tokens or re-structuring nodes
+/// without changing the order of the tokens in the tree (requires no source map).
+///
+/// The following section uses parentheses as a concrete example to explain the functionality of the source map.
+/// However, the source map implementation isn&#39;t restricted to removing parentheses only, it supports mapping
+/// transformed to source position for any use case where a transform deletes text from the source tree.
+///
+/// ## Position Mapping
+///
+/// The source map internally tracks all the ranges that have been deleted from the source code sorted by the start of the deleted range.
+/// It further stores the absolute count of deleted bytes preceding a range. The deleted range together
+/// with the absolute count allows to re-compute the source location for every transformed location
+/// and has the benefit that it requires significantly fewer memory
+/// than source maps that use a source to destination position marker for every token.
+///
+/// ## Map Node Ranges
+///
+/// Only having the deleted ranges to resolve the original text of a node isn&#39;t sufficient.
+/// Resolving the original text of a node is needed when formatting a node as verbatim, either because
+/// formatting the node failed because of a syntax error, or formatting is suppressed with a `rome-ignore format:` comment.
+///
+/// ```text
+/// // Source           // Transformed
+///  (a+b) + (c + d)   a + b + c + d;
+/// ```
+///
+/// Using the above example, the following source ranges should be returned when quering with the transformed ranges:
+///
+/// * `a` -&gt; `a`: Should not include the leading `(`
+/// * `b` -&gt; `b`: Should not include the trailing `)`
+/// * `a + b` -&gt; `(a + b)`: Should include the leading `(` and trailing `)`.
+/// * `a + b + c + d` -&gt; `(a + b) + (c + d)`: Should include the fist `(` token and the last `)` token because the expression statement
+///   fully encloses the `a + b` and `c + d` nodes.
+///
+/// This is why the source map also tracks the mapped trimmed ranges for every node.
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>TransformSourceMap {
+    source_text: String,
 
-    <span class="doccomment">/// The mappings stored in increasing order</span>
-    <span class="ident">deleted_ranges</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DeletedRange</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The mappings stored in increasing order
+    </span>deleted_ranges: Vec&lt;DeletedRange&gt;,
 
-    <span class="doccomment">/// Key: Start or end position of node for which the trimmed range should be extended</span>
-    <span class="doccomment">/// Value: The trimmed range.</span>
-    <span class="ident">mapped_node_ranges</span>: <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">TextSize</span>, <span class="ident">TrimmedNodeRangeMapping</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Key: Start or end position of node for which the trimmed range should be extended
+    /// Value: The trimmed range.
+    </span>mapped_node_ranges: FxHashMap&lt;TextSize, TrimmedNodeRangeMapping&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">TransformSourceMap</span> {
-    <span class="doccomment">/// Returns the text of the source document as it was before the transformation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_text</span>
+<span class="kw">impl </span>TransformSourceMap {
+    <span class="doccomment">/// Returns the text of the source document as it was before the transformation.
+    </span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.source_text
     }
 
-    <span class="doccomment">/// Maps a range of the transformed document to a range in the source document.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Complexity: `O(log(n))`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">transformed_range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(
-            <span class="self">self</span>.<span class="ident">source_offset</span>(<span class="ident">transformed_range</span>.<span class="ident">start</span>(), <span class="ident">RangePosition::Start</span>),
-            <span class="self">self</span>.<span class="ident">source_offset</span>(<span class="ident">transformed_range</span>.<span class="ident">end</span>(), <span class="ident">RangePosition::End</span>),
+    <span class="doccomment">/// Maps a range of the transformed document to a range in the source document.
+    ///
+    /// Complexity: `O(log(n))`
+    </span><span class="kw">pub fn </span>source_range(<span class="kw-2">&amp;</span><span class="self">self</span>, transformed_range: TextRange) -&gt; TextRange {
+        <span class="kw">let </span>range = TextRange::new(
+            <span class="self">self</span>.source_offset(transformed_range.start(), RangePosition::Start),
+            <span class="self">self</span>.source_offset(transformed_range.end(), RangePosition::End),
         );
 
-        <span class="macro">debug_assert!</span>(<span class="ident">range</span>.<span class="ident">end</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">source_text</span>.<span class="ident">text_len</span>(), <span class="string">&quot;Mapped range {:?} exceeds the length of the source document {:?}. Please check if the passed `transformed_range` is a range of the transformed tree and not of the source tree, and that it belongs to the tree for which the source map was created for.&quot;</span>, <span class="ident">range</span>, <span class="self">self</span>.<span class="ident">source_text</span>.<span class="ident">len</span>());
-        <span class="ident">range</span>
+        <span class="macro">debug_assert!</span>(range.end() &lt;= <span class="self">self</span>.source_text.text_len(), <span class="string">&quot;Mapped range {:?} exceeds the length of the source document {:?}. Please check if the passed `transformed_range` is a range of the transformed tree and not of the source tree, and that it belongs to the tree for which the source map was created for.&quot;</span>, range, <span class="self">self</span>.source_text.len());
+        range
     }
 
-    <span class="doccomment">/// Maps the trimmed range of the transformed node to the trimmed range in the source document.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Average Complexity: `O(log(n))`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">trimmed_source_range</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="ident">trimmed_source_range_from_transformed_range</span>(<span class="ident">node</span>.<span class="ident">text_trimmed_range</span>())
+    <span class="doccomment">/// Maps the trimmed range of the transformed node to the trimmed range in the source document.
+    ///
+    /// Average Complexity: `O(log(n))`
+    </span><span class="kw">pub fn </span>trimmed_source_range&lt;L: Language&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; TextRange {
+        <span class="self">self</span>.trimmed_source_range_from_transformed_range(node.text_trimmed_range())
     }
 
-    <span class="kw">fn</span> <span class="ident">resolve_trimmed_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">source_range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">let</span> <span class="ident">start_mapping</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mapped_node_ranges</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">source_range</span>.<span class="ident">start</span>());
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mapping</span>) <span class="op">=</span> <span class="ident">start_mapping</span> {
-            <span class="comment">// If the queried node fully encloses the original range of the node, then extend the range</span>
-            <span class="kw">if</span> <span class="ident">source_range</span>.<span class="ident">contains_range</span>(<span class="ident">mapping</span>.<span class="ident">original_range</span>) {
-                <span class="ident">source_range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">mapping</span>.<span class="ident">extended_range</span>.<span class="ident">start</span>(), <span class="ident">source_range</span>.<span class="ident">end</span>());
+    <span class="kw">fn </span>resolve_trimmed_range(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>source_range: TextRange) -&gt; TextRange {
+        <span class="kw">let </span>start_mapping = <span class="self">self</span>.mapped_node_ranges.get(<span class="kw-2">&amp;</span>source_range.start());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(mapping) = start_mapping {
+            <span class="comment">// If the queried node fully encloses the original range of the node, then extend the range
+            </span><span class="kw">if </span>source_range.contains_range(mapping.original_range) {
+                source_range = TextRange::new(mapping.extended_range.start(), source_range.end());
             }
         }
 
-        <span class="kw">let</span> <span class="ident">end_mapping</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mapped_node_ranges</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">source_range</span>.<span class="ident">end</span>());
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mapping</span>) <span class="op">=</span> <span class="ident">end_mapping</span> {
-            <span class="comment">// If the queried node fully encloses the original range of the node, then extend the range</span>
-            <span class="kw">if</span> <span class="ident">source_range</span>.<span class="ident">contains_range</span>(<span class="ident">mapping</span>.<span class="ident">original_range</span>) {
-                <span class="ident">source_range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">source_range</span>.<span class="ident">start</span>(), <span class="ident">mapping</span>.<span class="ident">extended_range</span>.<span class="ident">end</span>());
+        <span class="kw">let </span>end_mapping = <span class="self">self</span>.mapped_node_ranges.get(<span class="kw-2">&amp;</span>source_range.end());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(mapping) = end_mapping {
+            <span class="comment">// If the queried node fully encloses the original range of the node, then extend the range
+            </span><span class="kw">if </span>source_range.contains_range(mapping.original_range) {
+                source_range = TextRange::new(source_range.start(), mapping.extended_range.end());
             }
         }
 
-        <span class="ident">source_range</span>
+        source_range
     }
 
-    <span class="kw">fn</span> <span class="ident">trimmed_source_range_from_transformed_range</span>(
+    <span class="kw">fn </span>trimmed_source_range_from_transformed_range(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">transformed_range</span>: <span class="ident">TextRange</span>,
-    ) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">let</span> <span class="ident">source_range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">source_range</span>(<span class="ident">transformed_range</span>);
+        transformed_range: TextRange,
+    ) -&gt; TextRange {
+        <span class="kw">let </span>source_range = <span class="self">self</span>.source_range(transformed_range);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mapped_range</span> <span class="op">=</span> <span class="ident">source_range</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>mapped_range = source_range;
 
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">resolved</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">resolve_trimmed_range</span>(<span class="ident">mapped_range</span>);
+        <span class="kw">loop </span>{
+            <span class="kw">let </span>resolved = <span class="self">self</span>.resolve_trimmed_range(mapped_range);
 
-            <span class="kw">if</span> <span class="ident">resolved</span> <span class="op">==</span> <span class="ident">mapped_range</span> {
-                <span class="kw">break</span> <span class="ident">resolved</span>;
-            } <span class="kw">else</span> {
-                <span class="ident">mapped_range</span> <span class="op">=</span> <span class="ident">resolved</span>;
+            <span class="kw">if </span>resolved == mapped_range {
+                <span class="kw">break </span>resolved;
+            } <span class="kw">else </span>{
+                mapped_range = resolved;
             }
         }
     }
 
-    <span class="doccomment">/// Returns the source text of the trimmed range of `node`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">trimmed_source_text</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">trimmed_source_range</span>(<span class="ident">node</span>);
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_text</span>[<span class="ident">range</span>]
+    <span class="doccomment">/// Returns the source text of the trimmed range of `node`.
+    </span><span class="kw">pub fn </span>trimmed_source_text&lt;L: Language&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">let </span>range = <span class="self">self</span>.trimmed_source_range(node);
+        <span class="kw-2">&amp;</span><span class="self">self</span>.source_text[range]
     }
 
-    <span class="doccomment">/// Returns an iterator over all deleted ranges in increasing order by their start position.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deleted_ranges</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">DeletedRanges</span> {
-        <span class="ident">DeletedRanges</span> {
-            <span class="ident">source_text</span>: <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_text</span>,
-            <span class="ident">deleted_ranges</span>: <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">iter</span>(),
+    <span class="doccomment">/// Returns an iterator over all deleted ranges in increasing order by their start position.
+    </span><span class="kw">pub fn </span>deleted_ranges(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DeletedRanges {
+        DeletedRanges {
+            source_text: <span class="kw-2">&amp;</span><span class="self">self</span>.source_text,
+            deleted_ranges: <span class="self">self</span>.deleted_ranges.iter(),
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">trimmed_source_text_from_transformed_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">trimmed_source_range_from_transformed_range</span>(<span class="ident">range</span>);
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_text</span>[<span class="ident">range</span>]
+    <span class="attribute">#[cfg(test)]
+    </span><span class="kw">fn </span>trimmed_source_text_from_transformed_range(<span class="kw-2">&amp;</span><span class="self">self</span>, range: TextRange) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">let </span>range = <span class="self">self</span>.trimmed_source_range_from_transformed_range(range);
+        <span class="kw-2">&amp;</span><span class="self">self</span>.source_text[range]
     }
 
-    <span class="kw">fn</span> <span class="ident">source_offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">transformed_offset</span>: <span class="ident">TextSize</span>, <span class="ident">position</span>: <span class="ident">RangePosition</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">deleted_ranges</span>
-            .<span class="ident">binary_search_by_key</span>(<span class="kw-2">&amp;</span><span class="ident">transformed_offset</span>, <span class="op">|</span><span class="ident">range</span><span class="op">|</span> <span class="ident">range</span>.<span class="ident">transformed_start</span>());
+    <span class="kw">fn </span>source_offset(<span class="kw-2">&amp;</span><span class="self">self</span>, transformed_offset: TextSize, position: RangePosition) -&gt; TextSize {
+        <span class="kw">let </span>index = <span class="self">self
+            </span>.deleted_ranges
+            .binary_search_by_key(<span class="kw-2">&amp;</span>transformed_offset, |range| range.transformed_start());
 
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">index</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">index</span>) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">deleted_ranges</span>[<span class="ident">index</span>]),
-            <span class="prelude-val">Err</span>(<span class="ident">index</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">0</span> {
-                    <span class="prelude-val">None</span>
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">get</span>(<span class="ident">index</span> <span class="op">-</span> <span class="number">1</span>)
+        <span class="kw">let </span>range = <span class="kw">match </span>index {
+            <span class="prelude-val">Ok</span>(index) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.deleted_ranges[index]),
+            <span class="prelude-val">Err</span>(index) =&gt; {
+                <span class="kw">if </span>index == <span class="number">0 </span>{
+                    <span class="prelude-val">None
+                </span>} <span class="kw">else </span>{
+                    <span class="self">self</span>.deleted_ranges.get(index - <span class="number">1</span>)
                 }
             }
         };
 
-        <span class="self">self</span>.<span class="ident">source_offset_with_range</span>(<span class="ident">transformed_offset</span>, <span class="ident">position</span>, <span class="ident">range</span>)
+        <span class="self">self</span>.source_offset_with_range(transformed_offset, position, range)
     }
 
-    <span class="kw">fn</span> <span class="ident">source_offset_with_range</span>(
+    <span class="kw">fn </span>source_offset_with_range(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">transformed_offset</span>: <span class="ident">TextSize</span>,
-        <span class="ident">position</span>: <span class="ident">RangePosition</span>,
-        <span class="ident">deleted_range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">DeletedRange</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">TextSize</span> {
-        <span class="kw">match</span> <span class="ident">deleted_range</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">range</span>) =&gt; {
+        transformed_offset: TextSize,
+        position: RangePosition,
+        deleted_range: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>DeletedRange&gt;,
+    ) -&gt; TextSize {
+        <span class="kw">match </span>deleted_range {
+            <span class="prelude-val">Some</span>(range) =&gt; {
                 <span class="macro">debug_assert!</span>(
-                    <span class="ident">range</span>.<span class="ident">transformed_start</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">transformed_offset</span>,
+                    range.transformed_start() &lt;= transformed_offset,
                     <span class="string">&quot;Transformed start {:?} must be less than or equal to transformed offset {:?}.&quot;</span>,
-                    <span class="ident">range</span>.<span class="ident">transformed_start</span>(),
-                    <span class="ident">transformed_offset</span>
+                    range.transformed_start(),
+                    transformed_offset
                 );
-                <span class="comment">// Transformed position directly falls onto a position where a deleted range starts or ends (depending on the position)</span>
-                <span class="comment">// For example when querying: `a` in `(a)` or (a + b)`, or `b`</span>
-                <span class="kw">if</span> <span class="ident">range</span>.<span class="ident">transformed_start</span>() <span class="op">==</span> <span class="ident">transformed_offset</span> {
-                    <span class="kw">match</span> <span class="ident">position</span> {
-                        <span class="ident">RangePosition::Start</span> =&gt; <span class="ident">range</span>.<span class="ident">source_end</span>(),
-                        <span class="comment">// `a)`, deleted range is right after the token. That&#39;s why `source_start` is the offset</span>
-                        <span class="comment">// that truncates the `)` and `source_end` includes it</span>
-                        <span class="ident">RangePosition::End</span> =&gt; <span class="ident">range</span>.<span class="ident">source_start</span>(),
+                <span class="comment">// Transformed position directly falls onto a position where a deleted range starts or ends (depending on the position)
+                // For example when querying: `a` in `(a)` or (a + b)`, or `b`
+                </span><span class="kw">if </span>range.transformed_start() == transformed_offset {
+                    <span class="kw">match </span>position {
+                        RangePosition::Start =&gt; range.source_end(),
+                        <span class="comment">// `a)`, deleted range is right after the token. That&#39;s why `source_start` is the offset
+                        // that truncates the `)` and `source_end` includes it
+                        </span>RangePosition::End =&gt; range.source_start(),
                     }
                 }
-                <span class="comment">// The position falls outside of a position that has a leading/trailing deleted range.</span>
-                <span class="comment">// For example, if you get the position of `+` in `(a + b)`.</span>
-                <span class="comment">// That means, the trimmed and non-trimmed offsets are the same</span>
-                <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">transformed_delta</span> <span class="op">=</span> <span class="ident">transformed_offset</span> <span class="op">-</span> <span class="ident">range</span>.<span class="ident">transformed_start</span>();
-                    <span class="ident">range</span>.<span class="ident">source_start</span>() <span class="op">+</span> <span class="ident">range</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">transformed_delta</span>
+                <span class="comment">// The position falls outside of a position that has a leading/trailing deleted range.
+                // For example, if you get the position of `+` in `(a + b)`.
+                // That means, the trimmed and non-trimmed offsets are the same
+                </span><span class="kw">else </span>{
+                    <span class="kw">let </span>transformed_delta = transformed_offset - range.transformed_start();
+                    range.source_start() + range.len() + transformed_delta
                 }
             }
-            <span class="prelude-val">None</span> =&gt; <span class="ident">transformed_offset</span>,
+            <span class="prelude-val">None </span>=&gt; transformed_offset,
         }
     }
 
-    <span class="doccomment">/// Maps the source code positions relative to the transformed tree of `printed` to the location</span>
-    <span class="doccomment">/// in the original, untransformed source code.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The printer creates a source map that allows mapping positions from the newly formatted document</span>
-    <span class="doccomment">/// back to the locations of the tree. However, the source positions stored in [crate::FormatElement::DynamicText]</span>
-    <span class="doccomment">/// and [crate::FormatElement::SyntaxTokenTextSlice] are relative to the transformed tree</span>
-    <span class="doccomment">/// and not the original tree passed to [crate::format_node].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This function re-maps the positions from the positions in the transformed tree back to the positions</span>
-    <span class="doccomment">/// in the original, untransformed tree.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map_printed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">printed</span>: <span class="ident">Printed</span>) -&gt; <span class="ident">Printed</span> {
-        <span class="self">self</span>.<span class="ident">map_markers</span>(<span class="kw-2">&amp;mut</span> <span class="ident">printed</span>.<span class="ident">sourcemap</span>);
+    <span class="doccomment">/// Maps the source code positions relative to the transformed tree of `printed` to the location
+    /// in the original, untransformed source code.
+    ///
+    /// The printer creates a source map that allows mapping positions from the newly formatted document
+    /// back to the locations of the tree. However, the source positions stored in [crate::FormatElement::DynamicText]
+    /// and [crate::FormatElement::SyntaxTokenTextSlice] are relative to the transformed tree
+    /// and not the original tree passed to [crate::format_node].
+    ///
+    /// This function re-maps the positions from the positions in the transformed tree back to the positions
+    /// in the original, untransformed tree.
+    </span><span class="kw">pub fn </span>map_printed(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>printed: Printed) -&gt; Printed {
+        <span class="self">self</span>.map_markers(<span class="kw-2">&amp;mut </span>printed.sourcemap);
 
-        <span class="ident">printed</span>
+        printed
     }
 
-    <span class="doccomment">/// Maps the printers source map marker to the source positions.</span>
-    <span class="kw">fn</span> <span class="ident">map_markers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">markers</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">SourceMarker</span>]) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">is_empty</span>() {
+    <span class="doccomment">/// Maps the printers source map marker to the source positions.
+    </span><span class="kw">fn </span>map_markers(<span class="kw-2">&amp;</span><span class="self">self</span>, markers: <span class="kw-2">&amp;mut </span>[SourceMarker]) {
+        <span class="kw">if </span><span class="self">self</span>.deleted_ranges.is_empty() {
             <span class="kw">return</span>;
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_marker</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SourceMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_range_index</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>previous_marker: <span class="prelude-ty">Option</span>&lt;SourceMarker&gt; = <span class="prelude-val">None</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>next_range_index = <span class="number">0</span>;
 
-        <span class="kw">for</span> <span class="ident">marker</span> <span class="kw">in</span> <span class="ident">markers</span> {
-            <span class="comment">// It&#39;s not guaranteed that markers are sorted by source location (line suffix comments).</span>
-            <span class="comment">// It can, therefore, be necessary to navigate backwards again.</span>
-            <span class="comment">// In this case, do a binary search for the index of the next deleted range (`O(log(n)`).</span>
-            <span class="kw">let</span> <span class="ident">out_of_order_marker</span> <span class="op">=</span>
-                <span class="ident">previous_marker</span>.<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">previous</span><span class="op">|</span> <span class="ident">previous</span>.<span class="ident">source</span> <span class="op">&gt;</span> <span class="ident">marker</span>.<span class="ident">source</span>);
+        <span class="kw">for </span>marker <span class="kw">in </span>markers {
+            <span class="comment">// It&#39;s not guaranteed that markers are sorted by source location (line suffix comments).
+            // It can, therefore, be necessary to navigate backwards again.
+            // In this case, do a binary search for the index of the next deleted range (`O(log(n)`).
+            </span><span class="kw">let </span>out_of_order_marker =
+                previous_marker.map_or(<span class="bool-val">false</span>, |previous| previous.source &gt; marker.source);
 
-            <span class="kw">if</span> <span class="ident">out_of_order_marker</span> {
-                <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="self">self</span>
-                    .<span class="ident">deleted_ranges</span>
-                    .<span class="ident">binary_search_by_key</span>(<span class="kw-2">&amp;</span><span class="ident">marker</span>.<span class="ident">source</span>, <span class="op">|</span><span class="ident">range</span><span class="op">|</span> <span class="ident">range</span>.<span class="ident">transformed_start</span>());
+            <span class="kw">if </span>out_of_order_marker {
+                <span class="kw">let </span>index = <span class="self">self
+                    </span>.deleted_ranges
+                    .binary_search_by_key(<span class="kw-2">&amp;</span>marker.source, |range| range.transformed_start());
 
-                <span class="kw">match</span> <span class="ident">index</span> {
-                    <span class="comment">// Direct match</span>
-                    <span class="prelude-val">Ok</span>(<span class="ident">index</span>) =&gt; {
-                        <span class="ident">next_range_index</span> <span class="op">=</span> <span class="ident">index</span> <span class="op">+</span> <span class="number">1</span>;
+                <span class="kw">match </span>index {
+                    <span class="comment">// Direct match
+                    </span><span class="prelude-val">Ok</span>(index) =&gt; {
+                        next_range_index = index + <span class="number">1</span>;
                     }
-                    <span class="prelude-val">Err</span>(<span class="ident">index</span>) =&gt; <span class="ident">next_range_index</span> <span class="op">=</span> <span class="ident">index</span>,
+                    <span class="prelude-val">Err</span>(index) =&gt; next_range_index = index,
                 }
-            } <span class="kw">else</span> {
-                <span class="comment">// Find the range for this mapping. In most cases this is a no-op or only involves a single step</span>
-                <span class="comment">// because markers are most of the time in increasing source order.</span>
-                <span class="kw">while</span> <span class="ident">next_range_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">len</span>() {
-                    <span class="kw">let</span> <span class="ident">next_range</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">deleted_ranges</span>[<span class="ident">next_range_index</span>];
+            } <span class="kw">else </span>{
+                <span class="comment">// Find the range for this mapping. In most cases this is a no-op or only involves a single step
+                // because markers are most of the time in increasing source order.
+                </span><span class="kw">while </span>next_range_index &lt; <span class="self">self</span>.deleted_ranges.len() {
+                    <span class="kw">let </span>next_range = <span class="kw-2">&amp;</span><span class="self">self</span>.deleted_ranges[next_range_index];
 
-                    <span class="kw">if</span> <span class="ident">next_range</span>.<span class="ident">transformed_start</span>() <span class="op">&gt;</span> <span class="ident">marker</span>.<span class="ident">source</span> {
+                    <span class="kw">if </span>next_range.transformed_start() &gt; marker.source {
                         <span class="kw">break</span>;
                     }
 
-                    <span class="ident">next_range_index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    next_range_index += <span class="number">1</span>;
                 }
             }
 
-            <span class="ident">previous_marker</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">marker</span>);
+            previous_marker = <span class="prelude-val">Some</span>(<span class="kw-2">*</span>marker);
 
-            <span class="kw">let</span> <span class="ident">current_range</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">next_range_index</span> <span class="op">==</span> <span class="number">0</span> {
-                <span class="prelude-val">None</span>
-            } <span class="kw">else</span> {
-                <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">get</span>(<span class="ident">next_range_index</span> <span class="op">-</span> <span class="number">1</span>)
+            <span class="kw">let </span>current_range = <span class="kw">if </span>next_range_index == <span class="number">0 </span>{
+                <span class="prelude-val">None
+            </span>} <span class="kw">else </span>{
+                <span class="self">self</span>.deleted_ranges.get(next_range_index - <span class="number">1</span>)
             };
 
-            <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span>
-                <span class="self">self</span>.<span class="ident">source_offset_with_range</span>(<span class="ident">marker</span>.<span class="ident">source</span>, <span class="ident">RangePosition::Start</span>, <span class="ident">current_range</span>);
+            <span class="kw">let </span>source =
+                <span class="self">self</span>.source_offset_with_range(marker.source, RangePosition::Start, current_range);
 
-            <span class="ident">marker</span>.<span class="ident">source</span> <span class="op">=</span> <span class="ident">source</span>;
+            marker.source = source;
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">TrimmedNodeRangeMapping</span> {
-    <span class="doccomment">/// The original trimmed range of the node.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// (a + b)</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `1..6` `a + b`</span>
-    <span class="ident">original_range</span>: <span class="ident">TextRange</span>,
+<span class="attribute">#[derive(Debug, Copy, Clone)]
+</span><span class="kw">struct </span>TrimmedNodeRangeMapping {
+    <span class="doccomment">/// The original trimmed range of the node.
+    ///
+    /// ```javascript
+    /// (a + b)
+    /// ```
+    ///
+    /// `1..6` `a + b`
+    </span>original_range: TextRange,
 
-    <span class="doccomment">/// The range to which the trimmed range of the node should be extended</span>
-    <span class="doccomment">/// ```javascript</span>
-    <span class="doccomment">/// (a + b)</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `0..7` for `a + b` if its range should also include the parenthesized range.</span>
-    <span class="ident">extended_range</span>: <span class="ident">TextRange</span>,
+    <span class="doccomment">/// The range to which the trimmed range of the node should be extended
+    /// ```javascript
+    /// (a + b)
+    /// ```
+    ///
+    /// `0..7` for `a + b` if its range should also include the parenthesized range.
+    </span>extended_range: TextRange,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">enum</span> <span class="ident">RangePosition</span> {
-    <span class="ident">Start</span>,
-    <span class="ident">End</span>,
+<span class="attribute">#[derive(Copy, Clone, Debug)]
+</span><span class="kw">enum </span>RangePosition {
+    Start,
+    End,
 }
 
-<span class="doccomment">/// Stores the information about a range in the source document that isn&#39;t present in the transformed document</span>
-<span class="doccomment">/// and provides means to map the transformed position back to the source position.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```javascript</span>
-<span class="doccomment">/// (a + b)</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A transform that removes the parentheses from the above expression removes the ranges `0..1` (`(` token)</span>
-<span class="doccomment">/// and `6..7` (`)` token) and the source map creates one [DeletedRange] for each:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```text</span>
-<span class="doccomment">/// DeletedRange {</span>
-<span class="doccomment">///     source_range: 0..1,</span>
-<span class="doccomment">///     total_length_preceding_deleted_ranges: 0,</span>
-<span class="doccomment">/// },</span>
-<span class="doccomment">/// DeletedRange {</span>
-<span class="doccomment">///     source_range: 6..7,</span>
-<span class="doccomment">///     total_length_preceding_deleted_ranges: 1,</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The first range indicates that the range `0..1` for the `(` token has been removed. The second range</span>
-<span class="doccomment">/// indicates that the range `6..7` for the `)` token has been removed and it stores that, up to this point,</span>
-<span class="doccomment">/// but not including, 1 more byte has been removed.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">struct</span> <span class="ident">DeletedRange</span> {
-    <span class="doccomment">/// The range in the source document of the bytes that have been omitted from the transformed document.</span>
-    <span class="ident">source_range</span>: <span class="ident">TextRange</span>,
+<span class="doccomment">/// Stores the information about a range in the source document that isn&#39;t present in the transformed document
+/// and provides means to map the transformed position back to the source position.
+///
+/// # Examples
+///
+/// ```javascript
+/// (a + b)
+/// ```
+///
+/// A transform that removes the parentheses from the above expression removes the ranges `0..1` (`(` token)
+/// and `6..7` (`)` token) and the source map creates one [DeletedRange] for each:
+///
+/// ```text
+/// DeletedRange {
+///     source_range: 0..1,
+///     total_length_preceding_deleted_ranges: 0,
+/// },
+/// DeletedRange {
+///     source_range: 6..7,
+///     total_length_preceding_deleted_ranges: 1,
+/// }
+/// ```
+///
+/// The first range indicates that the range `0..1` for the `(` token has been removed. The second range
+/// indicates that the range `6..7` for the `)` token has been removed and it stores that, up to this point,
+/// but not including, 1 more byte has been removed.
+</span><span class="attribute">#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+</span><span class="kw">struct </span>DeletedRange {
+    <span class="doccomment">/// The range in the source document of the bytes that have been omitted from the transformed document.
+    </span>source_range: TextRange,
 
-    <span class="doccomment">/// The accumulated count of all removed bytes up to (but not including) the start of this range.</span>
-    <span class="ident">total_length_preceding_deleted_ranges</span>: <span class="ident">TextSize</span>,
+    <span class="doccomment">/// The accumulated count of all removed bytes up to (but not including) the start of this range.
+    </span>total_length_preceding_deleted_ranges: TextSize,
 }
 
-<span class="kw">impl</span> <span class="ident">DeletedRange</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source_range</span>: <span class="ident">TextRange</span>, <span class="ident">total_length_preceding_deleted_ranges</span>: <span class="ident">TextSize</span>) -&gt; <span class="self">Self</span> {
-        <span class="macro">debug_assert!</span>(<span class="ident">source_range</span>.<span class="ident">start</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">total_length_preceding_deleted_ranges</span>, <span class="string">&quot;The total number of deleted bytes ({:?}) can not exceed the offset from the start in the source document ({:?}). This is a bug in the source map implementation.&quot;</span>, <span class="ident">total_length_preceding_deleted_ranges</span>, <span class="ident">source_range</span>.<span class="ident">start</span>());
+<span class="kw">impl </span>DeletedRange {
+    <span class="kw">fn </span>new(source_range: TextRange, total_length_preceding_deleted_ranges: TextSize) -&gt; <span class="self">Self </span>{
+        <span class="macro">debug_assert!</span>(source_range.start() &gt;= total_length_preceding_deleted_ranges, <span class="string">&quot;The total number of deleted bytes ({:?}) can not exceed the offset from the start in the source document ({:?}). This is a bug in the source map implementation.&quot;</span>, total_length_preceding_deleted_ranges, source_range.start());
 
-        <span class="self">Self</span> {
-            <span class="ident">source_range</span>,
-            <span class="ident">total_length_preceding_deleted_ranges</span>,
+        <span class="self">Self </span>{
+            source_range,
+            total_length_preceding_deleted_ranges,
         }
     }
 
-    <span class="doccomment">/// The number of deleted characters starting from [source offset](DeletedRange::source_start).</span>
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">source_range</span>.<span class="ident">len</span>()
+    <span class="doccomment">/// The number of deleted characters starting from [source offset](DeletedRange::source_start).
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.source_range.len()
     }
 
-    <span class="doccomment">/// The start position in bytes in the source document of the omitted sequence in the transformed document.</span>
-    <span class="kw">fn</span> <span class="ident">source_start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">source_range</span>.<span class="ident">start</span>()
+    <span class="doccomment">/// The start position in bytes in the source document of the omitted sequence in the transformed document.
+    </span><span class="kw">fn </span>source_start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.source_range.start()
     }
 
-    <span class="doccomment">/// The end position in bytes in the source document of the omitted sequence in the transformed document.</span>
-    <span class="kw">fn</span> <span class="ident">source_end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">source_range</span>.<span class="ident">end</span>()
+    <span class="doccomment">/// The end position in bytes in the source document of the omitted sequence in the transformed document.
+    </span><span class="kw">fn </span>source_end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.source_range.end()
     }
 
-    <span class="doccomment">/// Returns the byte position of [DeleteRange::source_start] in the transformed document.</span>
-    <span class="kw">fn</span> <span class="ident">transformed_start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">source_range</span>.<span class="ident">start</span>() <span class="op">-</span> <span class="self">self</span>.<span class="ident">total_length_preceding_deleted_ranges</span>
+    <span class="doccomment">/// Returns the byte position of [DeleteRange::source_start] in the transformed document.
+    </span><span class="kw">fn </span>transformed_start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.source_range.start() - <span class="self">self</span>.total_length_preceding_deleted_ranges
     }
 }
 
-<span class="doccomment">/// Builder for creating a source map.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TransformSourceMapBuilder</span> {
-    <span class="doccomment">/// The original source text of the tree before it was transformed.</span>
-    <span class="ident">source_text</span>: <span class="ident">String</span>,
+<span class="doccomment">/// Builder for creating a source map.
+</span><span class="attribute">#[derive(Debug, Default)]
+</span><span class="kw">pub struct </span>TransformSourceMapBuilder {
+    <span class="doccomment">/// The original source text of the tree before it was transformed.
+    </span>source_text: String,
 
-    <span class="doccomment">/// The mappings in increasing order by transformed offset.</span>
-    <span class="ident">deleted_ranges</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The mappings in increasing order by transformed offset.
+    </span>deleted_ranges: Vec&lt;TextRange&gt;,
 
-    <span class="doccomment">/// The keys are a position in the source map where a trimmed node starts or ends.</span>
-    <span class="doccomment">/// The values are the metadata about a trimmed node range</span>
-    <span class="ident">mapped_node_ranges</span>: <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">TextSize</span>, <span class="ident">TrimmedNodeRangeMapping</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The keys are a position in the source map where a trimmed node starts or ends.
+    /// The values are the metadata about a trimmed node range
+    </span>mapped_node_ranges: FxHashMap&lt;TextSize, TrimmedNodeRangeMapping&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">TransformSourceMapBuilder</span> {
-    <span class="doccomment">/// Creates a new builder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            ..<span class="ident">Default::default</span>()
+<span class="kw">impl </span>TransformSourceMapBuilder {
+    <span class="doccomment">/// Creates a new builder.
+    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            ..Default::default()
         }
     }
 
-    <span class="doccomment">/// Creates a new builder for a document with the given source.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_source</span>(<span class="ident">source</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">source_text</span>: <span class="ident">source</span>,
-            ..<span class="ident">Default::default</span>()
+    <span class="doccomment">/// Creates a new builder for a document with the given source.
+    </span><span class="kw">pub fn </span>with_source(source: String) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            source_text: source,
+            ..Default::default()
         }
     }
 
-    <span class="doccomment">/// Appends `text` to the source text of the original document.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_source_text</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
-        <span class="self">self</span>.<span class="ident">source_text</span>.<span class="ident">push_str</span>(<span class="ident">text</span>);
+    <span class="doccomment">/// Appends `text` to the source text of the original document.
+    </span><span class="kw">pub fn </span>push_source_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) {
+        <span class="self">self</span>.source_text.push_str(text);
     }
 
-    <span class="doccomment">/// Adds a new mapping for a deleted character range.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_deleted_range</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">source_range</span>: <span class="ident">TextRange</span>) {
-        <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">push</span>(<span class="ident">source_range</span>);
+    <span class="doccomment">/// Adds a new mapping for a deleted character range.
+    </span><span class="kw">pub fn </span>add_deleted_range(<span class="kw-2">&amp;mut </span><span class="self">self</span>, source_range: TextRange) {
+        <span class="self">self</span>.deleted_ranges.push(source_range);
     }
 
-    <span class="doccomment">/// Adds a mapping to widen a nodes trimmed range.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The formatter uses the trimmed range when formatting a node in verbatim either because the node</span>
-    <span class="doccomment">/// failed to format because of a syntax error or because it&#39;s formatting is suppressed with a `rome-ignore format:` comment.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This method adds a mapping to widen a nodes trimmed range to enclose another range instead. This is</span>
-    <span class="doccomment">/// e.g. useful when removing parentheses around expressions where `(/* comment */ a /* comment */)` because</span>
-    <span class="doccomment">/// the trimmed range of `a` should now enclose the full range including the `(` and `)` tokens to ensure</span>
-    <span class="doccomment">/// that the parentheses are retained when printing that node in verbatim style.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extend_trimmed_node_range</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">original_range</span>: <span class="ident">TextRange</span>,
-        <span class="ident">extended_range</span>: <span class="ident">TextRange</span>,
+    <span class="doccomment">/// Adds a mapping to widen a nodes trimmed range.
+    ///
+    /// The formatter uses the trimmed range when formatting a node in verbatim either because the node
+    /// failed to format because of a syntax error or because it&#39;s formatting is suppressed with a `rome-ignore format:` comment.
+    ///
+    /// This method adds a mapping to widen a nodes trimmed range to enclose another range instead. This is
+    /// e.g. useful when removing parentheses around expressions where `(/* comment */ a /* comment */)` because
+    /// the trimmed range of `a` should now enclose the full range including the `(` and `)` tokens to ensure
+    /// that the parentheses are retained when printing that node in verbatim style.
+    </span><span class="kw">pub fn </span>extend_trimmed_node_range(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        original_range: TextRange,
+        extended_range: TextRange,
     ) {
-        <span class="kw">let</span> <span class="ident">mapping</span> <span class="op">=</span> <span class="ident">TrimmedNodeRangeMapping</span> {
-            <span class="ident">original_range</span>,
-            <span class="ident">extended_range</span>,
+        <span class="kw">let </span>mapping = TrimmedNodeRangeMapping {
+            original_range,
+            extended_range,
         };
 
-        <span class="self">self</span>.<span class="ident">mapped_node_ranges</span>
-            .<span class="ident">insert</span>(<span class="ident">original_range</span>.<span class="ident">start</span>(), <span class="ident">mapping</span>);
-        <span class="self">self</span>.<span class="ident">mapped_node_ranges</span>
-            .<span class="ident">insert</span>(<span class="ident">original_range</span>.<span class="ident">end</span>(), <span class="ident">mapping</span>);
+        <span class="self">self</span>.mapped_node_ranges
+            .insert(original_range.start(), mapping);
+        <span class="self">self</span>.mapped_node_ranges
+            .insert(original_range.end(), mapping);
     }
 
-    <span class="doccomment">/// Creates a source map that performs single position lookups in `O(log(n))`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">TransformSourceMap</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">merged_mappings</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">len</span>());
+    <span class="doccomment">/// Creates a source map that performs single position lookups in `O(log(n))`.
+    </span><span class="kw">pub fn </span>finish(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; TransformSourceMap {
+        <span class="kw">let </span><span class="kw-2">mut </span>merged_mappings = Vec::with_capacity(<span class="self">self</span>.deleted_ranges.len());
 
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">is_empty</span>() {
-            <span class="self">self</span>.<span class="ident">deleted_ranges</span>
-                .<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">a</span>.<span class="ident">start</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">start</span>()) {
-                    <span class="ident">Ordering::Equal</span> =&gt; <span class="ident">a</span>.<span class="ident">end</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">end</span>()),
-                    <span class="ident">ordering</span> =&gt; <span class="ident">ordering</span>,
+        <span class="kw">if </span>!<span class="self">self</span>.deleted_ranges.is_empty() {
+            <span class="self">self</span>.deleted_ranges
+                .sort_by(|a, b| <span class="kw">match </span>a.start().cmp(<span class="kw-2">&amp;</span>b.start()) {
+                    Ordering::Equal =&gt; a.end().cmp(<span class="kw-2">&amp;</span>b.end()),
+                    ordering =&gt; ordering,
                 });
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_mapping</span> <span class="op">=</span> <span class="ident">DeletedRange::new</span>(
-                <span class="comment">// SAFETY: Safe because of the not empty check above</span>
-                <span class="self">self</span>.<span class="ident">deleted_ranges</span>[<span class="number">0</span>],
-                <span class="ident">TextSize::default</span>(),
+            <span class="kw">let </span><span class="kw-2">mut </span>last_mapping = DeletedRange::new(
+                <span class="comment">// SAFETY: Safe because of the not empty check above
+                </span><span class="self">self</span>.deleted_ranges[<span class="number">0</span>],
+                TextSize::default(),
             );
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">transformed_offset</span> <span class="op">=</span> <span class="ident">last_mapping</span>.<span class="ident">len</span>();
+            <span class="kw">let </span><span class="kw-2">mut </span>transformed_offset = last_mapping.len();
 
-            <span class="kw">for</span> <span class="ident">range</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">drain</span>(<span class="number">1</span>..) {
-                <span class="comment">// Merge adjacent ranges to ensure there&#39;s only ever a single mapping starting at the same transformed offset.</span>
-                <span class="kw">if</span> <span class="ident">last_mapping</span>.<span class="ident">source_range</span>.<span class="ident">end</span>() <span class="op">==</span> <span class="ident">range</span>.<span class="ident">start</span>() {
-                    <span class="ident">last_mapping</span>.<span class="ident">source_range</span> <span class="op">=</span> <span class="ident">last_mapping</span>.<span class="ident">source_range</span>.<span class="ident">cover</span>(<span class="ident">range</span>);
-                } <span class="kw">else</span> {
-                    <span class="ident">merged_mappings</span>.<span class="ident">push</span>(<span class="ident">last_mapping</span>);
+            <span class="kw">for </span>range <span class="kw">in </span><span class="self">self</span>.deleted_ranges.drain(<span class="number">1</span>..) {
+                <span class="comment">// Merge adjacent ranges to ensure there&#39;s only ever a single mapping starting at the same transformed offset.
+                </span><span class="kw">if </span>last_mapping.source_range.end() == range.start() {
+                    last_mapping.source_range = last_mapping.source_range.cover(range);
+                } <span class="kw">else </span>{
+                    merged_mappings.push(last_mapping);
 
-                    <span class="ident">last_mapping</span> <span class="op">=</span> <span class="ident">DeletedRange::new</span>(<span class="ident">range</span>, <span class="ident">transformed_offset</span>);
+                    last_mapping = DeletedRange::new(range, transformed_offset);
                 }
-                <span class="ident">transformed_offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">range</span>.<span class="ident">len</span>();
+                transformed_offset += range.len();
             }
 
-            <span class="ident">merged_mappings</span>.<span class="ident">push</span>(<span class="ident">last_mapping</span>);
+            merged_mappings.push(last_mapping);
         }
 
-        <span class="ident">TransformSourceMap</span> {
-            <span class="ident">source_text</span>: <span class="self">self</span>.<span class="ident">source_text</span>,
-            <span class="ident">deleted_ranges</span>: <span class="ident">merged_mappings</span>,
-            <span class="ident">mapped_node_ranges</span>: <span class="self">self</span>.<span class="ident">mapped_node_ranges</span>,
+        TransformSourceMap {
+            source_text: <span class="self">self</span>.source_text,
+            deleted_ranges: merged_mappings,
+            mapped_node_ranges: <span class="self">self</span>.mapped_node_ranges,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DeletedRangeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The start position of the removed range in the source document</span>
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">TextSize</span>,
+<span class="attribute">#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>DeletedRangeEntry&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// The start position of the removed range in the source document
+    </span><span class="kw">pub </span>source: TextSize,
 
-    <span class="doccomment">/// The position in the transformed document where the removed range would have been (but is not, because it was removed)</span>
-    <span class="kw">pub</span> <span class="ident">transformed</span>: <span class="ident">TextSize</span>,
+    <span class="doccomment">/// The position in the transformed document where the removed range would have been (but is not, because it was removed)
+    </span><span class="kw">pub </span>transformed: TextSize,
 
-    <span class="doccomment">/// The text of the removed range</span>
-    <span class="kw">pub</span> <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
+    <span class="doccomment">/// The text of the removed range
+    </span><span class="kw">pub </span>text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
 }
 
-<span class="doccomment">/// Iterator over all removed ranges in a document.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns the ranges in increased order by their start position.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DeletedRanges</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">source_text</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
+<span class="doccomment">/// Iterator over all removed ranges in a document.
+///
+/// Returns the ranges in increased order by their start position.
+</span><span class="kw">pub struct </span>DeletedRanges&lt;<span class="lifetime">&#39;a</span>&gt; {
+    source_text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
 
-    <span class="doccomment">/// The mappings stored in increasing order</span>
-    <span class="ident">deleted_ranges</span>: <span class="ident">std::slice::Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">DeletedRange</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The mappings stored in increasing order
+    </span>deleted_ranges: std::slice::Iter&lt;<span class="lifetime">&#39;a</span>, DeletedRange&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">DeletedRanges</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">DeletedRangeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>DeletedRanges&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">type </span>Item = DeletedRangeEntry&lt;<span class="lifetime">&#39;a</span>&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">next</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>next = <span class="self">self</span>.deleted_ranges.next()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(<span class="ident">DeletedRangeEntry</span> {
-            <span class="ident">source</span>: <span class="ident">next</span>.<span class="ident">source_range</span>.<span class="ident">start</span>(),
-            <span class="ident">transformed</span>: <span class="ident">next</span>.<span class="ident">transformed_start</span>(),
-            <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_text</span>[<span class="ident">next</span>.<span class="ident">source_range</span>],
+        <span class="prelude-val">Some</span>(DeletedRangeEntry {
+            source: next.source_range.start(),
+            transformed: next.transformed_start(),
+            text: <span class="kw-2">&amp;</span><span class="self">self</span>.source_text[next.source_range],
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">size_hint</span>()
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="self">self</span>.deleted_ranges.size_hint()
     }
 
-    <span class="kw">fn</span> <span class="ident">last</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="kw">fn </span>last(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">last</span>()<span class="question-mark">?</span>;
+        <span class="kw">let </span>last = <span class="self">self</span>.deleted_ranges.last()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(<span class="ident">DeletedRangeEntry</span> {
-            <span class="ident">source</span>: <span class="ident">last</span>.<span class="ident">source_range</span>.<span class="ident">start</span>(),
-            <span class="ident">transformed</span>: <span class="ident">last</span>.<span class="ident">transformed_start</span>(),
-            <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_text</span>[<span class="ident">last</span>.<span class="ident">source_range</span>],
+        <span class="prelude-val">Some</span>(DeletedRangeEntry {
+            source: last.source_range.start(),
+            transformed: last.transformed_start(),
+            text: <span class="kw-2">&amp;</span><span class="self">self</span>.source_text[last.source_range],
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">DeletedRanges</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">back</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">deleted_ranges</span>.<span class="ident">next_back</span>()<span class="question-mark">?</span>;
+<span class="kw">impl </span>DoubleEndedIterator <span class="kw">for </span>DeletedRanges&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>back = <span class="self">self</span>.deleted_ranges.next_back()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(<span class="ident">DeletedRangeEntry</span> {
-            <span class="ident">source</span>: <span class="ident">back</span>.<span class="ident">source_range</span>.<span class="ident">start</span>(),
-            <span class="ident">transformed</span>: <span class="ident">back</span>.<span class="ident">transformed_start</span>(),
-            <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_text</span>[<span class="ident">back</span>.<span class="ident">source_range</span>],
+        <span class="prelude-val">Some</span>(DeletedRangeEntry {
+            source: back.source_range.start(),
+            transformed: back.transformed_start(),
+            text: <span class="kw-2">&amp;</span><span class="self">self</span>.source_text[back.source_range],
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">DeletedRanges</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {}
-<span class="kw">impl</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">DeletedRanges</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>DeletedRanges&lt;<span class="lifetime">&#39;_</span>&gt; {}
+<span class="kw">impl </span>ExactSizeIterator <span class="kw">for </span>DeletedRanges&lt;<span class="lifetime">&#39;_</span>&gt; {}
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::source_map::DeletedRangeEntry</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>, <span class="ident">TransformSourceMapBuilder</span>};
-    <span class="kw">use</span> <span class="ident">rome_rowan::raw_language</span>::{<span class="ident">RawLanguageKind</span>, <span class="ident">RawSyntaxTreeBuilder</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::source_map::DeletedRangeEntry;
+    <span class="kw">use crate</span>::{TextRange, TextSize, TransformSourceMapBuilder};
+    <span class="kw">use </span>rome_rowan::raw_language::{RawLanguageKind, RawSyntaxTreeBuilder};
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">range_mapping</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cst_builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">cst_builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-        <span class="comment">// The shape of the tree doesn&#39;t matter for the test case</span>
-        <span class="ident">cst_builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="string">&quot;(a + (((b + c)) + d)) + e&quot;</span>);
-        <span class="ident">cst_builder</span>.<span class="ident">finish_node</span>();
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">cst_builder</span>.<span class="ident">finish</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>range_mapping() {
+        <span class="kw">let </span><span class="kw-2">mut </span>cst_builder = RawSyntaxTreeBuilder::new();
+        cst_builder.start_node(RawLanguageKind::ROOT);
+        <span class="comment">// The shape of the tree doesn&#39;t matter for the test case
+        </span>cst_builder.token(RawLanguageKind::STRING_TOKEN, <span class="string">&quot;(a + (((b + c)) + d)) + e&quot;</span>);
+        cst_builder.finish_node();
+        <span class="kw">let </span>root = cst_builder.finish();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">TransformSourceMapBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">push_source_text</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>.<span class="ident">text</span>().<span class="ident">to_string</span>());
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = TransformSourceMapBuilder::new();
+        builder.push_source_text(<span class="kw-2">&amp;</span>root.text().to_string());
 
-        <span class="comment">// Add mappings for all removed parentheses.</span>
+        <span class="comment">// Add mappings for all removed parentheses.
 
-        <span class="comment">// `(`</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">TextSize::from</span>(<span class="number">1</span>)));
+        // `(`
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">0</span>), TextSize::from(<span class="number">1</span>)));
 
-        <span class="comment">// `(((`</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">5</span>), <span class="ident">TextSize::from</span>(<span class="number">6</span>)));
-        <span class="comment">// Ranges can be added out of order</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">7</span>), <span class="ident">TextSize::from</span>(<span class="number">8</span>)));
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">6</span>), <span class="ident">TextSize::from</span>(<span class="number">7</span>)));
+        <span class="comment">// `(((`
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">5</span>), TextSize::from(<span class="number">6</span>)));
+        <span class="comment">// Ranges can be added out of order
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">7</span>), TextSize::from(<span class="number">8</span>)));
+        builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">6</span>), TextSize::from(<span class="number">7</span>)));
 
-        <span class="comment">// `))`</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">13</span>), <span class="ident">TextSize::from</span>(<span class="number">14</span>)));
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">14</span>), <span class="ident">TextSize::from</span>(<span class="number">15</span>)));
+        <span class="comment">// `))`
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">13</span>), TextSize::from(<span class="number">14</span>)));
+        builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">14</span>), TextSize::from(<span class="number">15</span>)));
 
-        <span class="comment">// `))`</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">19</span>), <span class="ident">TextSize::from</span>(<span class="number">20</span>)));
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">20</span>), <span class="ident">TextSize::from</span>(<span class="number">21</span>)));
+        <span class="comment">// `))`
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">19</span>), TextSize::from(<span class="number">20</span>)));
+        builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">20</span>), TextSize::from(<span class="number">21</span>)));
 
-        <span class="kw">let</span> <span class="ident">source_map</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span>source_map = builder.finish();
 
-        <span class="comment">// The following mapping assume the tranformed string to be (including whitespace):</span>
-        <span class="comment">// &quot;a + b + c + d + e&quot;;</span>
+        <span class="comment">// The following mapping assume the tranformed string to be (including whitespace):
+        // &quot;a + b + c + d + e&quot;;
 
-        <span class="comment">// `a`</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">source_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">TextSize::from</span>(<span class="number">1</span>))),
-            <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">1</span>), <span class="ident">TextSize::from</span>(<span class="number">2</span>))
+        // `a`
+        </span><span class="macro">assert_eq!</span>(
+            source_map.source_range(TextRange::new(TextSize::from(<span class="number">0</span>), TextSize::from(<span class="number">1</span>))),
+            TextRange::new(TextSize::from(<span class="number">1</span>), TextSize::from(<span class="number">2</span>))
         );
 
-        <span class="comment">// `b`</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">source_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">4</span>), <span class="ident">TextSize::from</span>(<span class="number">5</span>))),
-            <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">8</span>), <span class="ident">TextSize::from</span>(<span class="number">9</span>))
+        <span class="comment">// `b`
+        </span><span class="macro">assert_eq!</span>(
+            source_map.source_range(TextRange::new(TextSize::from(<span class="number">4</span>), TextSize::from(<span class="number">5</span>))),
+            TextRange::new(TextSize::from(<span class="number">8</span>), TextSize::from(<span class="number">9</span>))
         );
 
-        <span class="comment">// `c`</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">source_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">8</span>), <span class="ident">TextSize::from</span>(<span class="number">9</span>))),
-            <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">12</span>), <span class="ident">TextSize::from</span>(<span class="number">13</span>))
+        <span class="comment">// `c`
+        </span><span class="macro">assert_eq!</span>(
+            source_map.source_range(TextRange::new(TextSize::from(<span class="number">8</span>), TextSize::from(<span class="number">9</span>))),
+            TextRange::new(TextSize::from(<span class="number">12</span>), TextSize::from(<span class="number">13</span>))
         );
 
-        <span class="comment">// `d`</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">source_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">12</span>), <span class="ident">TextSize::from</span>(<span class="number">13</span>))),
-            <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">18</span>), <span class="ident">TextSize::from</span>(<span class="number">19</span>))
+        <span class="comment">// `d`
+        </span><span class="macro">assert_eq!</span>(
+            source_map.source_range(TextRange::new(TextSize::from(<span class="number">12</span>), TextSize::from(<span class="number">13</span>))),
+            TextRange::new(TextSize::from(<span class="number">18</span>), TextSize::from(<span class="number">19</span>))
         );
 
-        <span class="comment">// `e`</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">source_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">16</span>), <span class="ident">TextSize::from</span>(<span class="number">17</span>))),
-            <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">24</span>), <span class="ident">TextSize::from</span>(<span class="number">25</span>))
-        );
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">trimmed_range</span>() {
-        <span class="comment">// Build up a tree for `((a))`</span>
-        <span class="comment">// Don&#39;t mind the unknown nodes, it doesn&#39;t really matter what the nodes are.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cst_builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">cst_builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-
-        <span class="ident">cst_builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::UNKNOWN</span>);
-        <span class="ident">cst_builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="string">&quot;(&quot;</span>);
-
-        <span class="ident">cst_builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::UNKNOWN</span>);
-        <span class="ident">cst_builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::UNKNOWN</span>, <span class="string">&quot;(&quot;</span>);
-
-        <span class="ident">cst_builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>);
-        <span class="ident">cst_builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="string">&quot;a&quot;</span>);
-        <span class="ident">cst_builder</span>.<span class="ident">finish_node</span>();
-
-        <span class="ident">cst_builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::UNKNOWN</span>, <span class="string">&quot;)&quot;</span>);
-        <span class="ident">cst_builder</span>.<span class="ident">finish_node</span>();
-
-        <span class="ident">cst_builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::UNKNOWN</span>, <span class="string">&quot;)&quot;</span>);
-        <span class="ident">cst_builder</span>.<span class="ident">finish_node</span>();
-
-        <span class="ident">cst_builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::UNKNOWN</span>, <span class="string">&quot;;&quot;</span>);
-
-        <span class="ident">cst_builder</span>.<span class="ident">finish_node</span>();
-
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">cst_builder</span>.<span class="ident">finish</span>();
-
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>.<span class="ident">text</span>(), <span class="string">&quot;((a));&quot;</span>);
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">unknowns</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::UNKNOWN</span>);
-
-        <span class="comment">// `((a))`</span>
-        <span class="kw">let</span> <span class="ident">outer</span> <span class="op">=</span> <span class="ident">unknowns</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-
-        <span class="comment">// `(a)`</span>
-        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">unknowns</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-
-        <span class="comment">// `a`</span>
-        <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span>)
-            .<span class="ident">unwrap</span>();
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">TransformSourceMapBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">push_source_text</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>.<span class="ident">text</span>().<span class="ident">to_string</span>());
-
-        <span class="comment">// Add mappings for all removed parentheses.</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">TextSize::from</span>(<span class="number">2</span>)));
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">3</span>), <span class="ident">TextSize::from</span>(<span class="number">5</span>)));
-
-        <span class="comment">// Extend `a` to the range of `(a)`</span>
-        <span class="ident">builder</span>
-            .<span class="ident">extend_trimmed_node_range</span>(<span class="ident">expression</span>.<span class="ident">text_trimmed_range</span>(), <span class="ident">inner</span>.<span class="ident">text_trimmed_range</span>());
-        <span class="comment">// Extend `(a)` to the range of `((a))`</span>
-        <span class="ident">builder</span>.<span class="ident">extend_trimmed_node_range</span>(<span class="ident">inner</span>.<span class="ident">text_trimmed_range</span>(), <span class="ident">outer</span>.<span class="ident">text_trimmed_range</span>());
-
-        <span class="kw">let</span> <span class="ident">source_map</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
-
-        <span class="comment">// Query `a`</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text_from_transformed_range</span>(<span class="ident">TextRange::new</span>(
-                <span class="ident">TextSize::from</span>(<span class="number">0</span>),
-                <span class="ident">TextSize::from</span>(<span class="number">1</span>)
-            )),
-            <span class="string">&quot;((a))&quot;</span>
-        );
-
-        <span class="comment">// Query `a;` expression</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">trimmed_source_text_from_transformed_range</span>(<span class="ident">TextRange::new</span>(
-                <span class="ident">TextSize::from</span>(<span class="number">0</span>),
-                <span class="ident">TextSize::from</span>(<span class="number">2</span>)
-            )),
-            <span class="string">&quot;((a));&quot;</span>
+        <span class="comment">// `e`
+        </span><span class="macro">assert_eq!</span>(
+            source_map.source_range(TextRange::new(TextSize::from(<span class="number">16</span>), TextSize::from(<span class="number">17</span>))),
+            TextRange::new(TextSize::from(<span class="number">24</span>), TextSize::from(<span class="number">25</span>))
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">deleted_ranges</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cst_builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">cst_builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-        <span class="comment">// The shape of the tree doesn&#39;t matter for the test case</span>
-        <span class="ident">cst_builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="string">&quot;(a + (((b + c)) + d)) + e&quot;</span>);
-        <span class="ident">cst_builder</span>.<span class="ident">finish_node</span>();
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">cst_builder</span>.<span class="ident">finish</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>trimmed_range() {
+        <span class="comment">// Build up a tree for `((a))`
+        // Don&#39;t mind the unknown nodes, it doesn&#39;t really matter what the nodes are.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>cst_builder = RawSyntaxTreeBuilder::new();
+        cst_builder.start_node(RawLanguageKind::ROOT);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">TransformSourceMapBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">push_source_text</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>.<span class="ident">text</span>().<span class="ident">to_string</span>());
+        cst_builder.start_node(RawLanguageKind::UNKNOWN);
+        cst_builder.token(RawLanguageKind::STRING_TOKEN, <span class="string">&quot;(&quot;</span>);
 
-        <span class="comment">// Add mappings for all removed parentheses.</span>
+        cst_builder.start_node(RawLanguageKind::UNKNOWN);
+        cst_builder.token(RawLanguageKind::UNKNOWN, <span class="string">&quot;(&quot;</span>);
 
-        <span class="comment">// `(`</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">TextSize::from</span>(<span class="number">1</span>)));
+        cst_builder.start_node(RawLanguageKind::LITERAL_EXPRESSION);
+        cst_builder.token(RawLanguageKind::STRING_TOKEN, <span class="string">&quot;a&quot;</span>);
+        cst_builder.finish_node();
 
-        <span class="comment">// `(((`</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">5</span>), <span class="ident">TextSize::from</span>(<span class="number">6</span>)));
-        <span class="comment">// Ranges can be added out of order</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">7</span>), <span class="ident">TextSize::from</span>(<span class="number">8</span>)));
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">6</span>), <span class="ident">TextSize::from</span>(<span class="number">7</span>)));
+        cst_builder.token(RawLanguageKind::UNKNOWN, <span class="string">&quot;)&quot;</span>);
+        cst_builder.finish_node();
 
-        <span class="comment">// `))`</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">13</span>), <span class="ident">TextSize::from</span>(<span class="number">14</span>)));
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">14</span>), <span class="ident">TextSize::from</span>(<span class="number">15</span>)));
+        cst_builder.token(RawLanguageKind::UNKNOWN, <span class="string">&quot;)&quot;</span>);
+        cst_builder.finish_node();
 
-        <span class="comment">// `))`</span>
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">19</span>), <span class="ident">TextSize::from</span>(<span class="number">20</span>)));
-        <span class="ident">builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">20</span>), <span class="ident">TextSize::from</span>(<span class="number">21</span>)));
+        cst_builder.token(RawLanguageKind::UNKNOWN, <span class="string">&quot;;&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">source_map</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">finish</span>();
+        cst_builder.finish_node();
 
-        <span class="kw">let</span> <span class="ident">deleted_ranges</span> <span class="op">=</span> <span class="ident">source_map</span>.<span class="ident">deleted_ranges</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        <span class="kw">let </span>root = cst_builder.finish();
+
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>root.text(), <span class="string">&quot;((a));&quot;</span>);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>unknowns = root
+            .descendants()
+            .filter(|node| node.kind() == RawLanguageKind::UNKNOWN);
+
+        <span class="comment">// `((a))`
+        </span><span class="kw">let </span>outer = unknowns.next().unwrap();
+
+        <span class="comment">// `(a)`
+        </span><span class="kw">let </span>inner = unknowns.next().unwrap();
+
+        <span class="comment">// `a`
+        </span><span class="kw">let </span>expression = root
+            .descendants()
+            .find(|node| node.kind() == RawLanguageKind::LITERAL_EXPRESSION)
+            .unwrap();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = TransformSourceMapBuilder::new();
+        builder.push_source_text(<span class="kw-2">&amp;</span>root.text().to_string());
+
+        <span class="comment">// Add mappings for all removed parentheses.
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">0</span>), TextSize::from(<span class="number">2</span>)));
+        builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">3</span>), TextSize::from(<span class="number">5</span>)));
+
+        <span class="comment">// Extend `a` to the range of `(a)`
+        </span>builder
+            .extend_trimmed_node_range(expression.text_trimmed_range(), inner.text_trimmed_range());
+        <span class="comment">// Extend `(a)` to the range of `((a))`
+        </span>builder.extend_trimmed_node_range(inner.text_trimmed_range(), outer.text_trimmed_range());
+
+        <span class="kw">let </span>source_map = builder.finish();
+
+        <span class="comment">// Query `a`
+        </span><span class="macro">assert_eq!</span>(
+            source_map.trimmed_source_text_from_transformed_range(TextRange::new(
+                TextSize::from(<span class="number">0</span>),
+                TextSize::from(<span class="number">1</span>)
+            )),
+            <span class="string">&quot;((a))&quot;
+        </span>);
+
+        <span class="comment">// Query `a;` expression
+        </span><span class="macro">assert_eq!</span>(
+            source_map.trimmed_source_text_from_transformed_range(TextRange::new(
+                TextSize::from(<span class="number">0</span>),
+                TextSize::from(<span class="number">2</span>)
+            )),
+            <span class="string">&quot;((a));&quot;
+        </span>);
+    }
+
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>deleted_ranges() {
+        <span class="kw">let </span><span class="kw-2">mut </span>cst_builder = RawSyntaxTreeBuilder::new();
+        cst_builder.start_node(RawLanguageKind::ROOT);
+        <span class="comment">// The shape of the tree doesn&#39;t matter for the test case
+        </span>cst_builder.token(RawLanguageKind::STRING_TOKEN, <span class="string">&quot;(a + (((b + c)) + d)) + e&quot;</span>);
+        cst_builder.finish_node();
+        <span class="kw">let </span>root = cst_builder.finish();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = TransformSourceMapBuilder::new();
+        builder.push_source_text(<span class="kw-2">&amp;</span>root.text().to_string());
+
+        <span class="comment">// Add mappings for all removed parentheses.
+
+        // `(`
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">0</span>), TextSize::from(<span class="number">1</span>)));
+
+        <span class="comment">// `(((`
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">5</span>), TextSize::from(<span class="number">6</span>)));
+        <span class="comment">// Ranges can be added out of order
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">7</span>), TextSize::from(<span class="number">8</span>)));
+        builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">6</span>), TextSize::from(<span class="number">7</span>)));
+
+        <span class="comment">// `))`
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">13</span>), TextSize::from(<span class="number">14</span>)));
+        builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">14</span>), TextSize::from(<span class="number">15</span>)));
+
+        <span class="comment">// `))`
+        </span>builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">19</span>), TextSize::from(<span class="number">20</span>)));
+        builder.add_deleted_range(TextRange::new(TextSize::from(<span class="number">20</span>), TextSize::from(<span class="number">21</span>)));
+
+        <span class="kw">let </span>source_map = builder.finish();
+
+        <span class="kw">let </span>deleted_ranges = source_map.deleted_ranges().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">deleted_ranges</span>,
+            deleted_ranges,
             <span class="macro">vec!</span>[
-                <span class="ident">DeletedRangeEntry</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">0</span>),
-                    <span class="ident">transformed</span>: <span class="ident">TextSize::from</span>(<span class="number">0</span>),
-                    <span class="ident">text</span>: <span class="string">&quot;(&quot;</span>
-                },
-                <span class="ident">DeletedRangeEntry</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">5</span>),
-                    <span class="ident">transformed</span>: <span class="ident">TextSize::from</span>(<span class="number">4</span>),
-                    <span class="ident">text</span>: <span class="string">&quot;(((&quot;</span>
-                },
-                <span class="ident">DeletedRangeEntry</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">13</span>),
-                    <span class="ident">transformed</span>: <span class="ident">TextSize::from</span>(<span class="number">9</span>),
-                    <span class="ident">text</span>: <span class="string">&quot;))&quot;</span>
-                },
-                <span class="ident">DeletedRangeEntry</span> {
-                    <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">19</span>),
-                    <span class="ident">transformed</span>: <span class="ident">TextSize::from</span>(<span class="number">13</span>),
-                    <span class="ident">text</span>: <span class="string">&quot;))&quot;</span>
-                },
+                DeletedRangeEntry {
+                    source: TextSize::from(<span class="number">0</span>),
+                    transformed: TextSize::from(<span class="number">0</span>),
+                    text: <span class="string">&quot;(&quot;
+                </span>},
+                DeletedRangeEntry {
+                    source: TextSize::from(<span class="number">5</span>),
+                    transformed: TextSize::from(<span class="number">4</span>),
+                    text: <span class="string">&quot;(((&quot;
+                </span>},
+                DeletedRangeEntry {
+                    source: TextSize::from(<span class="number">13</span>),
+                    transformed: TextSize::from(<span class="number">9</span>),
+                    text: <span class="string">&quot;))&quot;
+                </span>},
+                DeletedRangeEntry {
+                    source: TextSize::from(<span class="number">19</span>),
+                    transformed: TextSize::from(<span class="number">13</span>),
+                    text: <span class="string">&quot;))&quot;
+                </span>},
             ]
         );
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">source_map</span>.<span class="ident">deleted_ranges</span>().<span class="ident">last</span>(),
-            <span class="prelude-val">Some</span>(<span class="ident">DeletedRangeEntry</span> {
-                <span class="ident">source</span>: <span class="ident">TextSize::from</span>(<span class="number">19</span>),
-                <span class="ident">transformed</span>: <span class="ident">TextSize::from</span>(<span class="number">13</span>),
-                <span class="ident">text</span>: <span class="string">&quot;))&quot;</span>
-            })
+            source_map.deleted_ranges().last(),
+            <span class="prelude-val">Some</span>(DeletedRangeEntry {
+                source: TextSize::from(<span class="number">19</span>),
+                transformed: TextSize::from(<span class="number">13</span>),
+                text: <span class="string">&quot;))&quot;
+            </span>})
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

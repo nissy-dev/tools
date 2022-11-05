@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/workspace/client.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>client.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/workspace/client.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>client.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -179,186 +179,186 @@
 <span id="179">179</span>
 <span id="180">180</span>
 <span id="181">181</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">panic::RefUnwindSafe</span>,
-    <span class="ident">sync::atomic</span>::{<span class="ident">AtomicU64</span>, <span class="ident">Ordering</span>},
+</pre><pre class="rust"><code><span class="kw">use </span>std::{
+    panic::RefUnwindSafe,
+    sync::atomic::{AtomicU64, Ordering},
 };
 
-<span class="kw">use</span> <span class="ident">rome_formatter::Printed</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de::DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">serde_json::json</span>;
+<span class="kw">use </span>rome_formatter::Printed;
+<span class="kw">use </span>serde::{de::DeserializeOwned, Deserialize, Serialize};
+<span class="kw">use </span>serde_json::json;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::workspace</span>::{<span class="ident">RageParams</span>, <span class="ident">RageResult</span>, <span class="ident">ServerInfo</span>, <span class="ident">SupportsFeatureResult</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">RomeError</span>, <span class="ident">TransportError</span>, <span class="ident">Workspace</span>};
+<span class="kw">use </span><span class="kw">crate</span>::workspace::{RageParams, RageResult, ServerInfo, SupportsFeatureResult};
+<span class="kw">use crate</span>::{RomeError, TransportError, Workspace};
 
-<span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">ChangeFileParams</span>, <span class="ident">CloseFileParams</span>, <span class="ident">FixFileParams</span>, <span class="ident">FixFileResult</span>, <span class="ident">FormatFileParams</span>,
-    <span class="ident">FormatOnTypeParams</span>, <span class="ident">FormatRangeParams</span>, <span class="ident">GetControlFlowGraphParams</span>, <span class="ident">GetFormatterIRParams</span>,
-    <span class="ident">GetSyntaxTreeParams</span>, <span class="ident">GetSyntaxTreeResult</span>, <span class="ident">OpenFileParams</span>, <span class="ident">PullActionsParams</span>, <span class="ident">PullActionsResult</span>,
-    <span class="ident">PullDiagnosticsParams</span>, <span class="ident">PullDiagnosticsResult</span>, <span class="ident">RenameParams</span>, <span class="ident">RenameResult</span>,
-    <span class="ident">SupportsFeatureParams</span>, <span class="ident">UpdateSettingsParams</span>,
+<span class="kw">use super</span>::{
+    ChangeFileParams, CloseFileParams, FixFileParams, FixFileResult, FormatFileParams,
+    FormatOnTypeParams, FormatRangeParams, GetControlFlowGraphParams, GetFormatterIRParams,
+    GetSyntaxTreeParams, GetSyntaxTreeResult, OpenFileParams, PullActionsParams, PullActionsResult,
+    PullDiagnosticsParams, PullDiagnosticsResult, RenameParams, RenameResult,
+    SupportsFeatureParams, UpdateSettingsParams,
 };
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WorkspaceClient</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">transport</span>: <span class="ident">T</span>,
-    <span class="ident">request_id</span>: <span class="ident">AtomicU64</span>,
-    <span class="ident">server_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ServerInfo</span><span class="op">&gt;</span>,
+<span class="kw">pub struct </span>WorkspaceClient&lt;T&gt; {
+    transport: T,
+    request_id: AtomicU64,
+    server_info: <span class="prelude-ty">Option</span>&lt;ServerInfo&gt;,
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">WorkspaceTransport</span> {
-    <span class="kw">fn</span> <span class="ident">request</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="ident">TransportRequest</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">TransportError</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">P</span>: <span class="ident">Serialize</span>,
-        <span class="ident">R</span>: <span class="ident">DeserializeOwned</span>;
+<span class="kw">pub trait </span>WorkspaceTransport {
+    <span class="kw">fn </span>request&lt;P, R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, request: TransportRequest&lt;P&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;R, TransportError&gt;
+    <span class="kw">where
+        </span>P: Serialize,
+        R: DeserializeOwned;
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TransportRequest</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">u64</span>,
-    <span class="kw">pub</span> <span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
-    <span class="kw">pub</span> <span class="ident">params</span>: <span class="ident">P</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>TransportRequest&lt;P&gt; {
+    <span class="kw">pub </span>id: u64,
+    <span class="kw">pub </span>method: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
+    <span class="kw">pub </span>params: P,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InitializeResult</span> {
-    <span class="doccomment">/// Information about the server.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">server_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ServerInfo</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, PartialEq, Eq, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>InitializeResult {
+    <span class="doccomment">/// Information about the server.
+    </span><span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span><span class="kw">pub </span>server_info: <span class="prelude-ty">Option</span>&lt;ServerInfo&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">WorkspaceClient</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">WorkspaceTransport</span> <span class="op">+</span> <span class="ident">RefUnwindSafe</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+<span class="kw">impl</span>&lt;T&gt; WorkspaceClient&lt;T&gt;
+<span class="kw">where
+    </span>T: WorkspaceTransport + RefUnwindSafe + Send + Sync,
 {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">transport</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="self">Self</span> {
-            <span class="ident">transport</span>,
-            <span class="ident">request_id</span>: <span class="ident">AtomicU64::new</span>(<span class="number">0</span>),
-            <span class="ident">server_info</span>: <span class="prelude-val">None</span>,
+    <span class="kw">pub fn </span>new(transport: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, RomeError&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>client = <span class="self">Self </span>{
+            transport,
+            request_id: AtomicU64::new(<span class="number">0</span>),
+            server_info: <span class="prelude-val">None</span>,
         };
 
-        <span class="comment">// TODO: The current implementation of the JSON-RPC protocol in</span>
-        <span class="comment">// tower_lsp doesn&#39;t allow any request to be sent before a call to</span>
-        <span class="comment">// initialize, this is something we could be able to lift by using our</span>
-        <span class="comment">// own RPC protocol implementation</span>
-        <span class="kw">let</span> <span class="ident">value</span>: <span class="ident">InitializeResult</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">request</span>(
+        <span class="comment">// TODO: The current implementation of the JSON-RPC protocol in
+        // tower_lsp doesn&#39;t allow any request to be sent before a call to
+        // initialize, this is something we could be able to lift by using our
+        // own RPC protocol implementation
+        </span><span class="kw">let </span>value: InitializeResult = client.request(
             <span class="string">&quot;initialize&quot;</span>,
             <span class="macro">json!</span>({
                 <span class="string">&quot;capabilities&quot;</span>: {},
                 <span class="string">&quot;clientInfo&quot;</span>: {
                     <span class="string">&quot;name&quot;</span>: <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_NAME&quot;</span>),
-                    <span class="string">&quot;version&quot;</span>: <span class="ident"><span class="kw">crate</span>::VERSION</span>
+                    <span class="string">&quot;version&quot;</span>: <span class="kw">crate</span>::VERSION
                 },
             }),
         )<span class="question-mark">?</span>;
 
-        <span class="ident">client</span>.<span class="ident">server_info</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">server_info</span>;
+        client.server_info = value.server_info;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">client</span>)
+        <span class="prelude-val">Ok</span>(client)
     }
 
-    <span class="kw">fn</span> <span class="ident">request</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">params</span>: <span class="ident">P</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">P</span>: <span class="ident">Serialize</span>,
-        <span class="ident">R</span>: <span class="ident">DeserializeOwned</span>,
+    <span class="kw">fn </span>request&lt;P, R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, method: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str, params: P) -&gt; <span class="prelude-ty">Result</span>&lt;R, RomeError&gt;
+    <span class="kw">where
+        </span>P: Serialize,
+        R: DeserializeOwned,
     {
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">request_id</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::Relaxed</span>);
-        <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">TransportRequest</span> { <span class="ident">id</span>, <span class="ident">method</span>, <span class="ident">params</span> };
+        <span class="kw">let </span>id = <span class="self">self</span>.request_id.fetch_add(<span class="number">1</span>, Ordering::Relaxed);
+        <span class="kw">let </span>request = TransportRequest { id, method, params };
 
-        <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">transport</span>.<span class="ident">request</span>(<span class="ident">request</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>response = <span class="self">self</span>.transport.request(request)<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">response</span>)
+        <span class="prelude-val">Ok</span>(response)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/shutdown&quot;</span>, ())
+    <span class="kw">pub fn </span>shutdown(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/shutdown&quot;</span>, ())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Workspace</span> <span class="kw">for</span> <span class="ident">WorkspaceClient</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">WorkspaceTransport</span> <span class="op">+</span> <span class="ident">RefUnwindSafe</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+<span class="kw">impl</span>&lt;T&gt; Workspace <span class="kw">for </span>WorkspaceClient&lt;T&gt;
+<span class="kw">where
+    </span>T: WorkspaceTransport + RefUnwindSafe + Send + Sync,
 {
-    <span class="kw">fn</span> <span class="ident">supports_feature</span>(
+    <span class="kw">fn </span>supports_feature(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">SupportsFeatureParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SupportsFeatureResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/supports_feature&quot;</span>, <span class="ident">params</span>)
+        params: SupportsFeatureParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;SupportsFeatureResult, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/supports_feature&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">update_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">UpdateSettingsParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/update_settings&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>update_settings(<span class="kw-2">&amp;</span><span class="self">self</span>, params: UpdateSettingsParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/update_settings&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">open_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">OpenFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/open_file&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>open_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: OpenFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/open_file&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">get_syntax_tree</span>(
+    <span class="kw">fn </span>get_syntax_tree(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">GetSyntaxTreeParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GetSyntaxTreeResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/get_syntax_tree&quot;</span>, <span class="ident">params</span>)
+        params: GetSyntaxTreeParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;GetSyntaxTreeResult, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/get_syntax_tree&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">get_control_flow_graph</span>(
+    <span class="kw">fn </span>get_control_flow_graph(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">GetControlFlowGraphParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/get_control_flow_graph&quot;</span>, <span class="ident">params</span>)
+        params: GetControlFlowGraphParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;String, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/get_control_flow_graph&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">get_formatter_ir</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">GetFormatterIRParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/get_formatter_ir&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>get_formatter_ir(<span class="kw-2">&amp;</span><span class="self">self</span>, params: GetFormatterIRParams) -&gt; <span class="prelude-ty">Result</span>&lt;String, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/get_formatter_ir&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">change_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">ChangeFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/change_file&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>change_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: ChangeFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/change_file&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">close_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">CloseFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/close_file&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>close_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: CloseFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/close_file&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">pull_diagnostics</span>(
+    <span class="kw">fn </span>pull_diagnostics(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">PullDiagnosticsParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullDiagnosticsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/pull_diagnostics&quot;</span>, <span class="ident">params</span>)
+        params: PullDiagnosticsParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;PullDiagnosticsResult, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/pull_diagnostics&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">pull_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">PullActionsParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullActionsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/pull_actions&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>pull_actions(<span class="kw-2">&amp;</span><span class="self">self</span>, params: PullActionsParams) -&gt; <span class="prelude-ty">Result</span>&lt;PullActionsResult, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/pull_actions&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">format_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/format_file&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>format_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/format_file&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">format_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatRangeParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/format_range&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>format_range(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatRangeParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/format_range&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">format_on_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatOnTypeParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/format_on_type&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>format_on_type(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatOnTypeParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/format_on_type&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">fix_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FixFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FixFileResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/fix_file&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>fix_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FixFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;FixFileResult, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/fix_file&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">rename</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">RenameParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RenameResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/rename&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>rename(<span class="kw-2">&amp;</span><span class="self">self</span>, params: RenameParams) -&gt; <span class="prelude-ty">Result</span>&lt;RenameResult, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/rename&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">rage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">RageParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RageResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="string">&quot;rome/rage&quot;</span>, <span class="ident">params</span>)
+    <span class="kw">fn </span>rage(<span class="kw-2">&amp;</span><span class="self">self</span>, params: RageParams) -&gt; <span class="prelude-ty">Result</span>&lt;RageResult, RomeError&gt; {
+        <span class="self">self</span>.request(<span class="string">&quot;rome/rage&quot;</span>, params)
     }
 
-    <span class="kw">fn</span> <span class="ident">server_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ServerInfo</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">server_info</span>.<span class="ident">as_ref</span>()
+    <span class="kw">fn </span>server_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>ServerInfo&gt; {
+        <span class="self">self</span>.server_info.as_ref()
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

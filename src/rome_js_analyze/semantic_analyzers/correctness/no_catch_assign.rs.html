@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/semantic_analyzers/correctness/no_catch_assign.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>no_catch_assign.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/semantic_analyzers/correctness/no_catch_assign.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>no_catch_assign.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -101,108 +101,108 @@
 <span id="101">101</span>
 <span id="102">102</span>
 <span id="103">103</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">semantic_services::Semantic</span>, <span class="ident">JsRuleAction</span>};
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">context::RuleContext</span>, <span class="ident">declare_rule</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsCatchClause</span>, <span class="ident">JsSyntaxNode</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan::AstNode</span>;
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{semantic_services::Semantic, JsRuleAction};
+<span class="kw">use </span>rome_analyze::{context::RuleContext, declare_rule, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_js_syntax::{JsCatchClause, JsSyntaxNode};
+<span class="kw">use </span>rome_rowan::AstNode;
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Disallow reassigning exceptions in catch clauses</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// try {</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// } catch (e) {</span>
-    <span class="doccomment">///   e;</span>
-    <span class="doccomment">///   e = 10;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Valid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// try {</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// } catch (e) {</span>
-    <span class="doccomment">///   let e = 10;</span>
-    <span class="doccomment">///   e = 100;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">NoCatchAssign</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;noCatchAssign&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">true</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Disallow reassigning exceptions in catch clauses
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    /// try {
+    ///
+    /// } catch (e) {
+    ///   e;
+    ///   e = 10;
+    /// }
+    /// ```
+    ///
+    /// ### Valid
+    ///
+    /// ```js
+    /// try {
+    ///
+    /// } catch (e) {
+    ///   let e = 10;
+    ///   e = 100;
+    /// }
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) NoCatchAssign {
+        version: <span class="string">&quot;0.7.0&quot;</span>,
+        name: <span class="string">&quot;noCatchAssign&quot;</span>,
+        recommended: <span class="bool-val">true</span>,
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">NoCatchAssign</span> {
-    <span class="doccomment">/// Why use [JsCatchClause] instead of [JsIdentifierAssignment] ? Because this could reduce search range.</span>
-    <span class="doccomment">/// We only compare the declaration of [JsCatchClause] with all descent [JsIdentifierAssignment] of its body.</span>
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Semantic</span><span class="op">&lt;</span><span class="ident">JsCatchClause</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// The first element of `State` is the reassignment of catch parameter, the second element of `State` is the declaration of catch clause.</span>
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> (<span class="ident">JsSyntaxNode</span>, <span class="ident">JsSyntaxNode</span>);
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>NoCatchAssign {
+    <span class="doccomment">/// Why use [JsCatchClause] instead of [JsIdentifierAssignment] ? Because this could reduce search range.
+    /// We only compare the declaration of [JsCatchClause] with all descent [JsIdentifierAssignment] of its body.
+    </span><span class="kw">type </span>Query = Semantic&lt;JsCatchClause&gt;;
+    <span class="doccomment">/// The first element of `State` is the reassignment of catch parameter, the second element of `State` is the declaration of catch clause.
+    </span><span class="kw">type </span>State = (JsSyntaxNode, JsSyntaxNode);
+    <span class="kw">type </span>Signals = Vec&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">catch_clause</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">model</span>();
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; Vec&lt;<span class="self">Self</span>::State&gt; {
+        <span class="kw">let </span>catch_clause = ctx.query();
+        <span class="kw">let </span>model = ctx.model();
 
-        <span class="ident">catch_clause</span>
-            .<span class="ident">declaration</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">decl</span><span class="op">|</span> {
-                <span class="comment">// catch_binding</span>
-                <span class="comment">// ## Example</span>
-                <span class="comment">// try {</span>
+        catch_clause
+            .declaration()
+            .and_then(|decl| {
+                <span class="comment">// catch_binding
+                // ## Example
+                // try {
 
-                <span class="comment">// } catch (catch_binding) {</span>
-                <span class="comment">//          ^^^^^^^^^^^^^</span>
-                <span class="comment">// }</span>
-                <span class="kw">let</span> <span class="ident">catch_binding</span> <span class="op">=</span> <span class="ident">decl</span>.<span class="ident">binding</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-                <span class="comment">// Only [JsIdentifierBinding] is allowed to use `model.all_references` now, so I need to make sure this is</span>
-                <span class="comment">// a [JsIdentifierBinding].</span>
-                <span class="kw">let</span> <span class="ident">identifier_binding</span> <span class="op">=</span> <span class="ident">catch_binding</span>
-                    .<span class="ident">as_js_any_binding</span>()<span class="question-mark">?</span>
-                    .<span class="ident">as_js_identifier_binding</span>()<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">catch_binding_syntax</span> <span class="op">=</span> <span class="ident">catch_binding</span>.<span class="ident">syntax</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">invalid_assignment</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-                <span class="kw">for</span> <span class="ident">reference</span> <span class="kw">in</span> <span class="ident">model</span>.<span class="ident">all_writes</span>(<span class="ident">identifier_binding</span>) {
-                    <span class="ident">invalid_assignment</span>
-                        .<span class="ident">push</span>((<span class="ident">reference</span>.<span class="ident">node</span>().<span class="ident">clone</span>(), <span class="ident">catch_binding_syntax</span>.<span class="ident">clone</span>()));
+                // } catch (catch_binding) {
+                //          ^^^^^^^^^^^^^
+                // }
+                </span><span class="kw">let </span>catch_binding = decl.binding().ok()<span class="question-mark">?</span>;
+                <span class="comment">// Only [JsIdentifierBinding] is allowed to use `model.all_references` now, so I need to make sure this is
+                // a [JsIdentifierBinding].
+                </span><span class="kw">let </span>identifier_binding = catch_binding
+                    .as_js_any_binding()<span class="question-mark">?
+                    </span>.as_js_identifier_binding()<span class="question-mark">?</span>;
+                <span class="kw">let </span>catch_binding_syntax = catch_binding.syntax();
+                <span class="kw">let </span><span class="kw-2">mut </span>invalid_assignment = <span class="macro">vec!</span>[];
+                <span class="kw">for </span>reference <span class="kw">in </span>model.all_writes(identifier_binding) {
+                    invalid_assignment
+                        .push((reference.node().clone(), catch_binding_syntax.clone()));
                 }
 
-                <span class="prelude-val">Some</span>(<span class="ident">invalid_assignment</span>)
+                <span class="prelude-val">Some</span>(invalid_assignment)
             })
-            .<span class="ident">unwrap_or_default</span>()
+            .unwrap_or_default()
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">_ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">assignment</span>, <span class="ident">catch_binding_syntax</span>) <span class="op">=</span> <span class="ident">state</span>;
-        <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">RuleDiagnostic::new</span>(
+    <span class="kw">fn </span>diagnostic(_ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>(assignment, catch_binding_syntax) = state;
+        <span class="kw">let </span>diagnostic = RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">assignment</span>.<span class="ident">text_trimmed_range</span>(),
-            <span class="macro">markup!</span> {
-                <span class="string">&quot; Do not &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;reassign catch parameters.&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;&quot;</span>
-            },
+            assignment.text_trimmed_range(),
+            <span class="macro">markup! </span>{
+                <span class="string">&quot; Do not &quot;</span>&lt;Emphasis&gt;<span class="string">&quot;reassign catch parameters.&quot;</span>&lt;/Emphasis&gt;<span class="string">&quot;&quot;
+            </span>},
         )
-        .<span class="ident">detail</span>(
-            <span class="ident">catch_binding_syntax</span>.<span class="ident">text_trimmed_range</span>(),
-            <span class="macro">markup!</span> {
-                <span class="string">&quot;The catch parameter is declared here&quot;</span>
-            },
+        .detail(
+            catch_binding_syntax.text_trimmed_range(),
+            <span class="macro">markup! </span>{
+                <span class="string">&quot;The catch parameter is declared here&quot;
+            </span>},
         );
 
-        <span class="prelude-val">Some</span>(<span class="ident">diagnostic</span>.<span class="ident">note</span>(<span class="string">&quot;Use a local variable instead.&quot;</span>))
+        <span class="prelude-val">Some</span>(diagnostic.note(<span class="string">&quot;Use a local variable instead.&quot;</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="prelude-val">None</span>
-    }
+    <span class="kw">fn </span>action(<span class="kw">_</span>: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="prelude-val">None
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

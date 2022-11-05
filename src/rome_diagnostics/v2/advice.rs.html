@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/advice.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>advice.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/advice.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>advice.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -189,196 +189,196 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">display::Backtrace</span>,
-    <span class="ident">location</span>::{<span class="ident">AsResource</span>, <span class="ident">AsSourceCode</span>, <span class="ident">AsSpan</span>},
-    <span class="ident">Location</span>,
+</pre><pre class="rust"><code><span class="kw">use super</span>::{
+    display::Backtrace,
+    location::{AsResource, AsSourceCode, AsSpan},
+    Location,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_console::fmt</span>::{<span class="self">self</span>, <span class="ident">Display</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_text_edit::TextEdit</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::io</span>;
+<span class="kw">use </span><span class="kw">crate</span>::Applicability;
+<span class="kw">use </span>rome_console::fmt::{<span class="self">self</span>, Display};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_text_edit::TextEdit;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::io;
 
-<span class="doccomment">/// Trait implemented by types that support emitting advices into a diagnostic</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Advices</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+<span class="doccomment">/// Trait implemented by types that support emitting advices into a diagnostic
+</span><span class="kw">pub trait </span>Advices {
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt;;
 }
 
-<span class="doccomment">/// The `Visit` trait is used to collect advices from a diagnostic: a visitor</span>
-<span class="doccomment">/// instance is provided to the [Diagnostic::advices](super::Diagnostic::advices)</span>
-<span class="doccomment">/// and [Diagnostic::verbose_advices](super::Diagnostic::verbose_advices) methods,</span>
-<span class="doccomment">/// and the diagnostic implementation is expected to call into the various `record_*`</span>
-<span class="doccomment">/// methods to communicate advices to the user.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Visit</span> {
-    <span class="doccomment">/// Prints a single log entry with the provided category and markup.</span>
-    <span class="kw">fn</span> <span class="ident">record_log</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">category</span>: <span class="ident">LogCategory</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> (<span class="ident">category</span>, <span class="ident">text</span>);
+<span class="doccomment">/// The `Visit` trait is used to collect advices from a diagnostic: a visitor
+/// instance is provided to the [Diagnostic::advices](super::Diagnostic::advices)
+/// and [Diagnostic::verbose_advices](super::Diagnostic::verbose_advices) methods,
+/// and the diagnostic implementation is expected to call into the various `record_*`
+/// methods to communicate advices to the user.
+</span><span class="kw">pub trait </span>Visit {
+    <span class="doccomment">/// Prints a single log entry with the provided category and markup.
+    </span><span class="kw">fn </span>record_log(<span class="kw-2">&amp;mut </span><span class="self">self</span>, category: LogCategory, text: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= (category, text);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Prints an unordered list of items.</span>
-    <span class="kw">fn</span> <span class="ident">record_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">list</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">list</span>;
+    <span class="doccomment">/// Prints an unordered list of items.
+    </span><span class="kw">fn </span>record_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, list: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display]) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= list;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Prints a code frame outlining the provided source location.</span>
-    <span class="kw">fn</span> <span class="ident">record_frame</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">location</span>: <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">location</span>;
+    <span class="doccomment">/// Prints a code frame outlining the provided source location.
+    </span><span class="kw">fn </span>record_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>, location: Location&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= location;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Prints the diff between the `prev` and `next` strings.</span>
-    <span class="kw">fn</span> <span class="ident">record_diff</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">diff</span>: <span class="kw-2">&amp;</span><span class="ident">TextEdit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">diff</span>;
+    <span class="doccomment">/// Prints the diff between the `prev` and `next` strings.
+    </span><span class="kw">fn </span>record_diff(<span class="kw-2">&amp;mut </span><span class="self">self</span>, diff: <span class="kw-2">&amp;</span>TextEdit) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= diff;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Prints a Rust backtrace.</span>
-    <span class="kw">fn</span> <span class="ident">record_backtrace</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>,
-        <span class="ident">backtrace</span>: <span class="kw-2">&amp;</span><span class="ident">Backtrace</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> (<span class="ident">title</span>, <span class="ident">backtrace</span>);
+    <span class="doccomment">/// Prints a Rust backtrace.
+    </span><span class="kw">fn </span>record_backtrace(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        title: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display,
+        backtrace: <span class="kw-2">&amp;</span>Backtrace,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= (title, backtrace);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Prints a command to the user.</span>
-    <span class="kw">fn</span> <span class="ident">record_command</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">command</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">command</span>;
+    <span class="doccomment">/// Prints a command to the user.
+    </span><span class="kw">fn </span>record_command(<span class="kw-2">&amp;mut </span><span class="self">self</span>, command: <span class="kw-2">&amp;</span>str) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= command;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Prints a group of advices under a common title.</span>
-    <span class="kw">fn</span> <span class="ident">record_group</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>, <span class="ident">advice</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Advices</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> (<span class="ident">title</span>, <span class="ident">advice</span>);
+    <span class="doccomment">/// Prints a group of advices under a common title.
+    </span><span class="kw">fn </span>record_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>, title: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display, advice: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Advices) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let _ </span>= (title, advice);
         <span class="prelude-val">Ok</span>(())
-    }
-}
-
-<span class="doccomment">/// The category for a log advice, defines how the message should be presented</span>
-<span class="doccomment">/// to the user.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">LogCategory</span> {
-    <span class="doccomment">/// The advice doesn&#39;t have any specific category, the message will be</span>
-    <span class="doccomment">/// printed as plain markup.</span>
-    <span class="prelude-val">None</span>,
-    <span class="doccomment">/// Print the advices with the information style.</span>
-    <span class="ident">Info</span>,
-    <span class="doccomment">/// Print the advices with the warning style.</span>
-    <span class="ident">Warn</span>,
-    <span class="doccomment">/// Print the advices with the error style.</span>
-    <span class="ident">Error</span>,
-}
-
-<span class="doccomment">/// Utility type implementing [Advices] that emits a single log advice with</span>
-<span class="doccomment">/// the provided category and text.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LogAdvice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">category</span>: <span class="ident">LogCategory</span>,
-    <span class="kw">pub</span> <span class="ident">text</span>: <span class="ident">T</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Display</span><span class="op">&gt;</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">LogAdvice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="self">self</span>.<span class="ident">category</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>)
     }
 }
 
-<span class="doccomment">/// Utility type implementing [Advices] that emits a single code frame</span>
-<span class="doccomment">/// advice with the provided path, span and source code.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CodeFrameAdvice</span><span class="op">&lt;</span><span class="ident">Path</span>, <span class="ident">Span</span>, <span class="ident">SourceCode</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">Path</span>,
-    <span class="kw">pub</span> <span class="ident">span</span>: <span class="ident">Span</span>,
-    <span class="kw">pub</span> <span class="ident">source_code</span>: <span class="ident">SourceCode</span>,
+<span class="doccomment">/// The category for a log advice, defines how the message should be presented
+/// to the user.
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub enum </span>LogCategory {
+    <span class="doccomment">/// The advice doesn&#39;t have any specific category, the message will be
+    /// printed as plain markup.
+    </span><span class="prelude-val">None</span>,
+    <span class="doccomment">/// Print the advices with the information style.
+    </span>Info,
+    <span class="doccomment">/// Print the advices with the warning style.
+    </span>Warn,
+    <span class="doccomment">/// Print the advices with the error style.
+    </span>Error,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Path</span>, <span class="ident">Span</span>, <span class="ident">SourceCode</span><span class="op">&gt;</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">CodeFrameAdvice</span><span class="op">&lt;</span><span class="ident">Path</span>, <span class="ident">Span</span>, <span class="ident">SourceCode</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Path</span>: <span class="ident">AsResource</span>,
-    <span class="ident">Span</span>: <span class="ident">AsSpan</span>,
-    <span class="ident">SourceCode</span>: <span class="ident">AsSourceCode</span>,
+<span class="doccomment">/// Utility type implementing [Advices] that emits a single log advice with
+/// the provided category and text.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>LogAdvice&lt;T&gt; {
+    <span class="kw">pub </span>category: LogCategory,
+    <span class="kw">pub </span>text: T,
+}
+
+<span class="kw">impl</span>&lt;T: Display&gt; Advices <span class="kw">for </span>LogAdvice&lt;T&gt; {
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        visitor.record_log(<span class="self">self</span>.category, <span class="kw-2">&amp;</span><span class="self">self</span>.text)
+    }
+}
+
+<span class="doccomment">/// Utility type implementing [Advices] that emits a single code frame
+/// advice with the provided path, span and source code.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>CodeFrameAdvice&lt;Path, Span, SourceCode&gt; {
+    <span class="kw">pub </span>path: Path,
+    <span class="kw">pub </span>span: Span,
+    <span class="kw">pub </span>source_code: SourceCode,
+}
+
+<span class="kw">impl</span>&lt;Path, Span, SourceCode&gt; Advices <span class="kw">for </span>CodeFrameAdvice&lt;Path, Span, SourceCode&gt;
+<span class="kw">where
+    </span>Path: AsResource,
+    Span: AsSpan,
+    SourceCode: AsSourceCode,
 {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="ident">Location::builder</span>()
-            .<span class="ident">resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>)
-            .<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">span</span>)
-            .<span class="ident">source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_code</span>)
-            .<span class="ident">build</span>();
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span>location = Location::builder()
+            .resource(<span class="kw-2">&amp;</span><span class="self">self</span>.path)
+            .span(<span class="kw-2">&amp;</span><span class="self">self</span>.span)
+            .source_code(<span class="kw-2">&amp;</span><span class="self">self</span>.source_code)
+            .build();
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">location</span>) <span class="op">=</span> <span class="ident">location</span> {
-            <span class="ident">visitor</span>.<span class="ident">record_frame</span>(<span class="ident">location</span>)<span class="question-mark">?</span>;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(location) = location {
+            visitor.record_frame(location)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="doccomment">/// Utility type implementing [Advices] that emits a diff advice with the</span>
-<span class="doccomment">/// provided prev and next text.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DiffAdvice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">diff</span>: <span class="ident">D</span>,
+<span class="doccomment">/// Utility type implementing [Advices] that emits a diff advice with the
+/// provided prev and next text.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>DiffAdvice&lt;D&gt; {
+    <span class="kw">pub </span>diff: D,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">DiffAdvice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">D</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">TextEdit</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;D&gt; Advices <span class="kw">for </span>DiffAdvice&lt;D&gt;
+<span class="kw">where
+    </span>D: AsRef&lt;TextEdit&gt;,
 {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">visitor</span>.<span class="ident">record_diff</span>(<span class="self">self</span>.<span class="ident">diff</span>.<span class="ident">as_ref</span>())
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        visitor.record_diff(<span class="self">self</span>.diff.as_ref())
     }
 }
 
-<span class="doccomment">/// Utility type implementing [Advices] that emits a command advice with</span>
-<span class="doccomment">/// the provided text.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CommandAdvice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">command</span>: <span class="ident">T</span>,
+<span class="doccomment">/// Utility type implementing [Advices] that emits a command advice with
+/// the provided text.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>CommandAdvice&lt;T&gt; {
+    <span class="kw">pub </span>command: T,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">CommandAdvice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;T&gt; Advices <span class="kw">for </span>CommandAdvice&lt;T&gt;
+<span class="kw">where
+    </span>T: AsRef&lt;str&gt;,
 {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">visitor</span>.<span class="ident">record_command</span>(<span class="self">self</span>.<span class="ident">command</span>.<span class="ident">as_ref</span>())
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        visitor.record_command(<span class="self">self</span>.command.as_ref())
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="doccomment">/// Utility type implementing [Advices] that emits a</span>
-<span class="doccomment">/// code suggestion with the provided text</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CodeSuggestionAdvice</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">applicability</span>: <span class="ident">Applicability</span>,
-    <span class="kw">pub</span> <span class="ident">msg</span>: <span class="ident">M</span>,
-    <span class="kw">pub</span> <span class="ident">suggestion</span>: <span class="ident">TextEdit</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="doccomment">/// Utility type implementing [Advices] that emits a
+/// code suggestion with the provided text
+</span><span class="kw">pub struct </span>CodeSuggestionAdvice&lt;M&gt; {
+    <span class="kw">pub </span>applicability: Applicability,
+    <span class="kw">pub </span>msg: M,
+    <span class="kw">pub </span>suggestion: TextEdit,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">CodeSuggestionAdvice</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">M</span>: <span class="ident">Display</span>,
+<span class="kw">impl</span>&lt;M&gt; Advices <span class="kw">for </span>CodeSuggestionAdvice&lt;M&gt;
+<span class="kw">where
+    </span>M: Display,
 {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">applicability</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">applicability</span> {
-            <span class="ident">Applicability::Always</span> =&gt; <span class="string">&quot;Safe fix&quot;</span>,
-            <span class="ident">Applicability::MaybeIncorrect</span> =&gt; <span class="string">&quot;Suggested fix&quot;</span>,
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span>applicability = <span class="kw">match </span><span class="self">self</span>.applicability {
+            Applicability::Always =&gt; <span class="string">&quot;Safe fix&quot;</span>,
+            Applicability::MaybeIncorrect =&gt; <span class="string">&quot;Suggested fix&quot;</span>,
         };
 
-        <span class="ident">visitor</span>.<span class="ident">record_log</span>(
-            <span class="ident">LogCategory::Info</span>,
-            <span class="kw-2">&amp;</span><span class="macro">markup!</span> {
-                {<span class="ident">applicability</span>}<span class="string">&quot;: &quot;</span>{<span class="self">self</span>.<span class="ident">msg</span>}
+        visitor.record_log(
+            LogCategory::Info,
+            <span class="kw-2">&amp;</span><span class="macro">markup! </span>{
+                {applicability}<span class="string">&quot;: &quot;</span>{<span class="self">self</span>.msg}
             },
         )<span class="question-mark">?</span>;
 
-        <span class="ident">visitor</span>.<span class="ident">record_diff</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">suggestion</span>)
+        visitor.record_diff(<span class="kw-2">&amp;</span><span class="self">self</span>.suggestion)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

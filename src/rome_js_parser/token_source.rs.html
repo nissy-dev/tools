@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/token_source.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>token_source.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_parser/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/token_source.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>token_source.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_parser/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -322,329 +322,329 @@
 <span id="322">322</span>
 <span id="323">323</span>
 <span id="324">324</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::lexer</span>::{<span class="ident">BufferedLexer</span>, <span class="ident">LexContext</span>, <span class="ident">Lexer</span>, <span class="ident">LexerCheckpoint</span>, <span class="ident">ReLexContext</span>, <span class="ident">TextRange</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ParseDiagnostic</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileId</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind::EOF</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">TextSize</span>, <span class="ident">TriviaPieceKind</span>};
-<span class="kw">use</span> <span class="ident">std::collections::VecDeque</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::lexer::{BufferedLexer, LexContext, Lexer, LexerCheckpoint, ReLexContext, TextRange};
+<span class="kw">use </span><span class="kw">crate</span>::ParseDiagnostic;
+<span class="kw">use </span>rome_diagnostics::file::FileId;
+<span class="kw">use </span>rome_js_syntax::JsSyntaxKind;
+<span class="kw">use </span>rome_js_syntax::JsSyntaxKind::EOF;
+<span class="kw">use </span>rome_rowan::{TextSize, TriviaPieceKind};
+<span class="kw">use </span>std::collections::VecDeque;
 
-<span class="doccomment">/// A comment or a whitespace trivia in the source code.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Trivia</span> {
-    <span class="doccomment">/// The kind of the trivia token.</span>
-    <span class="ident">kind</span>: <span class="ident">TriviaPieceKind</span>,
+<span class="doccomment">/// A comment or a whitespace trivia in the source code.
+</span><span class="attribute">#[derive(Debug, Copy, Clone)]
+</span><span class="kw">pub struct </span>Trivia {
+    <span class="doccomment">/// The kind of the trivia token.
+    </span>kind: TriviaPieceKind,
 
-    <span class="doccomment">/// The range of the trivia in the source text</span>
-    <span class="ident">range</span>: <span class="ident">TextRange</span>,
+    <span class="doccomment">/// The range of the trivia in the source text
+    </span>range: TextRange,
 
-    <span class="doccomment">/// Whatever this is the trailing or leading trivia of a non-trivia token.</span>
-    <span class="ident">trailing</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Whatever this is the trailing or leading trivia of a non-trivia token.
+    </span>trailing: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">Trivia</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">kind</span>: <span class="ident">TriviaPieceKind</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>, <span class="ident">trailing</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">kind</span>,
-            <span class="ident">range</span>,
-            <span class="ident">trailing</span>,
+<span class="kw">impl </span>Trivia {
+    <span class="kw">fn </span>new(kind: TriviaPieceKind, range: TextRange, trailing: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            kind,
+            range,
+            trailing,
         }
     }
-    <span class="doccomment">/// Returns the kind of the token</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TriviaPieceKind</span> {
-        <span class="self">self</span>.<span class="ident">kind</span>
+    <span class="doccomment">/// Returns the kind of the token
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TriviaPieceKind {
+        <span class="self">self</span>.kind
     }
 
-    <span class="doccomment">/// Returns the token&#39;s length in bytes</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">range</span>.<span class="ident">len</span>()
+    <span class="doccomment">/// Returns the token&#39;s length in bytes
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.range.len()
     }
 
-    <span class="doccomment">/// Returns the byte offset of the trivia in the source text</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">range</span>.<span class="ident">start</span>()
+    <span class="doccomment">/// Returns the byte offset of the trivia in the source text
+    </span><span class="kw">pub fn </span>offset(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.range.start()
     }
 
-    <span class="doccomment">/// Returns `true` if this is the trailing trivia of a non-trivia token or false otherwise.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">trailing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">trailing</span>
+    <span class="doccomment">/// Returns `true` if this is the trailing trivia of a non-trivia token or false otherwise.
+    </span><span class="kw">pub fn </span>trailing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.trailing
     }
 
-    <span class="doccomment">/// Returns the text range of this trivia</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="ident">range</span>
+    <span class="doccomment">/// Returns the text range of this trivia
+    </span><span class="kw">pub fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.range
     }
 }
 
-<span class="doccomment">/// Token source for the parser that skips over any non-trivia token.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TokenSource</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span> {
-    <span class="ident">lexer</span>: <span class="ident">BufferedLexer</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Token source for the parser that skips over any non-trivia token.
+</span><span class="kw">pub struct </span>TokenSource&lt;<span class="lifetime">&#39;l</span>&gt; {
+    lexer: BufferedLexer&lt;<span class="lifetime">&#39;l</span>&gt;,
 
-    <span class="doccomment">/// List of the skipped trivia. Needed to construct the CST and compute the non-trivia token offsets.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">trivia_list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Trivia</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// List of the skipped trivia. Needed to construct the CST and compute the non-trivia token offsets.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) trivia_list: Vec&lt;Trivia&gt;,
 
-    <span class="doccomment">/// Cache for the non-trivia token lookahead. For example for the source `let a = 10;` if the</span>
-    <span class="doccomment">/// [TokenSource]&#39;s currently positioned at the start of the file (`let`). The `nth(2)` non-trivia token,</span>
-    <span class="doccomment">/// as returned by the [TokenSource], is the `=` token but retrieving it requires skipping over the</span>
-    <span class="doccomment">/// two whitespace trivia tokens (first between `let` and `a`, second between `a` and `=`).</span>
-    <span class="doccomment">/// The [TokenSource] state then is:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * `non_trivia_lookahead`: [IDENT: &#39;a&#39;, EQ]</span>
-    <span class="doccomment">/// * `lookahead_offset`: 4 (the `=` is the 4th token after the `let` keyword)</span>
-    <span class="ident">non_trivia_lookahead</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Lookahead</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Cache for the non-trivia token lookahead. For example for the source `let a = 10;` if the
+    /// [TokenSource]&#39;s currently positioned at the start of the file (`let`). The `nth(2)` non-trivia token,
+    /// as returned by the [TokenSource], is the `=` token but retrieving it requires skipping over the
+    /// two whitespace trivia tokens (first between `let` and `a`, second between `a` and `=`).
+    /// The [TokenSource] state then is:
+    ///
+    /// * `non_trivia_lookahead`: [IDENT: &#39;a&#39;, EQ]
+    /// * `lookahead_offset`: 4 (the `=` is the 4th token after the `let` keyword)
+    </span>non_trivia_lookahead: VecDeque&lt;Lookahead&gt;,
 
-    <span class="doccomment">/// Offset of the last cached lookahead token from the current [BufferedLexer] token.</span>
-    <span class="ident">lookahead_offset</span>: <span class="ident">usize</span>,
+    <span class="doccomment">/// Offset of the last cached lookahead token from the current [BufferedLexer] token.
+    </span>lookahead_offset: usize,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Lookahead</span> {
-    <span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>,
-    <span class="ident">after_newline</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Debug, Copy, Clone)]
+</span><span class="kw">struct </span>Lookahead {
+    kind: JsSyntaxKind,
+    after_newline: bool,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span> <span class="ident">TokenSource</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new token source.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">lexer</span>: <span class="ident">BufferedLexer</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span>) -&gt; <span class="ident">TokenSource</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span> {
-        <span class="ident">TokenSource</span> {
-            <span class="ident">lexer</span>,
-            <span class="ident">trivia_list</span>: <span class="macro">vec!</span>[],
-            <span class="ident">lookahead_offset</span>: <span class="number">0</span>,
-            <span class="ident">non_trivia_lookahead</span>: <span class="ident">VecDeque::new</span>(),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;l</span>&gt; TokenSource&lt;<span class="lifetime">&#39;l</span>&gt; {
+    <span class="doccomment">/// Creates a new token source.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(lexer: BufferedLexer&lt;<span class="lifetime">&#39;l</span>&gt;) -&gt; TokenSource&lt;<span class="lifetime">&#39;l</span>&gt; {
+        TokenSource {
+            lexer,
+            trivia_list: <span class="macro">vec!</span>[],
+            lookahead_offset: <span class="number">0</span>,
+            non_trivia_lookahead: VecDeque::new(),
         }
     }
 
-    <span class="doccomment">/// Creates a new token source for the given string</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;l</span> <span class="ident">str</span>, <span class="ident">file_id</span>: <span class="ident">FileId</span>) -&gt; <span class="ident">TokenSource</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">lexer</span> <span class="op">=</span> <span class="ident">Lexer::from_str</span>(<span class="ident">source</span>, <span class="ident">file_id</span>);
-        <span class="kw">let</span> <span class="ident">buffered</span> <span class="op">=</span> <span class="ident">BufferedLexer::new</span>(<span class="ident">lexer</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">TokenSource::new</span>(<span class="ident">buffered</span>);
+    <span class="doccomment">/// Creates a new token source for the given string
+    </span><span class="kw">pub fn </span>from_str(source: <span class="kw-2">&amp;</span><span class="lifetime">&#39;l </span>str, file_id: FileId) -&gt; TokenSource&lt;<span class="lifetime">&#39;l</span>&gt; {
+        <span class="kw">let </span>lexer = Lexer::from_str(source, file_id);
+        <span class="kw">let </span>buffered = BufferedLexer::new(lexer);
+        <span class="kw">let </span><span class="kw-2">mut </span>source = TokenSource::new(buffered);
 
-        <span class="ident">source</span>.<span class="ident">next_non_trivia_token</span>(<span class="ident">LexContext::default</span>(), <span class="bool-val">true</span>);
-        <span class="ident">source</span>
+        source.next_non_trivia_token(LexContext::default(), <span class="bool-val">true</span>);
+        source
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">next_non_trivia_token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">context</span>: <span class="ident">LexContext</span>, <span class="ident">first_token</span>: <span class="ident">bool</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">processed_tokens</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="op">!</span><span class="ident">first_token</span>;
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>next_non_trivia_token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: LexContext, first_token: bool) {
+        <span class="kw">let </span><span class="kw-2">mut </span>processed_tokens = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>trailing = !first_token;
 
-        <span class="comment">// Drop the last cached lookahead, we&#39;re now moving past it</span>
-        <span class="self">self</span>.<span class="ident">non_trivia_lookahead</span>.<span class="ident">pop_front</span>();
+        <span class="comment">// Drop the last cached lookahead, we&#39;re now moving past it
+        </span><span class="self">self</span>.non_trivia_lookahead.pop_front();
 
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">next_token</span>(<span class="ident">context</span>);
-            <span class="ident">processed_tokens</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">loop </span>{
+            <span class="kw">let </span>kind = <span class="self">self</span>.lexer.next_token(context);
+            processed_tokens += <span class="number">1</span>;
 
-            <span class="kw">let</span> <span class="ident">trivia_kind</span> <span class="op">=</span> <span class="ident">TriviaPieceKind::try_from</span>(<span class="ident">kind</span>);
+            <span class="kw">let </span>trivia_kind = TriviaPieceKind::try_from(kind);
 
-            <span class="kw">match</span> <span class="ident">trivia_kind</span> {
+            <span class="kw">match </span>trivia_kind {
                 <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">break</span>,
-                <span class="prelude-val">Ok</span>(<span class="ident">trivia_kind</span>) =&gt; {
-                    <span class="comment">// Trivia after and including the newline is considered the leading trivia of the next token</span>
-                    <span class="kw">if</span> <span class="ident">trivia_kind</span>.<span class="ident">is_newline</span>() {
-                        <span class="ident">trailing</span> <span class="op">=</span> <span class="bool-val">false</span>;
+                <span class="prelude-val">Ok</span>(trivia_kind) =&gt; {
+                    <span class="comment">// Trivia after and including the newline is considered the leading trivia of the next token
+                    </span><span class="kw">if </span>trivia_kind.is_newline() {
+                        trailing = <span class="bool-val">false</span>;
                     }
 
-                    <span class="self">self</span>.<span class="ident">trivia_list</span>
-                        .<span class="ident">push</span>(<span class="ident">Trivia::new</span>(<span class="ident">trivia_kind</span>, <span class="self">self</span>.<span class="ident">current_range</span>(), <span class="ident">trailing</span>));
+                    <span class="self">self</span>.trivia_list
+                        .push(Trivia::new(trivia_kind, <span class="self">self</span>.current_range(), trailing));
                 }
             }
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lookahead_offset</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="macro">debug_assert!</span>(<span class="self">self</span>.<span class="ident">lookahead_offset</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">processed_tokens</span>);
-            <span class="self">self</span>.<span class="ident">lookahead_offset</span> <span class="op">-</span><span class="op">=</span> <span class="ident">processed_tokens</span>;
+        <span class="kw">if </span><span class="self">self</span>.lookahead_offset != <span class="number">0 </span>{
+            <span class="macro">debug_assert!</span>(<span class="self">self</span>.lookahead_offset &gt;= processed_tokens);
+            <span class="self">self</span>.lookahead_offset -= processed_tokens;
         }
     }
 
-    <span class="doccomment">/// Returns the kind of the current non-trivia token</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JsSyntaxKind</span> {
-        <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">current</span>()
+    <span class="doccomment">/// Returns the kind of the current non-trivia token
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>current(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JsSyntaxKind {
+        <span class="self">self</span>.lexer.current()
     }
 
-    <span class="doccomment">/// Returns the range of the current non-trivia token</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">current_range</span>()
+    <span class="doccomment">/// Returns the range of the current non-trivia token
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>current_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="self">self</span>.lexer.current_range()
     }
 
-    <span class="doccomment">/// Gets the kind of the nth non-trivia token</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nth</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="ident">JsSyntaxKind</span> {
-        <span class="kw">if</span> <span class="ident">n</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">current</span>()
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="ident">n</span>).<span class="ident">map_or</span>(<span class="ident">EOF</span>, <span class="op">|</span><span class="ident">lookahead</span><span class="op">|</span> <span class="ident">lookahead</span>.<span class="ident">kind</span>)
+    <span class="doccomment">/// Gets the kind of the nth non-trivia token
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>nth(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; JsSyntaxKind {
+        <span class="kw">if </span>n == <span class="number">0 </span>{
+            <span class="self">self</span>.current()
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.lookahead(n).map_or(EOF, |lookahead| lookahead.kind)
         }
     }
 
-    <span class="doccomment">/// Returns true if the current token is preceded by a line break</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_preceding_line_break</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">has_preceding_line_break</span>()
+    <span class="doccomment">/// Returns true if the current token is preceded by a line break
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>has_preceding_line_break(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.lexer.has_preceding_line_break()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_unicode_escape</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">has_unicode_escape</span>()
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>has_unicode_escape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.lexer.has_unicode_escape()
     }
 
-    <span class="doccomment">/// Returns true if the nth non-trivia token is preceded by a line break</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_nth_preceding_line_break</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="ident">n</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">has_preceding_line_break</span>()
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="ident">n</span>)
-                .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">lookahead</span><span class="op">|</span> <span class="ident">lookahead</span>.<span class="ident">after_newline</span>)
+    <span class="doccomment">/// Returns true if the nth non-trivia token is preceded by a line break
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>has_nth_preceding_line_break(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; bool {
+        <span class="kw">if </span>n == <span class="number">0 </span>{
+            <span class="self">self</span>.has_preceding_line_break()
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.lookahead(n)
+                .map_or(<span class="bool-val">false</span>, |lookahead| lookahead.after_newline)
         }
     }
 
-    <span class="doccomment">/// Returns `true` if the next token has any preceding trivia (either trailing trivia of the current</span>
-    <span class="doccomment">/// token or leading trivia of the next token)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_next_preceding_trivia</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">next_token_trivia</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">lexer</span>
-            .<span class="ident">lookahead</span>()
-            .<span class="ident">next</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">lookahead</span><span class="op">|</span> <span class="ident">TriviaPieceKind::try_from</span>(<span class="ident">lookahead</span>.<span class="ident">kind</span>()).<span class="ident">ok</span>());
-        <span class="ident">next_token_trivia</span>.<span class="ident">is_some</span>()
+    <span class="doccomment">/// Returns `true` if the next token has any preceding trivia (either trailing trivia of the current
+    /// token or leading trivia of the next token)
+    </span><span class="kw">pub fn </span>has_next_preceding_trivia(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">let </span>next_token_trivia = <span class="self">self
+            </span>.lexer
+            .lookahead()
+            .next()
+            .and_then(|lookahead| TriviaPieceKind::try_from(lookahead.kind()).ok());
+        next_token_trivia.is_some()
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">lookahead</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Lookahead</span><span class="op">&gt;</span> {
-        <span class="macro">assert_ne!</span>(<span class="ident">n</span>, <span class="number">0</span>);
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>lookahead(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;Lookahead&gt; {
+        <span class="macro">assert_ne!</span>(n, <span class="number">0</span>);
 
-        <span class="comment">// Return the cached token if any</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">lookahead</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">non_trivia_lookahead</span>.<span class="ident">get</span>(<span class="ident">n</span> <span class="op">-</span> <span class="number">1</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">lookahead</span>);
+        <span class="comment">// Return the cached token if any
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(lookahead) = <span class="self">self</span>.non_trivia_lookahead.get(n - <span class="number">1</span>) {
+            <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">*</span>lookahead);
         }
 
-        <span class="comment">// Jump right to where we&#39;ve left of last time rather than going through all tokens again.</span>
-        <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">lookahead</span>().<span class="ident">skip</span>(<span class="self">self</span>.<span class="ident">lookahead_offset</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">remaining</span> <span class="op">=</span> <span class="ident">n</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">non_trivia_lookahead</span>.<span class="ident">len</span>();
+        <span class="comment">// Jump right to where we&#39;ve left of last time rather than going through all tokens again.
+        </span><span class="kw">let </span>iter = <span class="self">self</span>.lexer.lookahead().skip(<span class="self">self</span>.lookahead_offset);
+        <span class="kw">let </span><span class="kw-2">mut </span>remaining = n - <span class="self">self</span>.non_trivia_lookahead.len();
 
-        <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">iter</span> {
-            <span class="self">self</span>.<span class="ident">lookahead_offset</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">for </span>item <span class="kw">in </span>iter {
+            <span class="self">self</span>.lookahead_offset += <span class="number">1</span>;
 
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">item</span>.<span class="ident">kind</span>().<span class="ident">is_trivia</span>() {
-                <span class="ident">remaining</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+            <span class="kw">if </span>!item.kind().is_trivia() {
+                remaining -= <span class="number">1</span>;
 
-                <span class="kw">let</span> <span class="ident">lookahead</span> <span class="op">=</span> <span class="ident">Lookahead</span> {
-                    <span class="ident">after_newline</span>: <span class="ident">item</span>.<span class="ident">has_preceding_line_break</span>(),
-                    <span class="ident">kind</span>: <span class="ident">item</span>.<span class="ident">kind</span>(),
+                <span class="kw">let </span>lookahead = Lookahead {
+                    after_newline: item.has_preceding_line_break(),
+                    kind: item.kind(),
                 };
 
-                <span class="self">self</span>.<span class="ident">non_trivia_lookahead</span>.<span class="ident">push_back</span>(<span class="ident">lookahead</span>);
+                <span class="self">self</span>.non_trivia_lookahead.push_back(lookahead);
 
-                <span class="kw">if</span> <span class="ident">remaining</span> <span class="op">==</span> <span class="number">0</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">lookahead</span>);
+                <span class="kw">if </span>remaining == <span class="number">0 </span>{
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(lookahead);
                 }
             }
         }
 
-        <span class="prelude-val">None</span>
+        <span class="prelude-val">None
+    </span>}
+
+    <span class="kw">pub fn </span>rewind(<span class="kw-2">&amp;mut </span><span class="self">self</span>, checkpoint: TokenSourceCheckpoint) {
+        <span class="macro">assert!</span>(<span class="self">self</span>.trivia_list.len() &gt;= checkpoint.trivia_len <span class="kw">as </span>usize);
+        <span class="self">self</span>.trivia_list.truncate(checkpoint.trivia_len <span class="kw">as </span>usize);
+        <span class="self">self</span>.lexer.rewind(checkpoint.lexer);
+        <span class="self">self</span>.non_trivia_lookahead.clear();
+        <span class="self">self</span>.lookahead_offset = <span class="number">0</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rewind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">checkpoint</span>: <span class="ident">TokenSourceCheckpoint</span>) {
-        <span class="macro">assert!</span>(<span class="self">self</span>.<span class="ident">trivia_list</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">checkpoint</span>.<span class="ident">trivia_len</span> <span class="kw">as</span> <span class="ident">usize</span>);
-        <span class="self">self</span>.<span class="ident">trivia_list</span>.<span class="ident">truncate</span>(<span class="ident">checkpoint</span>.<span class="ident">trivia_len</span> <span class="kw">as</span> <span class="ident">usize</span>);
-        <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">rewind</span>(<span class="ident">checkpoint</span>.<span class="ident">lexer</span>);
-        <span class="self">self</span>.<span class="ident">non_trivia_lookahead</span>.<span class="ident">clear</span>();
-        <span class="self">self</span>.<span class="ident">lookahead_offset</span> <span class="op">=</span> <span class="number">0</span>;
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">checkpoint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenSourceCheckpoint</span> {
-        <span class="ident">TokenSourceCheckpoint</span> {
-            <span class="ident">trivia_len</span>: <span class="self">self</span>.<span class="ident">trivia_list</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>,
-            <span class="ident">lexer</span>: <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">checkpoint</span>(),
+    <span class="kw">pub fn </span>checkpoint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TokenSourceCheckpoint {
+        TokenSourceCheckpoint {
+            trivia_len: <span class="self">self</span>.trivia_list.len() <span class="kw">as </span>u32,
+            lexer: <span class="self">self</span>.lexer.checkpoint(),
         }
     }
 
-    <span class="doccomment">/// Returns the source text</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;l</span> <span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">source</span>()
+    <span class="doccomment">/// Returns the source text
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;l </span>str {
+        <span class="self">self</span>.lexer.source()
     }
 
-    <span class="doccomment">/// Bumps the current token and moves the parser to the next non-trivia token</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bump</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">context</span>: <span class="ident">LexContext</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">EOF</span> {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">context</span>.<span class="ident">is_regular</span>() {
-                <span class="self">self</span>.<span class="ident">lookahead_offset</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="self">self</span>.<span class="ident">non_trivia_lookahead</span>.<span class="ident">clear</span>();
+    <span class="doccomment">/// Bumps the current token and moves the parser to the next non-trivia token
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>bump(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: LexContext) {
+        <span class="kw">if </span><span class="self">self</span>.current() != EOF {
+            <span class="kw">if </span>!context.is_regular() {
+                <span class="self">self</span>.lookahead_offset = <span class="number">0</span>;
+                <span class="self">self</span>.non_trivia_lookahead.clear();
             }
 
-            <span class="self">self</span>.<span class="ident">next_non_trivia_token</span>(<span class="ident">context</span>, <span class="bool-val">false</span>);
+            <span class="self">self</span>.next_non_trivia_token(context, <span class="bool-val">false</span>);
         }
     }
 
-    <span class="doccomment">/// Skips the current token as skipped token trivia</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">skip_as_trivia</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">context</span>: <span class="ident">LexContext</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">EOF</span> {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">context</span>.<span class="ident">is_regular</span>() {
-                <span class="self">self</span>.<span class="ident">lookahead_offset</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="self">self</span>.<span class="ident">non_trivia_lookahead</span>.<span class="ident">clear</span>();
+    <span class="doccomment">/// Skips the current token as skipped token trivia
+    </span><span class="kw">pub fn </span>skip_as_trivia(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: LexContext) {
+        <span class="kw">if </span><span class="self">self</span>.current() != EOF {
+            <span class="kw">if </span>!context.is_regular() {
+                <span class="self">self</span>.lookahead_offset = <span class="number">0</span>;
+                <span class="self">self</span>.non_trivia_lookahead.clear();
             }
 
-            <span class="self">self</span>.<span class="ident">trivia_list</span>.<span class="ident">push</span>(<span class="ident">Trivia::new</span>(
-                <span class="ident">TriviaPieceKind::Skipped</span>,
-                <span class="self">self</span>.<span class="ident">current_range</span>(),
+            <span class="self">self</span>.trivia_list.push(Trivia::new(
+                TriviaPieceKind::Skipped,
+                <span class="self">self</span>.current_range(),
                 <span class="bool-val">false</span>,
             ));
 
-            <span class="self">self</span>.<span class="ident">next_non_trivia_token</span>(<span class="ident">context</span>, <span class="bool-val">true</span>)
+            <span class="self">self</span>.next_non_trivia_token(context, <span class="bool-val">true</span>)
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">re_lex</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">ReLexContext</span>) -&gt; <span class="ident">JsSyntaxKind</span> {
-        <span class="kw">let</span> <span class="ident">current_kind</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>();
+    <span class="kw">pub fn </span>re_lex(<span class="kw-2">&amp;mut </span><span class="self">self</span>, mode: ReLexContext) -&gt; JsSyntaxKind {
+        <span class="kw">let </span>current_kind = <span class="self">self</span>.current();
 
-        <span class="kw">let</span> <span class="ident">new_kind</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">re_lex</span>(<span class="ident">mode</span>);
+        <span class="kw">let </span>new_kind = <span class="self">self</span>.lexer.re_lex(mode);
 
-        <span class="comment">// Only need to clear the lookahead cache when the token did change</span>
-        <span class="kw">if</span> <span class="ident">current_kind</span> <span class="op">!</span><span class="op">=</span> <span class="ident">new_kind</span> {
-            <span class="self">self</span>.<span class="ident">non_trivia_lookahead</span>.<span class="ident">clear</span>();
-            <span class="self">self</span>.<span class="ident">lookahead_offset</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="comment">// Only need to clear the lookahead cache when the token did change
+        </span><span class="kw">if </span>current_kind != new_kind {
+            <span class="self">self</span>.non_trivia_lookahead.clear();
+            <span class="self">self</span>.lookahead_offset = <span class="number">0</span>;
         }
 
-        <span class="ident">new_kind</span>
+        new_kind
     }
 
-    <span class="doccomment">/// Returns the byte offset of the current token from the start of the source document</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">current_range</span>().<span class="ident">start</span>()
+    <span class="doccomment">/// Returns the byte offset of the current token from the start of the source document
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.current_range().start()
     }
 
-    <span class="doccomment">/// Ends this token source and returns the source text&#39;s trivia</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) -&gt; (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Trivia</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParseDiagnostic</span><span class="op">&gt;</span>) {
-        (<span class="self">self</span>.<span class="ident">trivia_list</span>, <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">finish</span>())
+    <span class="doccomment">/// Ends this token source and returns the source text&#39;s trivia
+    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; (Vec&lt;Trivia&gt;, Vec&lt;ParseDiagnostic&gt;) {
+        (<span class="self">self</span>.trivia_list, <span class="self">self</span>.lexer.finish())
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TokenSourceCheckpoint</span> {
-    <span class="ident">lexer</span>: <span class="ident">LexerCheckpoint</span>,
-    <span class="doccomment">/// A `u32` should be enough because `TextSize` is also limited to `u32`.</span>
-    <span class="doccomment">/// The worst case is a document where every character is its own token. This would</span>
-    <span class="doccomment">/// result in `u32::MAX` tokens</span>
-    <span class="ident">trivia_len</span>: <span class="ident">u32</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>TokenSourceCheckpoint {
+    lexer: LexerCheckpoint,
+    <span class="doccomment">/// A `u32` should be enough because `TextSize` is also limited to `u32`.
+    /// The worst case is a document where every character is its own token. This would
+    /// result in `u32::MAX` tokens
+    </span>trivia_len: u32,
 }
 
-<span class="kw">impl</span> <span class="ident">TokenSourceCheckpoint</span> {
-    <span class="doccomment">/// byte offset in the source text</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">current_start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">lexer</span>.<span class="ident">current_start</span>()
+<span class="kw">impl </span>TokenSourceCheckpoint {
+    <span class="doccomment">/// byte offset in the source text
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>current_start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.lexer.current_start()
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">trivia_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">trivia_len</span> <span class="kw">as</span> <span class="ident">usize</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>trivia_position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.trivia_len <span class="kw">as </span>usize
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

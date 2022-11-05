@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/display.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>display.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/display.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>display.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -939,704 +939,704 @@
 <span id="939">939</span>
 <span id="940">940</span>
 <span id="941">941</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">iter</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::{io, iter};
 
-<span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">fmt</span>, <span class="ident">markup</span>, <span class="ident">HorizontalLine</span>, <span class="ident">Markup</span>, <span class="ident">MarkupBuf</span>, <span class="ident">MarkupElement</span>, <span class="ident">MarkupNode</span>};
-<span class="kw">use</span> <span class="ident">rome_text_edit::TextEdit</span>;
-<span class="kw">use</span> <span class="ident">unicode_width::UnicodeWidthStr</span>;
+<span class="kw">use </span>rome_console::{fmt, markup, HorizontalLine, Markup, MarkupBuf, MarkupElement, MarkupNode};
+<span class="kw">use </span>rome_text_edit::TextEdit;
+<span class="kw">use </span>unicode_width::UnicodeWidthStr;
 
-<span class="kw">mod</span> <span class="ident">backtrace</span>;
-<span class="kw">mod</span> <span class="ident">diff</span>;
-<span class="kw">mod</span> <span class="ident">frame</span>;
-<span class="kw">mod</span> <span class="ident">message</span>;
+<span class="kw">mod </span>backtrace;
+<span class="kw">mod </span>diff;
+<span class="kw">mod </span>frame;
+<span class="kw">mod </span>message;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::v2::display::frame::SourceFile</span>;
+<span class="kw">use </span><span class="kw">crate</span>::v2::display::frame::SourceFile;
 
-<span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">diagnostic::internal::AsDiagnostic</span>, <span class="ident">Advices</span>, <span class="ident">Diagnostic</span>, <span class="ident">DiagnosticTags</span>, <span class="ident">Location</span>, <span class="ident">LogCategory</span>,
-    <span class="ident">Resource</span>, <span class="ident">Severity</span>, <span class="ident">Visit</span>,
+<span class="kw">use super</span>::{
+    diagnostic::internal::AsDiagnostic, Advices, Diagnostic, DiagnosticTags, Location, LogCategory,
+    Resource, Severity, Visit,
 };
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::backtrace</span>::{<span class="ident">set_bottom_frame</span>, <span class="ident">Backtrace</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::message::MessageAndDescription</span>;
+<span class="kw">pub use </span><span class="self">self</span>::backtrace::{set_bottom_frame, Backtrace};
+<span class="kw">pub use </span><span class="self">self</span>::message::MessageAndDescription;
 
-<span class="doccomment">/// Helper struct from printing the description of a diagnostic into any</span>
-<span class="doccomment">/// formatter implementing [std::fmt::Write].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PrintDescription</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt</span> <span class="ident">D</span>);
+<span class="doccomment">/// Helper struct from printing the description of a diagnostic into any
+/// formatter implementing [std::fmt::Write].
+</span><span class="kw">pub struct </span>PrintDescription&lt;<span class="lifetime">&#39;fmt</span>, D: <span class="question-mark">?</span>Sized&gt;(<span class="kw">pub </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt </span>D);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="ident">AsDiagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">PrintDescription</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-            .<span class="ident">as_diagnostic</span>()
-            .<span class="ident">description</span>(<span class="ident">fmt</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">std::fmt::Error</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;fmt</span>, D: AsDiagnostic + <span class="question-mark">?</span>Sized&gt; std::fmt::Display <span class="kw">for </span>PrintDescription&lt;<span class="lifetime">&#39;fmt</span>, D&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="self">self</span>.<span class="number">0
+            </span>.as_diagnostic()
+            .description(fmt)
+            .map_err(|<span class="kw">_</span>| std::fmt::Error)
     }
 }
 
-<span class="doccomment">/// Helper struct for printing a diagnostic as markup into any formatter</span>
-<span class="doccomment">/// implementing [rome_console::fmt::Write].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PrintDiagnostic</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt</span> <span class="ident">D</span>);
+<span class="doccomment">/// Helper struct for printing a diagnostic as markup into any formatter
+/// implementing [rome_console::fmt::Write].
+</span><span class="kw">pub struct </span>PrintDiagnostic&lt;<span class="lifetime">&#39;fmt</span>, D: <span class="question-mark">?</span>Sized&gt;(<span class="kw">pub </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt </span>D);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="ident">AsDiagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">PrintDiagnostic</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_diagnostic</span>();
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;fmt</span>, D: AsDiagnostic + <span class="question-mark">?</span>Sized&gt; fmt::Display <span class="kw">for </span>PrintDiagnostic&lt;<span class="lifetime">&#39;fmt</span>, D&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span>diagnostic = <span class="self">self</span>.<span class="number">0</span>.as_diagnostic();
 
-        <span class="comment">// Print the header for the diagnostic</span>
-        <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-            {<span class="ident">PrintHeader</span>(<span class="ident">diagnostic</span>)}<span class="string">&quot;\n\n&quot;</span>
-        })<span class="question-mark">?</span>;
+        <span class="comment">// Print the header for the diagnostic
+        </span>fmt.write_markup(<span class="macro">markup! </span>{
+            {PrintHeader(diagnostic)}<span class="string">&quot;\n\n&quot;
+        </span>})<span class="question-mark">?</span>;
 
-        <span class="comment">// Wrap the formatter with an indentation level and print the advices</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slot</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt</span> <span class="op">=</span> <span class="ident">IndentWriter::wrap</span>(<span class="ident">fmt</span>, <span class="kw-2">&amp;mut</span> <span class="ident">slot</span>, <span class="bool-val">true</span>, <span class="string">&quot;  &quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">visitor</span> <span class="op">=</span> <span class="ident">PrintAdvices</span>(<span class="kw-2">&amp;mut</span> <span class="ident">fmt</span>);
+        <span class="comment">// Wrap the formatter with an indentation level and print the advices
+        </span><span class="kw">let </span><span class="kw-2">mut </span>slot = <span class="prelude-val">None</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>fmt = IndentWriter::wrap(fmt, <span class="kw-2">&amp;mut </span>slot, <span class="bool-val">true</span>, <span class="string">&quot;  &quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>visitor = PrintAdvices(<span class="kw-2">&amp;mut </span>fmt);
 
-        <span class="ident">print_advices</span>(<span class="kw-2">&amp;mut</span> <span class="ident">visitor</span>, <span class="ident">diagnostic</span>, <span class="bool-val">true</span>)
+        print_advices(<span class="kw-2">&amp;mut </span>visitor, diagnostic, <span class="bool-val">true</span>)
     }
 }
 
-<span class="doccomment">/// Display struct implementing the formatting of a diagnostic header.</span>
-<span class="kw">struct</span> <span class="ident">PrintHeader</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt</span> <span class="ident">D</span>);
+<span class="doccomment">/// Display struct implementing the formatting of a diagnostic header.
+</span><span class="kw">struct </span>PrintHeader&lt;<span class="lifetime">&#39;fmt</span>, D: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt </span>D);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">PrintHeader</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="self">Self</span>(<span class="ident">diagnostic</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;fmt</span>, D: Diagnostic + <span class="question-mark">?</span>Sized&gt; fmt::Display <span class="kw">for </span>PrintHeader&lt;<span class="lifetime">&#39;fmt</span>, D&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span><span class="self">Self</span>(diagnostic) = <span class="kw-2">*</span><span class="self">self</span>;
 
-        <span class="comment">// Wrap the formatter with a counter to measure the width of the printed text</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slot</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt</span> <span class="op">=</span> <span class="ident">CountWidth::wrap</span>(<span class="ident">f</span>, <span class="kw-2">&amp;mut</span> <span class="ident">slot</span>);
+        <span class="comment">// Wrap the formatter with a counter to measure the width of the printed text
+        </span><span class="kw">let </span><span class="kw-2">mut </span>slot = <span class="prelude-val">None</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>fmt = CountWidth::wrap(f, <span class="kw-2">&amp;mut </span>slot);
 
-        <span class="comment">// Print the diagnostic location if it has one</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">location</span>) <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">location</span>() {
-            <span class="comment">// Print the path if it&#39;s a file</span>
-            <span class="kw">let</span> <span class="ident">file_name</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">location</span>.<span class="ident">resource</span> {
-                <span class="ident">Resource::File</span>(<span class="ident">file</span>) =&gt; <span class="ident">file</span>.<span class="ident">path</span>(),
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+        <span class="comment">// Print the diagnostic location if it has one
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(location) = diagnostic.location() {
+            <span class="comment">// Print the path if it&#39;s a file
+            </span><span class="kw">let </span>file_name = <span class="kw">match </span><span class="kw-2">&amp;</span>location.resource {
+                Resource::File(file) =&gt; file.path(),
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             };
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>) <span class="op">=</span> <span class="ident">file_name</span> {
-                <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(name) = file_name {
+                fmt.write_str(name)<span class="question-mark">?</span>;
 
-                <span class="comment">// Print the line and column position if the location has a span and source code</span>
-                <span class="comment">// (the source code is necessary to convert a byte offset into a line + column)</span>
-                <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">span</span>), <span class="prelude-val">Some</span>(<span class="ident">source_code</span>)) <span class="op">=</span> (<span class="ident">location</span>.<span class="ident">span</span>, <span class="ident">location</span>.<span class="ident">source_code</span>) {
-                    <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">SourceFile::new</span>(<span class="ident">source_code</span>);
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">location</span>) <span class="op">=</span> <span class="ident">file</span>.<span class="ident">location</span>(<span class="ident">span</span>.<span class="ident">start</span>()) {
-                        <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                            <span class="string">&quot;:&quot;</span>{<span class="ident">location</span>.<span class="ident">line_number</span>.<span class="ident">get</span>()}<span class="string">&quot;:&quot;</span>{<span class="ident">location</span>.<span class="ident">column_number</span>.<span class="ident">get</span>()}
+                <span class="comment">// Print the line and column position if the location has a span and source code
+                // (the source code is necessary to convert a byte offset into a line + column)
+                </span><span class="kw">if let </span>(<span class="prelude-val">Some</span>(span), <span class="prelude-val">Some</span>(source_code)) = (location.span, location.source_code) {
+                    <span class="kw">let </span>file = SourceFile::new(source_code);
+                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(location) = file.location(span.start()) {
+                        fmt.write_markup(<span class="macro">markup! </span>{
+                            <span class="string">&quot;:&quot;</span>{location.line_number.get()}<span class="string">&quot;:&quot;</span>{location.column_number.get()}
                         })<span class="question-mark">?</span>;
                     }
                 }
 
-                <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
+                fmt.write_str(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
             }
         }
 
-        <span class="comment">// Print the category of the diagnostic, with a hyperlink if</span>
-        <span class="comment">// the category has an associated link</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">category</span>) <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">category</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">link</span>) <span class="op">=</span> <span class="ident">category</span>.<span class="ident">link</span>() {
-                <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                    <span class="op">&lt;</span><span class="ident">Hyperlink</span> <span class="ident">href</span><span class="op">=</span>{<span class="ident">link</span>}<span class="op">&gt;</span>{<span class="ident">category</span>.<span class="ident">name</span>()}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Hyperlink</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span>
-                })<span class="question-mark">?</span>;
-            } <span class="kw">else</span> {
-                <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                    {<span class="ident">category</span>.<span class="ident">name</span>()}<span class="string">&quot; &quot;</span>
-                })<span class="question-mark">?</span>;
+        <span class="comment">// Print the category of the diagnostic, with a hyperlink if
+        // the category has an associated link
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(category) = diagnostic.category() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(link) = category.link() {
+                fmt.write_markup(<span class="macro">markup! </span>{
+                    &lt;Hyperlink href={link}&gt;{category.name()}&lt;/Hyperlink&gt;<span class="string">&quot; &quot;
+                </span>})<span class="question-mark">?</span>;
+            } <span class="kw">else </span>{
+                fmt.write_markup(<span class="macro">markup! </span>{
+                    {category.name()}<span class="string">&quot; &quot;
+                </span>})<span class="question-mark">?</span>;
             }
         }
 
-        <span class="comment">// Print the internal, fixable and fatal tags</span>
-        <span class="kw">let</span> <span class="ident">tags</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">tags</span>();
+        <span class="comment">// Print the internal, fixable and fatal tags
+        </span><span class="kw">let </span>tags = diagnostic.tags();
 
-        <span class="kw">if</span> <span class="ident">tags</span>.<span class="ident">contains</span>(<span class="ident">DiagnosticTags::INTERNAL</span>) {
-            <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                <span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot; INTERNAL &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span>
-            })<span class="question-mark">?</span>;
+        <span class="kw">if </span>tags.contains(DiagnosticTags::INTERNAL) {
+            fmt.write_markup(<span class="macro">markup! </span>{
+                &lt;Inverse&gt;&lt;Error&gt;<span class="string">&quot; INTERNAL &quot;</span>&lt;/Error&gt;&lt;/Inverse&gt;<span class="string">&quot; &quot;
+            </span>})<span class="question-mark">?</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">tags</span>.<span class="ident">contains</span>(<span class="ident">DiagnosticTags::FIXABLE</span>) {
-            <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                <span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span>
-            })<span class="question-mark">?</span>;
+        <span class="kw">if </span>tags.contains(DiagnosticTags::FIXABLE) {
+            fmt.write_markup(<span class="macro">markup! </span>{
+                &lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; &quot;
+            </span>})<span class="question-mark">?</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">diagnostic</span>.<span class="ident">severity</span>() <span class="op">==</span> <span class="ident">Severity::Fatal</span> {
-            <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                <span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot; FATAL &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span>
-            })<span class="question-mark">?</span>;
+        <span class="kw">if </span>diagnostic.severity() == Severity::Fatal {
+            fmt.write_markup(<span class="macro">markup! </span>{
+                &lt;Inverse&gt;&lt;Error&gt;<span class="string">&quot; FATAL &quot;</span>&lt;/Error&gt;&lt;/Inverse&gt;<span class="string">&quot; &quot;
+            </span>})<span class="question-mark">?</span>;
         }
 
-        <span class="comment">// Load the printed width for the header, and fill the rest of the line</span>
-        <span class="comment">// with the &#39;━&#39; line character up to 100 columns with at least 10 characters</span>
-        <span class="kw">const</span> <span class="ident">HEADER_WIDTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">100</span>;
-        <span class="kw">const</span> <span class="ident">MIN_WIDTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">10</span>;
+        <span class="comment">// Load the printed width for the header, and fill the rest of the line
+        // with the &#39;━&#39; line character up to 100 columns with at least 10 characters
+        </span><span class="kw">const </span>HEADER_WIDTH: usize = <span class="number">100</span>;
+        <span class="kw">const </span>MIN_WIDTH: usize = <span class="number">10</span>;
 
-        <span class="kw">let</span> <span class="ident">text_width</span> <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">map_or</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">writer</span><span class="op">|</span> <span class="ident">writer</span>.<span class="ident">width</span>);
-        <span class="kw">let</span> <span class="ident">line_width</span> <span class="op">=</span> <span class="ident">HEADER_WIDTH</span>.<span class="ident">saturating_sub</span>(<span class="ident">text_width</span>).<span class="ident">max</span>(<span class="ident">MIN_WIDTH</span>);
-        <span class="ident">HorizontalLine::new</span>(<span class="ident">line_width</span>).<span class="ident">fmt</span>(<span class="ident">f</span>)
+        <span class="kw">let </span>text_width = slot.map_or(<span class="number">0</span>, |writer| writer.width);
+        <span class="kw">let </span>line_width = HEADER_WIDTH.saturating_sub(text_width).max(MIN_WIDTH);
+        HorizontalLine::new(line_width).fmt(f)
     }
 }
 
-<span class="doccomment">/// Wrapper for a type implementing [fmt::Write] that counts the total width of</span>
-<span class="doccomment">/// all printed characters.</span>
-<span class="kw">struct</span> <span class="ident">CountWidth</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> {
-    <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">W</span>,
-    <span class="ident">width</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// Wrapper for a type implementing [fmt::Write] that counts the total width of
+/// all printed characters.
+</span><span class="kw">struct </span>CountWidth&lt;<span class="lifetime">&#39;a</span>, W: <span class="question-mark">?</span>Sized&gt; {
+    writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>W,
+    width: usize,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;write</span><span class="op">&gt;</span> <span class="ident">CountWidth</span><span class="op">&lt;</span><span class="lifetime">&#39;write</span>, <span class="kw">dyn</span> <span class="ident">fmt::Write</span> <span class="op">+</span> <span class="lifetime">&#39;write</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Wrap the writer in an existing [fmt::Formatter] with an instance of [CountWidth].</span>
-    <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="lifetime">&#39;slot</span>, <span class="lifetime">&#39;fmt</span>: <span class="lifetime">&#39;write</span> <span class="op">+</span> <span class="lifetime">&#39;slot</span><span class="op">&gt;</span>(
-        <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt</span> <span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-        <span class="ident">slot</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;slot</span> <span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;slot</span><span class="op">&gt;</span> {
-        <span class="ident">fmt</span>.<span class="ident">wrap_writer</span>(<span class="op">|</span><span class="ident">writer</span><span class="op">|</span> <span class="ident">slot</span>.<span class="ident">get_or_insert</span>(<span class="self">Self</span> { <span class="ident">writer</span>, <span class="ident">width</span>: <span class="number">0</span> }))
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;write</span>&gt; CountWidth&lt;<span class="lifetime">&#39;write</span>, <span class="kw">dyn </span>fmt::Write + <span class="lifetime">&#39;write</span>&gt; {
+    <span class="doccomment">/// Wrap the writer in an existing [fmt::Formatter] with an instance of [CountWidth].
+    </span><span class="kw">fn </span>wrap&lt;<span class="lifetime">&#39;slot</span>, <span class="lifetime">&#39;fmt</span>: <span class="lifetime">&#39;write </span>+ <span class="lifetime">&#39;slot</span>&gt;(
+        fmt: <span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt </span><span class="kw-2">mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;,
+        slot: <span class="kw-2">&amp;</span><span class="lifetime">&#39;slot </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;,
+    ) -&gt; fmt::Formatter&lt;<span class="lifetime">&#39;slot</span>&gt; {
+        fmt.wrap_writer(|writer| slot.get_or_insert(<span class="self">Self </span>{ writer, width: <span class="number">0 </span>}))
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">fmt::Write</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">fmt::Write</span> <span class="kw">for</span> <span class="ident">CountWidth</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_str</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">elements</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::MarkupElements</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_str</span>(<span class="ident">elements</span>, <span class="ident">content</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">width</span> <span class="op">+</span><span class="op">=</span> <span class="ident">UnicodeWidthStr::width</span>(<span class="ident">content</span>);
+<span class="kw">impl</span>&lt;W: fmt::Write + <span class="question-mark">?</span>Sized&gt; fmt::Write <span class="kw">for </span>CountWidth&lt;<span class="lifetime">&#39;_</span>, W&gt; {
+    <span class="kw">fn </span>write_str(<span class="kw-2">&amp;mut </span><span class="self">self</span>, elements: <span class="kw-2">&amp;</span>fmt::MarkupElements&lt;<span class="lifetime">&#39;_</span>&gt;, content: <span class="kw-2">&amp;</span>str) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.writer.write_str(elements, content)<span class="question-mark">?</span>;
+        <span class="self">self</span>.width += UnicodeWidthStr::width(content);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">write_fmt</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">elements</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::MarkupElements</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-        <span class="ident">content</span>: <span class="ident">std::fmt::Arguments</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>) <span class="op">=</span> <span class="ident">content</span>.<span class="ident">as_str</span>() {
-            <span class="self">self</span>.<span class="ident">write_str</span>(<span class="ident">elements</span>, <span class="ident">content</span>)
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">content</span>.<span class="ident">to_string</span>();
-            <span class="self">self</span>.<span class="ident">write_str</span>(<span class="ident">elements</span>, <span class="kw-2">&amp;</span><span class="ident">content</span>)
+    <span class="kw">fn </span>write_fmt(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        elements: <span class="kw-2">&amp;</span>fmt::MarkupElements&lt;<span class="lifetime">&#39;_</span>&gt;,
+        content: std::fmt::Arguments&lt;<span class="lifetime">&#39;_</span>&gt;,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(content) = content.as_str() {
+            <span class="self">self</span>.write_str(elements, content)
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>content = content.to_string();
+            <span class="self">self</span>.write_str(elements, <span class="kw-2">&amp;</span>content)
         }
     }
 }
 
-<span class="doccomment">/// Write the advices for `diagnostic` into `visitor`.</span>
-<span class="kw">fn</span> <span class="ident">print_advices</span><span class="op">&lt;</span><span class="ident">V</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>, <span class="ident">diagnostic</span>: <span class="kw-2">&amp;</span><span class="ident">D</span>, <span class="ident">verbose</span>: <span class="ident">bool</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">V</span>: <span class="ident">Visit</span>,
-    <span class="ident">D</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
+<span class="doccomment">/// Write the advices for `diagnostic` into `visitor`.
+</span><span class="kw">fn </span>print_advices&lt;V, D&gt;(visitor: <span class="kw-2">&amp;mut </span>V, diagnostic: <span class="kw-2">&amp;</span>D, verbose: bool) -&gt; io::Result&lt;()&gt;
+<span class="kw">where
+    </span>V: Visit,
+    D: Diagnostic + <span class="question-mark">?</span>Sized,
 {
-    <span class="comment">// Visit the advices of the diagnostic with a lightweight visitor that</span>
-    <span class="comment">// detects if the diagnostic has any frame or backtrace advice</span>
-    <span class="kw">let</span> <span class="ident">skip_frame</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">location</span>) <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">location</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">frame_visitor</span> <span class="op">=</span> <span class="ident">FrameVisitor</span> {
-            <span class="ident">location</span>,
-            <span class="ident">skip_frame</span>: <span class="bool-val">false</span>,
+    <span class="comment">// Visit the advices of the diagnostic with a lightweight visitor that
+    // detects if the diagnostic has any frame or backtrace advice
+    </span><span class="kw">let </span>skip_frame = <span class="kw">if let </span><span class="prelude-val">Some</span>(location) = diagnostic.location() {
+        <span class="kw">let </span><span class="kw-2">mut </span>frame_visitor = FrameVisitor {
+            location,
+            skip_frame: <span class="bool-val">false</span>,
         };
 
-        <span class="ident">diagnostic</span>.<span class="ident">advices</span>(<span class="kw-2">&amp;mut</span> <span class="ident">frame_visitor</span>)<span class="question-mark">?</span>;
+        diagnostic.advices(<span class="kw-2">&amp;mut </span>frame_visitor)<span class="question-mark">?</span>;
 
-        <span class="ident">frame_visitor</span>.<span class="ident">skip_frame</span>
-    } <span class="kw">else</span> {
-        <span class="bool-val">false</span>
-    };
+        frame_visitor.skip_frame
+    } <span class="kw">else </span>{
+        <span class="bool-val">false
+    </span>};
 
-    <span class="comment">// Print the message for the diagnostic as a log advice</span>
-    <span class="ident">print_message_advice</span>(<span class="ident">visitor</span>, <span class="ident">diagnostic</span>, <span class="ident">skip_frame</span>)<span class="question-mark">?</span>;
+    <span class="comment">// Print the message for the diagnostic as a log advice
+    </span>print_message_advice(visitor, diagnostic, skip_frame)<span class="question-mark">?</span>;
 
-    <span class="comment">// Print the other advices for the diagnostic</span>
-    <span class="ident">diagnostic</span>.<span class="ident">advices</span>(<span class="ident">visitor</span>)<span class="question-mark">?</span>;
+    <span class="comment">// Print the other advices for the diagnostic
+    </span>diagnostic.advices(visitor)<span class="question-mark">?</span>;
 
-    <span class="comment">// Print the tags of the diagnostic as advices</span>
-    <span class="ident">print_tags_advices</span>(<span class="ident">visitor</span>, <span class="ident">diagnostic</span>)<span class="question-mark">?</span>;
+    <span class="comment">// Print the tags of the diagnostic as advices
+    </span>print_tags_advices(visitor, diagnostic)<span class="question-mark">?</span>;
 
-    <span class="comment">// If verbose printing is enabled, print the verbose advices in a nested group</span>
-    <span class="kw">if</span> <span class="ident">verbose</span> {
-        <span class="comment">// Count the number of verbose advices in the diagnostic</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">counter</span> <span class="op">=</span> <span class="ident">CountAdvices</span>(<span class="number">0</span>);
-        <span class="ident">diagnostic</span>.<span class="ident">verbose_advices</span>(<span class="kw-2">&amp;mut</span> <span class="ident">counter</span>)<span class="question-mark">?</span>;
+    <span class="comment">// If verbose printing is enabled, print the verbose advices in a nested group
+    </span><span class="kw">if </span>verbose {
+        <span class="comment">// Count the number of verbose advices in the diagnostic
+        </span><span class="kw">let </span><span class="kw-2">mut </span>counter = CountAdvices(<span class="number">0</span>);
+        diagnostic.verbose_advices(<span class="kw-2">&amp;mut </span>counter)<span class="question-mark">?</span>;
 
-        <span class="comment">// If the diagnostic has any verbose advice, print the group</span>
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">counter</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">let</span> <span class="ident">verbose_advices</span> <span class="op">=</span> <span class="ident">PrintVerboseAdvices</span>(<span class="ident">diagnostic</span>);
-            <span class="ident">visitor</span>.<span class="ident">record_group</span>(<span class="kw-2">&amp;</span><span class="string">&quot;Verbose advice&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">verbose_advices</span>)<span class="question-mark">?</span>;
+        <span class="comment">// If the diagnostic has any verbose advice, print the group
+        </span><span class="kw">if </span>!counter.is_empty() {
+            <span class="kw">let </span>verbose_advices = PrintVerboseAdvices(diagnostic);
+            visitor.record_group(<span class="kw-2">&amp;</span><span class="string">&quot;Verbose advice&quot;</span>, <span class="kw-2">&amp;</span>verbose_advices)<span class="question-mark">?</span>;
         }
     }
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="doccomment">/// Advice visitor used to detect if the diagnostic contains any frame or backtrace diagnostic.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">FrameVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;diag</span><span class="op">&gt;</span> {
-    <span class="ident">location</span>: <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;diag</span><span class="op">&gt;</span>,
-    <span class="ident">skip_frame</span>: <span class="ident">bool</span>,
+<span class="doccomment">/// Advice visitor used to detect if the diagnostic contains any frame or backtrace diagnostic.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>FrameVisitor&lt;<span class="lifetime">&#39;diag</span>&gt; {
+    location: Location&lt;<span class="lifetime">&#39;diag</span>&gt;,
+    skip_frame: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">Visit</span> <span class="kw">for</span> <span class="ident">FrameVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record_frame</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">location</span>: <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">location</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">location</span> {
-            <span class="self">self</span>.<span class="ident">skip_frame</span> <span class="op">=</span> <span class="bool-val">true</span>;
+<span class="kw">impl </span>Visit <span class="kw">for </span>FrameVisitor&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>record_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>, location: Location&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">if </span>location == <span class="self">self</span>.location {
+            <span class="self">self</span>.skip_frame = <span class="bool-val">true</span>;
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">record_backtrace</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Backtrace</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">skip_frame</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">fn </span>record_backtrace(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display, <span class="kw">_</span>: <span class="kw-2">&amp;</span>Backtrace) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.skip_frame = <span class="bool-val">true</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="doccomment">/// Print the message and code frame for the diagnostic as advices.</span>
-<span class="kw">fn</span> <span class="ident">print_message_advice</span><span class="op">&lt;</span><span class="ident">V</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>, <span class="ident">diagnostic</span>: <span class="kw-2">&amp;</span><span class="ident">D</span>, <span class="ident">skip_frame</span>: <span class="ident">bool</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">V</span>: <span class="ident">Visit</span>,
-    <span class="ident">D</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
+<span class="doccomment">/// Print the message and code frame for the diagnostic as advices.
+</span><span class="kw">fn </span>print_message_advice&lt;V, D&gt;(visitor: <span class="kw-2">&amp;mut </span>V, diagnostic: <span class="kw-2">&amp;</span>D, skip_frame: bool) -&gt; io::Result&lt;()&gt;
+<span class="kw">where
+    </span>V: Visit,
+    D: Diagnostic + <span class="question-mark">?</span>Sized,
 {
-    <span class="comment">// Print the entire message / cause chain for the diagnostic to a MarkupBuf</span>
-    <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">MarkupBuf::default</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt</span> <span class="op">=</span> <span class="ident">fmt::Formatter::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">message</span>);
-        <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span>({ <span class="ident">PrintCauseChain</span>(<span class="ident">diagnostic</span>) }))<span class="question-mark">?</span>;
-        <span class="ident">message</span>
+    <span class="comment">// Print the entire message / cause chain for the diagnostic to a MarkupBuf
+    </span><span class="kw">let </span>message = {
+        <span class="kw">let </span><span class="kw-2">mut </span>message = MarkupBuf::default();
+        <span class="kw">let </span><span class="kw-2">mut </span>fmt = fmt::Formatter::new(<span class="kw-2">&amp;mut </span>message);
+        fmt.write_markup(<span class="macro">markup!</span>({ PrintCauseChain(diagnostic) }))<span class="question-mark">?</span>;
+        message
     };
 
-    <span class="comment">// Print a log advice for the message, with a special fallback if the buffer is empty</span>
-    <span class="kw">if</span> <span class="ident">message</span>.<span class="ident">is_empty</span>() {
-        <span class="ident">visitor</span>.<span class="ident">record_log</span>(
-            <span class="ident">LogCategory::None</span>,
-            <span class="kw-2">&amp;</span><span class="macro">markup!</span> {
-                <span class="op">&lt;</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="string">&quot;no diagnostic message provided&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Dim</span><span class="op">&gt;</span>
+    <span class="comment">// Print a log advice for the message, with a special fallback if the buffer is empty
+    </span><span class="kw">if </span>message.is_empty() {
+        visitor.record_log(
+            LogCategory::None,
+            <span class="kw-2">&amp;</span><span class="macro">markup! </span>{
+                &lt;Dim&gt;<span class="string">&quot;no diagnostic message provided&quot;</span>&lt;/Dim&gt;
             },
         )<span class="question-mark">?</span>;
-    } <span class="kw">else</span> {
-        <span class="kw">let</span> <span class="ident">category</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">diagnostic</span>.<span class="ident">severity</span>() {
-            <span class="ident">Severity::Fatal</span> <span class="op">|</span> <span class="ident">Severity::Error</span> =&gt; <span class="ident">LogCategory::Error</span>,
-            <span class="ident">Severity::Warning</span> =&gt; <span class="ident">LogCategory::Warn</span>,
-            <span class="ident">Severity::Information</span> <span class="op">|</span> <span class="ident">Severity::Hint</span> =&gt; <span class="ident">LogCategory::Info</span>,
+    } <span class="kw">else </span>{
+        <span class="kw">let </span>category = <span class="kw">match </span>diagnostic.severity() {
+            Severity::Fatal | Severity::Error =&gt; LogCategory::Error,
+            Severity::Warning =&gt; LogCategory::Warn,
+            Severity::Information | Severity::Hint =&gt; LogCategory::Info,
         };
 
-        <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="ident">category</span>, <span class="kw-2">&amp;</span><span class="ident">message</span>)<span class="question-mark">?</span>;
+        visitor.record_log(category, <span class="kw-2">&amp;</span>message)<span class="question-mark">?</span>;
     }
 
-    <span class="comment">// If the diagnostic has no explicit code frame or backtrace advice, print</span>
-    <span class="comment">// a code frame advice with the location of the diagnostic</span>
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">skip_frame</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">location</span>) <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">location</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">loc</span><span class="op">|</span> <span class="ident">loc</span>.<span class="ident">span</span>.<span class="ident">is_some</span>()) {
-            <span class="ident">visitor</span>.<span class="ident">record_frame</span>(<span class="ident">location</span>)<span class="question-mark">?</span>;
+    <span class="comment">// If the diagnostic has no explicit code frame or backtrace advice, print
+    // a code frame advice with the location of the diagnostic
+    </span><span class="kw">if </span>!skip_frame {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(location) = diagnostic.location().filter(|loc| loc.span.is_some()) {
+            visitor.record_frame(location)<span class="question-mark">?</span>;
         }
     }
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="doccomment">/// Display wrapper for printing the &quot;cause chain&quot; of a diagnostic, with the</span>
-<span class="doccomment">/// message of this diagnostic and all of its sources.</span>
-<span class="kw">struct</span> <span class="ident">PrintCauseChain</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt</span> <span class="ident">D</span>);
+<span class="doccomment">/// Display wrapper for printing the &quot;cause chain&quot; of a diagnostic, with the
+/// message of this diagnostic and all of its sources.
+</span><span class="kw">struct </span>PrintCauseChain&lt;<span class="lifetime">&#39;fmt</span>, D: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt </span>D);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">PrintCauseChain</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="self">Self</span>(<span class="ident">diagnostic</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;fmt</span>, D: Diagnostic + <span class="question-mark">?</span>Sized&gt; fmt::Display <span class="kw">for </span>PrintCauseChain&lt;<span class="lifetime">&#39;fmt</span>, D&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span><span class="self">Self</span>(diagnostic) = <span class="kw-2">*</span><span class="self">self</span>;
 
-        <span class="ident">diagnostic</span>.<span class="ident">message</span>(<span class="ident">fmt</span>)<span class="question-mark">?</span>;
+        diagnostic.message(fmt)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="ident">iter::successors</span>(<span class="ident">diagnostic</span>.<span class="ident">source</span>(), <span class="op">|</span><span class="ident">prev</span><span class="op">|</span> <span class="ident">prev</span>.<span class="ident">source</span>());
-        <span class="kw">for</span> <span class="ident">diagnostic</span> <span class="kw">in</span> <span class="ident">chain</span> {
-            <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="string">&quot;\n\nCaused by:\n&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>chain = iter::successors(diagnostic.source(), |prev| prev.source());
+        <span class="kw">for </span>diagnostic <span class="kw">in </span>chain {
+            fmt.write_str(<span class="string">&quot;\n\nCaused by:\n&quot;</span>)<span class="question-mark">?</span>;
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slot</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt</span> <span class="op">=</span> <span class="ident">IndentWriter::wrap</span>(<span class="ident">fmt</span>, <span class="kw-2">&amp;mut</span> <span class="ident">slot</span>, <span class="bool-val">true</span>, <span class="string">&quot;  &quot;</span>);
-            <span class="ident">diagnostic</span>.<span class="ident">message</span>(<span class="kw-2">&amp;mut</span> <span class="ident">fmt</span>)<span class="question-mark">?</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>slot = <span class="prelude-val">None</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>fmt = IndentWriter::wrap(fmt, <span class="kw-2">&amp;mut </span>slot, <span class="bool-val">true</span>, <span class="string">&quot;  &quot;</span>);
+            diagnostic.message(<span class="kw-2">&amp;mut </span>fmt)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="doccomment">/// Implementation of [Visitor] that prints the advices for a diagnostic.</span>
-<span class="kw">struct</span> <span class="ident">PrintAdvices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Implementation of [Visitor] that prints the advices for a diagnostic.
+</span><span class="kw">struct </span>PrintAdvices&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;b</span>&gt;);
 
-<span class="kw">impl</span> <span class="ident">PrintAdvices</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">print_log</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">kind</span>: <span class="ident">MarkupElement</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-        <span class="ident">prefix</span>: <span class="ident">char</span>,
-        <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_markup</span>(<span class="ident">Markup</span>(<span class="kw-2">&amp;</span>[<span class="ident">MarkupNode</span> {
-            <span class="ident">elements</span>: <span class="kw-2">&amp;</span>[<span class="ident">MarkupElement::Emphasis</span>, <span class="ident">kind</span>.<span class="ident">clone</span>()],
-            <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">prefix</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>,
+<span class="kw">impl </span>PrintAdvices&lt;<span class="lifetime">&#39;_</span>, <span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>print_log(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        kind: MarkupElement&lt;<span class="lifetime">&#39;_</span>&gt;,
+        prefix: char,
+        text: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.write_markup(Markup(<span class="kw-2">&amp;</span>[MarkupNode {
+            elements: <span class="kw-2">&amp;</span>[MarkupElement::Emphasis, kind.clone()],
+            content: <span class="kw-2">&amp;</span>prefix <span class="kw">as </span><span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display,
         }]))<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_str</span>(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="number">0</span>.write_str(<span class="string">&quot; &quot;</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slot</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt</span> <span class="op">=</span> <span class="ident">IndentWriter::wrap</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;mut</span> <span class="ident">slot</span>, <span class="bool-val">false</span>, <span class="string">&quot;  &quot;</span>);
-        <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="ident">Markup</span>(<span class="kw-2">&amp;</span>[<span class="ident">MarkupNode</span> {
-            <span class="ident">elements</span>: <span class="kw-2">&amp;</span>[<span class="ident">kind</span>],
-            <span class="ident">content</span>: <span class="ident">text</span>,
+        <span class="kw">let </span><span class="kw-2">mut </span>slot = <span class="prelude-val">None</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>fmt = IndentWriter::wrap(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;mut </span>slot, <span class="bool-val">false</span>, <span class="string">&quot;  &quot;</span>);
+        fmt.write_markup(Markup(<span class="kw-2">&amp;</span>[MarkupNode {
+            elements: <span class="kw-2">&amp;</span>[kind],
+            content: text,
         }]))<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_str</span>(<span class="string">&quot;\n\n&quot;</span>)
+        <span class="self">self</span>.<span class="number">0</span>.write_str(<span class="string">&quot;\n\n&quot;</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Visit</span> <span class="kw">for</span> <span class="ident">PrintAdvices</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record_log</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">category</span>: <span class="ident">LogCategory</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">category</span> {
-            <span class="ident">LogCategory::None</span> =&gt; <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> { {<span class="ident">text</span>}<span class="string">&quot;\n\n&quot;</span> }),
-            <span class="ident">LogCategory::Info</span> =&gt; <span class="self">self</span>.<span class="ident">print_log</span>(<span class="ident">MarkupElement::Info</span>, <span class="string">&#39;\u{2139}&#39;</span>, <span class="ident">text</span>),
-            <span class="ident">LogCategory::Warn</span> =&gt; <span class="self">self</span>.<span class="ident">print_log</span>(<span class="ident">MarkupElement::Warn</span>, <span class="string">&#39;\u{26a0}&#39;</span>, <span class="ident">text</span>),
-            <span class="ident">LogCategory::Error</span> =&gt; <span class="self">self</span>.<span class="ident">print_log</span>(<span class="ident">MarkupElement::Error</span>, <span class="string">&#39;\u{2716}&#39;</span>, <span class="ident">text</span>),
+<span class="kw">impl </span>Visit <span class="kw">for </span>PrintAdvices&lt;<span class="lifetime">&#39;_</span>, <span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>record_log(<span class="kw-2">&amp;mut </span><span class="self">self</span>, category: LogCategory, text: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">match </span>category {
+            LogCategory::None =&gt; <span class="self">self</span>.<span class="number">0</span>.write_markup(<span class="macro">markup! </span>{ {text}<span class="string">&quot;\n\n&quot; </span>}),
+            LogCategory::Info =&gt; <span class="self">self</span>.print_log(MarkupElement::Info, <span class="string">&#39;\u{2139}&#39;</span>, text),
+            LogCategory::Warn =&gt; <span class="self">self</span>.print_log(MarkupElement::Warn, <span class="string">&#39;\u{26a0}&#39;</span>, text),
+            LogCategory::Error =&gt; <span class="self">self</span>.print_log(MarkupElement::Error, <span class="string">&#39;\u{2716}&#39;</span>, text),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">record_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">list</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">list</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slot</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt</span> <span class="op">=</span> <span class="ident">IndentWriter::wrap</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;mut</span> <span class="ident">slot</span>, <span class="bool-val">false</span>, <span class="string">&quot;  &quot;</span>);
-            <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-                <span class="string">&quot;- &quot;</span>{<span class="kw-2">*</span><span class="ident">item</span>}<span class="string">&quot;\n&quot;</span>
-            })<span class="question-mark">?</span>;
+    <span class="kw">fn </span>record_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, list: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display]) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">for </span>item <span class="kw">in </span>list {
+            <span class="kw">let </span><span class="kw-2">mut </span>slot = <span class="prelude-val">None</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>fmt = IndentWriter::wrap(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;mut </span>slot, <span class="bool-val">false</span>, <span class="string">&quot;  &quot;</span>);
+            fmt.write_markup(<span class="macro">markup! </span>{
+                <span class="string">&quot;- &quot;</span>{<span class="kw-2">*</span>item}<span class="string">&quot;\n&quot;
+            </span>})<span class="question-mark">?</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">list</span>.<span class="ident">is_empty</span>() {
+        <span class="kw">if </span>list.is_empty() {
             <span class="prelude-val">Ok</span>(())
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_str</span>(<span class="string">&quot;\n&quot;</span>)
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.<span class="number">0</span>.write_str(<span class="string">&quot;\n&quot;</span>)
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">record_frame</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">location</span>: <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">frame::print_frame</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">location</span>)
+    <span class="kw">fn </span>record_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>, location: Location&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        frame::print_frame(<span class="self">self</span>.<span class="number">0</span>, location)
     }
 
-    <span class="kw">fn</span> <span class="ident">record_diff</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">diff</span>: <span class="kw-2">&amp;</span><span class="ident">TextEdit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">diff::print_diff</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">diff</span>)
+    <span class="kw">fn </span>record_diff(<span class="kw-2">&amp;mut </span><span class="self">self</span>, diff: <span class="kw-2">&amp;</span>TextEdit) -&gt; io::Result&lt;()&gt; {
+        diff::print_diff(<span class="self">self</span>.<span class="number">0</span>, diff)
     }
 
-    <span class="kw">fn</span> <span class="ident">record_backtrace</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>,
-        <span class="ident">backtrace</span>: <span class="kw-2">&amp;</span><span class="ident">Backtrace</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">backtrace</span> <span class="op">=</span> <span class="ident">backtrace</span>.<span class="ident">clone</span>();
-        <span class="ident">backtrace</span>.<span class="ident">resolve</span>();
+    <span class="kw">fn </span>record_backtrace(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        title: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display,
+        backtrace: <span class="kw-2">&amp;</span>Backtrace,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>backtrace = backtrace.clone();
+        backtrace.resolve();
 
-        <span class="kw">if</span> <span class="ident">backtrace</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+        <span class="kw">if </span>backtrace.is_empty() {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
 
-        <span class="self">self</span>.<span class="ident">record_log</span>(<span class="ident">LogCategory::Info</span>, <span class="ident">title</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.record_log(LogCategory::Info, title)<span class="question-mark">?</span>;
 
-        <span class="ident">backtrace::print_backtrace</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">backtrace</span>)
+        backtrace::print_backtrace(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>backtrace)
     }
 
-    <span class="kw">fn</span> <span class="ident">record_command</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">command</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;$&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span>{<span class="ident">command</span>}<span class="string">&quot;\n\n&quot;</span>
-        })
+    <span class="kw">fn </span>record_command(<span class="kw-2">&amp;mut </span><span class="self">self</span>, command: <span class="kw-2">&amp;</span>str) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.write_markup(<span class="macro">markup! </span>{
+            &lt;Emphasis&gt;<span class="string">&quot;$&quot;</span>&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>{command}<span class="string">&quot;\n\n&quot;
+        </span>})
     }
 
-    <span class="kw">fn</span> <span class="ident">record_group</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>, <span class="ident">advice</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Advices</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> {
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span>{<span class="ident">title</span>}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;\n\n&quot;</span>
-        })<span class="question-mark">?</span>;
+    <span class="kw">fn </span>record_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>, title: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display, advice: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Advices) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.write_markup(<span class="macro">markup! </span>{
+            &lt;Emphasis&gt;{title}&lt;/Emphasis&gt;<span class="string">&quot;\n\n&quot;
+        </span>})<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slot</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt</span> <span class="op">=</span> <span class="ident">IndentWriter::wrap</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;mut</span> <span class="ident">slot</span>, <span class="bool-val">true</span>, <span class="string">&quot;  &quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">visitor</span> <span class="op">=</span> <span class="ident">PrintAdvices</span>(<span class="kw-2">&amp;mut</span> <span class="ident">fmt</span>);
-        <span class="ident">advice</span>.<span class="ident">record</span>(<span class="kw-2">&amp;mut</span> <span class="ident">visitor</span>)
+        <span class="kw">let </span><span class="kw-2">mut </span>slot = <span class="prelude-val">None</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>fmt = IndentWriter::wrap(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;mut </span>slot, <span class="bool-val">true</span>, <span class="string">&quot;  &quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>visitor = PrintAdvices(<span class="kw-2">&amp;mut </span>fmt);
+        advice.record(<span class="kw-2">&amp;mut </span>visitor)
     }
 }
 
-<span class="doccomment">/// Print the fatal and internal tags for the diagnostic as log advices.</span>
-<span class="kw">fn</span> <span class="ident">print_tags_advices</span><span class="op">&lt;</span><span class="ident">V</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>, <span class="ident">diagnostic</span>: <span class="kw-2">&amp;</span><span class="ident">D</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">V</span>: <span class="ident">Visit</span>,
-    <span class="ident">D</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
+<span class="doccomment">/// Print the fatal and internal tags for the diagnostic as log advices.
+</span><span class="kw">fn </span>print_tags_advices&lt;V, D&gt;(visitor: <span class="kw-2">&amp;mut </span>V, diagnostic: <span class="kw-2">&amp;</span>D) -&gt; io::Result&lt;()&gt;
+<span class="kw">where
+    </span>V: Visit,
+    D: Diagnostic + <span class="question-mark">?</span>Sized,
 {
-    <span class="kw">if</span> <span class="ident">diagnostic</span>.<span class="ident">severity</span>() <span class="op">==</span> <span class="ident">Severity::Fatal</span> {
-        <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="ident">LogCategory::Warn</span>, <span class="kw-2">&amp;</span><span class="string">&quot;Rome exited as this error could not be handled and resulted in a fatal error. Please report it if necessary.&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">if </span>diagnostic.severity() == Severity::Fatal {
+        visitor.record_log(LogCategory::Warn, <span class="kw-2">&amp;</span><span class="string">&quot;Rome exited as this error could not be handled and resulted in a fatal error. Please report it if necessary.&quot;</span>)<span class="question-mark">?</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">diagnostic</span>.<span class="ident">tags</span>().<span class="ident">contains</span>(<span class="ident">DiagnosticTags::INTERNAL</span>) {
-        <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="ident">LogCategory::Warn</span>, <span class="kw-2">&amp;</span><span class="string">&quot;This diagnostic was derived from an internal Rome error. Potential bug, please report it if necessary.&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">if </span>diagnostic.tags().contains(DiagnosticTags::INTERNAL) {
+        visitor.record_log(LogCategory::Warn, <span class="kw-2">&amp;</span><span class="string">&quot;This diagnostic was derived from an internal Rome error. Potential bug, please report it if necessary.&quot;</span>)<span class="question-mark">?</span>;
     }
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="doccomment">/// Advice visitor that counts how many advices are visited.</span>
-<span class="kw">struct</span> <span class="ident">CountAdvices</span>(<span class="ident">usize</span>);
+<span class="doccomment">/// Advice visitor that counts how many advices are visited.
+</span><span class="kw">struct </span>CountAdvices(usize);
 
-<span class="kw">impl</span> <span class="ident">CountAdvices</span> {
-    <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">==</span> <span class="number">0</span>
+<span class="kw">impl </span>CountAdvices {
+    <span class="kw">fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0 </span>== <span class="number">0
+    </span>}
+}
+
+<span class="kw">impl </span>Visit <span class="kw">for </span>CountAdvices {
+    <span class="kw">fn </span>record_log(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: LogCategory, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0 </span>+= <span class="number">1</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn </span>record_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display]) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0 </span>+= <span class="number">1</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn </span>record_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: Location&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0 </span>+= <span class="number">1</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn </span>record_diff(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>TextEdit) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0 </span>+= <span class="number">1</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn </span>record_backtrace(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display, <span class="kw">_</span>: <span class="kw-2">&amp;</span>Backtrace) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0 </span>+= <span class="number">1</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn </span>record_command(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>str) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0 </span>+= <span class="number">1</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn </span>record_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Advices) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0 </span>+= <span class="number">1</span>;
+        <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Visit</span> <span class="kw">for</span> <span class="ident">CountAdvices</span> {
-    <span class="kw">fn</span> <span class="ident">record_log</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="ident">LogCategory</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
+<span class="doccomment">/// Implements [Advices] for verbose advices of a diagnostic.
+</span><span class="kw">struct </span>PrintVerboseAdvices&lt;<span class="lifetime">&#39;a</span>, D: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>D);
 
-    <span class="kw">fn</span> <span class="ident">record_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">record_frame</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">record_diff</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">TextEdit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">record_backtrace</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Backtrace</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">record_command</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">record_group</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Advices</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="prelude-val">Ok</span>(())
+<span class="kw">impl</span>&lt;D: Diagnostic + <span class="question-mark">?</span>Sized&gt; Advices <span class="kw">for </span>PrintVerboseAdvices&lt;<span class="lifetime">&#39;_</span>, D&gt; {
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.verbose_advices(visitor)
     }
 }
 
-<span class="doccomment">/// Implements [Advices] for verbose advices of a diagnostic.</span>
-<span class="kw">struct</span> <span class="ident">PrintVerboseAdvices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">D</span>);
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">PrintVerboseAdvices</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">verbose_advices</span>(<span class="ident">visitor</span>)
-    }
+<span class="doccomment">/// Wrapper type over [fmt::Write] that injects `ident_text` at the start of
+/// every line.
+</span><span class="kw">struct </span>IndentWriter&lt;<span class="lifetime">&#39;a</span>, W: <span class="question-mark">?</span>Sized&gt; {
+    writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>W,
+    pending_indent: bool,
+    ident_text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
 }
 
-<span class="doccomment">/// Wrapper type over [fmt::Write] that injects `ident_text` at the start of</span>
-<span class="doccomment">/// every line.</span>
-<span class="kw">struct</span> <span class="ident">IndentWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> {
-    <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">W</span>,
-    <span class="ident">pending_indent</span>: <span class="ident">bool</span>,
-    <span class="ident">ident_text</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;write</span><span class="op">&gt;</span> <span class="ident">IndentWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;write</span>, <span class="kw">dyn</span> <span class="ident">fmt::Write</span> <span class="op">+</span> <span class="lifetime">&#39;write</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="lifetime">&#39;slot</span>, <span class="lifetime">&#39;fmt</span>: <span class="lifetime">&#39;write</span> <span class="op">+</span> <span class="lifetime">&#39;slot</span><span class="op">&gt;</span>(
-        <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt</span> <span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-        <span class="ident">slot</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;slot</span> <span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
-        <span class="ident">pending_indent</span>: <span class="ident">bool</span>,
-        <span class="ident">ident_text</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
-    ) -&gt; <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;slot</span><span class="op">&gt;</span> {
-        <span class="ident">fmt</span>.<span class="ident">wrap_writer</span>(<span class="op">|</span><span class="ident">writer</span><span class="op">|</span> {
-            <span class="ident">slot</span>.<span class="ident">get_or_insert</span>(<span class="self">Self</span> {
-                <span class="ident">writer</span>,
-                <span class="ident">pending_indent</span>,
-                <span class="ident">ident_text</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;write</span>&gt; IndentWriter&lt;<span class="lifetime">&#39;write</span>, <span class="kw">dyn </span>fmt::Write + <span class="lifetime">&#39;write</span>&gt; {
+    <span class="kw">fn </span>wrap&lt;<span class="lifetime">&#39;slot</span>, <span class="lifetime">&#39;fmt</span>: <span class="lifetime">&#39;write </span>+ <span class="lifetime">&#39;slot</span>&gt;(
+        fmt: <span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt </span><span class="kw-2">mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;,
+        slot: <span class="kw-2">&amp;</span><span class="lifetime">&#39;slot </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;,
+        pending_indent: bool,
+        ident_text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
+    ) -&gt; fmt::Formatter&lt;<span class="lifetime">&#39;slot</span>&gt; {
+        fmt.wrap_writer(|writer| {
+            slot.get_or_insert(<span class="self">Self </span>{
+                writer,
+                pending_indent,
+                ident_text,
             })
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">fmt::Write</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">fmt::Write</span> <span class="kw">for</span> <span class="ident">IndentWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_str</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">elements</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::MarkupElements</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-        <span class="kw-2">mut</span> <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">while</span> <span class="op">!</span><span class="ident">content</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pending_indent</span> {
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_str</span>(<span class="ident">elements</span>, <span class="self">self</span>.<span class="ident">ident_text</span>)<span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">pending_indent</span> <span class="op">=</span> <span class="bool-val">false</span>;
+<span class="kw">impl</span>&lt;W: fmt::Write + <span class="question-mark">?</span>Sized&gt; fmt::Write <span class="kw">for </span>IndentWriter&lt;<span class="lifetime">&#39;_</span>, W&gt; {
+    <span class="kw">fn </span>write_str(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        elements: <span class="kw-2">&amp;</span>fmt::MarkupElements&lt;<span class="lifetime">&#39;_</span>&gt;,
+        <span class="kw-2">mut </span>content: <span class="kw-2">&amp;</span>str,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">while </span>!content.is_empty() {
+            <span class="kw">if </span><span class="self">self</span>.pending_indent {
+                <span class="self">self</span>.writer.write_str(elements, <span class="self">self</span>.ident_text)<span class="question-mark">?</span>;
+                <span class="self">self</span>.pending_indent = <span class="bool-val">false</span>;
             }
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="ident">content</span>.<span class="ident">find</span>(<span class="string">&#39;\n&#39;</span>) {
-                <span class="kw">let</span> (<span class="ident">start</span>, <span class="ident">end</span>) <span class="op">=</span> <span class="ident">content</span>.<span class="ident">split_at</span>(<span class="ident">index</span> <span class="op">+</span> <span class="number">1</span>);
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_str</span>(<span class="ident">elements</span>, <span class="ident">start</span>)<span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">pending_indent</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="ident">content</span> <span class="op">=</span> <span class="ident">end</span>;
-            } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_str</span>(<span class="ident">elements</span>, <span class="ident">content</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(index) = content.find(<span class="string">&#39;\n&#39;</span>) {
+                <span class="kw">let </span>(start, end) = content.split_at(index + <span class="number">1</span>);
+                <span class="self">self</span>.writer.write_str(elements, start)<span class="question-mark">?</span>;
+                <span class="self">self</span>.pending_indent = <span class="bool-val">true</span>;
+                content = end;
+            } <span class="kw">else </span>{
+                <span class="kw">return </span><span class="self">self</span>.writer.write_str(elements, content);
             }
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">write_fmt</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">elements</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::MarkupElements</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-        <span class="ident">content</span>: <span class="ident">std::fmt::Arguments</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>) <span class="op">=</span> <span class="ident">content</span>.<span class="ident">as_str</span>() {
-            <span class="self">self</span>.<span class="ident">write_str</span>(<span class="ident">elements</span>, <span class="ident">content</span>)
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">content</span>.<span class="ident">to_string</span>();
-            <span class="self">self</span>.<span class="ident">write_str</span>(<span class="ident">elements</span>, <span class="kw-2">&amp;</span><span class="ident">content</span>)
+    <span class="kw">fn </span>write_fmt(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        elements: <span class="kw-2">&amp;</span>fmt::MarkupElements&lt;<span class="lifetime">&#39;_</span>&gt;,
+        content: std::fmt::Arguments&lt;<span class="lifetime">&#39;_</span>&gt;,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(content) = content.as_str() {
+            <span class="self">self</span>.write_str(elements, content)
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>content = content.to_string();
+            <span class="self">self</span>.write_str(elements, <span class="kw-2">&amp;</span>content)
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">std::io</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>std::io;
 
-    <span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">fmt</span>, <span class="ident">markup</span>};
-    <span class="kw">use</span> <span class="ident">rome_diagnostics::v2</span>::{<span class="ident">DiagnosticTags</span>, <span class="ident">Severity</span>};
-    <span class="kw">use</span> <span class="ident">rome_diagnostics_categories</span>::{<span class="ident">category</span>, <span class="ident">Category</span>};
-    <span class="kw">use</span> <span class="ident">rome_text_edit::TextEdit</span>;
-    <span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-    <span class="kw">use</span> <span class="ident">serde_json</span>::{<span class="ident">from_value</span>, <span class="ident">json</span>};
+    <span class="kw">use </span>rome_console::{fmt, markup};
+    <span class="kw">use </span>rome_diagnostics::v2::{DiagnosticTags, Severity};
+    <span class="kw">use </span>rome_diagnostics_categories::{category, Category};
+    <span class="kw">use </span>rome_text_edit::TextEdit;
+    <span class="kw">use </span>rome_text_size::{TextRange, TextSize};
+    <span class="kw">use </span>serde_json::{from_value, json};
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::v2</span>::{
-        <span class="ident">Advices</span>, <span class="ident">Diagnostic</span>, <span class="ident">FilePath</span>, <span class="ident">Location</span>, <span class="ident">LogCategory</span>, <span class="ident">PrintDiagnostic</span>, <span class="ident">Resource</span>,
-        <span class="ident">SourceCode</span>, <span class="ident">Visit</span>,
+    <span class="kw">use </span><span class="kw">crate</span>::v2::{
+        Advices, Diagnostic, FilePath, Location, LogCategory, PrintDiagnostic, Resource,
+        SourceCode, Visit,
     };
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="self">self</span> <span class="kw">as</span> <span class="ident">rome_diagnostics</span>};
+    <span class="kw">use crate</span>::{<span class="self">self </span><span class="kw">as </span>rome_diagnostics};
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">TestDiagnostic</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-        <span class="ident">path</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-        <span class="ident">span</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
-        <span class="ident">source_code</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-        <span class="ident">advice</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>,
-        <span class="ident">verbose_advice</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>,
-        <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Diagnostic</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>TestDiagnostic&lt;A&gt; {
+        path: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        span: <span class="prelude-ty">Option</span>&lt;TextRange&gt;,
+        source_code: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        advice: <span class="prelude-ty">Option</span>&lt;A&gt;,
+        verbose_advice: <span class="prelude-ty">Option</span>&lt;A&gt;,
+        source: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Diagnostic&gt;&gt;,
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> <span class="ident">TestDiagnostic</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">empty</span>() -&gt; <span class="self">Self</span> {
-            <span class="self">Self</span> {
-                <span class="ident">path</span>: <span class="prelude-val">None</span>,
-                <span class="ident">span</span>: <span class="prelude-val">None</span>,
-                <span class="ident">source_code</span>: <span class="prelude-val">None</span>,
-                <span class="ident">advice</span>: <span class="prelude-val">None</span>,
-                <span class="ident">verbose_advice</span>: <span class="prelude-val">None</span>,
-                <span class="ident">source</span>: <span class="prelude-val">None</span>,
+    <span class="kw">impl</span>&lt;A&gt; TestDiagnostic&lt;A&gt; {
+        <span class="kw">fn </span>empty() -&gt; <span class="self">Self </span>{
+            <span class="self">Self </span>{
+                path: <span class="prelude-val">None</span>,
+                span: <span class="prelude-val">None</span>,
+                source_code: <span class="prelude-val">None</span>,
+                advice: <span class="prelude-val">None</span>,
+                verbose_advice: <span class="prelude-val">None</span>,
+                source: <span class="prelude-val">None</span>,
             }
         }
 
-        <span class="kw">fn</span> <span class="ident">with_location</span>() -&gt; <span class="self">Self</span> {
-            <span class="self">Self</span> {
-                <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;path&quot;</span>)),
-                <span class="ident">span</span>: <span class="prelude-val">Some</span>(<span class="ident">TextRange::at</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">TextSize::from</span>(<span class="number">6</span>))),
-                <span class="ident">source_code</span>: <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;source code&quot;</span>)),
-                <span class="ident">advice</span>: <span class="prelude-val">None</span>,
-                <span class="ident">verbose_advice</span>: <span class="prelude-val">None</span>,
-                <span class="ident">source</span>: <span class="prelude-val">None</span>,
+        <span class="kw">fn </span>with_location() -&gt; <span class="self">Self </span>{
+            <span class="self">Self </span>{
+                path: <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;path&quot;</span>)),
+                span: <span class="prelude-val">Some</span>(TextRange::at(TextSize::from(<span class="number">0</span>), TextSize::from(<span class="number">6</span>))),
+                source_code: <span class="prelude-val">Some</span>(String::from(<span class="string">&quot;source code&quot;</span>)),
+                advice: <span class="prelude-val">None</span>,
+                verbose_advice: <span class="prelude-val">None</span>,
+                source: <span class="prelude-val">None</span>,
             }
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Advices</span> <span class="op">+</span> <span class="ident">std::fmt::Debug</span><span class="op">&gt;</span> <span class="ident">Diagnostic</span> <span class="kw">for</span> <span class="ident">TestDiagnostic</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">category</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span><span class="op">&gt;</span> {
+    <span class="kw">impl</span>&lt;A: Advices + std::fmt::Debug&gt; Diagnostic <span class="kw">for </span>TestDiagnostic&lt;A&gt; {
+        <span class="kw">fn </span>category(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category&gt; {
             <span class="prelude-val">Some</span>(<span class="macro">category!</span>(<span class="string">&quot;internalError/io&quot;</span>))
         }
 
-        <span class="kw">fn</span> <span class="ident">severity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Severity</span> {
-            <span class="ident">Severity::Error</span>
+        <span class="kw">fn </span>severity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Severity {
+            Severity::Error
         }
 
-        <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-            <span class="macro">write!</span>(<span class="ident">fmt</span>, <span class="string">&quot;diagnostic message&quot;</span>)
+        <span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+            <span class="macro">write!</span>(fmt, <span class="string">&quot;diagnostic message&quot;</span>)
         }
 
-        <span class="kw">fn</span> <span class="ident">message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="macro">write!</span>(<span class="ident">fmt</span>, <span class="string">&quot;diagnostic message&quot;</span>)
+        <span class="kw">fn </span>message(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+            <span class="macro">write!</span>(fmt, <span class="string">&quot;diagnostic message&quot;</span>)
         }
 
-        <span class="kw">fn</span> <span class="ident">advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">advice</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">advice</span> {
-                <span class="ident">advice</span>.<span class="ident">record</span>(<span class="ident">visitor</span>)<span class="question-mark">?</span>;
+        <span class="kw">fn </span>advices(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(advice) = <span class="kw-2">&amp;</span><span class="self">self</span>.advice {
+                advice.record(visitor)<span class="question-mark">?</span>;
             }
 
             <span class="prelude-val">Ok</span>(())
         }
 
-        <span class="kw">fn</span> <span class="ident">verbose_advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">advice</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">verbose_advice</span> {
-                <span class="ident">advice</span>.<span class="ident">record</span>(<span class="ident">visitor</span>)<span class="question-mark">?</span>;
+        <span class="kw">fn </span>verbose_advices(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(advice) = <span class="kw-2">&amp;</span><span class="self">self</span>.verbose_advice {
+                advice.record(visitor)<span class="question-mark">?</span>;
             }
 
             <span class="prelude-val">Ok</span>(())
         }
 
-        <span class="kw">fn</span> <span class="ident">location</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-            <span class="ident">Location::builder</span>()
-                .<span class="ident">resource</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>)
-                .<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">span</span>)
-                .<span class="ident">source_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_code</span>)
-                .<span class="ident">build</span>()
+        <span class="kw">fn </span>location(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Location&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+            Location::builder()
+                .resource(<span class="kw-2">&amp;</span><span class="self">self</span>.path)
+                .span(<span class="kw-2">&amp;</span><span class="self">self</span>.span)
+                .source_code(<span class="kw-2">&amp;</span><span class="self">self</span>.source_code)
+                .build()
         }
 
-        <span class="kw">fn</span> <span class="ident">tags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">DiagnosticTags</span> {
-            <span class="ident">DiagnosticTags::FIXABLE</span>
+        <span class="kw">fn </span>tags(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DiagnosticTags {
+            DiagnosticTags::FIXABLE
         }
 
-        <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Diagnostic</span><span class="op">&gt;</span> {
-            <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">as_deref</span>()
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">LogAdvices</span>;
-
-    <span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">LogAdvices</span> {
-        <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="ident">LogCategory::Error</span>, <span class="kw-2">&amp;</span><span class="string">&quot;error&quot;</span>)<span class="question-mark">?</span>;
-            <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="ident">LogCategory::Warn</span>, <span class="kw-2">&amp;</span><span class="string">&quot;warn&quot;</span>)<span class="question-mark">?</span>;
-            <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="ident">LogCategory::Info</span>, <span class="kw-2">&amp;</span><span class="string">&quot;info&quot;</span>)<span class="question-mark">?</span>;
-            <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="ident">LogCategory::None</span>, <span class="kw-2">&amp;</span><span class="string">&quot;none&quot;</span>)
+        <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">dyn </span>Diagnostic&gt; {
+            <span class="self">self</span>.source.as_deref()
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">ListAdvice</span>;
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>LogAdvices;
 
-    <span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">ListAdvice</span> {
-        <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="ident">visitor</span>.<span class="ident">record_list</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="string">&quot;item 1&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;item 2&quot;</span>])
+    <span class="kw">impl </span>Advices <span class="kw">for </span>LogAdvices {
+        <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            visitor.record_log(LogCategory::Error, <span class="kw-2">&amp;</span><span class="string">&quot;error&quot;</span>)<span class="question-mark">?</span>;
+            visitor.record_log(LogCategory::Warn, <span class="kw-2">&amp;</span><span class="string">&quot;warn&quot;</span>)<span class="question-mark">?</span>;
+            visitor.record_log(LogCategory::Info, <span class="kw-2">&amp;</span><span class="string">&quot;info&quot;</span>)<span class="question-mark">?</span>;
+            visitor.record_log(LogCategory::None, <span class="kw-2">&amp;</span><span class="string">&quot;none&quot;</span>)
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">FrameAdvice</span>;
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>ListAdvice;
 
-    <span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">FrameAdvice</span> {
-        <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="ident">visitor</span>.<span class="ident">record_frame</span>(<span class="ident">Location</span> {
-                <span class="ident">resource</span>: <span class="ident">Resource::File</span>(<span class="ident">FilePath::Path</span>(<span class="string">&quot;other_path&quot;</span>)),
-                <span class="ident">span</span>: <span class="prelude-val">Some</span>(<span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">8</span>), <span class="ident">TextSize::from</span>(<span class="number">16</span>))),
-                <span class="ident">source_code</span>: <span class="prelude-val">Some</span>(<span class="ident">SourceCode</span> {
-                    <span class="ident">text</span>: <span class="string">&quot;context location context&quot;</span>,
-                    <span class="ident">line_starts</span>: <span class="prelude-val">None</span>,
+    <span class="kw">impl </span>Advices <span class="kw">for </span>ListAdvice {
+        <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            visitor.record_list(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="string">&quot;item 1&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;item 2&quot;</span>])
+        }
+    }
+
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>FrameAdvice;
+
+    <span class="kw">impl </span>Advices <span class="kw">for </span>FrameAdvice {
+        <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            visitor.record_frame(Location {
+                resource: Resource::File(FilePath::Path(<span class="string">&quot;other_path&quot;</span>)),
+                span: <span class="prelude-val">Some</span>(TextRange::new(TextSize::from(<span class="number">8</span>), TextSize::from(<span class="number">16</span>))),
+                source_code: <span class="prelude-val">Some</span>(SourceCode {
+                    text: <span class="string">&quot;context location context&quot;</span>,
+                    line_starts: <span class="prelude-val">None</span>,
                 }),
             })
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">DiffAdvice</span>;
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>DiffAdvice;
 
-    <span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">DiffAdvice</span> {
-        <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="ident">diff</span> <span class="op">=</span>
-                <span class="ident">TextEdit::from_unicode_words</span>(<span class="string">&quot;context before context&quot;</span>, <span class="string">&quot;context after context&quot;</span>);
-            <span class="ident">visitor</span>.<span class="ident">record_diff</span>(<span class="kw-2">&amp;</span><span class="ident">diff</span>)
+    <span class="kw">impl </span>Advices <span class="kw">for </span>DiffAdvice {
+        <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            <span class="kw">let </span>diff =
+                TextEdit::from_unicode_words(<span class="string">&quot;context before context&quot;</span>, <span class="string">&quot;context after context&quot;</span>);
+            visitor.record_diff(<span class="kw-2">&amp;</span>diff)
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">BacktraceAdvice</span>;
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>BacktraceAdvice;
 
-    <span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">BacktraceAdvice</span> {
-        <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="ident">backtrace</span> <span class="op">=</span> <span class="ident">from_value</span>(<span class="macro">json!</span>([
+    <span class="kw">impl </span>Advices <span class="kw">for </span>BacktraceAdvice {
+        <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            <span class="kw">let </span>backtrace = from_value(<span class="macro">json!</span>([
                 {
                     <span class="string">&quot;ip&quot;</span>: <span class="number">0x0f0f0f0f</span>,
                     <span class="string">&quot;symbols&quot;</span>: [
@@ -1644,241 +1644,241 @@
                             <span class="string">&quot;name&quot;</span>: <span class="string">&quot;crate::module::function&quot;</span>,
                             <span class="string">&quot;filename&quot;</span>: <span class="string">&quot;crate/src/module.rs&quot;</span>,
                             <span class="string">&quot;lineno&quot;</span>: <span class="number">8</span>,
-                            <span class="string">&quot;colno&quot;</span>: <span class="number">16</span>
-                        }
+                            <span class="string">&quot;colno&quot;</span>: <span class="number">16
+                        </span>}
                     ]
                 }
             ]));
 
-            <span class="ident">visitor</span>.<span class="ident">record_backtrace</span>(<span class="kw-2">&amp;</span><span class="string">&quot;Backtrace Title&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">backtrace</span>.<span class="ident">unwrap</span>())
+            visitor.record_backtrace(<span class="kw-2">&amp;</span><span class="string">&quot;Backtrace Title&quot;</span>, <span class="kw-2">&amp;</span>backtrace.unwrap())
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">CommandAdvice</span>;
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>CommandAdvice;
 
-    <span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">CommandAdvice</span> {
-        <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="ident">visitor</span>.<span class="ident">record_command</span>(<span class="string">&quot;rome command --argument&quot;</span>)
+    <span class="kw">impl </span>Advices <span class="kw">for </span>CommandAdvice {
+        <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            visitor.record_command(<span class="string">&quot;rome command --argument&quot;</span>)
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">GroupAdvice</span>;
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>GroupAdvice;
 
-    <span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">GroupAdvice</span> {
-        <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="ident">visitor</span>.<span class="ident">record_group</span>(<span class="kw-2">&amp;</span><span class="string">&quot;Group Title&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">LogAdvices</span>)
+    <span class="kw">impl </span>Advices <span class="kw">for </span>GroupAdvice {
+        <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            visitor.record_group(<span class="kw-2">&amp;</span><span class="string">&quot;Group Title&quot;</span>, <span class="kw-2">&amp;</span>LogAdvices)
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_header</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span>::<span class="op">&lt;</span><span class="ident">LogAdvices</span><span class="op">&gt;</span><span class="ident">::with_location</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_header() {
+        <span class="kw">let </span>diag = TestDiagnostic::&lt;LogAdvices&gt;::with_location();
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>) }).<span class="ident">to_owned</span>();
+        <span class="kw">let </span>diag = <span class="macro">markup!</span>({ PrintDiagnostic(<span class="kw-2">&amp;</span>diag) }).to_owned();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">markup!</span>{
-            <span class="string">&quot;path:1:1 internalError/io &quot;</span><span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;</span>
-            <span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;diagnostic message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  &gt;&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;1 │ &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;source code\n&quot;</span>
-            <span class="string">&quot;   &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;   │ &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;^^^^^^&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-        }.<span class="ident">to_owned</span>();
+        <span class="kw">let </span>expected = <span class="macro">markup!</span>{
+            <span class="string">&quot;path:1:1 internalError/io &quot;</span>&lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;
+            &quot;\n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;diagnostic message&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  &gt;&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Emphasis&gt;<span class="string">&quot;1 │ &quot;</span>&lt;/Emphasis&gt;<span class="string">&quot;source code\n&quot;
+            &quot;   &quot;</span>&lt;Emphasis&gt;<span class="string">&quot;   │ &quot;</span>&lt;/Emphasis&gt;&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;^^^^^^&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+        </span>}.to_owned();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_log_advices</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span> {
-            <span class="ident">advice</span>: <span class="prelude-val">Some</span>(<span class="ident">LogAdvices</span>),
-            ..<span class="ident">TestDiagnostic::empty</span>()
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_log_advices() {
+        <span class="kw">let </span>diag = TestDiagnostic {
+            advice: <span class="prelude-val">Some</span>(LogAdvices),
+            ..TestDiagnostic::empty()
         };
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>) }).<span class="ident">to_owned</span>();
+        <span class="kw">let </span>diag = <span class="macro">markup!</span>({ PrintDiagnostic(<span class="kw-2">&amp;</span>diag) }).to_owned();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">markup!</span>{
-            <span class="string">&quot;internalError/io &quot;</span><span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;</span>
-            <span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;diagnostic message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;error&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;  ⚠&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;warn&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;  ℹ&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;info&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="string">&quot;  none\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-        }.<span class="ident">to_owned</span>();
+        <span class="kw">let </span>expected = <span class="macro">markup!</span>{
+            <span class="string">&quot;internalError/io &quot;</span>&lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;
+            &quot;\n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;diagnostic message&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;error&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Warn&gt;<span class="string">&quot;  ⚠&quot;</span>&lt;/Warn&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Warn&gt;<span class="string">&quot;warn&quot;</span>&lt;/Warn&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Info&gt;<span class="string">&quot;  ℹ&quot;</span>&lt;/Info&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Info&gt;<span class="string">&quot;info&quot;</span>&lt;/Info&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            &quot;  none\n&quot;
+            &quot;  \n&quot;
+        </span>}.to_owned();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_list_advice</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span> {
-            <span class="ident">advice</span>: <span class="prelude-val">Some</span>(<span class="ident">ListAdvice</span>),
-            ..<span class="ident">TestDiagnostic::empty</span>()
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_list_advice() {
+        <span class="kw">let </span>diag = TestDiagnostic {
+            advice: <span class="prelude-val">Some</span>(ListAdvice),
+            ..TestDiagnostic::empty()
         };
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>) }).<span class="ident">to_owned</span>();
+        <span class="kw">let </span>diag = <span class="macro">markup!</span>({ PrintDiagnostic(<span class="kw-2">&amp;</span>diag) }).to_owned();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">markup!</span>{
-            <span class="string">&quot;internalError/io &quot;</span><span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;</span>
-            <span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;diagnostic message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="string">&quot;  - item 1\n&quot;</span>
-            <span class="string">&quot;  - item 2\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-        }.<span class="ident">to_owned</span>();
+        <span class="kw">let </span>expected = <span class="macro">markup!</span>{
+            <span class="string">&quot;internalError/io &quot;</span>&lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;
+            &quot;\n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;diagnostic message&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            &quot;  - item 1\n&quot;
+            &quot;  - item 2\n&quot;
+            &quot;  \n&quot;
+        </span>}.to_owned();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_frame_advice</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span> {
-            <span class="ident">advice</span>: <span class="prelude-val">Some</span>(<span class="ident">FrameAdvice</span>),
-            ..<span class="ident">TestDiagnostic::empty</span>()
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_frame_advice() {
+        <span class="kw">let </span>diag = TestDiagnostic {
+            advice: <span class="prelude-val">Some</span>(FrameAdvice),
+            ..TestDiagnostic::empty()
         };
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>) }).<span class="ident">to_owned</span>();
+        <span class="kw">let </span>diag = <span class="macro">markup!</span>({ PrintDiagnostic(<span class="kw-2">&amp;</span>diag) }).to_owned();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">markup!</span>{
-            <span class="string">&quot;internalError/io &quot;</span><span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;</span>
-            <span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;diagnostic message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  &gt;&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;1 │ &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;context location context\n&quot;</span>
-            <span class="string">&quot;   &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;   │ &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;        &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;^^^^^^^^&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-        }.<span class="ident">to_owned</span>();
+        <span class="kw">let </span>expected = <span class="macro">markup!</span>{
+            <span class="string">&quot;internalError/io &quot;</span>&lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;
+            &quot;\n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;diagnostic message&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  &gt;&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Emphasis&gt;<span class="string">&quot;1 │ &quot;</span>&lt;/Emphasis&gt;<span class="string">&quot;context location context\n&quot;
+            &quot;   &quot;</span>&lt;Emphasis&gt;<span class="string">&quot;   │ &quot;</span>&lt;/Emphasis&gt;<span class="string">&quot;        &quot;</span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;^^^^^^^^&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+        </span>}.to_owned();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_diff_advice</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span> {
-            <span class="ident">advice</span>: <span class="prelude-val">Some</span>(<span class="ident">DiffAdvice</span>),
-            ..<span class="ident">TestDiagnostic::empty</span>()
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_diff_advice() {
+        <span class="kw">let </span>diag = TestDiagnostic {
+            advice: <span class="prelude-val">Some</span>(DiffAdvice),
+            ..TestDiagnostic::empty()
         };
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>) }).<span class="ident">to_owned</span>();
+        <span class="kw">let </span>diag = <span class="macro">markup!</span>({ PrintDiagnostic(<span class="kw-2">&amp;</span>diag) }).to_owned();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">markup!</span>{
-            <span class="string">&quot;internalError/io &quot;</span><span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;</span>
-            <span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;diagnostic message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  -&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;context&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="string">&quot;·&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;before&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="string">&quot;·&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;context&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Success</span><span class="op">&gt;</span><span class="string">&quot;  +&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Success</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Success</span><span class="op">&gt;</span><span class="string">&quot;context&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Success</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Success</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="string">&quot;·&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Success</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Success</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;after&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Success</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Success</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="string">&quot;·&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Dim</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Success</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Success</span><span class="op">&gt;</span><span class="string">&quot;context&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Success</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-        }.<span class="ident">to_owned</span>();
+        <span class="kw">let </span>expected = <span class="macro">markup!</span>{
+            <span class="string">&quot;internalError/io &quot;</span>&lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;
+            &quot;\n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;diagnostic message&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Error&gt;<span class="string">&quot;  -&quot;</span>&lt;/Error&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;context&quot;</span>&lt;/Error&gt;&lt;Error&gt;&lt;Dim&gt;<span class="string">&quot;·&quot;</span>&lt;/Dim&gt;&lt;/Error&gt;&lt;Error&gt;&lt;Emphasis&gt;<span class="string">&quot;before&quot;</span>&lt;/Emphasis&gt;&lt;/Error&gt;&lt;Error&gt;&lt;Dim&gt;<span class="string">&quot;·&quot;</span>&lt;/Dim&gt;&lt;/Error&gt;&lt;Error&gt;<span class="string">&quot;context&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            </span>&lt;Success&gt;<span class="string">&quot;  +&quot;</span>&lt;/Success&gt;<span class="string">&quot; &quot;</span>&lt;Success&gt;<span class="string">&quot;context&quot;</span>&lt;/Success&gt;&lt;Success&gt;&lt;Dim&gt;<span class="string">&quot;·&quot;</span>&lt;/Dim&gt;&lt;/Success&gt;&lt;Success&gt;&lt;Emphasis&gt;<span class="string">&quot;after&quot;</span>&lt;/Emphasis&gt;&lt;/Success&gt;&lt;Success&gt;&lt;Dim&gt;<span class="string">&quot;·&quot;</span>&lt;/Dim&gt;&lt;/Success&gt;&lt;Success&gt;<span class="string">&quot;context&quot;</span>&lt;/Success&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+        </span>}.to_owned();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_backtrace_advice</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span> {
-            <span class="ident">advice</span>: <span class="prelude-val">Some</span>(<span class="ident">BacktraceAdvice</span>),
-            ..<span class="ident">TestDiagnostic::empty</span>()
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_backtrace_advice() {
+        <span class="kw">let </span>diag = TestDiagnostic {
+            advice: <span class="prelude-val">Some</span>(BacktraceAdvice),
+            ..TestDiagnostic::empty()
         };
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>) }).<span class="ident">to_owned</span>();
+        <span class="kw">let </span>diag = <span class="macro">markup!</span>({ PrintDiagnostic(<span class="kw-2">&amp;</span>diag) }).to_owned();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">markup!</span>{
-            <span class="string">&quot;internalError/io &quot;</span><span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;</span>
-            <span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;diagnostic message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;  ℹ&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;Backtrace Title&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="string">&quot;     0: crate::module::function\n&quot;</span>
-            <span class="string">&quot;            at crate/src/module.rs:8:16\n&quot;</span>
-        }.<span class="ident">to_owned</span>();
+        <span class="kw">let </span>expected = <span class="macro">markup!</span>{
+            <span class="string">&quot;internalError/io &quot;</span>&lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;
+            &quot;\n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;diagnostic message&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Info&gt;<span class="string">&quot;  ℹ&quot;</span>&lt;/Info&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Info&gt;<span class="string">&quot;Backtrace Title&quot;</span>&lt;/Info&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            &quot;     0: crate::module::function\n&quot;
+            &quot;            at crate/src/module.rs:8:16\n&quot;
+        </span>}.to_owned();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_command_advice</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span> {
-            <span class="ident">advice</span>: <span class="prelude-val">Some</span>(<span class="ident">CommandAdvice</span>),
-            ..<span class="ident">TestDiagnostic::empty</span>()
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_command_advice() {
+        <span class="kw">let </span>diag = TestDiagnostic {
+            advice: <span class="prelude-val">Some</span>(CommandAdvice),
+            ..TestDiagnostic::empty()
         };
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>) }).<span class="ident">to_owned</span>();
+        <span class="kw">let </span>diag = <span class="macro">markup!</span>({ PrintDiagnostic(<span class="kw-2">&amp;</span>diag) }).to_owned();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">markup!</span>{
-            <span class="string">&quot;internalError/io &quot;</span><span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;</span>
-            <span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;diagnostic message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;  $&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; rome command --argument\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-        }.<span class="ident">to_owned</span>();
+        <span class="kw">let </span>expected = <span class="macro">markup!</span>{
+            <span class="string">&quot;internalError/io &quot;</span>&lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;
+            &quot;\n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;diagnostic message&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;<span class="string">&quot;  $&quot;</span>&lt;/Emphasis&gt;<span class="string">&quot; rome command --argument\n&quot;
+            &quot;  \n&quot;
+        </span>}.to_owned();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_group_advice</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic</span> {
-            <span class="ident">advice</span>: <span class="prelude-val">Some</span>(<span class="ident">GroupAdvice</span>),
-            ..<span class="ident">TestDiagnostic::empty</span>()
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_group_advice() {
+        <span class="kw">let </span>diag = TestDiagnostic {
+            advice: <span class="prelude-val">Some</span>(GroupAdvice),
+            ..TestDiagnostic::empty()
         };
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="macro">markup!</span>({ <span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>) }).<span class="ident">to_owned</span>();
+        <span class="kw">let </span>diag = <span class="macro">markup!</span>({ PrintDiagnostic(<span class="kw-2">&amp;</span>diag) }).to_owned();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">markup!</span>{
-            <span class="string">&quot;internalError/io &quot;</span><span class="op">&lt;</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; FIXABLE &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Inverse</span><span class="op">&gt;</span><span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;</span>
-            <span class="string">&quot;\n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;  ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;diagnostic message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;  Group Title&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;  \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;    ✖&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;error&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Error</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;    \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;    ⚠&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;warn&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;    \n&quot;</span>
-            <span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;    ℹ&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot; &quot;</span><span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;info&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;\n&quot;</span>
-            <span class="string">&quot;    \n&quot;</span>
-            <span class="string">&quot;    none\n&quot;</span>
-            <span class="string">&quot;    \n&quot;</span>
-        }.<span class="ident">to_owned</span>();
+        <span class="kw">let </span>expected = <span class="macro">markup!</span>{
+            <span class="string">&quot;internalError/io &quot;</span>&lt;Inverse&gt;<span class="string">&quot; FIXABLE &quot;</span>&lt;/Inverse&gt;<span class="string">&quot; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&quot;
+            &quot;\n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;  ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;diagnostic message&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;<span class="string">&quot;  Group Title&quot;</span>&lt;/Emphasis&gt;<span class="string">&quot;\n&quot;
+            &quot;  \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Error&gt;<span class="string">&quot;    ✖&quot;</span>&lt;/Error&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Error&gt;<span class="string">&quot;error&quot;</span>&lt;/Error&gt;<span class="string">&quot;\n&quot;
+            &quot;    \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Warn&gt;<span class="string">&quot;    ⚠&quot;</span>&lt;/Warn&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Warn&gt;<span class="string">&quot;warn&quot;</span>&lt;/Warn&gt;<span class="string">&quot;\n&quot;
+            &quot;    \n&quot;
+            </span>&lt;Emphasis&gt;&lt;Info&gt;<span class="string">&quot;    ℹ&quot;</span>&lt;/Info&gt;&lt;/Emphasis&gt;<span class="string">&quot; &quot;</span>&lt;Info&gt;<span class="string">&quot;info&quot;</span>&lt;/Info&gt;<span class="string">&quot;\n&quot;
+            &quot;    \n&quot;
+            &quot;    none\n&quot;
+            &quot;    \n&quot;
+        </span>}.to_owned();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;\nactual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

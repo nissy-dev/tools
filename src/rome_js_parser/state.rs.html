@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_parser/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_js_parser/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -633,640 +633,640 @@
 <span id="633">633</span>
 <span id="634">634</span>
 <span id="635">635</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Parser</span>;
-<span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
-<span class="kw">use</span> <span class="ident">indexmap::IndexMap</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax::SourceType</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
-<span class="kw">use</span> <span class="ident">std::ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>, <span class="ident">Range</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::Parser;
+<span class="kw">use </span>bitflags::bitflags;
+<span class="kw">use </span>indexmap::IndexMap;
+<span class="kw">use </span>rome_js_syntax::SourceType;
+<span class="kw">use </span>rome_rowan::{TextRange, TextSize};
+<span class="kw">use </span>std::collections::HashSet;
+<span class="kw">use </span>std::ops::{Deref, DerefMut, Range};
 
-<span class="kw">type</span> <span class="ident">LabelSet</span> <span class="op">=</span> <span class="ident">IndexMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">LabelledItem</span><span class="op">&gt;</span>;
+<span class="kw">type </span>LabelSet = IndexMap&lt;String, LabelledItem&gt;;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">LabelledItem</span> {
-    <span class="ident">Iteration</span>(<span class="ident">TextRange</span>),
-    <span class="ident">Other</span>(<span class="ident">TextRange</span>),
+<span class="attribute">#[derive(Debug, Clone, Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>LabelledItem {
+    Iteration(TextRange),
+    Other(TextRange),
 }
 
-<span class="kw">impl</span> <span class="ident">LabelledItem</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">TextRange</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">LabelledItem::Iteration</span>(<span class="ident">range</span>) <span class="op">|</span> <span class="ident">LabelledItem::Other</span>(<span class="ident">range</span>) =&gt; <span class="ident">range</span>,
+<span class="kw">impl </span>LabelledItem {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>TextRange {
+        <span class="kw">match </span><span class="self">self </span>{
+            LabelledItem::Iteration(range) | LabelledItem::Other(range) =&gt; range,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">ExportDefaultItemKind</span> {
-    <span class="ident">Unknown</span>,
-    <span class="ident">Expression</span>,
-    <span class="ident">FunctionOverload</span>,
-    <span class="ident">FunctionDeclaration</span>,
-    <span class="ident">Interface</span>,
-    <span class="comment">// Any other declaration</span>
-    <span class="ident">Declaration</span>,
+<span class="attribute">#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>ExportDefaultItemKind {
+    Unknown,
+    Expression,
+    FunctionOverload,
+    FunctionDeclaration,
+    Interface,
+    <span class="comment">// Any other declaration
+    </span>Declaration,
 }
 
-<span class="kw">impl</span> <span class="ident">ExportDefaultItemKind</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_overload</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">ExportDefaultItemKind::FunctionOverload</span>)
+<span class="kw">impl </span>ExportDefaultItemKind {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_overload(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, ExportDefaultItemKind::FunctionOverload)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_function_declaration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">ExportDefaultItemKind::FunctionDeclaration</span>)
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_function_declaration(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, ExportDefaultItemKind::FunctionDeclaration)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_interface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">ExportDefaultItemKind::Interface</span>)
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_interface(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, ExportDefaultItemKind::Interface)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ExportDefaultItem</span> {
-    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ExportDefaultItemKind</span>,
-    <span class="kw">pub</span> <span class="ident">range</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, Clone, Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ExportDefaultItem {
+    <span class="kw">pub </span>kind: ExportDefaultItemKind,
+    <span class="kw">pub </span>range: Range&lt;usize&gt;,
 }
 
-<span class="doccomment">/// State kept by the parser while parsing.</span>
-<span class="doccomment">/// It is required for things such as strict mode or async functions</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ParserState</span> {
-    <span class="ident">parsing_context</span>: <span class="ident">ParsingContextFlags</span>,
-    <span class="doccomment">/// A list of labels for labelled statements used to report undefined label errors</span>
-    <span class="doccomment">/// for break and continue, as well as duplicate labels.</span>
-    <span class="doccomment">/// Often called label set in the spec.</span>
-    <span class="ident">label_set</span>: <span class="ident">LabelSet</span>,
-    <span class="doccomment">/// Whether we are in strict mode code</span>
-    <span class="ident">strict</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StrictMode</span><span class="op">&gt;</span>,
+<span class="doccomment">/// State kept by the parser while parsing.
+/// It is required for things such as strict mode or async functions
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ParserState {
+    parsing_context: ParsingContextFlags,
+    <span class="doccomment">/// A list of labels for labelled statements used to report undefined label errors
+    /// for break and continue, as well as duplicate labels.
+    /// Often called label set in the spec.
+    </span>label_set: LabelSet,
+    <span class="doccomment">/// Whether we are in strict mode code
+    </span>strict: <span class="prelude-ty">Option</span>&lt;StrictMode&gt;,
 
-    <span class="doccomment">/// The exported default item, used for checking duplicate defaults</span>
-    <span class="kw">pub</span> <span class="ident">default_item</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExportDefaultItem</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// If set, the parser reports bindings with identical names. The option stores the name of the</span>
-    <span class="doccomment">/// node that disallows duplicate bindings, for example `let`, `const` or `import`.</span>
-    <span class="kw">pub</span> <span class="ident">duplicate_binding_parent</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">name_map</span>: <span class="ident">IndexMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">TextRange</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The exported default item, used for checking duplicate defaults
+    </span><span class="kw">pub </span>default_item: <span class="prelude-ty">Option</span>&lt;ExportDefaultItem&gt;,
+    <span class="doccomment">/// If set, the parser reports bindings with identical names. The option stores the name of the
+    /// node that disallows duplicate bindings, for example `let`, `const` or `import`.
+    </span><span class="kw">pub </span>duplicate_binding_parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;,
+    <span class="kw">pub </span>name_map: IndexMap&lt;String, TextRange&gt;,
 
-    <span class="doccomment">/// Indicates that the parser is speculatively parsing a syntax. Speculative parsing means that the</span>
-    <span class="doccomment">/// parser tries to parse a syntax as one kind and determines at the end if the assumption was right</span>
-    <span class="doccomment">/// by testing if the parser is at a specific token (or has no errors). For this approach to work,</span>
-    <span class="doccomment">/// the parser isn&#39;t allowed to skip any tokens while doing error recovery because it may then successfully</span>
-    <span class="doccomment">/// skip over all invalid tokens, so that it appears as if it was able to parse the syntax correctly.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Speculative parsing is useful if a syntax is ambiguous and no amount of lookahead (except parsing the whole syntax)</span>
-    <span class="doccomment">/// is sufficient to determine what syntax it is. For example, the syntax `(a, b) ...`</span>
-    <span class="doccomment">/// in JavaScript is either a parenthesized expression or an arrow expression if `...` is a `=&gt;`.</span>
-    <span class="doccomment">/// The challenge is, that it isn&#39;t possible to tell which of the two kinds it is until the parser</span>
-    <span class="doccomment">/// processed all of `(a, b)`.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">speculative_parsing</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Indicates that the parser is speculatively parsing a syntax. Speculative parsing means that the
+    /// parser tries to parse a syntax as one kind and determines at the end if the assumption was right
+    /// by testing if the parser is at a specific token (or has no errors). For this approach to work,
+    /// the parser isn&#39;t allowed to skip any tokens while doing error recovery because it may then successfully
+    /// skip over all invalid tokens, so that it appears as if it was able to parse the syntax correctly.
+    ///
+    /// Speculative parsing is useful if a syntax is ambiguous and no amount of lookahead (except parsing the whole syntax)
+    /// is sufficient to determine what syntax it is. For example, the syntax `(a, b) ...`
+    /// in JavaScript is either a parenthesized expression or an arrow expression if `...` is a `=&gt;`.
+    /// The challenge is, that it isn&#39;t possible to tell which of the two kinds it is until the parser
+    /// processed all of `(a, b)`.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) speculative_parsing: bool,
 
-    <span class="doccomment">/// Stores the token positions of all syntax that looks like an arrow expressions but aren&#39;t one.</span>
-    <span class="doccomment">/// Optimization to reduce the back-tracking required when parsing parenthesized and arrow function expressions.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">not_parenthesized_arrow</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Stores the token positions of all syntax that looks like an arrow expressions but aren&#39;t one.
+    /// Optimization to reduce the back-tracking required when parsing parenthesized and arrow function expressions.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) not_parenthesized_arrow: HashSet&lt;TextSize&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">StrictMode</span> {
-    <span class="ident">Module</span>,
-    <span class="ident">Explicit</span>(<span class="ident">TextRange</span>),
-    <span class="ident">Class</span>(<span class="ident">TextRange</span>),
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>StrictMode {
+    Module,
+    Explicit(TextRange),
+    Class(TextRange),
 }
 
-<span class="kw">impl</span> <span class="ident">ParserState</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source_type</span>: <span class="kw-2">&amp;</span><span class="ident">SourceType</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">ParserState</span> {
-            <span class="ident">parsing_context</span>: <span class="ident">ParsingContextFlags::TOP_LEVEL</span>,
-            <span class="ident">label_set</span>: <span class="ident">IndexMap::new</span>(),
-            <span class="ident">strict</span>: <span class="ident">source_type</span>
-                .<span class="ident">module_kind</span>()
-                .<span class="ident">is_module</span>()
-                .<span class="ident">then_some</span>(<span class="ident">StrictMode::Module</span>),
-            <span class="ident">default_item</span>: <span class="prelude-val">None</span>,
-            <span class="ident">name_map</span>: <span class="ident">IndexMap::new</span>(),
-            <span class="ident">duplicate_binding_parent</span>: <span class="prelude-val">None</span>,
-            <span class="ident">not_parenthesized_arrow</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">speculative_parsing</span>: <span class="bool-val">false</span>,
+<span class="kw">impl </span>ParserState {
+    <span class="kw">pub fn </span>new(source_type: <span class="kw-2">&amp;</span>SourceType) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>state = ParserState {
+            parsing_context: ParsingContextFlags::TOP_LEVEL,
+            label_set: IndexMap::new(),
+            strict: source_type
+                .module_kind()
+                .is_module()
+                .then_some(StrictMode::Module),
+            default_item: <span class="prelude-val">None</span>,
+            name_map: IndexMap::new(),
+            duplicate_binding_parent: <span class="prelude-val">None</span>,
+            not_parenthesized_arrow: Default::default(),
+            speculative_parsing: <span class="bool-val">false</span>,
         };
 
-        <span class="kw">if</span> <span class="ident">source_type</span>.<span class="ident">module_kind</span>().<span class="ident">is_module</span>() {
-            <span class="ident">state</span>.<span class="ident">parsing_context</span> <span class="op">|</span><span class="op">=</span> <span class="ident">ParsingContextFlags::IN_ASYNC</span>
+        <span class="kw">if </span>source_type.module_kind().is_module() {
+            state.parsing_context |= ParsingContextFlags::IN_ASYNC
         }
 
-        <span class="comment">// test d.ts arguments_in_definition_file</span>
-        <span class="comment">// function a(...arguments: any[]): void;</span>
-        <span class="kw">if</span> <span class="ident">source_type</span>.<span class="ident">language</span>().<span class="ident">is_definition_file</span>() {
-            <span class="ident">EnterAmbientContext</span>.<span class="ident">apply</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>);
+        <span class="comment">// test d.ts arguments_in_definition_file
+        // function a(...arguments: any[]): void;
+        </span><span class="kw">if </span>source_type.language().is_definition_file() {
+            EnterAmbientContext.apply(<span class="kw-2">&amp;mut </span>state);
         }
 
-        <span class="ident">state</span>
+        state
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_function</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">parsing_context</span>
-            .<span class="ident">contains</span>(<span class="ident">ParsingContextFlags::IN_FUNCTION</span>)
+    <span class="kw">pub fn </span>in_function(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.parsing_context
+            .contains(ParsingContextFlags::IN_FUNCTION)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_generator</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">parsing_context</span>
-            .<span class="ident">contains</span>(<span class="ident">ParsingContextFlags::IN_GENERATOR</span>)
+    <span class="kw">pub fn </span>in_generator(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.parsing_context
+            .contains(ParsingContextFlags::IN_GENERATOR)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_async</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">parsing_context</span>.<span class="ident">contains</span>(<span class="ident">ParsingContextFlags::IN_ASYNC</span>)
+    <span class="kw">pub fn </span>in_async(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.parsing_context.contains(ParsingContextFlags::IN_ASYNC)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_ambient_context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">parsing_context</span>
-            .<span class="ident">contains</span>(<span class="ident">ParsingContextFlags::AMBIENT_CONTEXT</span>)
+    <span class="kw">pub fn </span>in_ambient_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.parsing_context
+            .contains(ParsingContextFlags::AMBIENT_CONTEXT)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_constructor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">parsing_context</span>
-            .<span class="ident">contains</span>(<span class="ident">ParsingContextFlags::IN_CONSTRUCTOR</span>)
+    <span class="kw">pub fn </span>in_constructor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.parsing_context
+            .contains(ParsingContextFlags::IN_CONSTRUCTOR)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_top_level</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">parsing_context</span>
-            .<span class="ident">contains</span>(<span class="ident">ParsingContextFlags::TOP_LEVEL</span>)
+    <span class="kw">pub fn </span>is_top_level(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.parsing_context
+            .contains(ParsingContextFlags::TOP_LEVEL)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">continue_allowed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">parsing_context</span>
-            .<span class="ident">contains</span>(<span class="ident">ParsingContextFlags::CONTINUE_ALLOWED</span>)
+    <span class="kw">pub fn </span>continue_allowed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.parsing_context
+            .contains(ParsingContextFlags::CONTINUE_ALLOWED)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">break_allowed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">parsing_context</span>
-            .<span class="ident">contains</span>(<span class="ident">ParsingContextFlags::BREAK_ALLOWED</span>)
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strict</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">StrictMode</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">strict</span>.<span class="ident">as_ref</span>()
+    <span class="kw">pub fn </span>break_allowed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.parsing_context
+            .contains(ParsingContextFlags::BREAK_ALLOWED)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_labelled_item</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">label</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">LabelledItem</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">label_set</span>.<span class="ident">get</span>(<span class="ident">label</span>)
+    <span class="kw">pub fn </span>strict(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>StrictMode&gt; {
+        <span class="self">self</span>.strict.as_ref()
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">checkpoint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ParserStateCheckpoint</span> {
-        <span class="ident">ParserStateCheckpoint::snapshot</span>(<span class="self">self</span>)
+    <span class="kw">pub fn </span>get_labelled_item(<span class="kw-2">&amp;</span><span class="self">self</span>, label: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>LabelledItem&gt; {
+        <span class="self">self</span>.label_set.get(label)
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">restore</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">checkpoint</span>: <span class="ident">ParserStateCheckpoint</span>) {
-        <span class="ident">checkpoint</span>.<span class="ident">rewind</span>(<span class="self">self</span>);
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>checkpoint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ParserStateCheckpoint {
+        ParserStateCheckpoint::snapshot(<span class="self">self</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>restore(<span class="kw-2">&amp;mut </span><span class="self">self</span>, checkpoint: ParserStateCheckpoint) {
+        checkpoint.rewind(<span class="self">self</span>);
     }
 }
 
-<span class="doccomment">/// Stores a checkpoint of the [ParserState].</span>
-<span class="doccomment">/// Allows rewinding the state to its previous state.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It&#39;s important that creating and rewinding a snapshot is cheap. Consider the performance implications</span>
-<span class="doccomment">/// before adding new unscoped state.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">ParserStateCheckpoint</span> {
-    <span class="doccomment">/// Additional data that we only want to store in debug mode</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="ident">debug_checkpoint</span>: <span class="ident">DebugParserStateCheckpoint</span>,
+<span class="doccomment">/// Stores a checkpoint of the [ParserState].
+/// Allows rewinding the state to its previous state.
+///
+/// It&#39;s important that creating and rewinding a snapshot is cheap. Consider the performance implications
+/// before adding new unscoped state.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>ParserStateCheckpoint {
+    <span class="doccomment">/// Additional data that we only want to store in debug mode
+    </span><span class="attribute">#[cfg(debug_assertions)]
+    </span>debug_checkpoint: DebugParserStateCheckpoint,
 }
 
-<span class="kw">impl</span> <span class="ident">ParserStateCheckpoint</span> {
-    <span class="doccomment">/// Creates a snapshot of the passed in state.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident">ParserState</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">debug_checkpoint</span>: <span class="ident">DebugParserStateCheckpoint::snapshot</span>(<span class="ident">state</span>),
+<span class="kw">impl </span>ParserStateCheckpoint {
+    <span class="doccomment">/// Creates a snapshot of the passed in state.
+    </span><span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">fn </span>snapshot(state: <span class="kw-2">&amp;</span>ParserState) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            debug_checkpoint: DebugParserStateCheckpoint::snapshot(state),
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ParserState</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {}
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    </span><span class="kw">fn </span>snapshot(<span class="kw">_</span>: <span class="kw-2">&amp;</span>ParserState) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{}
     }
 
-    <span class="doccomment">/// Restores the `state values` to the time when this snapshot was created.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">rewind</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) {
-        <span class="self">self</span>.<span class="ident">debug_checkpoint</span>.<span class="ident">rewind</span>(<span class="ident">state</span>);
+    <span class="doccomment">/// Restores the `state values` to the time when this snapshot was created.
+    </span><span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">fn </span>rewind(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) {
+        <span class="self">self</span>.debug_checkpoint.rewind(state);
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="kw">fn</span> <span class="ident">rewind</span>(<span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ParserState</span>) {}
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    </span><span class="kw">fn </span>rewind(<span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>ParserState) {}
 }
 
-<span class="doccomment">/// Most of the [ParserState] is scoped state. It should, therefore, not be necessary to rewind</span>
-<span class="doccomment">/// that state because that&#39;s already taken care of by `with_state` and `with_scoped_state`.</span>
-<span class="doccomment">/// But, you can never no and better be safe than sorry. That&#39;s why we use some heuristics</span>
-<span class="doccomment">/// to verify that non of the scoped state did change and assert for it when rewinding.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">DebugParserStateCheckpoint</span> {
-    <span class="ident">parsing_context</span>: <span class="ident">ParsingContextFlags</span>,
-    <span class="ident">label_set_len</span>: <span class="ident">usize</span>,
-    <span class="ident">strict</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StrictMode</span><span class="op">&gt;</span>,
-    <span class="ident">default_item</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExportDefaultItem</span><span class="op">&gt;</span>,
-    <span class="ident">duplicate_binding_parent</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="ident">name_map_len</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// Most of the [ParserState] is scoped state. It should, therefore, not be necessary to rewind
+/// that state because that&#39;s already taken care of by `with_state` and `with_scoped_state`.
+/// But, you can never no and better be safe than sorry. That&#39;s why we use some heuristics
+/// to verify that non of the scoped state did change and assert for it when rewinding.
+</span><span class="attribute">#[derive(Debug, Clone)]
+#[cfg(debug_assertions)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>DebugParserStateCheckpoint {
+    parsing_context: ParsingContextFlags,
+    label_set_len: usize,
+    strict: <span class="prelude-ty">Option</span>&lt;StrictMode&gt;,
+    default_item: <span class="prelude-ty">Option</span>&lt;ExportDefaultItem&gt;,
+    duplicate_binding_parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;,
+    name_map_len: usize,
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-<span class="kw">impl</span> <span class="ident">DebugParserStateCheckpoint</span> {
-    <span class="kw">fn</span> <span class="ident">snapshot</span>(<span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident">ParserState</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">parsing_context</span>: <span class="ident">state</span>.<span class="ident">parsing_context</span>,
-            <span class="ident">label_set_len</span>: <span class="ident">state</span>.<span class="ident">label_set</span>.<span class="ident">len</span>(),
-            <span class="ident">strict</span>: <span class="ident">state</span>.<span class="ident">strict</span>.<span class="ident">clone</span>(),
-            <span class="ident">default_item</span>: <span class="ident">state</span>.<span class="ident">default_item</span>.<span class="ident">clone</span>(),
-            <span class="ident">duplicate_binding_parent</span>: <span class="ident">state</span>.<span class="ident">duplicate_binding_parent</span>,
-            <span class="ident">name_map_len</span>: <span class="ident">state</span>.<span class="ident">name_map</span>.<span class="ident">len</span>(),
+<span class="attribute">#[cfg(debug_assertions)]
+</span><span class="kw">impl </span>DebugParserStateCheckpoint {
+    <span class="kw">fn </span>snapshot(state: <span class="kw-2">&amp;</span>ParserState) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            parsing_context: state.parsing_context,
+            label_set_len: state.label_set.len(),
+            strict: state.strict.clone(),
+            default_item: state.default_item.clone(),
+            duplicate_binding_parent: state.duplicate_binding_parent,
+            name_map_len: state.name_map.len(),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">rewind</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) {
-        <span class="macro">assert_eq!</span>(<span class="ident">state</span>.<span class="ident">parsing_context</span>, <span class="self">self</span>.<span class="ident">parsing_context</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">state</span>.<span class="ident">label_set</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">label_set_len</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">state</span>.<span class="ident">strict</span>, <span class="self">self</span>.<span class="ident">strict</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">state</span>.<span class="ident">default_item</span>, <span class="self">self</span>.<span class="ident">default_item</span>);
+    <span class="kw">fn </span>rewind(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) {
+        <span class="macro">assert_eq!</span>(state.parsing_context, <span class="self">self</span>.parsing_context);
+        <span class="macro">assert_eq!</span>(state.label_set.len(), <span class="self">self</span>.label_set_len);
+        <span class="macro">assert_eq!</span>(state.strict, <span class="self">self</span>.strict);
+        <span class="macro">assert_eq!</span>(state.default_item, <span class="self">self</span>.default_item);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">state</span>.<span class="ident">duplicate_binding_parent</span>,
-            <span class="self">self</span>.<span class="ident">duplicate_binding_parent</span>
+            state.duplicate_binding_parent,
+            <span class="self">self</span>.duplicate_binding_parent
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">state</span>.<span class="ident">name_map</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">name_map_len</span>);
+        <span class="macro">assert_eq!</span>(state.name_map.len(), <span class="self">self</span>.name_map_len);
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Applies the passed in change to the parser&#39;s state and reverts the</span>
-    <span class="doccomment">/// changes when the returned [ParserStateGuard] goes out of scope.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with_scoped_state</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span>, <span class="ident">C</span>: <span class="ident">ChangeParserState</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">change</span>: <span class="ident">C</span>,
-    ) -&gt; <span class="ident">ParserStateGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">snapshot</span> <span class="op">=</span> <span class="ident">change</span>.<span class="ident">apply</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">state</span>);
-        <span class="ident">ParserStateGuard::new</span>(<span class="self">self</span>, <span class="ident">snapshot</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>&gt; Parser&lt;<span class="lifetime">&#39;t</span>&gt; {
+    <span class="doccomment">/// Applies the passed in change to the parser&#39;s state and reverts the
+    /// changes when the returned [ParserStateGuard] goes out of scope.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>with_scoped_state&lt;<span class="lifetime">&#39;p</span>, C: ChangeParserState&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;p </span><span class="kw-2">mut </span><span class="self">self</span>,
+        change: C,
+    ) -&gt; ParserStateGuard&lt;<span class="lifetime">&#39;p</span>, <span class="lifetime">&#39;t</span>, C&gt; {
+        <span class="kw">let </span>snapshot = change.apply(<span class="kw-2">&amp;mut </span><span class="self">self</span>.state);
+        ParserStateGuard::new(<span class="self">self</span>, snapshot)
     }
 
-    <span class="doccomment">/// Applies the passed in change to the parser state before applying the passed `func` and</span>
-    <span class="doccomment">/// restores the state to before the change before returning the result.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with_state</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">change</span>: <span class="ident">C</span>, <span class="ident">func</span>: <span class="ident">F</span>) -&gt; <span class="ident">R</span>
-    <span class="kw">where</span>
-        <span class="ident">C</span>: <span class="ident">ChangeParserState</span>,
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">R</span>,
+    <span class="doccomment">/// Applies the passed in change to the parser state before applying the passed `func` and
+    /// restores the state to before the change before returning the result.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>with_state&lt;C, F, R&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, change: C, func: F) -&gt; R
+    <span class="kw">where
+        </span>C: ChangeParserState,
+        F: FnOnce(<span class="kw-2">&amp;mut </span>Parser) -&gt; R,
     {
-        <span class="kw">let</span> <span class="ident">snapshot</span> <span class="op">=</span> <span class="ident">change</span>.<span class="ident">apply</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">state</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">func</span>(<span class="self">self</span>);
-        <span class="ident">C::restore</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">state</span>, <span class="ident">snapshot</span>);
-        <span class="ident">result</span>
+        <span class="kw">let </span>snapshot = change.apply(<span class="kw-2">&amp;mut </span><span class="self">self</span>.state);
+        <span class="kw">let </span>result = func(<span class="self">self</span>);
+        C::restore(<span class="kw-2">&amp;mut </span><span class="self">self</span>.state, snapshot);
+        result
     }
 }
 
-<span class="doccomment">/// Reverts state changes to their previous value when it goes out of scope.</span>
-<span class="doccomment">/// Can be used like a regular parser.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ParserStateGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">C</span>: <span class="ident">ChangeParserState</span>,
+<span class="doccomment">/// Reverts state changes to their previous value when it goes out of scope.
+/// Can be used like a regular parser.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ParserStateGuard&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C&gt;
+<span class="kw">where
+    </span>C: ChangeParserState,
 {
-    <span class="ident">snapshot</span>: <span class="ident">C::Snapshot</span>,
-    <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
+    snapshot: C::Snapshot,
+    inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser </span><span class="kw-2">mut </span>Parser&lt;<span class="lifetime">&#39;t</span>&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span>: <span class="ident">ChangeParserState</span><span class="op">&gt;</span> <span class="ident">ParserStateGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">parser</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>, <span class="ident">snapshot</span>: <span class="ident">C::Snapshot</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">snapshot</span>,
-            <span class="ident">inner</span>: <span class="ident">parser</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C: ChangeParserState&gt; ParserStateGuard&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C&gt; {
+    <span class="kw">fn </span>new(parser: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser </span><span class="kw-2">mut </span>Parser&lt;<span class="lifetime">&#39;t</span>&gt;, snapshot: C::Snapshot) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            snapshot,
+            inner: parser,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span>: <span class="ident">ChangeParserState</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">ParserStateGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">snapshot</span> <span class="op">=</span> <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">snapshot</span>);
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C: ChangeParserState&gt; Drop <span class="kw">for </span>ParserStateGuard&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C&gt; {
+    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>snapshot = std::mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.snapshot);
 
-        <span class="ident">C::restore</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>, <span class="ident">snapshot</span>);
+        C::restore(<span class="kw-2">&amp;mut </span><span class="self">self</span>.inner.state, snapshot);
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span>: <span class="ident">ChangeParserState</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">ParserStateGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C: ChangeParserState&gt; Deref <span class="kw">for </span>ParserStateGuard&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C&gt; {
+    <span class="kw">type </span>Target = Parser&lt;<span class="lifetime">&#39;t</span>&gt;;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        <span class="self">self</span>.inner
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span>: <span class="ident">ChangeParserState</span><span class="op">&gt;</span> <span class="ident">DerefMut</span> <span class="kw">for</span> <span class="ident">ParserStateGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, <span class="ident">C</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C: ChangeParserState&gt; DerefMut <span class="kw">for </span>ParserStateGuard&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;t</span>, C&gt; {
+    <span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
+        <span class="self">self</span>.inner
     }
 }
 
-<span class="doccomment">/// Implements a specific modification to the parser state that can later be reverted.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">ChangeParserState</span> {
-    <span class="kw">type</span> <span class="ident">Snapshot</span>: <span class="ident">Default</span>;
+<span class="doccomment">/// Implements a specific modification to the parser state that can later be reverted.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ChangeParserState {
+    <span class="kw">type </span>Snapshot: Default;
 
-    <span class="doccomment">/// Applies the change to the passed in state and returns snapshot that allows restoring the previous state.</span>
-    <span class="kw">fn</span> <span class="ident">apply</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) -&gt; <span class="ident"><span class="self">Self</span>::Snapshot</span>;
+    <span class="doccomment">/// Applies the change to the passed in state and returns snapshot that allows restoring the previous state.
+    </span><span class="kw">fn </span>apply(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) -&gt; <span class="self">Self</span>::Snapshot;
 
-    <span class="doccomment">/// Restores the state to its previous value</span>
-    <span class="kw">fn</span> <span class="ident">restore</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>, <span class="ident">value</span>: <span class="ident"><span class="self">Self</span>::Snapshot</span>);
+    <span class="doccomment">/// Restores the state to its previous value
+    </span><span class="kw">fn </span>restore(state: <span class="kw-2">&amp;mut </span>ParserState, value: <span class="self">Self</span>::Snapshot);
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EnableStrictModeSnapshot</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StrictMode</span><span class="op">&gt;</span>);
+<span class="attribute">#[derive(Default, Debug)]
+</span><span class="kw">pub struct </span>EnableStrictModeSnapshot(<span class="prelude-ty">Option</span>&lt;StrictMode&gt;);
 
-<span class="doccomment">/// Enables strict mode</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnableStrictMode</span>(<span class="kw">pub</span> <span class="ident">StrictMode</span>);
+<span class="doccomment">/// Enables strict mode
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnableStrictMode(<span class="kw">pub </span>StrictMode);
 
-<span class="kw">impl</span> <span class="ident">ChangeParserState</span> <span class="kw">for</span> <span class="ident">EnableStrictMode</span> {
-    <span class="kw">type</span> <span class="ident">Snapshot</span> <span class="op">=</span> <span class="ident">EnableStrictModeSnapshot</span>;
+<span class="kw">impl </span>ChangeParserState <span class="kw">for </span>EnableStrictMode {
+    <span class="kw">type </span>Snapshot = EnableStrictModeSnapshot;
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">apply</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) -&gt; <span class="ident"><span class="self">Self</span>::Snapshot</span> {
-        <span class="ident">EnableStrictModeSnapshot</span>(<span class="ident">std::mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">strict</span>, <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">0</span>)))
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>apply(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) -&gt; <span class="self">Self</span>::Snapshot {
+        EnableStrictModeSnapshot(std::mem::replace(<span class="kw-2">&amp;mut </span>state.strict, <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">0</span>)))
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">restore</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>, <span class="ident">value</span>: <span class="ident"><span class="self">Self</span>::Snapshot</span>) {
-        <span class="ident">state</span>.<span class="ident">strict</span> <span class="op">=</span> <span class="ident">value</span>.<span class="number">0</span>
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>restore(state: <span class="kw-2">&amp;mut </span>ParserState, value: <span class="self">Self</span>::Snapshot) {
+        state.strict = value.<span class="number">0
+    </span>}
+}
+
+<span class="macro">bitflags! </span>{
+    <span class="doccomment">/// Flags describing the context of a function.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SignatureFlags: u8 {
+        <span class="doccomment">/// Is the function in an async context
+        </span><span class="kw">const </span>ASYNC 		= <span class="number">1 </span>&lt;&lt; <span class="number">0</span>;
+        <span class="doccomment">/// Is the function in a generator context
+        </span><span class="kw">const </span>GENERATOR 	= <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
+        <span class="doccomment">/// Is the function a constructor (or constructor context)
+        </span><span class="kw">const </span>CONSTRUCTOR 	= <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
     }
 }
 
-<span class="macro">bitflags!</span> {
-    <span class="doccomment">/// Flags describing the context of a function.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">SignatureFlags</span>: <span class="ident">u8</span> {
-        <span class="doccomment">/// Is the function in an async context</span>
-        <span class="kw">const</span> <span class="ident">ASYNC</span> 		<span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">0</span>;
-        <span class="doccomment">/// Is the function in a generator context</span>
-        <span class="kw">const</span> <span class="ident">GENERATOR</span> 	<span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">1</span>;
-        <span class="doccomment">/// Is the function a constructor (or constructor context)</span>
-        <span class="kw">const</span> <span class="ident">CONSTRUCTOR</span> 	<span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>;
-    }
-}
+<span class="kw">impl </span>From&lt;SignatureFlags&gt; <span class="kw">for </span>ParsingContextFlags {
+    <span class="kw">fn </span>from(flags: SignatureFlags) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>parsing_context = ParsingContextFlags::empty();
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">SignatureFlags</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ParsingContextFlags</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">flags</span>: <span class="ident">SignatureFlags</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parsing_context</span> <span class="op">=</span> <span class="ident">ParsingContextFlags::empty</span>();
-
-        <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">SignatureFlags::ASYNC</span>) {
-            <span class="ident">parsing_context</span> <span class="op">|</span><span class="op">=</span> <span class="ident">ParsingContextFlags::IN_ASYNC</span>;
+        <span class="kw">if </span>flags.contains(SignatureFlags::ASYNC) {
+            parsing_context |= ParsingContextFlags::IN_ASYNC;
         }
 
-        <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">SignatureFlags::GENERATOR</span>) {
-            <span class="ident">parsing_context</span> <span class="op">|</span><span class="op">=</span> <span class="ident">ParsingContextFlags::IN_GENERATOR</span>;
+        <span class="kw">if </span>flags.contains(SignatureFlags::GENERATOR) {
+            parsing_context |= ParsingContextFlags::IN_GENERATOR;
         }
 
-        <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">SignatureFlags::CONSTRUCTOR</span>) {
-            <span class="ident">parsing_context</span> <span class="op">|</span><span class="op">=</span> <span class="ident">ParsingContextFlags::IN_CONSTRUCTOR</span>;
+        <span class="kw">if </span>flags.contains(SignatureFlags::CONSTRUCTOR) {
+            parsing_context |= ParsingContextFlags::IN_CONSTRUCTOR;
         }
 
-        <span class="ident">parsing_context</span>
+        parsing_context
     }
 }
 
-<span class="macro">bitflags!</span> {
-    <span class="doccomment">/// Flags representing the parsing state.</span>
-    <span class="doccomment">/// The reasons to use flags instead of individual boolean fields on `ParserState` are:</span>
-    <span class="doccomment">/// * It&#39;s possible to use bit masks to define what state should be inherited. For example,</span>
-    <span class="doccomment">///   functions inherit whether they&#39;re defined inside a parameter but override the `in_async` flag</span>
-    <span class="doccomment">/// * It&#39;s easier to snapshot the previous state. Individual boolean fields would require that a change</span>
-    <span class="doccomment">///   snapshots each individual boolean field to allow restoring the previous state. With bitflags, all that</span>
-    <span class="doccomment">///   is needed is to copy away the flags field and restore it after.</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ParsingContextFlags</span>: <span class="ident">u8</span> {
-        <span class="doccomment">/// Whether the parser is in a generator function like `function* a() {}`</span>
-        <span class="doccomment">/// Matches the `Yield` parameter in the ECMA spec</span>
-        <span class="kw">const</span> <span class="ident">IN_GENERATOR</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">0</span>;
-        <span class="doccomment">/// Whether the parser is inside a function</span>
-        <span class="kw">const</span> <span class="ident">IN_FUNCTION</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">1</span>;
-        <span class="doccomment">/// Whatever the parser is inside a constructor</span>
-        <span class="kw">const</span> <span class="ident">IN_CONSTRUCTOR</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>;
+<span class="macro">bitflags! </span>{
+    <span class="doccomment">/// Flags representing the parsing state.
+    /// The reasons to use flags instead of individual boolean fields on `ParserState` are:
+    /// * It&#39;s possible to use bit masks to define what state should be inherited. For example,
+    ///   functions inherit whether they&#39;re defined inside a parameter but override the `in_async` flag
+    /// * It&#39;s easier to snapshot the previous state. Individual boolean fields would require that a change
+    ///   snapshots each individual boolean field to allow restoring the previous state. With bitflags, all that
+    ///   is needed is to copy away the flags field and restore it after.
+    </span><span class="attribute">#[derive(Default)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ParsingContextFlags: u8 {
+        <span class="doccomment">/// Whether the parser is in a generator function like `function* a() {}`
+        /// Matches the `Yield` parameter in the ECMA spec
+        </span><span class="kw">const </span>IN_GENERATOR = <span class="number">1 </span>&lt;&lt; <span class="number">0</span>;
+        <span class="doccomment">/// Whether the parser is inside a function
+        </span><span class="kw">const </span>IN_FUNCTION = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
+        <span class="doccomment">/// Whatever the parser is inside a constructor
+        </span><span class="kw">const </span>IN_CONSTRUCTOR = <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
 
-        <span class="doccomment">/// Is async allowed in this context. Either because it&#39;s an async function or top level await is supported.</span>
-        <span class="doccomment">/// Equivalent to the `Async` generator in the ECMA spec</span>
-        <span class="kw">const</span> <span class="ident">IN_ASYNC</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">3</span>;
+        <span class="doccomment">/// Is async allowed in this context. Either because it&#39;s an async function or top level await is supported.
+        /// Equivalent to the `Async` generator in the ECMA spec
+        </span><span class="kw">const </span>IN_ASYNC = <span class="number">1 </span>&lt;&lt; <span class="number">3</span>;
 
-        <span class="doccomment">/// Whether the parser is parsing a top-level statement (not inside a class, function, parameter) or not</span>
-        <span class="kw">const</span> <span class="ident">TOP_LEVEL</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">4</span>;
+        <span class="doccomment">/// Whether the parser is parsing a top-level statement (not inside a class, function, parameter) or not
+        </span><span class="kw">const </span>TOP_LEVEL = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
 
-        <span class="doccomment">/// Whether the parser is in an iteration or switch statement and</span>
-        <span class="doccomment">/// `break` is allowed.</span>
-        <span class="kw">const</span> <span class="ident">BREAK_ALLOWED</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">5</span>;
+        <span class="doccomment">/// Whether the parser is in an iteration or switch statement and
+        /// `break` is allowed.
+        </span><span class="kw">const </span>BREAK_ALLOWED = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
 
-        <span class="doccomment">/// Whether the parser is in an iteration statement and `continue` is allowed.</span>
-        <span class="kw">const</span> <span class="ident">CONTINUE_ALLOWED</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">6</span>;
+        <span class="doccomment">/// Whether the parser is in an iteration statement and `continue` is allowed.
+        </span><span class="kw">const </span>CONTINUE_ALLOWED = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
 
-        <span class="doccomment">/// Whatever the parser is in a TypeScript ambient context</span>
-        <span class="kw">const</span> <span class="ident">AMBIENT_CONTEXT</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">7</span>;
+        <span class="doccomment">/// Whatever the parser is in a TypeScript ambient context
+        </span><span class="kw">const </span>AMBIENT_CONTEXT = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
 
-        <span class="kw">const</span> <span class="ident">LOOP</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::BREAK_ALLOWED</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::CONTINUE_ALLOWED</span>.<span class="ident">bits</span>;
+        <span class="kw">const </span>LOOP = <span class="self">Self</span>::BREAK_ALLOWED.bits | <span class="self">Self</span>::CONTINUE_ALLOWED.bits;
 
-        <span class="doccomment">/// Bitmask of all the flags that must be reset (shouldn&#39;t be inherited) when the parser enters a function</span>
-        <span class="kw">const</span> <span class="ident">FUNCTION_RESET_MASK</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::BREAK_ALLOWED</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::CONTINUE_ALLOWED</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::IN_CONSTRUCTOR</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::IN_ASYNC</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::IN_GENERATOR</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::TOP_LEVEL</span>.<span class="ident">bits</span>;
+        <span class="doccomment">/// Bitmask of all the flags that must be reset (shouldn&#39;t be inherited) when the parser enters a function
+        </span><span class="kw">const </span>FUNCTION_RESET_MASK = <span class="self">Self</span>::BREAK_ALLOWED.bits | <span class="self">Self</span>::CONTINUE_ALLOWED.bits | <span class="self">Self</span>::IN_CONSTRUCTOR.bits | <span class="self">Self</span>::IN_ASYNC.bits | <span class="self">Self</span>::IN_GENERATOR.bits | <span class="self">Self</span>::TOP_LEVEL.bits;
 
-        <span class="doccomment">/// Bitmask of all the flags that must be reset (shouldn&#39;t be inherited) when entering parameters.</span>
-        <span class="kw">const</span> <span class="ident">PARAMETER_RESET_MASK</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::IN_CONSTRUCTOR</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::IN_FUNCTION</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::TOP_LEVEL</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::IN_GENERATOR</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::IN_ASYNC</span>.<span class="ident">bits</span>;
+        <span class="doccomment">/// Bitmask of all the flags that must be reset (shouldn&#39;t be inherited) when entering parameters.
+        </span><span class="kw">const </span>PARAMETER_RESET_MASK = <span class="self">Self</span>::IN_CONSTRUCTOR.bits | <span class="self">Self</span>::IN_FUNCTION.bits | <span class="self">Self</span>::TOP_LEVEL.bits | <span class="self">Self</span>::IN_GENERATOR.bits | <span class="self">Self</span>::IN_ASYNC.bits;
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ParsingContextFlagsSnapshot</span>(<span class="ident">ParsingContextFlags</span>);
+<span class="attribute">#[derive(Debug, Default, Copy, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ParsingContextFlagsSnapshot(ParsingContextFlags);
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">ChangeParserStateFlags</span> {
-    <span class="kw">fn</span> <span class="ident">compute_new_flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">existing</span>: <span class="ident">ParsingContextFlags</span>) -&gt; <span class="ident">ParsingContextFlags</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ChangeParserStateFlags {
+    <span class="kw">fn </span>compute_new_flags(<span class="kw-2">&amp;</span><span class="self">self</span>, existing: ParsingContextFlags) -&gt; ParsingContextFlags;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ChangeParserStateFlags</span><span class="op">&gt;</span> <span class="ident">ChangeParserState</span> <span class="kw">for</span> <span class="ident">T</span> {
-    <span class="kw">type</span> <span class="ident">Snapshot</span> <span class="op">=</span> <span class="ident">ParsingContextFlagsSnapshot</span>;
+<span class="kw">impl</span>&lt;T: ChangeParserStateFlags&gt; ChangeParserState <span class="kw">for </span>T {
+    <span class="kw">type </span>Snapshot = ParsingContextFlagsSnapshot;
 
-    <span class="kw">fn</span> <span class="ident">apply</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) -&gt; <span class="ident"><span class="self">Self</span>::Snapshot</span> {
-        <span class="kw">let</span> <span class="ident">new_flags</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_new_flags</span>(<span class="ident">state</span>.<span class="ident">parsing_context</span>);
-        <span class="ident">ParsingContextFlagsSnapshot</span>(<span class="ident">std::mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">parsing_context</span>, <span class="ident">new_flags</span>))
+    <span class="kw">fn </span>apply(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) -&gt; <span class="self">Self</span>::Snapshot {
+        <span class="kw">let </span>new_flags = <span class="self">self</span>.compute_new_flags(state.parsing_context);
+        ParsingContextFlagsSnapshot(std::mem::replace(<span class="kw-2">&amp;mut </span>state.parsing_context, new_flags))
     }
 
-    <span class="kw">fn</span> <span class="ident">restore</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>, <span class="ident">value</span>: <span class="ident"><span class="self">Self</span>::Snapshot</span>) {
-        <span class="ident">state</span>.<span class="ident">parsing_context</span> <span class="op">=</span> <span class="ident">value</span>.<span class="number">0</span>
-    }
+    <span class="kw">fn </span>restore(state: <span class="kw-2">&amp;mut </span>ParserState, value: <span class="self">Self</span>::Snapshot) {
+        state.parsing_context = value.<span class="number">0
+    </span>}
 }
 
-<span class="doccomment">/// Enters the parsing of function/method parameters</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterParameters</span>(
-    <span class="doccomment">/// Whether async and yield are reserved keywords</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">SignatureFlags</span>,
+<span class="doccomment">/// Enters the parsing of function/method parameters
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterParameters(
+    <span class="doccomment">/// Whether async and yield are reserved keywords
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) SignatureFlags,
 );
 
-<span class="kw">impl</span> <span class="ident">ChangeParserStateFlags</span> <span class="kw">for</span> <span class="ident">EnterParameters</span> {
-    <span class="kw">fn</span> <span class="ident">compute_new_flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">existing</span>: <span class="ident">ParsingContextFlags</span>) -&gt; <span class="ident">ParsingContextFlags</span> {
-        (<span class="ident">existing</span> <span class="op">-</span> <span class="ident">ParsingContextFlags::PARAMETER_RESET_MASK</span>) <span class="op">|</span> <span class="ident">ParsingContextFlags::from</span>(<span class="self">self</span>.<span class="number">0</span>)
+<span class="kw">impl </span>ChangeParserStateFlags <span class="kw">for </span>EnterParameters {
+    <span class="kw">fn </span>compute_new_flags(<span class="kw-2">&amp;</span><span class="self">self</span>, existing: ParsingContextFlags) -&gt; ParsingContextFlags {
+        (existing - ParsingContextFlags::PARAMETER_RESET_MASK) | ParsingContextFlags::from(<span class="self">self</span>.<span class="number">0</span>)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">BreakableKind</span> {
-    <span class="comment">// Iteration statement like Do, While, For</span>
-    <span class="ident">Iteration</span>,
+<span class="attribute">#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>BreakableKind {
+    <span class="comment">// Iteration statement like Do, While, For
+    </span>Iteration,
 
-    <span class="comment">// Switch statement</span>
-    <span class="ident">Switch</span>,
+    <span class="comment">// Switch statement
+    </span>Switch,
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterBreakable</span>(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">BreakableKind</span>);
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterBreakable(<span class="kw">pub</span>(<span class="kw">crate</span>) BreakableKind);
 
-<span class="kw">impl</span> <span class="ident">ChangeParserStateFlags</span> <span class="kw">for</span> <span class="ident">EnterBreakable</span> {
-    <span class="kw">fn</span> <span class="ident">compute_new_flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">existing</span>: <span class="ident">ParsingContextFlags</span>) -&gt; <span class="ident">ParsingContextFlags</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">existing</span> <span class="op">|</span> <span class="ident">ParsingContextFlags::BREAK_ALLOWED</span>;
+<span class="kw">impl </span>ChangeParserStateFlags <span class="kw">for </span>EnterBreakable {
+    <span class="kw">fn </span>compute_new_flags(<span class="kw-2">&amp;</span><span class="self">self</span>, existing: ParsingContextFlags) -&gt; ParsingContextFlags {
+        <span class="kw">let </span><span class="kw-2">mut </span>flags = existing | ParsingContextFlags::BREAK_ALLOWED;
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span> <span class="op">==</span> <span class="ident">BreakableKind::Iteration</span> {
-            <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">ParsingContextFlags::CONTINUE_ALLOWED</span>;
+        <span class="kw">if </span><span class="self">self</span>.<span class="number">0 </span>== BreakableKind::Iteration {
+            flags |= ParsingContextFlags::CONTINUE_ALLOWED;
         }
 
-        <span class="ident">flags</span>
+        flags
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EnterFunctionSnapshot</span> {
-    <span class="ident">parsing_context</span>: <span class="ident">ParsingContextFlags</span>,
-    <span class="ident">label_set</span>: <span class="ident">LabelSet</span>,
+<span class="attribute">#[derive(Debug, Clone, Default)]
+</span><span class="kw">pub struct </span>EnterFunctionSnapshot {
+    parsing_context: ParsingContextFlags,
+    label_set: LabelSet,
 }
 
-<span class="doccomment">/// Enters the parsing of a function/method. Resets the relevant parser state and sets the state</span>
-<span class="doccomment">/// according to the passed [SignatureFlags]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterFunction</span>(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">SignatureFlags</span>);
+<span class="doccomment">/// Enters the parsing of a function/method. Resets the relevant parser state and sets the state
+/// according to the passed [SignatureFlags]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterFunction(<span class="kw">pub</span>(<span class="kw">crate</span>) SignatureFlags);
 
-<span class="kw">impl</span> <span class="ident">ChangeParserState</span> <span class="kw">for</span> <span class="ident">EnterFunction</span> {
-    <span class="kw">type</span> <span class="ident">Snapshot</span> <span class="op">=</span> <span class="ident">EnterFunctionSnapshot</span>;
+<span class="kw">impl </span>ChangeParserState <span class="kw">for </span>EnterFunction {
+    <span class="kw">type </span>Snapshot = EnterFunctionSnapshot;
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">apply</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) -&gt; <span class="ident"><span class="self">Self</span>::Snapshot</span> {
-        <span class="kw">let</span> <span class="ident">new_flags</span> <span class="op">=</span> (<span class="ident">state</span>.<span class="ident">parsing_context</span> <span class="op">-</span> <span class="ident">ParsingContextFlags::FUNCTION_RESET_MASK</span>)
-            <span class="op">|</span> <span class="ident">ParsingContextFlags::IN_FUNCTION</span>
-            <span class="op">|</span> <span class="ident">ParsingContextFlags::from</span>(<span class="self">self</span>.<span class="number">0</span>);
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>apply(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) -&gt; <span class="self">Self</span>::Snapshot {
+        <span class="kw">let </span>new_flags = (state.parsing_context - ParsingContextFlags::FUNCTION_RESET_MASK)
+            | ParsingContextFlags::IN_FUNCTION
+            | ParsingContextFlags::from(<span class="self">self</span>.<span class="number">0</span>);
 
-        <span class="ident">EnterFunctionSnapshot</span> {
-            <span class="ident">parsing_context</span>: <span class="ident">std::mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">parsing_context</span>, <span class="ident">new_flags</span>),
-            <span class="ident">label_set</span>: <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">label_set</span>),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">restore</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>, <span class="ident">value</span>: <span class="ident"><span class="self">Self</span>::Snapshot</span>) {
-        <span class="ident">state</span>.<span class="ident">parsing_context</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">parsing_context</span>;
-        <span class="ident">state</span>.<span class="ident">label_set</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">label_set</span>;
-    }
-}
-
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterClassPropertyInitializer</span>;
-
-<span class="kw">impl</span> <span class="ident">ChangeParserStateFlags</span> <span class="kw">for</span> <span class="ident">EnterClassPropertyInitializer</span> {
-    <span class="kw">fn</span> <span class="ident">compute_new_flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">existing</span>: <span class="ident">ParsingContextFlags</span>) -&gt; <span class="ident">ParsingContextFlags</span> {
-        <span class="ident">existing</span>
-            <span class="op">-</span> <span class="ident">ParsingContextFlags::TOP_LEVEL</span>
-            <span class="op">-</span> <span class="ident">ParsingContextFlags::IN_ASYNC</span>
-            <span class="op">-</span> <span class="ident">ParsingContextFlags::IN_GENERATOR</span>
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterClassStaticInitializationBlockSnapshot</span> {
-    <span class="ident">label_set</span>: <span class="ident">LabelSet</span>,
-    <span class="ident">flags</span>: <span class="ident">ParsingContextFlags</span>,
-}
-
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterClassStaticInitializationBlock</span>;
-
-<span class="kw">impl</span> <span class="ident">ChangeParserState</span> <span class="kw">for</span> <span class="ident">EnterClassStaticInitializationBlock</span> {
-    <span class="kw">type</span> <span class="ident">Snapshot</span> <span class="op">=</span> <span class="ident">EnterClassStaticInitializationBlockSnapshot</span>;
-
-    <span class="kw">fn</span> <span class="ident">apply</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) -&gt; <span class="ident"><span class="self">Self</span>::Snapshot</span> {
-        <span class="kw">let</span> <span class="ident">flags</span> <span class="op">=</span> (<span class="ident">state</span>.<span class="ident">parsing_context</span>
-            <span class="op">-</span> <span class="ident">ParsingContextFlags::FUNCTION_RESET_MASK</span>
-            <span class="op">-</span> <span class="ident">ParsingContextFlags::IN_FUNCTION</span>)
-            <span class="op">|</span> <span class="ident">ParsingContextFlags::IN_ASYNC</span>; <span class="comment">// allow async for better error recovery</span>
-        <span class="ident">EnterClassStaticInitializationBlockSnapshot</span> {
-            <span class="ident">flags</span>: <span class="ident">std::mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">parsing_context</span>, <span class="ident">flags</span>),
-            <span class="ident">label_set</span>: <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">label_set</span>),
+        EnterFunctionSnapshot {
+            parsing_context: std::mem::replace(<span class="kw-2">&amp;mut </span>state.parsing_context, new_flags),
+            label_set: std::mem::take(<span class="kw-2">&amp;mut </span>state.label_set),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">restore</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>, <span class="ident">value</span>: <span class="ident"><span class="self">Self</span>::Snapshot</span>) {
-        <span class="ident">state</span>.<span class="ident">parsing_context</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">flags</span>;
-        <span class="ident">state</span>.<span class="ident">label_set</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">label_set</span>;
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>restore(state: <span class="kw-2">&amp;mut </span>ParserState, value: <span class="self">Self</span>::Snapshot) {
+        state.parsing_context = value.parsing_context;
+        state.label_set = value.label_set;
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">WithLabelSnapshot</span> {
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="ident">label_set_len</span>: <span class="ident">usize</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterClassPropertyInitializer;
+
+<span class="kw">impl </span>ChangeParserStateFlags <span class="kw">for </span>EnterClassPropertyInitializer {
+    <span class="kw">fn </span>compute_new_flags(<span class="kw-2">&amp;</span><span class="self">self</span>, existing: ParsingContextFlags) -&gt; ParsingContextFlags {
+        existing
+            - ParsingContextFlags::TOP_LEVEL
+            - ParsingContextFlags::IN_ASYNC
+            - ParsingContextFlags::IN_GENERATOR
+    }
 }
 
-<span class="doccomment">/// Adds the labelled item with the given label to the `label_set`.</span>
-<span class="doccomment">/// Removes the label when the change is undone.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">WithLabel</span>(<span class="kw">pub</span> <span class="ident">String</span>, <span class="kw">pub</span> <span class="ident">LabelledItem</span>);
+<span class="attribute">#[derive(Default, Debug, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterClassStaticInitializationBlockSnapshot {
+    label_set: LabelSet,
+    flags: ParsingContextFlags,
+}
 
-<span class="kw">impl</span> <span class="ident">ChangeParserState</span> <span class="kw">for</span> <span class="ident">WithLabel</span> {
-    <span class="kw">type</span> <span class="ident">Snapshot</span> <span class="op">=</span> <span class="ident">WithLabelSnapshot</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterClassStaticInitializationBlock;
 
-    <span class="kw">fn</span> <span class="ident">apply</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) -&gt; <span class="ident"><span class="self">Self</span>::Snapshot</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-        <span class="kw">let</span> <span class="ident">previous_len</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">label_set</span>.<span class="ident">len</span>();
-        <span class="ident">state</span>.<span class="ident">label_set</span>.<span class="ident">insert</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>);
-        <span class="ident">WithLabelSnapshot</span> {
-            <span class="comment">// Capturing the len is sufficient because:</span>
-            <span class="comment">// * The labels are stored in an index map that uses insertion-order</span>
-            <span class="comment">// * Labels are scoped and new labels are always appended to the end of the list</span>
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-            <span class="ident">label_set_len</span>: <span class="ident">previous_len</span>,
+<span class="kw">impl </span>ChangeParserState <span class="kw">for </span>EnterClassStaticInitializationBlock {
+    <span class="kw">type </span>Snapshot = EnterClassStaticInitializationBlockSnapshot;
+
+    <span class="kw">fn </span>apply(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) -&gt; <span class="self">Self</span>::Snapshot {
+        <span class="kw">let </span>flags = (state.parsing_context
+            - ParsingContextFlags::FUNCTION_RESET_MASK
+            - ParsingContextFlags::IN_FUNCTION)
+            | ParsingContextFlags::IN_ASYNC; <span class="comment">// allow async for better error recovery
+        </span>EnterClassStaticInitializationBlockSnapshot {
+            flags: std::mem::replace(<span class="kw-2">&amp;mut </span>state.parsing_context, flags),
+            label_set: std::mem::take(<span class="kw-2">&amp;mut </span>state.label_set),
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="kw">fn</span> <span class="ident">restore</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>, <span class="kw">_</span>: <span class="ident"><span class="self">Self</span>::Snapshot</span>) {
-        <span class="ident">state</span>.<span class="ident">label_set</span>.<span class="ident">pop</span>();
-    }
-
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">restore</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>, <span class="ident">value</span>: <span class="ident"><span class="self">Self</span>::Snapshot</span>) {
-        <span class="macro">assert_eq!</span>(<span class="ident">state</span>.<span class="ident">label_set</span>.<span class="ident">len</span>(), <span class="ident">value</span>.<span class="ident">label_set_len</span> <span class="op">+</span> <span class="number">1</span>);
-        <span class="ident">state</span>.<span class="ident">label_set</span>.<span class="ident">pop</span>();
+    <span class="kw">fn </span>restore(state: <span class="kw-2">&amp;mut </span>ParserState, value: <span class="self">Self</span>::Snapshot) {
+        state.parsing_context = value.flags;
+        state.label_set = value.label_set;
     }
 }
 
-<span class="doccomment">/// Sets the state changes needed when parsing a TS type declaration (async and await are not reserved identifiers)</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterType</span>;
-
-<span class="kw">impl</span> <span class="ident">ChangeParserStateFlags</span> <span class="kw">for</span> <span class="ident">EnterType</span> {
-    <span class="kw">fn</span> <span class="ident">compute_new_flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">existing</span>: <span class="ident">ParsingContextFlags</span>) -&gt; <span class="ident">ParsingContextFlags</span> {
-        <span class="ident">existing</span> <span class="op">-</span> <span class="ident">ParsingContextFlags::IN_ASYNC</span> <span class="op">-</span> <span class="ident">ParsingContextFlags::IN_GENERATOR</span>
-    }
+<span class="attribute">#[derive(Debug, Default)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>WithLabelSnapshot {
+    <span class="attribute">#[cfg(debug_assertions)]
+    </span>label_set_len: usize,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterAmbientContextSnapshot</span> {
-    <span class="ident">flags</span>: <span class="ident">ParsingContextFlags</span>,
-    <span class="ident">default_item</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExportDefaultItem</span><span class="op">&gt;</span>,
-    <span class="ident">strict_mode</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StrictMode</span><span class="op">&gt;</span>,
-}
+<span class="doccomment">/// Adds the labelled item with the given label to the `label_set`.
+/// Removes the label when the change is undone.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>WithLabel(<span class="kw">pub </span>String, <span class="kw">pub </span>LabelledItem);
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">EnterAmbientContext</span>;
+<span class="kw">impl </span>ChangeParserState <span class="kw">for </span>WithLabel {
+    <span class="kw">type </span>Snapshot = WithLabelSnapshot;
 
-<span class="kw">impl</span> <span class="ident">ChangeParserState</span> <span class="kw">for</span> <span class="ident">EnterAmbientContext</span> {
-    <span class="kw">type</span> <span class="ident">Snapshot</span> <span class="op">=</span> <span class="ident">EnterAmbientContextSnapshot</span>;
-
-    <span class="kw">fn</span> <span class="ident">apply</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>) -&gt; <span class="ident"><span class="self">Self</span>::Snapshot</span> {
-        <span class="kw">let</span> <span class="ident">new_flags</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">parsing_context</span> <span class="op">|</span> <span class="ident">ParsingContextFlags::AMBIENT_CONTEXT</span>;
-        <span class="ident">EnterAmbientContextSnapshot</span> {
-            <span class="ident">flags</span>: <span class="ident">std::mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">parsing_context</span>, <span class="ident">new_flags</span>),
-            <span class="ident">default_item</span>: <span class="ident">state</span>.<span class="ident">default_item</span>.<span class="ident">take</span>(),
-            <span class="ident">strict_mode</span>: <span class="ident">state</span>.<span class="ident">strict</span>.<span class="ident">take</span>(),
+    <span class="kw">fn </span>apply(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) -&gt; <span class="self">Self</span>::Snapshot {
+        <span class="attribute">#[cfg(debug_assertions)]
+        </span><span class="kw">let </span>previous_len = state.label_set.len();
+        state.label_set.insert(<span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>);
+        WithLabelSnapshot {
+            <span class="comment">// Capturing the len is sufficient because:
+            // * The labels are stored in an index map that uses insertion-order
+            // * Labels are scoped and new labels are always appended to the end of the list
+            </span><span class="attribute">#[cfg(debug_assertions)]
+            </span>label_set_len: previous_len,
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">restore</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ParserState</span>, <span class="ident">value</span>: <span class="ident"><span class="self">Self</span>::Snapshot</span>) {
-        <span class="ident">state</span>.<span class="ident">parsing_context</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">flags</span>;
-        <span class="ident">state</span>.<span class="ident">default_item</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">default_item</span>;
-        <span class="ident">state</span>.<span class="ident">strict</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">strict_mode</span>;
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    </span><span class="kw">fn </span>restore(state: <span class="kw-2">&amp;mut </span>ParserState, <span class="kw">_</span>: <span class="self">Self</span>::Snapshot) {
+        state.label_set.pop();
+    }
+
+    <span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">fn </span>restore(state: <span class="kw-2">&amp;mut </span>ParserState, value: <span class="self">Self</span>::Snapshot) {
+        <span class="macro">assert_eq!</span>(state.label_set.len(), value.label_set_len + <span class="number">1</span>);
+        state.label_set.pop();
+    }
+}
+
+<span class="doccomment">/// Sets the state changes needed when parsing a TS type declaration (async and await are not reserved identifiers)
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterType;
+
+<span class="kw">impl </span>ChangeParserStateFlags <span class="kw">for </span>EnterType {
+    <span class="kw">fn </span>compute_new_flags(<span class="kw-2">&amp;</span><span class="self">self</span>, existing: ParsingContextFlags) -&gt; ParsingContextFlags {
+        existing - ParsingContextFlags::IN_ASYNC - ParsingContextFlags::IN_GENERATOR
+    }
+}
+
+<span class="attribute">#[derive(Default)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterAmbientContextSnapshot {
+    flags: ParsingContextFlags,
+    default_item: <span class="prelude-ty">Option</span>&lt;ExportDefaultItem&gt;,
+    strict_mode: <span class="prelude-ty">Option</span>&lt;StrictMode&gt;,
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EnterAmbientContext;
+
+<span class="kw">impl </span>ChangeParserState <span class="kw">for </span>EnterAmbientContext {
+    <span class="kw">type </span>Snapshot = EnterAmbientContextSnapshot;
+
+    <span class="kw">fn </span>apply(<span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>ParserState) -&gt; <span class="self">Self</span>::Snapshot {
+        <span class="kw">let </span>new_flags = state.parsing_context | ParsingContextFlags::AMBIENT_CONTEXT;
+        EnterAmbientContextSnapshot {
+            flags: std::mem::replace(<span class="kw-2">&amp;mut </span>state.parsing_context, new_flags),
+            default_item: state.default_item.take(),
+            strict_mode: state.strict.take(),
+        }
+    }
+
+    <span class="kw">fn </span>restore(state: <span class="kw-2">&amp;mut </span>ParserState, value: <span class="self">Self</span>::Snapshot) {
+        state.parsing_context = value.flags;
+        state.default_item = value.default_item;
+        state.strict = value.strict_mode;
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/complexity/use_simplified_logic_expression.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_simplified_logic_expression.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/complexity/use_simplified_logic_expression.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_simplified_logic_expression.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -242,249 +242,249 @@
 <span id="242">242</span>
 <span id="243">243</span>
 <span id="244">244</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">context::RuleContext</span>, <span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_factory::make</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsAnyExpression</span>, <span class="ident">JsAnyLiteralExpression</span>, <span class="ident">JsBooleanLiteralExpression</span>, <span class="ident">JsLogicalExpression</span>,
-    <span class="ident">JsUnaryExpression</span>, <span class="ident">JsUnaryOperator</span>, <span class="ident">T</span>,
+</pre><pre class="rust"><code><span class="kw">use </span>rome_analyze::{context::RuleContext, declare_rule, ActionCategory, Ast, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_factory::make;
+<span class="kw">use </span>rome_js_syntax::{
+    JsAnyExpression, JsAnyLiteralExpression, JsBooleanLiteralExpression, JsLogicalExpression,
+    JsUnaryExpression, JsUnaryOperator, T,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">AstNodeExt</span>, <span class="ident">BatchMutationExt</span>};
+<span class="kw">use </span>rome_rowan::{AstNode, AstNodeExt, BatchMutationExt};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsRuleAction</span>;
+<span class="kw">use </span><span class="kw">crate</span>::JsRuleAction;
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Discard redundant terms from logical expressions.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// const boolExp = true;</span>
-    <span class="doccomment">/// const r = true &amp;&amp; boolExp;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// const boolExp2 = true;</span>
-    <span class="doccomment">/// const r2 = boolExp || true;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// const nonNullExp = 123;</span>
-    <span class="doccomment">/// const r3 = null ?? nonNullExp;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// const boolExpr1 = true;</span>
-    <span class="doccomment">/// const boolExpr2 = false;</span>
-    <span class="doccomment">/// const r4 = !boolExpr1 || !boolExpr2;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Valid</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// const boolExpr3 = true;</span>
-    <span class="doccomment">/// const boolExpr4 = false;</span>
-    <span class="doccomment">/// const r5 = !(boolExpr1 &amp;&amp; boolExpr2);</span>
-    <span class="doccomment">/// const boolExpr5 = true;</span>
-    <span class="doccomment">/// const boolExpr6 = false;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseSimplifiedLogicExpression</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;useSimplifiedLogicExpression&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">true</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Discard redundant terms from logical expressions.
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    /// const boolExp = true;
+    /// const r = true &amp;&amp; boolExp;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// const boolExp2 = true;
+    /// const r2 = boolExp || true;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// const nonNullExp = 123;
+    /// const r3 = null ?? nonNullExp;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// const boolExpr1 = true;
+    /// const boolExpr2 = false;
+    /// const r4 = !boolExpr1 || !boolExpr2;
+    /// ```
+    ///
+    /// ### Valid
+    /// ```js
+    /// const boolExpr3 = true;
+    /// const boolExpr4 = false;
+    /// const r5 = !(boolExpr1 &amp;&amp; boolExpr2);
+    /// const boolExpr5 = true;
+    /// const boolExpr6 = false;
+    /// ```
+    ///
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) UseSimplifiedLogicExpression {
+        version: <span class="string">&quot;0.7.0&quot;</span>,
+        name: <span class="string">&quot;useSimplifiedLogicExpression&quot;</span>,
+        recommended: <span class="bool-val">true</span>,
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseSimplifiedLogicExpression</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">JsLogicalExpression</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// First element of tuple is if the expression is simplified by [De Morgan&#39;s Law](https://en.wikipedia.org/wiki/De_Morgan%27s_laws) rule, the second element is the expression to replace.</span>
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> (<span class="ident">bool</span>, <span class="ident">JsAnyExpression</span>);
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>UseSimplifiedLogicExpression {
+    <span class="kw">type </span>Query = Ast&lt;JsLogicalExpression&gt;;
+    <span class="doccomment">/// First element of tuple is if the expression is simplified by [De Morgan&#39;s Law](https://en.wikipedia.org/wiki/De_Morgan%27s_laws) rule, the second element is the expression to replace.
+    </span><span class="kw">type </span>State = (bool, JsAnyExpression);
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">left</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">right</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">right</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-        <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">operator</span>().<span class="ident">ok</span>()<span class="question-mark">?</span> {
-            <span class="ident">rome_js_syntax::JsLogicalOperator::NullishCoalescing</span>
-                <span class="kw">if</span> <span class="macro">matches!</span>(
-                    <span class="ident">left</span>,
-                    <span class="ident">JsAnyExpression::JsAnyLiteralExpression</span>(
-                        <span class="ident">JsAnyLiteralExpression::JsNullLiteralExpression</span>(<span class="kw">_</span>)
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="kw">let </span>left = node.left().ok()<span class="question-mark">?</span>;
+        <span class="kw">let </span>right = node.right().ok()<span class="question-mark">?</span>;
+        <span class="kw">match </span>node.operator().ok()<span class="question-mark">? </span>{
+            rome_js_syntax::JsLogicalOperator::NullishCoalescing
+                <span class="kw">if </span><span class="macro">matches!</span>(
+                    left,
+                    JsAnyExpression::JsAnyLiteralExpression(
+                        JsAnyLiteralExpression::JsNullLiteralExpression(<span class="kw">_</span>)
                     )
                 ) =&gt;
             {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="bool-val">false</span>, <span class="ident">right</span>));
+                <span class="kw">return </span><span class="prelude-val">Some</span>((<span class="bool-val">false</span>, right));
             }
-            <span class="ident">rome_js_syntax::JsLogicalOperator::LogicalOr</span> =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">JsAnyExpression::JsAnyLiteralExpression</span>(
-                    <span class="ident">JsAnyLiteralExpression::JsBooleanLiteralExpression</span>(<span class="ident">literal</span>),
-                ) <span class="op">=</span> <span class="ident">left</span>
+            rome_js_syntax::JsLogicalOperator::LogicalOr =&gt; {
+                <span class="kw">if let </span>JsAnyExpression::JsAnyLiteralExpression(
+                    JsAnyLiteralExpression::JsBooleanLiteralExpression(literal),
+                ) = left
                 {
-                    <span class="kw">return</span> <span class="ident">simplify_or_expression</span>(<span class="ident">literal</span>, <span class="ident">right</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">expr</span><span class="op">|</span> (<span class="bool-val">false</span>, <span class="ident">expr</span>));
+                    <span class="kw">return </span>simplify_or_expression(literal, right).map(|expr| (<span class="bool-val">false</span>, expr));
                 }
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">JsAnyExpression::JsAnyLiteralExpression</span>(
-                    <span class="ident">JsAnyLiteralExpression::JsBooleanLiteralExpression</span>(<span class="ident">literal</span>),
-                ) <span class="op">=</span> <span class="ident">right</span>
+                <span class="kw">if let </span>JsAnyExpression::JsAnyLiteralExpression(
+                    JsAnyLiteralExpression::JsBooleanLiteralExpression(literal),
+                ) = right
                 {
-                    <span class="kw">return</span> <span class="ident">simplify_or_expression</span>(<span class="ident">literal</span>, <span class="ident">left</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">expr</span><span class="op">|</span> (<span class="bool-val">false</span>, <span class="ident">expr</span>));
+                    <span class="kw">return </span>simplify_or_expression(literal, left).map(|expr| (<span class="bool-val">false</span>, expr));
                 }
 
-                <span class="kw">if</span> <span class="ident">could_apply_de_morgan</span>(<span class="ident">node</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>) {
-                    <span class="kw">return</span> <span class="ident">simplify_de_morgan</span>(<span class="ident">node</span>)
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">expr</span><span class="op">|</span> (<span class="bool-val">true</span>, <span class="ident">JsAnyExpression::JsUnaryExpression</span>(<span class="ident">expr</span>)));
-                }
-            }
-            <span class="ident">rome_js_syntax::JsLogicalOperator::LogicalAnd</span> =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">JsAnyExpression::JsAnyLiteralExpression</span>(
-                    <span class="ident">JsAnyLiteralExpression::JsBooleanLiteralExpression</span>(<span class="ident">literal</span>),
-                ) <span class="op">=</span> <span class="ident">left</span>
-                {
-                    <span class="kw">return</span> <span class="ident">simplify_and_expression</span>(<span class="ident">literal</span>, <span class="ident">right</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">expr</span><span class="op">|</span> (<span class="bool-val">false</span>, <span class="ident">expr</span>));
-                }
-
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">JsAnyExpression::JsAnyLiteralExpression</span>(
-                    <span class="ident">JsAnyLiteralExpression::JsBooleanLiteralExpression</span>(<span class="ident">literal</span>),
-                ) <span class="op">=</span> <span class="ident">right</span>
-                {
-                    <span class="kw">return</span> <span class="ident">simplify_and_expression</span>(<span class="ident">literal</span>, <span class="ident">left</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">expr</span><span class="op">|</span> (<span class="bool-val">false</span>, <span class="ident">expr</span>));
-                }
-
-                <span class="kw">if</span> <span class="ident">could_apply_de_morgan</span>(<span class="ident">node</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>) {
-                    <span class="kw">return</span> <span class="ident">simplify_de_morgan</span>(<span class="ident">node</span>)
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">expr</span><span class="op">|</span> (<span class="bool-val">true</span>, <span class="ident">JsAnyExpression::JsUnaryExpression</span>(<span class="ident">expr</span>)));
+                <span class="kw">if </span>could_apply_de_morgan(node).unwrap_or(<span class="bool-val">false</span>) {
+                    <span class="kw">return </span>simplify_de_morgan(node)
+                        .map(|expr| (<span class="bool-val">true</span>, JsAnyExpression::JsUnaryExpression(expr)));
                 }
             }
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+            rome_js_syntax::JsLogicalOperator::LogicalAnd =&gt; {
+                <span class="kw">if let </span>JsAnyExpression::JsAnyLiteralExpression(
+                    JsAnyLiteralExpression::JsBooleanLiteralExpression(literal),
+                ) = left
+                {
+                    <span class="kw">return </span>simplify_and_expression(literal, right).map(|expr| (<span class="bool-val">false</span>, expr));
+                }
+
+                <span class="kw">if let </span>JsAnyExpression::JsAnyLiteralExpression(
+                    JsAnyLiteralExpression::JsBooleanLiteralExpression(literal),
+                ) = right
+                {
+                    <span class="kw">return </span>simplify_and_expression(literal, left).map(|expr| (<span class="bool-val">false</span>, expr));
+                }
+
+                <span class="kw">if </span>could_apply_de_morgan(node).unwrap_or(<span class="bool-val">false</span>) {
+                    <span class="kw">return </span>simplify_de_morgan(node)
+                        .map(|expr| (<span class="bool-val">true</span>, JsAnyExpression::JsUnaryExpression(expr)));
+                }
+            }
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
         }
 
-        <span class="prelude-val">None</span>
-    }
+        <span class="prelude-val">None
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+    <span class="kw">fn </span>diagnostic(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>node = ctx.query();
 
-        <span class="prelude-val">Some</span>(<span class="ident">RuleDiagnostic::new</span>(
+        <span class="prelude-val">Some</span>(RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">node</span>.<span class="ident">range</span>(),
-            <span class="macro">markup!</span> {
-                <span class="string">&quot;Logical expression contains unnecessary complexity.&quot;</span>
-            },
+            node.range(),
+            <span class="macro">markup! </span>{
+                <span class="string">&quot;Logical expression contains unnecessary complexity.&quot;
+            </span>},
         ))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
+    <span class="kw">fn </span>action(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
 
-        <span class="kw">let</span> (<span class="ident">is_simplified_by_de_morgan</span>, <span class="ident">expr</span>) <span class="op">=</span> <span class="ident">state</span>;
+        <span class="kw">let </span>(is_simplified_by_de_morgan, expr) = state;
 
-        <span class="ident">mutation</span>.<span class="ident">replace_node</span>(
-            <span class="ident">JsAnyExpression::JsLogicalExpression</span>(<span class="ident">node</span>.<span class="ident">clone</span>()),
-            <span class="ident">expr</span>.<span class="ident">clone</span>(),
+        mutation.replace_node(
+            JsAnyExpression::JsLogicalExpression(node.clone()),
+            expr.clone(),
         );
 
-        <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">is_simplified_by_de_morgan</span> {
-            <span class="string">&quot;Reduce the complexity of the logical expression.&quot;</span>
-        } <span class="kw">else</span> {
-            <span class="string">&quot;Discard redundant terms from the logical expression.&quot;</span>
-        };
+        <span class="kw">let </span>message = <span class="kw">if </span><span class="kw-2">*</span>is_simplified_by_de_morgan {
+            <span class="string">&quot;Reduce the complexity of the logical expression.&quot;
+        </span>} <span class="kw">else </span>{
+            <span class="string">&quot;Discard redundant terms from the logical expression.&quot;
+        </span>};
 
-        <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-            <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
-            <span class="ident">applicability</span>: <span class="ident">Applicability::MaybeIncorrect</span>,
-            <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;&quot;</span>{<span class="ident">message</span>}<span class="string">&quot;&quot;</span> }.<span class="ident">to_owned</span>(),
-            <span class="ident">mutation</span>,
+        <span class="prelude-val">Some</span>(JsRuleAction {
+            category: ActionCategory::QuickFix,
+            applicability: Applicability::MaybeIncorrect,
+            message: <span class="macro">markup! </span>{ <span class="string">&quot;&quot;</span>{message}<span class="string">&quot;&quot; </span>}.to_owned(),
+            mutation,
         })
     }
 }
 
-<span class="doccomment">/// https://en.wikipedia.org/wiki/De_Morgan%27s_laws</span>
-<span class="kw">fn</span> <span class="ident">could_apply_de_morgan</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">JsLogicalExpression</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">left</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">right</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">right</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-    <span class="kw">match</span> (<span class="ident">left</span>, <span class="ident">right</span>) {
-        (<span class="ident">JsAnyExpression::JsUnaryExpression</span>(<span class="ident">left</span>), <span class="ident">JsAnyExpression::JsUnaryExpression</span>(<span class="ident">right</span>)) =&gt; {
+<span class="doccomment">/// https://en.wikipedia.org/wiki/De_Morgan%27s_laws
+</span><span class="kw">fn </span>could_apply_de_morgan(node: <span class="kw-2">&amp;</span>JsLogicalExpression) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    <span class="kw">let </span>left = node.left().ok()<span class="question-mark">?</span>;
+    <span class="kw">let </span>right = node.right().ok()<span class="question-mark">?</span>;
+    <span class="kw">match </span>(left, right) {
+        (JsAnyExpression::JsUnaryExpression(left), JsAnyExpression::JsUnaryExpression(right)) =&gt; {
             <span class="prelude-val">Some</span>(
-                <span class="macro">matches!</span>(<span class="ident">left</span>.<span class="ident">operator</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>, <span class="ident">JsUnaryOperator::LogicalNot</span>)
-                    <span class="op">&amp;&amp;</span> <span class="macro">matches!</span>(<span class="ident">right</span>.<span class="ident">operator</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>, <span class="ident">JsUnaryOperator::LogicalNot</span>)
-                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">left</span>.<span class="ident">argument</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>, <span class="ident">JsAnyExpression::JsUnaryExpression</span>(<span class="kw">_</span>))
-                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="macro">matches!</span>(
-                        <span class="ident">right</span>.<span class="ident">argument</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
-                        <span class="ident">JsAnyExpression::JsUnaryExpression</span>(<span class="kw">_</span>)
+                <span class="macro">matches!</span>(left.operator().ok()<span class="question-mark">?</span>, JsUnaryOperator::LogicalNot)
+                    &amp;&amp; <span class="macro">matches!</span>(right.operator().ok()<span class="question-mark">?</span>, JsUnaryOperator::LogicalNot)
+                    &amp;&amp; !<span class="macro">matches!</span>(left.argument().ok()<span class="question-mark">?</span>, JsAnyExpression::JsUnaryExpression(<span class="kw">_</span>))
+                    &amp;&amp; !<span class="macro">matches!</span>(
+                        right.argument().ok()<span class="question-mark">?</span>,
+                        JsAnyExpression::JsUnaryExpression(<span class="kw">_</span>)
                     ),
             )
         }
-        <span class="kw">_</span> =&gt; <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
+        <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">simplify_and_expression</span>(
-    <span class="ident">literal</span>: <span class="ident">JsBooleanLiteralExpression</span>,
-    <span class="ident">expression</span>: <span class="ident">JsAnyExpression</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span> {
-    <span class="ident">keep_expression_if_literal</span>(<span class="ident">literal</span>, <span class="ident">expression</span>, <span class="bool-val">true</span>)
+<span class="kw">fn </span>simplify_and_expression(
+    literal: JsBooleanLiteralExpression,
+    expression: JsAnyExpression,
+) -&gt; <span class="prelude-ty">Option</span>&lt;JsAnyExpression&gt; {
+    keep_expression_if_literal(literal, expression, <span class="bool-val">true</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">simplify_or_expression</span>(
-    <span class="ident">literal</span>: <span class="ident">JsBooleanLiteralExpression</span>,
-    <span class="ident">expression</span>: <span class="ident">JsAnyExpression</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span> {
-    <span class="ident">keep_expression_if_literal</span>(<span class="ident">literal</span>, <span class="ident">expression</span>, <span class="bool-val">false</span>)
+<span class="kw">fn </span>simplify_or_expression(
+    literal: JsBooleanLiteralExpression,
+    expression: JsAnyExpression,
+) -&gt; <span class="prelude-ty">Option</span>&lt;JsAnyExpression&gt; {
+    keep_expression_if_literal(literal, expression, <span class="bool-val">false</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">keep_expression_if_literal</span>(
-    <span class="ident">literal</span>: <span class="ident">JsBooleanLiteralExpression</span>,
-    <span class="ident">expression</span>: <span class="ident">JsAnyExpression</span>,
-    <span class="ident">expected_value</span>: <span class="ident">bool</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsAnyExpression</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">eval_value</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">literal</span>.<span class="ident">value_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">kind</span>() {
+<span class="kw">fn </span>keep_expression_if_literal(
+    literal: JsBooleanLiteralExpression,
+    expression: JsAnyExpression,
+    expected_value: bool,
+) -&gt; <span class="prelude-ty">Option</span>&lt;JsAnyExpression&gt; {
+    <span class="kw">let </span>eval_value = <span class="kw">match </span>literal.value_token().ok()<span class="question-mark">?</span>.kind() {
         <span class="macro">T!</span>[<span class="bool-val">true</span>] =&gt; <span class="bool-val">true</span>,
         <span class="macro">T!</span>[<span class="bool-val">false</span>] =&gt; <span class="bool-val">false</span>,
-        <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+        <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
     };
-    <span class="kw">if</span> <span class="ident">eval_value</span> <span class="op">==</span> <span class="ident">expected_value</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">expression</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">JsAnyExpression::JsAnyLiteralExpression</span>(
-            <span class="ident">JsAnyLiteralExpression::JsBooleanLiteralExpression</span>(<span class="ident">literal</span>),
+    <span class="kw">if </span>eval_value == expected_value {
+        <span class="prelude-val">Some</span>(expression)
+    } <span class="kw">else </span>{
+        <span class="prelude-val">Some</span>(JsAnyExpression::JsAnyLiteralExpression(
+            JsAnyLiteralExpression::JsBooleanLiteralExpression(literal),
         ))
     }
 }
 
-<span class="kw">fn</span> <span class="ident">simplify_de_morgan</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">JsLogicalExpression</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsUnaryExpression</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">left</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">right</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">right</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">operator_token</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">operator_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-    <span class="kw">match</span> (<span class="ident">left</span>, <span class="ident">right</span>) {
-        (<span class="ident">JsAnyExpression::JsUnaryExpression</span>(<span class="ident">left</span>), <span class="ident">JsAnyExpression::JsUnaryExpression</span>(<span class="ident">right</span>)) =&gt; {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_logic_expression</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">operator_token</span>.<span class="ident">kind</span>() {
-                <span class="macro">T!</span>[<span class="op">|</span><span class="op">|</span>] =&gt; <span class="ident">node</span>
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">replace_token</span>(<span class="ident">operator_token</span>, <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="op">&amp;&amp;</span>])),
-                <span class="macro">T!</span>[<span class="op">&amp;&amp;</span>] =&gt; <span class="ident">node</span>
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">replace_token</span>(<span class="ident">operator_token</span>, <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="op">|</span><span class="op">|</span>])),
-                <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+<span class="kw">fn </span>simplify_de_morgan(node: <span class="kw-2">&amp;</span>JsLogicalExpression) -&gt; <span class="prelude-ty">Option</span>&lt;JsUnaryExpression&gt; {
+    <span class="kw">let </span>left = node.left().ok()<span class="question-mark">?</span>;
+    <span class="kw">let </span>right = node.right().ok()<span class="question-mark">?</span>;
+    <span class="kw">let </span>operator_token = node.operator_token().ok()<span class="question-mark">?</span>;
+    <span class="kw">match </span>(left, right) {
+        (JsAnyExpression::JsUnaryExpression(left), JsAnyExpression::JsUnaryExpression(right)) =&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>next_logic_expression = <span class="kw">match </span>operator_token.kind() {
+                <span class="macro">T!</span>[||] =&gt; node
+                    .clone()
+                    .replace_token(operator_token, make::token(<span class="macro">T!</span>[&amp;&amp;])),
+                <span class="macro">T!</span>[&amp;&amp;] =&gt; node
+                    .clone()
+                    .replace_token(operator_token, make::token(<span class="macro">T!</span>[||])),
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
             }<span class="question-mark">?</span>;
-            <span class="ident">next_logic_expression</span> <span class="op">=</span> <span class="ident">next_logic_expression</span>.<span class="ident">with_left</span>(<span class="ident">left</span>.<span class="ident">argument</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>);
-            <span class="ident">next_logic_expression</span> <span class="op">=</span> <span class="ident">next_logic_expression</span>.<span class="ident">with_right</span>(<span class="ident">right</span>.<span class="ident">argument</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>);
-            <span class="prelude-val">Some</span>(<span class="ident">make::js_unary_expression</span>(
-                <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="op">!</span>]),
-                <span class="ident">JsAnyExpression::JsParenthesizedExpression</span>(<span class="ident">make::js_parenthesized_expression</span>(
-                    <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]),
-                    <span class="ident">JsAnyExpression::JsLogicalExpression</span>(<span class="ident">next_logic_expression</span>),
-                    <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]),
+            next_logic_expression = next_logic_expression.with_left(left.argument().ok()<span class="question-mark">?</span>);
+            next_logic_expression = next_logic_expression.with_right(right.argument().ok()<span class="question-mark">?</span>);
+            <span class="prelude-val">Some</span>(make::js_unary_expression(
+                make::token(<span class="macro">T!</span>[!]),
+                JsAnyExpression::JsParenthesizedExpression(make::js_parenthesized_expression(
+                    make::token(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]),
+                    JsAnyExpression::JsLogicalExpression(next_logic_expression),
+                    make::token(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]),
                 )),
             ))
         }
-        <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+        <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

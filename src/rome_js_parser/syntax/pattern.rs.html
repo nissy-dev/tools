@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/syntax/pattern.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pattern.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/syntax/pattern.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pattern.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -272,279 +272,279 @@
 <span id="272">272</span>
 <span id="273">273</span>
 <span id="274">274</span>
-</pre><pre class="rust"><code><span class="doccomment">///! Provides traits for parsing pattern like nodes</span>
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::ParserProgress</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::expr</span>::{<span class="ident">parse_assignment_expression_or_higher</span>, <span class="ident">ExpressionContext</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::js_parse_error</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ParsedSyntax</span>::{<span class="ident">Absent</span>, <span class="ident">Present</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CompletedMarker</span>, <span class="ident">ParseDiagnostic</span>, <span class="ident">ParseRecovery</span>, <span class="ident">ParsedSyntax</span>, <span class="ident">Parser</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>::{<span class="ident">EOF</span>, <span class="ident">JS_ARRAY_HOLE</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>, <span class="ident">TextRange</span>, <span class="ident">T</span>};
+</pre><pre class="rust"><code><span class="doccomment">///! Provides traits for parsing pattern like nodes
+</span><span class="kw">use </span><span class="kw">crate</span>::parser::ParserProgress;
+<span class="kw">use </span><span class="kw">crate</span>::syntax::expr::{parse_assignment_expression_or_higher, ExpressionContext};
+<span class="kw">use </span><span class="kw">crate</span>::syntax::js_parse_error;
+<span class="kw">use </span><span class="kw">crate</span>::ParsedSyntax::{Absent, Present};
+<span class="kw">use crate</span>::{CompletedMarker, ParseDiagnostic, ParseRecovery, ParsedSyntax, Parser};
+<span class="kw">use </span>rome_js_syntax::JsSyntaxKind::{EOF, JS_ARRAY_HOLE};
+<span class="kw">use </span>rome_js_syntax::{JsSyntaxKind, TextRange, T};
 
-<span class="doccomment">/// Trait for parsing a pattern with an optional default of the form `pattern = default`</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">ParseWithDefaultPattern</span> {
-    <span class="doccomment">/// The syntax kind of the node for a pattern with a default value</span>
-    <span class="kw">fn</span> <span class="ident">pattern_with_default_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
+<span class="doccomment">/// Trait for parsing a pattern with an optional default of the form `pattern = default`
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ParseWithDefaultPattern {
+    <span class="doccomment">/// The syntax kind of the node for a pattern with a default value
+    </span><span class="kw">fn </span>pattern_with_default_kind() -&gt; JsSyntaxKind;
 
-    <span class="doccomment">/// Creates a diagnostic for the case where the pattern is missing. For example, if the</span>
-    <span class="doccomment">/// code only contains ` = default`</span>
-    <span class="kw">fn</span> <span class="ident">expected_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span>;
+    <span class="doccomment">/// Creates a diagnostic for the case where the pattern is missing. For example, if the
+    /// code only contains ` = default`
+    </span><span class="kw">fn </span>expected_pattern_error(p: <span class="kw-2">&amp;</span>Parser, range: TextRange) -&gt; ParseDiagnostic;
 
-    <span class="doccomment">/// Parses a pattern (without its default value)</span>
-    <span class="kw">fn</span> <span class="ident">parse_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span>;
+    <span class="doccomment">/// Parses a pattern (without its default value)
+    </span><span class="kw">fn </span>parse_pattern(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax;
 
-    <span class="doccomment">/// Parses a pattern and wraps it in a pattern with default if a `=` token follows the pattern</span>
-    <span class="kw">fn</span> <span class="ident">parse_pattern_with_optional_default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-        <span class="kw">let</span> <span class="ident">pattern</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parse_pattern</span>(<span class="ident">p</span>);
+    <span class="doccomment">/// Parses a pattern and wraps it in a pattern with default if a `=` token follows the pattern
+    </span><span class="kw">fn </span>parse_pattern_with_optional_default(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+        <span class="kw">let </span>pattern = <span class="self">self</span>.parse_pattern(p);
 
-        <span class="comment">// test_err js_invalid_assignment</span>
-        <span class="comment">// ([=[(p[=[(p%]&gt;([=[(p[=[(</span>
-        <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="op">=</span>]) {
-            <span class="kw">let</span> <span class="ident">with_default</span> <span class="op">=</span> <span class="ident">pattern</span>.<span class="ident">precede_or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::expected_pattern_error</span>);
-            <span class="ident">p</span>.<span class="ident">bump_any</span>(); <span class="comment">// eat the = token</span>
+        <span class="comment">// test_err js_invalid_assignment
+        // ([=[(p[=[(p%]&gt;([=[(p[=[(
+        </span><span class="kw">if </span>p.at(<span class="macro">T!</span>[=]) {
+            <span class="kw">let </span>with_default = pattern.precede_or_add_diagnostic(p, <span class="self">Self</span>::expected_pattern_error);
+            p.bump_any(); <span class="comment">// eat the = token
 
-            <span class="comment">// test pattern_with_default_in_keyword</span>
-            <span class="comment">// for ([a = &quot;a&quot; in {}] in []) {}</span>
-            <span class="ident">parse_assignment_expression_or_higher</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>())
-                .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_expression_assignment</span>);
+            // test pattern_with_default_in_keyword
+            // for ([a = &quot;a&quot; in {}] in []) {}
+            </span>parse_assignment_expression_or_higher(p, ExpressionContext::default())
+                .or_add_diagnostic(p, js_parse_error::expected_expression_assignment);
 
-            <span class="ident">Present</span>(<span class="ident">with_default</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::pattern_with_default_kind</span>()))
-        } <span class="kw">else</span> {
-            <span class="ident">pattern</span>
+            Present(with_default.complete(p, <span class="self">Self</span>::pattern_with_default_kind()))
+        } <span class="kw">else </span>{
+            pattern
         }
     }
 }
 
-<span class="doccomment">/// Trait for parsing an array like pattern of the form `[a, b = &quot;c&quot;, { }]`</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">ParseArrayPattern</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">ParseWithDefaultPattern</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The kind of an unknown pattern. Used in case the pattern contains elements that aren&#39;t valid patterns</span>
-    <span class="kw">fn</span> <span class="ident">unknown_pattern_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
-    <span class="doccomment">/// The kind of the array like pattern (array assignment or array binding)</span>
-    <span class="kw">fn</span> <span class="ident">array_pattern_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
-    <span class="doccomment">/// The kind of the rest pattern</span>
-    <span class="kw">fn</span> <span class="ident">rest_pattern_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
-    <span class="doccomment">/// The kind of the list</span>
-    <span class="kw">fn</span> <span class="ident">list_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
-    <span class="doccomment">///  Creates a diagnostic saying that the parser expected an element at the position passed as an argument.</span>
-    <span class="kw">fn</span> <span class="ident">expected_element_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span>;
-    <span class="doccomment">/// Creates a pattern with default instance. Used to parse the array elements.</span>
-    <span class="kw">fn</span> <span class="ident">pattern_with_default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">P</span>;
+<span class="doccomment">/// Trait for parsing an array like pattern of the form `[a, b = &quot;c&quot;, { }]`
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ParseArrayPattern&lt;P: ParseWithDefaultPattern&gt; {
+    <span class="doccomment">/// The kind of an unknown pattern. Used in case the pattern contains elements that aren&#39;t valid patterns
+    </span><span class="kw">fn </span>unknown_pattern_kind() -&gt; JsSyntaxKind;
+    <span class="doccomment">/// The kind of the array like pattern (array assignment or array binding)
+    </span><span class="kw">fn </span>array_pattern_kind() -&gt; JsSyntaxKind;
+    <span class="doccomment">/// The kind of the rest pattern
+    </span><span class="kw">fn </span>rest_pattern_kind() -&gt; JsSyntaxKind;
+    <span class="doccomment">/// The kind of the list
+    </span><span class="kw">fn </span>list_kind() -&gt; JsSyntaxKind;
+    <span class="doccomment">///  Creates a diagnostic saying that the parser expected an element at the position passed as an argument.
+    </span><span class="kw">fn </span>expected_element_error(p: <span class="kw-2">&amp;</span>Parser, range: TextRange) -&gt; ParseDiagnostic;
+    <span class="doccomment">/// Creates a pattern with default instance. Used to parse the array elements.
+    </span><span class="kw">fn </span>pattern_with_default(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; P;
 
-    <span class="doccomment">/// Tries to parse an array like pattern</span>
-    <span class="kw">fn</span> <span class="ident">parse_array_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]) {
-            <span class="kw">return</span> <span class="ident">Absent</span>;
+    <span class="doccomment">/// Tries to parse an array like pattern
+    </span><span class="kw">fn </span>parse_array_pattern(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+        <span class="kw">if </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]) {
+            <span class="kw">return </span>Absent;
         }
 
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
+        <span class="kw">let </span>m = p.start();
 
-        <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]);
-        <span class="kw">let</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">progress</span> <span class="op">=</span> <span class="ident">ParserProgress::default</span>();
+        p.bump(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]);
+        <span class="kw">let </span>elements = p.start();
+        <span class="kw">let </span><span class="kw-2">mut </span>progress = ParserProgress::default();
 
         {
-            <span class="kw">while</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="ident">EOF</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]) {
-                <span class="ident">progress</span>.<span class="ident">assert_progressing</span>(<span class="ident">p</span>);
+            <span class="kw">while </span>!p.at(EOF) &amp;&amp; !p.at(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]) {
+                progress.assert_progressing(p);
 
-                <span class="kw">let</span> <span class="ident">recovery</span> <span class="op">=</span> <span class="ident">ParseRecovery::new</span>(
-                    <span class="ident"><span class="self">Self</span>::unknown_pattern_kind</span>(),
-                    <span class="macro">token_set!</span>(<span class="ident">EOF</span>, <span class="macro">T!</span>[,], <span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>], <span class="macro">T!</span>[<span class="op">=</span>], <span class="macro">T!</span>[;], <span class="macro">T!</span>[...], <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]),
+                <span class="kw">let </span>recovery = ParseRecovery::new(
+                    <span class="self">Self</span>::unknown_pattern_kind(),
+                    <span class="macro">token_set!</span>(EOF, <span class="macro">T!</span>[,], <span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>], <span class="macro">T!</span>[=], <span class="macro">T!</span>[;], <span class="macro">T!</span>[...], <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]),
                 )
-                .<span class="ident">enable_recovery_on_line_break</span>();
+                .enable_recovery_on_line_break();
 
-                <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parse_any_array_element</span>(<span class="ident">p</span>, <span class="kw-2">&amp;</span><span class="ident">recovery</span>);
+                <span class="kw">let </span>element = <span class="self">self</span>.parse_any_array_element(p, <span class="kw-2">&amp;</span>recovery);
 
-                <span class="kw">if</span> <span class="ident">element</span>
-                    .<span class="ident">or_recover</span>(<span class="ident">p</span>, <span class="kw-2">&amp;</span><span class="ident">recovery</span>, <span class="ident"><span class="self">Self</span>::expected_element_error</span>)
-                    .<span class="ident">is_err</span>()
+                <span class="kw">if </span>element
+                    .or_recover(p, <span class="kw-2">&amp;</span>recovery, <span class="self">Self</span>::expected_element_error)
+                    .is_err()
                 {
-                    <span class="comment">// Failed to recover</span>
-                    <span class="kw">break</span>;
+                    <span class="comment">// Failed to recover
+                    </span><span class="kw">break</span>;
                 }
 
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]) {
-                    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[,]);
+                <span class="kw">if </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]) {
+                    p.expect(<span class="macro">T!</span>[,]);
                 }
             }
         }
 
-        <span class="ident">elements</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::list_kind</span>());
-        <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]);
+        elements.complete(p, <span class="self">Self</span>::list_kind());
+        p.expect(<span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>]);
 
-        <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::array_pattern_kind</span>()))
+        Present(m.complete(p, <span class="self">Self</span>::array_pattern_kind()))
     }
 
-    <span class="doccomment">/// Parses a single array element</span>
-    <span class="kw">fn</span> <span class="ident">parse_any_array_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">recovery</span>: <span class="kw-2">&amp;</span><span class="ident">ParseRecovery</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-        <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">cur</span>() {
-            <span class="macro">T!</span>[,] =&gt; <span class="ident">Present</span>(<span class="ident">p</span>.<span class="ident">start</span>().<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_ARRAY_HOLE</span>)),
-            <span class="macro">T!</span>[...] =&gt; <span class="self">self</span>
-                .<span class="ident">parse_rest_pattern</span>(<span class="ident">p</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">rest_pattern</span><span class="op">|</span> <span class="ident">validate_rest_pattern</span>(<span class="ident">p</span>, <span class="ident">rest_pattern</span>, <span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>], <span class="ident">recovery</span>)),
-            <span class="kw">_</span> =&gt; <span class="self">self</span>
-                .<span class="ident">pattern_with_default</span>()
-                .<span class="ident">parse_pattern_with_optional_default</span>(<span class="ident">p</span>),
+    <span class="doccomment">/// Parses a single array element
+    </span><span class="kw">fn </span>parse_any_array_element(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser, recovery: <span class="kw-2">&amp;</span>ParseRecovery) -&gt; ParsedSyntax {
+        <span class="kw">match </span>p.cur() {
+            <span class="macro">T!</span>[,] =&gt; Present(p.start().complete(p, JS_ARRAY_HOLE)),
+            <span class="macro">T!</span>[...] =&gt; <span class="self">self
+                </span>.parse_rest_pattern(p)
+                .map(|rest_pattern| validate_rest_pattern(p, rest_pattern, <span class="macro">T!</span>[<span class="string">&#39;]&#39;</span>], recovery)),
+            <span class="kw">_ </span>=&gt; <span class="self">self
+                </span>.pattern_with_default()
+                .parse_pattern_with_optional_default(p),
         }
     }
 
-    <span class="doccomment">/// Parses a rest element</span>
-    <span class="kw">fn</span> <span class="ident">parse_rest_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[...]) {
-            <span class="kw">return</span> <span class="ident">Absent</span>;
+    <span class="doccomment">/// Parses a rest element
+    </span><span class="kw">fn </span>parse_rest_pattern(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+        <span class="kw">if </span>!p.at(<span class="macro">T!</span>[...]) {
+            <span class="kw">return </span>Absent;
         }
 
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-        <span class="kw">let</span> <span class="ident">rest_end</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">end</span>();
-        <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[...]);
+        <span class="kw">let </span>m = p.start();
+        <span class="kw">let </span>rest_end = p.cur_range().end();
+        p.bump(<span class="macro">T!</span>[...]);
 
-        <span class="kw">let</span> <span class="ident">with_default</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pattern_with_default</span>();
+        <span class="kw">let </span>with_default = <span class="self">self</span>.pattern_with_default();
 
-        <span class="ident">with_default</span>.<span class="ident">parse_pattern</span>(<span class="ident">p</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="op">|</span><span class="ident">p</span>, <span class="kw">_</span><span class="op">|</span> {
-            <span class="ident">P::expected_pattern_error</span>(<span class="ident">p</span>, <span class="ident">TextRange::new</span>(<span class="ident">rest_end</span>, <span class="ident">rest_end</span>))
+        with_default.parse_pattern(p).or_add_diagnostic(p, |p, <span class="kw">_</span>| {
+            P::expected_pattern_error(p, TextRange::new(rest_end, rest_end))
         });
 
-        <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::rest_pattern_kind</span>()))
+        Present(m.complete(p, <span class="self">Self</span>::rest_pattern_kind()))
     }
 }
 
-<span class="doccomment">/// Trait for parsing an object pattern like node of the form `{ a, b: c}`</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">ParseObjectPattern</span> {
-    <span class="doccomment">/// Kind used when recovering from invalid properties.</span>
-    <span class="kw">fn</span> <span class="ident">unknown_pattern_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
-    <span class="doccomment">/// The kind of the pattern like node this trait parses</span>
-    <span class="kw">fn</span> <span class="ident">object_pattern_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
-    <span class="doccomment">/// The kind of the property list</span>
-    <span class="kw">fn</span> <span class="ident">list_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
-    <span class="doccomment">/// Creates a diagnostic saying that a property is expected at the passed in range that isn&#39;t present.</span>
-    <span class="kw">fn</span> <span class="ident">expected_property_pattern_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">ParseDiagnostic</span>;
+<span class="doccomment">/// Trait for parsing an object pattern like node of the form `{ a, b: c}`
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ParseObjectPattern {
+    <span class="doccomment">/// Kind used when recovering from invalid properties.
+    </span><span class="kw">fn </span>unknown_pattern_kind() -&gt; JsSyntaxKind;
+    <span class="doccomment">/// The kind of the pattern like node this trait parses
+    </span><span class="kw">fn </span>object_pattern_kind() -&gt; JsSyntaxKind;
+    <span class="doccomment">/// The kind of the property list
+    </span><span class="kw">fn </span>list_kind() -&gt; JsSyntaxKind;
+    <span class="doccomment">/// Creates a diagnostic saying that a property is expected at the passed in range that isn&#39;t present.
+    </span><span class="kw">fn </span>expected_property_pattern_error(p: <span class="kw-2">&amp;</span>Parser, range: TextRange) -&gt; ParseDiagnostic;
 
-    <span class="doccomment">/// Parses the object pattern like node</span>
-    <span class="kw">fn</span> <span class="ident">parse_object_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]) {
-            <span class="kw">return</span> <span class="ident">Absent</span>;
+    <span class="doccomment">/// Parses the object pattern like node
+    </span><span class="kw">fn </span>parse_object_pattern(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+        <span class="kw">if </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]) {
+            <span class="kw">return </span>Absent;
         }
 
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
+        <span class="kw">let </span>m = p.start();
 
-        <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]);
-        <span class="kw">let</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">progress</span> <span class="op">=</span> <span class="ident">ParserProgress::default</span>();
+        p.bump(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]);
+        <span class="kw">let </span>elements = p.start();
+        <span class="kw">let </span><span class="kw-2">mut </span>progress = ParserProgress::default();
 
-        <span class="kw">while</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]) {
-            <span class="ident">progress</span>.<span class="ident">assert_progressing</span>(<span class="ident">p</span>);
+        <span class="kw">while </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]) {
+            progress.assert_progressing(p);
 
-            <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[,]) {
-                <span class="comment">// missing element</span>
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident"><span class="self">Self</span>::expected_property_pattern_error</span>(<span class="ident">p</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>()));
-                <span class="ident">p</span>.<span class="ident">bump_any</span>(); <span class="comment">// bump ,</span>
-                <span class="kw">continue</span>;
+            <span class="kw">if </span>p.at(<span class="macro">T!</span>[,]) {
+                <span class="comment">// missing element
+                </span>p.error(<span class="self">Self</span>::expected_property_pattern_error(p, p.cur_range()));
+                p.bump_any(); <span class="comment">// bump ,
+                </span><span class="kw">continue</span>;
             }
-            <span class="kw">let</span> <span class="ident">recovery_set</span> <span class="op">=</span> <span class="ident">ParseRecovery::new</span>(
-                <span class="ident"><span class="self">Self</span>::unknown_pattern_kind</span>(),
-                <span class="macro">token_set!</span>(<span class="ident">EOF</span>, <span class="macro">T!</span>[,], <span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>], <span class="macro">T!</span>[...], <span class="macro">T!</span>[;], <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>], <span class="macro">T!</span>[<span class="op">=</span>]),
+            <span class="kw">let </span>recovery_set = ParseRecovery::new(
+                <span class="self">Self</span>::unknown_pattern_kind(),
+                <span class="macro">token_set!</span>(EOF, <span class="macro">T!</span>[,], <span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>], <span class="macro">T!</span>[...], <span class="macro">T!</span>[;], <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>], <span class="macro">T!</span>[=]),
             )
-            .<span class="ident">enable_recovery_on_line_break</span>();
+            .enable_recovery_on_line_break();
 
-            <span class="kw">let</span> <span class="ident">pattern</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parse_any_property_pattern</span>(<span class="ident">p</span>, <span class="kw-2">&amp;</span><span class="ident">recovery_set</span>);
+            <span class="kw">let </span>pattern = <span class="self">self</span>.parse_any_property_pattern(p, <span class="kw-2">&amp;</span>recovery_set);
 
-            <span class="kw">if</span> <span class="ident">pattern</span>
-                .<span class="ident">or_recover</span>(<span class="ident">p</span>, <span class="kw-2">&amp;</span><span class="ident">recovery_set</span>, <span class="ident"><span class="self">Self</span>::expected_property_pattern_error</span>)
-                .<span class="ident">is_err</span>()
+            <span class="kw">if </span>pattern
+                .or_recover(p, <span class="kw-2">&amp;</span>recovery_set, <span class="self">Self</span>::expected_property_pattern_error)
+                .is_err()
             {
                 <span class="kw">break</span>;
             }
 
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]) {
-                <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[,]);
+            <span class="kw">if </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]) {
+                p.expect(<span class="macro">T!</span>[,]);
             }
         }
 
-        <span class="ident">elements</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::list_kind</span>());
-        <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]);
+        elements.complete(p, <span class="self">Self</span>::list_kind());
+        p.expect(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]);
 
-        <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::object_pattern_kind</span>()))
+        Present(m.complete(p, <span class="self">Self</span>::object_pattern_kind()))
     }
 
-    <span class="doccomment">/// Parses a single property</span>
-    <span class="kw">fn</span> <span class="ident">parse_any_property_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">recovery</span>: <span class="kw-2">&amp;</span><span class="ident">ParseRecovery</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-        <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[...]) {
-            <span class="self">self</span>.<span class="ident">parse_rest_property_pattern</span>(<span class="ident">p</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">rest_pattern</span><span class="op">|</span> <span class="ident">validate_rest_pattern</span>(<span class="ident">p</span>, <span class="ident">rest_pattern</span>, <span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>], <span class="ident">recovery</span>))
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">parse_property_pattern</span>(<span class="ident">p</span>)
+    <span class="doccomment">/// Parses a single property
+    </span><span class="kw">fn </span>parse_any_property_pattern(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser, recovery: <span class="kw-2">&amp;</span>ParseRecovery) -&gt; ParsedSyntax {
+        <span class="kw">if </span>p.at(<span class="macro">T!</span>[...]) {
+            <span class="self">self</span>.parse_rest_property_pattern(p)
+                .map(|rest_pattern| validate_rest_pattern(p, rest_pattern, <span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>], recovery))
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.parse_property_pattern(p)
         }
     }
 
-    <span class="doccomment">/// Parses a shorthand `{ a }` or a &quot;named&quot; `{ a: b }` property</span>
-    <span class="kw">fn</span> <span class="ident">parse_property_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span>;
+    <span class="doccomment">/// Parses a shorthand `{ a }` or a &quot;named&quot; `{ a: b }` property
+    </span><span class="kw">fn </span>parse_property_pattern(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax;
 
-    <span class="doccomment">/// Parses a rest property `{ ...a }`</span>
-    <span class="kw">fn</span> <span class="ident">parse_rest_property_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span>;
+    <span class="doccomment">/// Parses a rest property `{ ...a }`
+    </span><span class="kw">fn </span>parse_rest_property_pattern(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax;
 }
 
-<span class="doccomment">/// Validates if the parsed completed rest marker is a valid rest element inside of a</span>
-<span class="doccomment">/// array or object assignment target and converts it to an unknown assignment target if not.</span>
-<span class="doccomment">/// A rest element must be:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// * the last element</span>
-<span class="doccomment">/// * not followed by a trailing comma</span>
-<span class="doccomment">/// * not have a default value</span>
-<span class="kw">fn</span> <span class="ident">validate_rest_pattern</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-    <span class="kw-2">mut</span> <span class="ident">rest</span>: <span class="ident">CompletedMarker</span>,
-    <span class="ident">end_token</span>: <span class="ident">JsSyntaxKind</span>,
-    <span class="ident">recovery</span>: <span class="kw-2">&amp;</span><span class="ident">ParseRecovery</span>,
-) -&gt; <span class="ident">CompletedMarker</span> {
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="ident">end_token</span>) {
-        <span class="kw">return</span> <span class="ident">rest</span>;
+<span class="doccomment">/// Validates if the parsed completed rest marker is a valid rest element inside of a
+/// array or object assignment target and converts it to an unknown assignment target if not.
+/// A rest element must be:
+///
+/// * the last element
+/// * not followed by a trailing comma
+/// * not have a default value
+</span><span class="kw">fn </span>validate_rest_pattern(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+    <span class="kw-2">mut </span>rest: CompletedMarker,
+    end_token: JsSyntaxKind,
+    recovery: <span class="kw-2">&amp;</span>ParseRecovery,
+) -&gt; CompletedMarker {
+    <span class="kw">if </span>p.at(end_token) {
+        <span class="kw">return </span>rest;
     }
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="op">=</span>]) {
-        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">rest</span>.<span class="ident">kind</span>();
-        <span class="kw">let</span> <span class="ident">rest_range</span> <span class="op">=</span> <span class="ident">rest</span>.<span class="ident">range</span>(<span class="ident">p</span>);
-        <span class="kw">let</span> <span class="ident">rest_marker</span> <span class="op">=</span> <span class="ident">rest</span>.<span class="ident">undo_completion</span>(<span class="ident">p</span>);
-        <span class="kw">let</span> <span class="ident">default_start</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>();
-        <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="op">=</span>]);
+    <span class="kw">if </span>p.at(<span class="macro">T!</span>[=]) {
+        <span class="kw">let </span>kind = rest.kind();
+        <span class="kw">let </span>rest_range = rest.range(p);
+        <span class="kw">let </span>rest_marker = rest.undo_completion(p);
+        <span class="kw">let </span>default_start = p.cur_range().start();
+        p.bump(<span class="macro">T!</span>[=]);
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">recovered</span>) <span class="op">=</span> <span class="ident">recovery</span>.<span class="ident">recover</span>(<span class="ident">p</span>) {
-            <span class="ident">recovered</span>.<span class="ident">undo_completion</span>(<span class="ident">p</span>).<span class="ident">abandon</span>(<span class="ident">p</span>); <span class="comment">// append recovered content to parent</span>
-        }
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(recovered) = recovery.recover(p) {
+            recovered.undo_completion(p).abandon(p); <span class="comment">// append recovered content to parent
+        </span>}
+        p.error(
+            p.err_builder(
                 <span class="string">&quot;rest element cannot have a default&quot;</span>,
-                <span class="ident">default_start</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(),
+                default_start..p.cur_range().start(),
             )
-            .<span class="ident">detail</span>(
-                <span class="ident">default_start</span>..<span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>(),
+            .detail(
+                default_start..p.cur_range().start(),
                 <span class="string">&quot;Remove the default value here&quot;</span>,
             )
-            .<span class="ident">detail</span>(<span class="ident">rest_range</span>, <span class="string">&quot;Rest element&quot;</span>),
+            .detail(rest_range, <span class="string">&quot;Rest element&quot;</span>),
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">invalid</span> <span class="op">=</span> <span class="ident">rest_marker</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">kind</span>);
-        <span class="ident">invalid</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
-        <span class="ident">invalid</span>
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[,]) <span class="op">&amp;&amp;</span> <span class="ident">p</span>.<span class="ident">nth_at</span>(<span class="number">1</span>, <span class="ident">end_token</span>) {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest element may not have a trailing comma&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>())
-                .<span class="ident">detail</span>(<span class="ident">p</span>.<span class="ident">cur_range</span>(), <span class="string">&quot;Remove the trailing comma here&quot;</span>)
-                .<span class="ident">detail</span>(<span class="ident">rest</span>.<span class="ident">range</span>(<span class="ident">p</span>), <span class="string">&quot;Rest element&quot;</span>),
+        <span class="kw">let </span><span class="kw-2">mut </span>invalid = rest_marker.complete(p, kind);
+        invalid.change_to_unknown(p);
+        invalid
+    } <span class="kw">else if </span>p.at(<span class="macro">T!</span>[,]) &amp;&amp; p.nth_at(<span class="number">1</span>, end_token) {
+        p.error(
+            p.err_builder(<span class="string">&quot;rest element may not have a trailing comma&quot;</span>, p.cur_range())
+                .detail(p.cur_range(), <span class="string">&quot;Remove the trailing comma here&quot;</span>)
+                .detail(rest.range(p), <span class="string">&quot;Rest element&quot;</span>),
         );
-        <span class="ident">rest</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
-        <span class="ident">rest</span>
-    } <span class="kw">else</span> {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest element must be the last element&quot;</span>, <span class="ident">rest</span>.<span class="ident">range</span>(<span class="ident">p</span>),)
-                .<span class="ident">hint</span>(
+        rest.change_to_unknown(p);
+        rest
+    } <span class="kw">else </span>{
+        p.error(
+            p.err_builder(<span class="string">&quot;rest element must be the last element&quot;</span>, rest.range(p),)
+                .hint(
                     <span class="macro">format!</span>(
                     <span class="string">&quot;Move the rest element to the end of the pattern, right before the closing &#39;{}&#39;&quot;</span>,
-                    <span class="ident">end_token</span>.<span class="ident">to_string</span>().<span class="ident">unwrap</span>(),
+                    end_token.to_string().unwrap(),
                     ),
                 ),
         );
-        <span class="ident">rest</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
-        <span class="ident">rest</span>
+        rest.change_to_unknown(p);
+        rest
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

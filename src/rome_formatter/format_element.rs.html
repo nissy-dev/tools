@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/format_element.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>format_element.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/format_element.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>format_element.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_formatter/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -393,400 +393,400 @@
 <span id="393">393</span>
 <span id="394">394</span>
 <span id="395">395</span>
-</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">document</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">tag</span>;
+</pre><pre class="rust"><code><span class="kw">pub mod </span>document;
+<span class="kw">pub mod </span>tag;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::format_element::tag</span>::{<span class="ident">LabelId</span>, <span class="ident">Tag</span>};
-<span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
+<span class="kw">use </span><span class="kw">crate</span>::format_element::tag::{LabelId, Tag};
+<span class="kw">use </span>std::borrow::Cow;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">TagKind</span>, <span class="ident">TextSize</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_pointer_width</span> <span class="op">=</span> <span class="string">&quot;64&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">rome_rowan::static_assert</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan::SyntaxTokenText</span>;
-<span class="kw">use</span> <span class="ident">std::hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>};
-<span class="kw">use</span> <span class="ident">std::ops::Deref</span>;
-<span class="kw">use</span> <span class="ident">std::rc::Rc</span>;
+<span class="kw">use crate</span>::{TagKind, TextSize};
+<span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+</span><span class="kw">use </span>rome_rowan::static_assert;
+<span class="kw">use </span>rome_rowan::SyntaxTokenText;
+<span class="kw">use </span>std::hash::{Hash, Hasher};
+<span class="kw">use </span>std::ops::Deref;
+<span class="kw">use </span>std::rc::Rc;
 
-<span class="doccomment">/// Language agnostic IR for formatting source code.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Use the helper functions like [crate::builders::space], [crate::builders::soft_line_break] etc. defined in this file to create elements.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FormatElement</span> {
-    <span class="doccomment">/// A space token, see [crate::builders::space] for documentation.</span>
-    <span class="ident">Space</span>,
+<span class="doccomment">/// Language agnostic IR for formatting source code.
+///
+/// Use the helper functions like [crate::builders::space], [crate::builders::soft_line_break] etc. defined in this file to create elements.
+</span><span class="attribute">#[derive(Clone, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>FormatElement {
+    <span class="doccomment">/// A space token, see [crate::builders::space] for documentation.
+    </span>Space,
 
-    <span class="doccomment">/// A new line, see [crate::builders::soft_line_break], [crate::builders::hard_line_break], and [crate::builders::soft_line_break_or_space] for documentation.</span>
-    <span class="ident">Line</span>(<span class="ident">LineMode</span>),
+    <span class="doccomment">/// A new line, see [crate::builders::soft_line_break], [crate::builders::hard_line_break], and [crate::builders::soft_line_break_or_space] for documentation.
+    </span>Line(LineMode),
 
-    <span class="doccomment">/// Forces the parent group to print in expanded mode.</span>
-    <span class="ident">ExpandParent</span>,
+    <span class="doccomment">/// Forces the parent group to print in expanded mode.
+    </span>ExpandParent,
 
-    <span class="doccomment">/// Token constructed by the formatter from a static string</span>
-    <span class="ident">StaticText</span> { <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> },
+    <span class="doccomment">/// Token constructed by the formatter from a static string
+    </span>StaticText { text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str },
 
-    <span class="doccomment">/// Token constructed from the input source as a dynamic</span>
-    <span class="doccomment">/// string with its start position in the input document.</span>
-    <span class="ident">DynamicText</span> {
-        <span class="doccomment">/// There&#39;s no need for the text to be mutable, using `Box&lt;str&gt;` safes 8 bytes over `String`.</span>
-        <span class="ident">text</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
-        <span class="doccomment">/// The start position of the dynamic token in the unformatted source code</span>
-        <span class="ident">source_position</span>: <span class="ident">TextSize</span>,
+    <span class="doccomment">/// Token constructed from the input source as a dynamic
+    /// string with its start position in the input document.
+    </span>DynamicText {
+        <span class="doccomment">/// There&#39;s no need for the text to be mutable, using `Box&lt;str&gt;` safes 8 bytes over `String`.
+        </span>text: Box&lt;str&gt;,
+        <span class="doccomment">/// The start position of the dynamic token in the unformatted source code
+        </span>source_position: TextSize,
     },
 
-    <span class="doccomment">/// A token for a text that is taken as is from the source code (input text and formatted representation are identical).</span>
-    <span class="doccomment">/// Implementing by taking a slice from a `SyntaxToken` to avoid allocating a new string.</span>
-    <span class="ident">SyntaxTokenTextSlice</span> {
-        <span class="doccomment">/// The start position of the token in the unformatted source code</span>
-        <span class="ident">source_position</span>: <span class="ident">TextSize</span>,
-        <span class="doccomment">/// The token text</span>
-        <span class="ident">slice</span>: <span class="ident">SyntaxTokenText</span>,
+    <span class="doccomment">/// A token for a text that is taken as is from the source code (input text and formatted representation are identical).
+    /// Implementing by taking a slice from a `SyntaxToken` to avoid allocating a new string.
+    </span>SyntaxTokenTextSlice {
+        <span class="doccomment">/// The start position of the token in the unformatted source code
+        </span>source_position: TextSize,
+        <span class="doccomment">/// The token text
+        </span>slice: SyntaxTokenText,
     },
 
-    <span class="doccomment">/// Prevents that line suffixes move past this boundary. Forces the printer to print any pending</span>
-    <span class="doccomment">/// line suffixes, potentially by inserting a hard line break.</span>
-    <span class="ident">LineSuffixBoundary</span>,
+    <span class="doccomment">/// Prevents that line suffixes move past this boundary. Forces the printer to print any pending
+    /// line suffixes, potentially by inserting a hard line break.
+    </span>LineSuffixBoundary,
 
-    <span class="doccomment">/// An interned format element. Useful when the same content must be emitted multiple times to avoid</span>
-    <span class="doccomment">/// deep cloning the IR when using the `best_fitting!` macro or `if_group_fits_on_line` and `if_group_breaks`.</span>
-    <span class="ident">Interned</span>(<span class="ident">Interned</span>),
+    <span class="doccomment">/// An interned format element. Useful when the same content must be emitted multiple times to avoid
+    /// deep cloning the IR when using the `best_fitting!` macro or `if_group_fits_on_line` and `if_group_breaks`.
+    </span>Interned(Interned),
 
-    <span class="doccomment">/// A list of different variants representing the same content. The printer picks the best fitting content.</span>
-    <span class="doccomment">/// Line breaks inside of a best fitting don&#39;t propagate to parent groups.</span>
-    <span class="ident">BestFitting</span>(<span class="ident">BestFitting</span>),
+    <span class="doccomment">/// A list of different variants representing the same content. The printer picks the best fitting content.
+    /// Line breaks inside of a best fitting don&#39;t propagate to parent groups.
+    </span>BestFitting(BestFitting),
 
-    <span class="doccomment">/// A [Tag] that marks the start/end of some content to which some special formatting is applied.</span>
-    <span class="ident">Tag</span>(<span class="ident">Tag</span>),
+    <span class="doccomment">/// A [Tag] that marks the start/end of some content to which some special formatting is applied.
+    </span>Tag(Tag),
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">FormatElement</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FormatElement::Space</span> =&gt; <span class="macro">write!</span>(<span class="ident">fmt</span>, <span class="string">&quot;Space&quot;</span>),
-            <span class="ident">FormatElement::Line</span>(<span class="ident">mode</span>) =&gt; <span class="ident">fmt</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;Line&quot;</span>).<span class="ident">field</span>(<span class="ident">mode</span>).<span class="ident">finish</span>(),
-            <span class="ident">FormatElement::ExpandParent</span> =&gt; <span class="macro">write!</span>(<span class="ident">fmt</span>, <span class="string">&quot;ExpandParent&quot;</span>),
-            <span class="ident">FormatElement::StaticText</span> { <span class="ident">text</span> } =&gt; {
-                <span class="ident">fmt</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;StaticText&quot;</span>).<span class="ident">field</span>(<span class="ident">text</span>).<span class="ident">finish</span>()
+<span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>FormatElement {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            FormatElement::Space =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Space&quot;</span>),
+            FormatElement::Line(mode) =&gt; fmt.debug_tuple(<span class="string">&quot;Line&quot;</span>).field(mode).finish(),
+            FormatElement::ExpandParent =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;ExpandParent&quot;</span>),
+            FormatElement::StaticText { text } =&gt; {
+                fmt.debug_tuple(<span class="string">&quot;StaticText&quot;</span>).field(text).finish()
             }
-            <span class="ident">FormatElement::DynamicText</span> { <span class="ident">text</span>, .. } =&gt; {
-                <span class="ident">fmt</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;DynamicText&quot;</span>).<span class="ident">field</span>(<span class="ident">text</span>).<span class="ident">finish</span>()
+            FormatElement::DynamicText { text, .. } =&gt; {
+                fmt.debug_tuple(<span class="string">&quot;DynamicText&quot;</span>).field(text).finish()
             }
-            <span class="ident">FormatElement::SyntaxTokenTextSlice</span> { <span class="ident">slice</span>, .. } =&gt; <span class="ident">fmt</span>
-                .<span class="ident">debug_tuple</span>(<span class="string">&quot;SyntaxTokenTextSlice&quot;</span>)
-                .<span class="ident">field</span>(<span class="ident">slice</span>)
-                .<span class="ident">finish</span>(),
-            <span class="ident">FormatElement::LineSuffixBoundary</span> =&gt; <span class="macro">write!</span>(<span class="ident">fmt</span>, <span class="string">&quot;LineSuffixBoundary&quot;</span>),
-            <span class="ident">FormatElement::BestFitting</span>(<span class="ident">best_fitting</span>) =&gt; {
-                <span class="ident">fmt</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;BestFitting&quot;</span>).<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="ident">best_fitting</span>).<span class="ident">finish</span>()
+            FormatElement::SyntaxTokenTextSlice { slice, .. } =&gt; fmt
+                .debug_tuple(<span class="string">&quot;SyntaxTokenTextSlice&quot;</span>)
+                .field(slice)
+                .finish(),
+            FormatElement::LineSuffixBoundary =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;LineSuffixBoundary&quot;</span>),
+            FormatElement::BestFitting(best_fitting) =&gt; {
+                fmt.debug_tuple(<span class="string">&quot;BestFitting&quot;</span>).field(<span class="kw-2">&amp;</span>best_fitting).finish()
             }
-            <span class="ident">FormatElement::Interned</span>(<span class="ident">interned</span>) =&gt; {
-                <span class="ident">fmt</span>.<span class="ident">debug_list</span>().<span class="ident">entries</span>(<span class="ident">interned</span>.<span class="ident">deref</span>()).<span class="ident">finish</span>()
+            FormatElement::Interned(interned) =&gt; {
+                fmt.debug_list().entries(interned.deref()).finish()
             }
-            <span class="ident">FormatElement::Tag</span>(<span class="ident">tag</span>) =&gt; <span class="ident">fmt</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;Tag&quot;</span>).<span class="ident">field</span>(<span class="ident">tag</span>).<span class="ident">finish</span>(),
+            FormatElement::Tag(tag) =&gt; fmt.debug_tuple(<span class="string">&quot;Tag&quot;</span>).field(tag).finish(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">LineMode</span> {
-    <span class="doccomment">/// See [crate::builders::soft_line_break_or_space] for documentation.</span>
-    <span class="ident">SoftOrSpace</span>,
-    <span class="doccomment">/// See [crate::builders::soft_line_break] for documentation.</span>
-    <span class="ident">Soft</span>,
-    <span class="doccomment">/// See [crate::builders::hard_line_break] for documentation.</span>
-    <span class="ident">Hard</span>,
-    <span class="doccomment">/// See [crate::builders::empty_line] for documentation.</span>
-    <span class="ident">Empty</span>,
+<span class="attribute">#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>LineMode {
+    <span class="doccomment">/// See [crate::builders::soft_line_break_or_space] for documentation.
+    </span>SoftOrSpace,
+    <span class="doccomment">/// See [crate::builders::soft_line_break] for documentation.
+    </span>Soft,
+    <span class="doccomment">/// See [crate::builders::hard_line_break] for documentation.
+    </span>Hard,
+    <span class="doccomment">/// See [crate::builders::empty_line] for documentation.
+    </span>Empty,
 }
 
-<span class="kw">impl</span> <span class="ident">LineMode</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_hard</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">LineMode::Hard</span>)
+<span class="kw">impl </span>LineMode {
+    <span class="kw">pub const fn </span>is_hard(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, LineMode::Hard)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PrintMode</span> {
-    <span class="doccomment">/// Omits any soft line breaks</span>
-    <span class="ident">Flat</span>,
-    <span class="doccomment">/// Prints soft line breaks as line breaks</span>
-    <span class="ident">Expanded</span>,
+<span class="attribute">#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>PrintMode {
+    <span class="doccomment">/// Omits any soft line breaks
+    </span>Flat,
+    <span class="doccomment">/// Prints soft line breaks as line breaks
+    </span>Expanded,
 }
 
-<span class="kw">impl</span> <span class="ident">PrintMode</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_flat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">PrintMode::Flat</span>)
+<span class="kw">impl </span>PrintMode {
+    <span class="kw">pub const fn </span>is_flat(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, PrintMode::Flat)
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_expanded</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">PrintMode::Expanded</span>)
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Interned</span>(<span class="ident">Rc</span><span class="op">&lt;</span>[<span class="ident">FormatElement</span>]<span class="op">&gt;</span>);
-
-<span class="kw">impl</span> <span class="ident">Interned</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">content</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FormatElement</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">content</span>.<span class="ident">into</span>())
+    <span class="kw">pub const fn </span>is_expanded(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, PrintMode::Expanded)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">Interned</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Interned</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">Rc::ptr_eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="number">0</span>)
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>Interned(Rc&lt;[FormatElement]&gt;);
+
+<span class="kw">impl </span>Interned {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(content: Vec&lt;FormatElement&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(content.into())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">Interned</span> {}
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>Interned {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Interned) -&gt; bool {
+        Rc::ptr_eq(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>other.<span class="number">0</span>)
+    }
+}
 
-<span class="kw">impl</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">Interned</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hasher</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>)
-    <span class="kw">where</span>
-        <span class="ident">H</span>: <span class="ident">Hasher</span>,
+<span class="kw">impl </span>Eq <span class="kw">for </span>Interned {}
+
+<span class="kw">impl </span>Hash <span class="kw">for </span>Interned {
+    <span class="kw">fn </span>hash&lt;H&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, hasher: <span class="kw-2">&amp;mut </span>H)
+    <span class="kw">where
+        </span>H: Hasher,
     {
-        <span class="ident">Rc::as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">hash</span>(<span class="ident">hasher</span>);
+        Rc::as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).hash(hasher);
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Interned</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
+<span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>Interned {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="self">self</span>.<span class="number">0</span>.fmt(f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Interned</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> [<span class="ident">FormatElement</span>];
+<span class="kw">impl </span>Deref <span class="kw">for </span>Interned {
+    <span class="kw">type </span>Target = [FormatElement];
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">deref</span>()
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        <span class="self">self</span>.<span class="number">0</span>.deref()
     }
 }
 
-<span class="kw">const</span> <span class="ident">LINE_SEPARATOR</span>: <span class="ident">char</span> <span class="op">=</span> <span class="string">&#39;\u{2028}&#39;</span>;
-<span class="kw">const</span> <span class="ident">PARAGRAPH_SEPARATOR</span>: <span class="ident">char</span> <span class="op">=</span> <span class="string">&#39;\u{2029}&#39;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">LINE_TERMINATORS</span>: [<span class="ident">char</span>; <span class="number">3</span>] <span class="op">=</span> [<span class="string">&#39;\r&#39;</span>, <span class="ident">LINE_SEPARATOR</span>, <span class="ident">PARAGRAPH_SEPARATOR</span>];
+<span class="kw">const </span>LINE_SEPARATOR: char = <span class="string">&#39;\u{2028}&#39;</span>;
+<span class="kw">const </span>PARAGRAPH_SEPARATOR: char = <span class="string">&#39;\u{2029}&#39;</span>;
+<span class="kw">pub const </span>LINE_TERMINATORS: [char; <span class="number">3</span>] = [<span class="string">&#39;\r&#39;</span>, LINE_SEPARATOR, PARAGRAPH_SEPARATOR];
 
-<span class="doccomment">/// Replace the line terminators matching the provided list with &quot;\n&quot;</span>
-<span class="doccomment">/// since its the only line break type supported by the printer</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalize_newlines</span><span class="op">&lt;</span><span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span><span class="op">&gt;</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">terminators</span>: [<span class="ident">char</span>; <span class="ident">N</span>]) -&gt; <span class="ident">Cow</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">String::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_end</span> <span class="op">=</span> <span class="number">0</span>;
+<span class="doccomment">/// Replace the line terminators matching the provided list with &quot;\n&quot;
+/// since its the only line break type supported by the printer
+</span><span class="kw">pub fn </span>normalize_newlines&lt;<span class="kw">const </span>N: usize&gt;(text: <span class="kw-2">&amp;</span>str, terminators: [char; N]) -&gt; Cow&lt;str&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>result = String::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>last_end = <span class="number">0</span>;
 
-    <span class="kw">for</span> (<span class="ident">start</span>, <span class="ident">part</span>) <span class="kw">in</span> <span class="ident">text</span>.<span class="ident">match_indices</span>(<span class="ident">terminators</span>) {
-        <span class="ident">result</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="ident">text</span>[<span class="ident">last_end</span>..<span class="ident">start</span>]);
-        <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\n&#39;</span>);
+    <span class="kw">for </span>(start, part) <span class="kw">in </span>text.match_indices(terminators) {
+        result.push_str(<span class="kw-2">&amp;</span>text[last_end..start]);
+        result.push(<span class="string">&#39;\n&#39;</span>);
 
-        <span class="ident">last_end</span> <span class="op">=</span> <span class="ident">start</span> <span class="op">+</span> <span class="ident">part</span>.<span class="ident">len</span>();
-        <span class="comment">// If the current character is \r and the</span>
-        <span class="comment">// next is \n, skip over the entire sequence</span>
-        <span class="kw">if</span> <span class="ident">part</span> <span class="op">==</span> <span class="string">&quot;\r&quot;</span> <span class="op">&amp;&amp;</span> <span class="ident">text</span>[<span class="ident">last_end</span>..].<span class="ident">starts_with</span>(<span class="string">&#39;\n&#39;</span>) {
-            <span class="ident">last_end</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        last_end = start + part.len();
+        <span class="comment">// If the current character is \r and the
+        // next is \n, skip over the entire sequence
+        </span><span class="kw">if </span>part == <span class="string">&quot;\r&quot; </span>&amp;&amp; text[last_end..].starts_with(<span class="string">&#39;\n&#39;</span>) {
+            last_end += <span class="number">1</span>;
         }
     }
 
-    <span class="comment">// If the result is empty no line terminators were matched,</span>
-    <span class="comment">// return the entire input text without allocating a new String</span>
-    <span class="kw">if</span> <span class="ident">result</span>.<span class="ident">is_empty</span>() {
-        <span class="ident">Cow::Borrowed</span>(<span class="ident">text</span>)
-    } <span class="kw">else</span> {
-        <span class="ident">result</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="ident">text</span>[<span class="ident">last_end</span>..<span class="ident">text</span>.<span class="ident">len</span>()]);
-        <span class="ident">Cow::Owned</span>(<span class="ident">result</span>)
+    <span class="comment">// If the result is empty no line terminators were matched,
+    // return the entire input text without allocating a new String
+    </span><span class="kw">if </span>result.is_empty() {
+        Cow::Borrowed(text)
+    } <span class="kw">else </span>{
+        result.push_str(<span class="kw-2">&amp;</span>text[last_end..text.len()]);
+        Cow::Owned(result)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FormatElement</span> {
-    <span class="doccomment">/// Returns `true` if self is a [FormatElement::Tag]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_tag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">FormatElement::Tag</span>(<span class="kw">_</span>))
+<span class="kw">impl </span>FormatElement {
+    <span class="doccomment">/// Returns `true` if self is a [FormatElement::Tag]
+    </span><span class="kw">pub const fn </span>is_tag(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, FormatElement::Tag(<span class="kw">_</span>))
     }
 
-    <span class="doccomment">/// Returns `true` if self is a [FormatElement::Tag] and [Tag::is_start] is `true`.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_start_tag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FormatElement::Tag</span>(<span class="ident">tag</span>) =&gt; <span class="ident">tag</span>.<span class="ident">is_start</span>(),
-            <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
+    <span class="doccomment">/// Returns `true` if self is a [FormatElement::Tag] and [Tag::is_start] is `true`.
+    </span><span class="kw">pub const fn </span>is_start_tag(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">match </span><span class="self">self </span>{
+            FormatElement::Tag(tag) =&gt; tag.is_start(),
+            <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
         }
     }
 
-    <span class="doccomment">/// Returns `true` if self is a [FormatElement::Tag] and [Tag::is_end] is `true`.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_end_tag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FormatElement::Tag</span>(<span class="ident">tag</span>) =&gt; <span class="ident">tag</span>.<span class="ident">is_end</span>(),
-            <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
+    <span class="doccomment">/// Returns `true` if self is a [FormatElement::Tag] and [Tag::is_end] is `true`.
+    </span><span class="kw">pub const fn </span>is_end_tag(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">match </span><span class="self">self </span>{
+            FormatElement::Tag(tag) =&gt; tag.is_end(),
+            <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">pub const fn </span>is_text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="macro">matches!</span>(
             <span class="self">self</span>,
-            <span class="ident">FormatElement::SyntaxTokenTextSlice</span> { .. }
-                <span class="op">|</span> <span class="ident">FormatElement::DynamicText</span> { .. }
-                <span class="op">|</span> <span class="ident">FormatElement::StaticText</span> { .. }
+            FormatElement::SyntaxTokenTextSlice { .. }
+                | FormatElement::DynamicText { .. }
+                | FormatElement::StaticText { .. }
         )
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_space</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">FormatElement::Space</span>)
+    <span class="kw">pub const fn </span>is_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, FormatElement::Space)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FormatElements</span> <span class="kw">for</span> <span class="ident">FormatElement</span> {
-    <span class="kw">fn</span> <span class="ident">will_break</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FormatElement::ExpandParent</span> =&gt; <span class="bool-val">true</span>,
-            <span class="ident">FormatElement::Tag</span>(<span class="ident">Tag::StartGroup</span>(<span class="ident">group</span>)) =&gt; <span class="op">!</span><span class="ident">group</span>.<span class="ident">mode</span>().<span class="ident">is_flat</span>(),
-            <span class="ident">FormatElement::Line</span>(<span class="ident">line_mode</span>) =&gt; <span class="macro">matches!</span>(<span class="ident">line_mode</span>, <span class="ident">LineMode::Hard</span> <span class="op">|</span> <span class="ident">LineMode::Empty</span>),
-            <span class="ident">FormatElement::StaticText</span> { <span class="ident">text</span> } =&gt; <span class="ident">text</span>.<span class="ident">contains</span>(<span class="string">&#39;\n&#39;</span>),
-            <span class="ident">FormatElement::DynamicText</span> { <span class="ident">text</span>, .. } =&gt; <span class="ident">text</span>.<span class="ident">contains</span>(<span class="string">&#39;\n&#39;</span>),
-            <span class="ident">FormatElement::SyntaxTokenTextSlice</span> { <span class="ident">slice</span>, .. } =&gt; <span class="ident">slice</span>.<span class="ident">contains</span>(<span class="string">&#39;\n&#39;</span>),
-            <span class="ident">FormatElement::Interned</span>(<span class="ident">interned</span>) =&gt; <span class="ident">interned</span>.<span class="ident">will_break</span>(),
-            <span class="comment">// Traverse into the most flat version because the content is guaranteed to expand when even</span>
-            <span class="comment">// the most flat version contains some content that forces a break.</span>
-            <span class="ident">FormatElement::BestFitting</span>(<span class="ident">best_fitting</span>) =&gt; <span class="ident">best_fitting</span>.<span class="ident">most_flat</span>().<span class="ident">will_break</span>(),
-            <span class="ident">FormatElement::LineSuffixBoundary</span> <span class="op">|</span> <span class="ident">FormatElement::Space</span> <span class="op">|</span> <span class="ident">FormatElement::Tag</span>(<span class="kw">_</span>) =&gt; {
-                <span class="bool-val">false</span>
-            }
+<span class="kw">impl </span>FormatElements <span class="kw">for </span>FormatElement {
+    <span class="kw">fn </span>will_break(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">match </span><span class="self">self </span>{
+            FormatElement::ExpandParent =&gt; <span class="bool-val">true</span>,
+            FormatElement::Tag(Tag::StartGroup(group)) =&gt; !group.mode().is_flat(),
+            FormatElement::Line(line_mode) =&gt; <span class="macro">matches!</span>(line_mode, LineMode::Hard | LineMode::Empty),
+            FormatElement::StaticText { text } =&gt; text.contains(<span class="string">&#39;\n&#39;</span>),
+            FormatElement::DynamicText { text, .. } =&gt; text.contains(<span class="string">&#39;\n&#39;</span>),
+            FormatElement::SyntaxTokenTextSlice { slice, .. } =&gt; slice.contains(<span class="string">&#39;\n&#39;</span>),
+            FormatElement::Interned(interned) =&gt; interned.will_break(),
+            <span class="comment">// Traverse into the most flat version because the content is guaranteed to expand when even
+            // the most flat version contains some content that forces a break.
+            </span>FormatElement::BestFitting(best_fitting) =&gt; best_fitting.most_flat().will_break(),
+            FormatElement::LineSuffixBoundary | FormatElement::Space | FormatElement::Tag(<span class="kw">_</span>) =&gt; {
+                <span class="bool-val">false
+            </span>}
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">has_label</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">label_id</span>: <span class="ident">LabelId</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FormatElement::Tag</span>(<span class="ident">Tag::StartLabelled</span>(<span class="ident">actual</span>)) =&gt; <span class="kw-2">*</span><span class="ident">actual</span> <span class="op">==</span> <span class="ident">label_id</span>,
-            <span class="ident">FormatElement::Interned</span>(<span class="ident">interned</span>) =&gt; <span class="ident">interned</span>.<span class="ident">deref</span>().<span class="ident">has_label</span>(<span class="ident">label_id</span>),
-            <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
+    <span class="kw">fn </span>has_label(<span class="kw-2">&amp;</span><span class="self">self</span>, label_id: LabelId) -&gt; bool {
+        <span class="kw">match </span><span class="self">self </span>{
+            FormatElement::Tag(Tag::StartLabelled(actual)) =&gt; <span class="kw-2">*</span>actual == label_id,
+            FormatElement::Interned(interned) =&gt; interned.deref().has_label(label_id),
+            <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">start_tag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="ident">TagKind</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Tag</span><span class="op">&gt;</span> {
-        <span class="prelude-val">None</span>
-    }
+    <span class="kw">fn </span>start_tag(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: TagKind) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Tag&gt; {
+        <span class="prelude-val">None
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">end_tag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">TagKind</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Tag</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FormatElement::Tag</span>(<span class="ident">tag</span>) <span class="kw">if</span> <span class="ident">tag</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">kind</span> <span class="op">&amp;&amp;</span> <span class="ident">tag</span>.<span class="ident">is_end</span>() =&gt; <span class="prelude-val">Some</span>(<span class="ident">tag</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">fn </span>end_tag(<span class="kw-2">&amp;</span><span class="self">self</span>, kind: TagKind) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Tag&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            FormatElement::Tag(tag) <span class="kw">if </span>tag.kind() == kind &amp;&amp; tag.is_end() =&gt; <span class="prelude-val">Some</span>(tag),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="doccomment">/// Provides the printer with different representations for the same element so that the printer</span>
-<span class="doccomment">/// can pick the best fitting variant.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Best fitting is defined as the variant that takes the most horizontal space but fits on the line.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BestFitting</span> {
-    <span class="doccomment">/// The different variants for this element.</span>
-    <span class="doccomment">/// The first element is the one that takes up the most space horizontally (the most flat),</span>
-    <span class="doccomment">/// The last element takes up the least space horizontally (but most horizontal space).</span>
-    <span class="ident">variants</span>: <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">FormatElement</span>]<span class="op">&gt;</span>]<span class="op">&gt;</span>,
+<span class="doccomment">/// Provides the printer with different representations for the same element so that the printer
+/// can pick the best fitting variant.
+///
+/// Best fitting is defined as the variant that takes the most horizontal space but fits on the line.
+</span><span class="attribute">#[derive(Clone, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>BestFitting {
+    <span class="doccomment">/// The different variants for this element.
+    /// The first element is the one that takes up the most space horizontally (the most flat),
+    /// The last element takes up the least space horizontally (but most horizontal space).
+    </span>variants: Box&lt;[Box&lt;[FormatElement]&gt;]&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">BestFitting</span> {
-    <span class="doccomment">/// Creates a new best fitting IR with the given variants. The method itself isn&#39;t unsafe</span>
-    <span class="doccomment">/// but it is to discourage people from using it because the printer will panic if</span>
-    <span class="doccomment">/// the slice doesn&#39;t contain at least the least and most expanded variants.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// You&#39;re looking for a way to create a `BestFitting` object, use the `best_fitting![least_expanded, most_expanded]` macro.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Safety</span>
-    <span class="doccomment">/// The slice must contain at least two variants.</span>
-    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_vec_unchecked</span>(<span class="ident">variants</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">FormatElement</span>]<span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl </span>BestFitting {
+    <span class="doccomment">/// Creates a new best fitting IR with the given variants. The method itself isn&#39;t unsafe
+    /// but it is to discourage people from using it because the printer will panic if
+    /// the slice doesn&#39;t contain at least the least and most expanded variants.
+    ///
+    /// You&#39;re looking for a way to create a `BestFitting` object, use the `best_fitting![least_expanded, most_expanded]` macro.
+    ///
+    /// ## Safety
+    /// The slice must contain at least two variants.
+    </span><span class="attribute">#[doc(hidden)]
+    </span><span class="kw">pub unsafe fn </span>from_vec_unchecked(variants: Vec&lt;Box&lt;[FormatElement]&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="macro">debug_assert!</span>(
-            <span class="ident">variants</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">2</span>,
-            <span class="string">&quot;Requires at least the least expanded and most expanded variants&quot;</span>
-        );
+            variants.len() &gt;= <span class="number">2</span>,
+            <span class="string">&quot;Requires at least the least expanded and most expanded variants&quot;
+        </span>);
 
-        <span class="self">Self</span> {
-            <span class="ident">variants</span>: <span class="ident">variants</span>.<span class="ident">into_boxed_slice</span>(),
+        <span class="self">Self </span>{
+            variants: variants.into_boxed_slice(),
         }
     }
 
-    <span class="doccomment">/// Returns the most expanded variant</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">most_expanded</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>] {
-        <span class="self">self</span>.<span class="ident">variants</span>.<span class="ident">last</span>().<span class="ident">expect</span>(
+    <span class="doccomment">/// Returns the most expanded variant
+    </span><span class="kw">pub fn </span>most_expanded(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement] {
+        <span class="self">self</span>.variants.last().expect(
             <span class="string">&quot;Most contain at least two elements, as guaranteed by the best fitting builder.&quot;</span>,
         )
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">variants</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">FormatElement</span>]<span class="op">&gt;</span>] {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">variants</span>
+    <span class="kw">pub fn </span>variants(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[Box&lt;[FormatElement]&gt;] {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.variants
     }
 
-    <span class="doccomment">/// Returns the least expanded variant</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">most_flat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">FormatElement</span>] {
-        <span class="self">self</span>.<span class="ident">variants</span>.<span class="ident">first</span>().<span class="ident">expect</span>(
+    <span class="doccomment">/// Returns the least expanded variant
+    </span><span class="kw">pub fn </span>most_flat(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FormatElement] {
+        <span class="self">self</span>.variants.first().expect(
             <span class="string">&quot;Most contain at least two elements, as guaranteed by the best fitting builder.&quot;</span>,
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">BestFitting</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_list</span>().<span class="ident">entries</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">variants</span>).<span class="ident">finish</span>()
+<span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>BestFitting {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        f.debug_list().entries(<span class="kw-2">&amp;*</span><span class="self">self</span>.variants).finish()
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">FormatElements</span> {
-    <span class="doccomment">/// Returns true if this [FormatElement] is guaranteed to break across multiple lines by the printer.</span>
-    <span class="doccomment">/// This is the case if this format element recursively contains a:</span>
-    <span class="doccomment">/// * [crate::builders::empty_line] or [crate::builders::hard_line_break]</span>
-    <span class="doccomment">/// * A token containing &#39;\n&#39;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Use this with caution, this is only a heuristic and the printer may print the element over multiple</span>
-    <span class="doccomment">/// lines if this element is part of a group and the group doesn&#39;t fit on a single line.</span>
-    <span class="kw">fn</span> <span class="ident">will_break</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
+<span class="kw">pub trait </span>FormatElements {
+    <span class="doccomment">/// Returns true if this [FormatElement] is guaranteed to break across multiple lines by the printer.
+    /// This is the case if this format element recursively contains a:
+    /// * [crate::builders::empty_line] or [crate::builders::hard_line_break]
+    /// * A token containing &#39;\n&#39;
+    ///
+    /// Use this with caution, this is only a heuristic and the printer may print the element over multiple
+    /// lines if this element is part of a group and the group doesn&#39;t fit on a single line.
+    </span><span class="kw">fn </span>will_break(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool;
 
-    <span class="doccomment">/// Returns true if the element has the given label.</span>
-    <span class="kw">fn</span> <span class="ident">has_label</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">label</span>: <span class="ident">LabelId</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// Returns true if the element has the given label.
+    </span><span class="kw">fn </span>has_label(<span class="kw-2">&amp;</span><span class="self">self</span>, label: LabelId) -&gt; bool;
 
-    <span class="doccomment">/// Returns the start tag of `kind` if:</span>
-    <span class="doccomment">/// * the last element is an end tag of `kind`.</span>
-    <span class="doccomment">/// * there&#39;s a matching start tag in this document (may not be true if this slice is an interned element and the `start` is in the document storing the interned element).</span>
-    <span class="kw">fn</span> <span class="ident">start_tag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">TagKind</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Tag</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Returns the start tag of `kind` if:
+    /// * the last element is an end tag of `kind`.
+    /// * there&#39;s a matching start tag in this document (may not be true if this slice is an interned element and the `start` is in the document storing the interned element).
+    </span><span class="kw">fn </span>start_tag(<span class="kw-2">&amp;</span><span class="self">self</span>, kind: TagKind) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Tag&gt;;
 
-    <span class="doccomment">/// Returns the end tag if:</span>
-    <span class="doccomment">/// * the last element is an end tag of `kind`</span>
-    <span class="kw">fn</span> <span class="ident">end_tag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">TagKind</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Tag</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Returns the end tag if:
+    /// * the last element is an end tag of `kind`
+    </span><span class="kw">fn </span>end_tag(<span class="kw-2">&amp;</span><span class="self">self</span>, kind: TagKind) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Tag&gt;;
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::format_element</span>::{<span class="ident">normalize_newlines</span>, <span class="ident">LINE_TERMINATORS</span>};
+    <span class="kw">use </span><span class="kw">crate</span>::format_element::{normalize_newlines, LINE_TERMINATORS};
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_normalize_newlines</span>() {
-        <span class="macro">assert_eq!</span>(<span class="ident">normalize_newlines</span>(<span class="string">&quot;a\nb&quot;</span>, <span class="ident">LINE_TERMINATORS</span>), <span class="string">&quot;a\nb&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">normalize_newlines</span>(<span class="string">&quot;a\n\n\nb&quot;</span>, <span class="ident">LINE_TERMINATORS</span>), <span class="string">&quot;a\n\n\nb&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">normalize_newlines</span>(<span class="string">&quot;a\rb&quot;</span>, <span class="ident">LINE_TERMINATORS</span>), <span class="string">&quot;a\nb&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">normalize_newlines</span>(<span class="string">&quot;a\r\nb&quot;</span>, <span class="ident">LINE_TERMINATORS</span>), <span class="string">&quot;a\nb&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_normalize_newlines() {
+        <span class="macro">assert_eq!</span>(normalize_newlines(<span class="string">&quot;a\nb&quot;</span>, LINE_TERMINATORS), <span class="string">&quot;a\nb&quot;</span>);
+        <span class="macro">assert_eq!</span>(normalize_newlines(<span class="string">&quot;a\n\n\nb&quot;</span>, LINE_TERMINATORS), <span class="string">&quot;a\n\n\nb&quot;</span>);
+        <span class="macro">assert_eq!</span>(normalize_newlines(<span class="string">&quot;a\rb&quot;</span>, LINE_TERMINATORS), <span class="string">&quot;a\nb&quot;</span>);
+        <span class="macro">assert_eq!</span>(normalize_newlines(<span class="string">&quot;a\r\nb&quot;</span>, LINE_TERMINATORS), <span class="string">&quot;a\nb&quot;</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">normalize_newlines</span>(<span class="string">&quot;a\r\n\r\n\r\nb&quot;</span>, <span class="ident">LINE_TERMINATORS</span>),
-            <span class="string">&quot;a\n\n\nb&quot;</span>
-        );
-        <span class="macro">assert_eq!</span>(<span class="ident">normalize_newlines</span>(<span class="string">&quot;a\u{2028}b&quot;</span>, <span class="ident">LINE_TERMINATORS</span>), <span class="string">&quot;a\nb&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">normalize_newlines</span>(<span class="string">&quot;a\u{2029}b&quot;</span>, <span class="ident">LINE_TERMINATORS</span>), <span class="string">&quot;a\nb&quot;</span>);
+            normalize_newlines(<span class="string">&quot;a\r\n\r\n\r\nb&quot;</span>, LINE_TERMINATORS),
+            <span class="string">&quot;a\n\n\nb&quot;
+        </span>);
+        <span class="macro">assert_eq!</span>(normalize_newlines(<span class="string">&quot;a\u{2028}b&quot;</span>, LINE_TERMINATORS), <span class="string">&quot;a\nb&quot;</span>);
+        <span class="macro">assert_eq!</span>(normalize_newlines(<span class="string">&quot;a\u{2029}b&quot;</span>, LINE_TERMINATORS), <span class="string">&quot;a\nb&quot;</span>);
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_pointer_width</span> <span class="op">=</span> <span class="string">&quot;64&quot;</span>)]</span>
-<span class="macro">static_assert!</span>(<span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident">rome_rowan::TextRange</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="number">8usize</span>);
+<span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+</span><span class="macro">static_assert!</span>(std::mem::size_of::&lt;rome_rowan::TextRange&gt;() == <span class="number">8usize</span>);
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_pointer_width</span> <span class="op">=</span> <span class="string">&quot;64&quot;</span>)]</span>
-<span class="macro">static_assert!</span>(<span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::format_element::tag::VerbatimKind</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="number">8usize</span>);
+<span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+</span><span class="macro">static_assert!</span>(std::mem::size_of::&lt;<span class="kw">crate</span>::format_element::tag::VerbatimKind&gt;() == <span class="number">8usize</span>);
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_pointer_width</span> <span class="op">=</span> <span class="string">&quot;64&quot;</span>)]</span>
-<span class="macro">static_assert!</span>(<span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::format_element::Tag</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="number">16usize</span>);
+<span class="attribute">#[cfg(not(debug_assertions))]
+#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+</span><span class="macro">static_assert!</span>(std::mem::size_of::&lt;<span class="kw">crate</span>::format_element::Tag&gt;() == <span class="number">16usize</span>);
 
-<span class="comment">// Increasing the size of FormatElement has serious consequences on runtime performance and memory footprint.</span>
-<span class="comment">// Is there a more efficient way to encode the data to avoid increasing its size? Can the information</span>
-<span class="comment">// be recomputed at a later point in time?</span>
-<span class="comment">// You reduced the size of a format element? Excellent work!</span>
+<span class="comment">// Increasing the size of FormatElement has serious consequences on runtime performance and memory footprint.
+// Is there a more efficient way to encode the data to avoid increasing its size? Can the information
+// be recomputed at a later point in time?
+// You reduced the size of a format element? Excellent work!
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_pointer_width</span> <span class="op">=</span> <span class="string">&quot;64&quot;</span>)]</span>
-<span class="macro">static_assert!</span>(<span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::FormatElement</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="number">24usize</span>);
+</span><span class="attribute">#[cfg(not(debug_assertions))]
+#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+</span><span class="macro">static_assert!</span>(std::mem::size_of::&lt;<span class="kw">crate</span>::FormatElement&gt;() == <span class="number">24usize</span>);
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

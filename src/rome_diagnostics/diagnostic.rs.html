@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/diagnostic.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>diagnostic.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_diagnostics/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/diagnostic.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>diagnostic.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_diagnostics/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -253,260 +253,260 @@
 <span id="253">253</span>
 <span id="254">254</span>
 <span id="255">255</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">file</span>::{<span class="ident">FileId</span>, <span class="ident">FileSpan</span>, <span class="ident">Span</span>},
-    <span class="ident">v2::Category</span>,
-    <span class="ident">Applicability</span>, <span class="ident">CodeSuggestion</span>, <span class="ident">DiagnosticTag</span>,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    file::{FileId, FileSpan, Span},
+    v2::Category,
+    Applicability, CodeSuggestion, DiagnosticTag,
 };
-<span class="kw">use</span> <span class="ident">rome_console::fmt::Display</span>;
-<span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">markup</span>, <span class="ident">MarkupBuf</span>};
-<span class="kw">use</span> <span class="ident">rome_text_edit::TextEdit</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use </span>rome_console::fmt::Display;
+<span class="kw">use </span>rome_console::{markup, MarkupBuf};
+<span class="kw">use </span>rome_text_edit::TextEdit;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="doccomment">/// A diagnostic message that can give information</span>
-<span class="doccomment">/// like errors or warnings.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Diagnostic</span> {
-    <span class="kw">pub</span> <span class="ident">file_id</span>: <span class="ident">FileId</span>,
+<span class="doccomment">/// A diagnostic message that can give information
+/// like errors or warnings.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>Diagnostic {
+    <span class="kw">pub </span>file_id: FileId,
 
-    <span class="kw">pub</span> <span class="ident">severity</span>: <span class="ident">Severity</span>,
-    <span class="kw">pub</span> <span class="ident">code</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">title</span>: <span class="ident">MarkupBuf</span>,
-    <span class="kw">pub</span> <span class="ident">summary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">tag</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DiagnosticTag</span><span class="op">&gt;</span>,
+    <span class="kw">pub </span>severity: Severity,
+    <span class="kw">pub </span>code: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category&gt;,
+    <span class="kw">pub </span>title: MarkupBuf,
+    <span class="kw">pub </span>summary: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>tag: <span class="prelude-ty">Option</span>&lt;DiagnosticTag&gt;,
 
-    <span class="kw">pub</span> <span class="ident">primary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SubDiagnostic</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">children</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SubDiagnostic</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">suggestions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CodeSuggestion</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">footers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Footer</span><span class="op">&gt;</span>,
+    <span class="kw">pub </span>primary: <span class="prelude-ty">Option</span>&lt;SubDiagnostic&gt;,
+    <span class="kw">pub </span>children: Vec&lt;SubDiagnostic&gt;,
+    <span class="kw">pub </span>suggestions: Vec&lt;CodeSuggestion&gt;,
+    <span class="kw">pub </span>footers: Vec&lt;Footer&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Diagnostic</span> {
-    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Error` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error</span>(<span class="ident">file_id</span>: <span class="ident">FileId</span>, <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_with_code</span>(<span class="ident">file_id</span>, <span class="ident">Severity::Error</span>, <span class="ident">title</span>, <span class="prelude-val">Some</span>(<span class="ident">code</span>))
+<span class="kw">impl </span>Diagnostic {
+    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Error` severity.
+    </span><span class="kw">pub fn </span>error(file_id: FileId, code: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category, title: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_with_code(file_id, Severity::Error, title, <span class="prelude-val">Some</span>(code))
     }
 
-    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Warning` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">warning</span>(<span class="ident">file_id</span>: <span class="ident">FileId</span>, <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_with_code</span>(<span class="ident">file_id</span>, <span class="ident">Severity::Warning</span>, <span class="ident">title</span>, <span class="prelude-val">Some</span>(<span class="ident">code</span>))
+    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Warning` severity.
+    </span><span class="kw">pub fn </span>warning(file_id: FileId, code: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category, title: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_with_code(file_id, Severity::Warning, title, <span class="prelude-val">Some</span>(code))
     }
 
-    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Help` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">help</span>(<span class="ident">file_id</span>: <span class="ident">FileId</span>, <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_with_code</span>(<span class="ident">file_id</span>, <span class="ident">Severity::Help</span>, <span class="ident">title</span>, <span class="prelude-val">Some</span>(<span class="ident">code</span>))
+    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Help` severity.
+    </span><span class="kw">pub fn </span>help(file_id: FileId, code: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category, title: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_with_code(file_id, Severity::Help, title, <span class="prelude-val">Some</span>(code))
     }
 
-    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Note` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">note</span>(<span class="ident">file_id</span>: <span class="ident">FileId</span>, <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_with_code</span>(<span class="ident">file_id</span>, <span class="ident">Severity::Note</span>, <span class="ident">title</span>, <span class="prelude-val">Some</span>(<span class="ident">code</span>))
+    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Note` severity.
+    </span><span class="kw">pub fn </span>note(file_id: FileId, code: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category, title: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_with_code(file_id, Severity::Note, title, <span class="prelude-val">Some</span>(code))
     }
 
-    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Bug` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bug</span>(<span class="ident">file_id</span>: <span class="ident">FileId</span>, <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_with_code</span>(<span class="ident">file_id</span>, <span class="ident">Severity::Bug</span>, <span class="ident">title</span>, <span class="prelude-val">Some</span>(<span class="ident">code</span>))
+    <span class="doccomment">/// Creates a new [`Diagnostic`] with the `Bug` severity.
+    </span><span class="kw">pub fn </span>bug(file_id: FileId, code: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category, title: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_with_code(file_id, Severity::Bug, title, <span class="prelude-val">Some</span>(code))
     }
 
-    <span class="doccomment">/// Creates a new [`Diagnostic`] that will be used in a builder-like way</span>
-    <span class="doccomment">/// to modify labels, and suggestions.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">file_id</span>: <span class="ident">FileId</span>, <span class="ident">severity</span>: <span class="ident">Severity</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_with_code</span>(<span class="ident">file_id</span>, <span class="ident">severity</span>, <span class="ident">title</span>, <span class="prelude-val">None</span>)
+    <span class="doccomment">/// Creates a new [`Diagnostic`] that will be used in a builder-like way
+    /// to modify labels, and suggestions.
+    </span><span class="kw">pub fn </span>new(file_id: FileId, severity: Severity, title: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_with_code(file_id, severity, title, <span class="prelude-val">None</span>)
     }
 
-    <span class="doccomment">/// Creates a new [`Diagnostic`] with an error code that will be used in a builder-like way</span>
-    <span class="doccomment">/// to modify labels, and suggestions.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_code</span>(
-        <span class="ident">file_id</span>: <span class="ident">FileId</span>,
-        <span class="ident">severity</span>: <span class="ident">Severity</span>,
-        <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Display</span>,
-        <span class="ident">code</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">file_id</span>,
-            <span class="ident">code</span>,
-            <span class="ident">severity</span>,
-            <span class="ident">title</span>: <span class="macro">markup!</span>({ <span class="ident">title</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">summary</span>: <span class="prelude-val">None</span>,
-            <span class="ident">primary</span>: <span class="prelude-val">None</span>,
-            <span class="ident">tag</span>: <span class="prelude-val">None</span>,
-            <span class="ident">children</span>: <span class="macro">vec!</span>[],
-            <span class="ident">suggestions</span>: <span class="macro">vec!</span>[],
-            <span class="ident">footers</span>: <span class="macro">vec!</span>[],
+    <span class="doccomment">/// Creates a new [`Diagnostic`] with an error code that will be used in a builder-like way
+    /// to modify labels, and suggestions.
+    </span><span class="kw">pub fn </span>new_with_code(
+        file_id: FileId,
+        severity: Severity,
+        title: <span class="kw">impl </span>Display,
+        code: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            file_id,
+            code,
+            severity,
+            title: <span class="macro">markup!</span>({ title }).to_owned(),
+            summary: <span class="prelude-val">None</span>,
+            primary: <span class="prelude-val">None</span>,
+            tag: <span class="prelude-val">None</span>,
+            children: <span class="macro">vec!</span>[],
+            suggestions: <span class="macro">vec!</span>[],
+            footers: <span class="macro">vec!</span>[],
         }
     }
 
-    <span class="doccomment">/// Overwrites the severity of this diagnostic.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">severity</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">severity</span>: <span class="ident">Severity</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">severity</span> <span class="op">=</span> <span class="ident">severity</span>;
-        <span class="self">self</span>
-    }
+    <span class="doccomment">/// Overwrites the severity of this diagnostic.
+    </span><span class="kw">pub fn </span>severity(<span class="kw-2">mut </span><span class="self">self</span>, severity: Severity) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.severity = severity;
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Set an explicit plain-text summary for this diagnostic.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">summary</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">summary</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">summary</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">summary</span>.<span class="ident">into</span>());
-        <span class="self">self</span>
-    }
+    <span class="doccomment">/// Set an explicit plain-text summary for this diagnostic.
+    </span><span class="kw">pub fn </span>summary(<span class="kw-2">mut </span><span class="self">self</span>, summary: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.summary = <span class="prelude-val">Some</span>(summary.into());
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Marks this diagnostic as deprecated code, which will</span>
-    <span class="doccomment">/// be displayed in the language server.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This does not have any influence on the diagnostic rendering.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deprecated</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">tag</span> <span class="op">=</span> <span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">tag</span>, <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Unnecessary</span>)) {
-            <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Both</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Deprecated</span>)
+    <span class="doccomment">/// Marks this diagnostic as deprecated code, which will
+    /// be displayed in the language server.
+    ///
+    /// This does not have any influence on the diagnostic rendering.
+    </span><span class="kw">pub fn </span>deprecated(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.tag = <span class="kw">if </span><span class="macro">matches!</span>(<span class="self">self</span>.tag, <span class="prelude-val">Some</span>(DiagnosticTag::Unnecessary)) {
+            <span class="prelude-val">Some</span>(DiagnosticTag::Both)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Some</span>(DiagnosticTag::Deprecated)
         };
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Marks this diagnostic as unnecessary code, which will</span>
-    <span class="doccomment">/// be displayed in the language server.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This does not have any influence on the diagnostic rendering.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unnecessary</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">tag</span> <span class="op">=</span> <span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">tag</span>, <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Deprecated</span>)) {
-            <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Both</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">DiagnosticTag::Unnecessary</span>)
+    <span class="doccomment">/// Marks this diagnostic as unnecessary code, which will
+    /// be displayed in the language server.
+    ///
+    /// This does not have any influence on the diagnostic rendering.
+    </span><span class="kw">pub fn </span>unnecessary(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.tag = <span class="kw">if </span><span class="macro">matches!</span>(<span class="self">self</span>.tag, <span class="prelude-val">Some</span>(DiagnosticTag::Deprecated)) {
+            <span class="prelude-val">Some</span>(DiagnosticTag::Both)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Some</span>(DiagnosticTag::Unnecessary)
         };
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Attaches a label to this [`Diagnostic`], that will point to another file</span>
-    <span class="doccomment">/// that is provided.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label_in_file</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">severity</span>: <span class="ident">Severity</span>, <span class="ident">span</span>: <span class="ident">FileSpan</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">push</span>(<span class="ident">SubDiagnostic</span> {
-            <span class="ident">severity</span>,
-            <span class="ident">msg</span>: <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">span</span>,
+    <span class="doccomment">/// Attaches a label to this [`Diagnostic`], that will point to another file
+    /// that is provided.
+    </span><span class="kw">pub fn </span>label_in_file(<span class="kw-2">mut </span><span class="self">self</span>, severity: Severity, span: FileSpan, msg: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.children.push(SubDiagnostic {
+            severity,
+            msg: <span class="macro">markup!</span>({ msg }).to_owned(),
+            span,
         });
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Attaches a label to this [`Diagnostic`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The given span has to be in the file that was provided while creating this [`Diagnostic`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">severity</span>: <span class="ident">Severity</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">Span</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">push</span>(<span class="ident">SubDiagnostic</span> {
-            <span class="ident">severity</span>,
-            <span class="ident">msg</span>: <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">span</span>: <span class="ident">FileSpan::new</span>(<span class="self">self</span>.<span class="ident">file_id</span>, <span class="ident">span</span>),
+    <span class="doccomment">/// Attaches a label to this [`Diagnostic`].
+    ///
+    /// The given span has to be in the file that was provided while creating this [`Diagnostic`].
+    </span><span class="kw">pub fn </span>label(<span class="kw-2">mut </span><span class="self">self</span>, severity: Severity, span: <span class="kw">impl </span>Span, msg: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.children.push(SubDiagnostic {
+            severity,
+            msg: <span class="macro">markup!</span>({ msg }).to_owned(),
+            span: FileSpan::new(<span class="self">self</span>.file_id, span),
         });
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Attaches a primary label to this [`Diagnostic`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">Span</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">primary</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">SubDiagnostic</span> {
-            <span class="ident">severity</span>: <span class="self">self</span>.<span class="ident">severity</span>,
-            <span class="ident">msg</span>: <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">span</span>: <span class="ident">FileSpan::new</span>(<span class="self">self</span>.<span class="ident">file_id</span>, <span class="ident">span</span>),
+    <span class="doccomment">/// Attaches a primary label to this [`Diagnostic`].
+    </span><span class="kw">pub fn </span>primary(<span class="kw-2">mut </span><span class="self">self</span>, span: <span class="kw">impl </span>Span, msg: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.primary = <span class="prelude-val">Some</span>(SubDiagnostic {
+            severity: <span class="self">self</span>.severity,
+            msg: <span class="macro">markup!</span>({ msg }).to_owned(),
+            span: FileSpan::new(<span class="self">self</span>.file_id, span),
         });
-        <span class="self">self</span>
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Attaches a secondary label to this [`Diagnostic`].
+    </span><span class="kw">pub fn </span>secondary(<span class="self">self</span>, span: <span class="kw">impl </span>Span, msg: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.label(Severity::Note, span, msg)
     }
 
-    <span class="doccomment">/// Attaches a secondary label to this [`Diagnostic`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">secondary</span>(<span class="self">self</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">Span</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">label</span>(<span class="ident">Severity::Note</span>, <span class="ident">span</span>, <span class="ident">msg</span>)
-    }
-
-    <span class="doccomment">/// Add a suggestion to this `Diagnostic`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">suggestion_full</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">Span</span>,
-        <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>,
-        <span class="ident">suggestion</span>: <span class="ident">TextEdit</span>,
-        <span class="ident">applicability</span>: <span class="ident">Applicability</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">file_id</span>;
-        <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="ident">FileSpan</span> {
-            <span class="ident">file</span>,
-            <span class="ident">range</span>: <span class="ident">span</span>.<span class="ident">as_range</span>(),
+    <span class="doccomment">/// Add a suggestion to this `Diagnostic`
+    </span><span class="kw">pub fn </span>suggestion_full(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        span: <span class="kw">impl </span>Span,
+        msg: <span class="kw">impl </span>Display,
+        suggestion: TextEdit,
+        applicability: Applicability,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>file = <span class="self">self</span>.file_id;
+        <span class="kw">let </span>span = FileSpan {
+            file,
+            range: span.as_range(),
         };
-        <span class="kw">let</span> <span class="ident">suggestion</span> <span class="op">=</span> <span class="ident">CodeSuggestion</span> {
-            <span class="ident">applicability</span>,
-            <span class="ident">msg</span>: <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">labels</span>: <span class="macro">vec!</span>[],
-            <span class="ident">span</span>,
-            <span class="ident">suggestion</span>,
+        <span class="kw">let </span>suggestion = CodeSuggestion {
+            applicability,
+            msg: <span class="macro">markup!</span>({ msg }).to_owned(),
+            labels: <span class="macro">vec!</span>[],
+            span,
+            suggestion,
         };
-        <span class="self">self</span>.<span class="ident">suggestions</span>.<span class="ident">push</span>(<span class="ident">suggestion</span>);
-        <span class="self">self</span>
-    }
+        <span class="self">self</span>.suggestions.push(suggestion);
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a footer to this `Diagnostic`, which will be displayed under the actual error.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">footer</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">severity</span>: <span class="ident">Severity</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">footers</span>.<span class="ident">push</span>(<span class="ident">Footer</span> {
-            <span class="ident">msg</span>: <span class="macro">markup!</span>({ <span class="ident">msg</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">severity</span>,
+    <span class="doccomment">/// Adds a footer to this `Diagnostic`, which will be displayed under the actual error.
+    </span><span class="kw">pub fn </span>footer(<span class="kw-2">mut </span><span class="self">self</span>, severity: Severity, msg: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.footers.push(Footer {
+            msg: <span class="macro">markup!</span>({ msg }).to_owned(),
+            severity,
         });
-        <span class="self">self</span>
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Adds a footer to this `Diagnostic`, with the `Help` severity.
+    </span><span class="kw">pub fn </span>footer_help(<span class="self">self</span>, msg: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.footer(Severity::Help, msg)
     }
 
-    <span class="doccomment">/// Adds a footer to this `Diagnostic`, with the `Help` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">footer_help</span>(<span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">footer</span>(<span class="ident">Severity::Help</span>, <span class="ident">msg</span>)
+    <span class="doccomment">/// Adds a footer to this `Diagnostic`, with the `Note` severity.
+    </span><span class="kw">pub fn </span>footer_note(<span class="self">self</span>, msg: <span class="kw">impl </span>Display) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.footer(Severity::Note, msg)
     }
 
-    <span class="doccomment">/// Adds a footer to this `Diagnostic`, with the `Note` severity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">footer_note</span>(<span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">footer</span>(<span class="ident">Severity::Note</span>, <span class="ident">msg</span>)
-    }
-
-    <span class="doccomment">/// Checks if the severity of the current diagnostic is [Severity::Error] or higher</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">severity</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">Severity::Error</span>
+    <span class="doccomment">/// Checks if the severity of the current diagnostic is [Severity::Error] or higher
+    </span><span class="kw">pub fn </span>is_error(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.severity &gt;= Severity::Error
     }
 }
 
-<span class="doccomment">/// A severity level for diagnostic messages.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// These are ordered in the following way:</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Severity</span> {
-    <span class="doccomment">/// A help message.</span>
-    <span class="ident">Help</span>,
-    <span class="doccomment">/// A note.</span>
-    <span class="ident">Note</span>,
-    <span class="doccomment">/// A warning.</span>
-    <span class="ident">Warning</span>,
-    <span class="doccomment">/// An error.</span>
-    <span class="ident">Error</span>,
-    <span class="doccomment">/// An unexpected bug.</span>
-    <span class="ident">Bug</span>,
+<span class="doccomment">/// A severity level for diagnostic messages.
+///
+/// These are ordered in the following way:
+</span><span class="attribute">#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub enum </span>Severity {
+    <span class="doccomment">/// A help message.
+    </span>Help,
+    <span class="doccomment">/// A note.
+    </span>Note,
+    <span class="doccomment">/// A warning.
+    </span>Warning,
+    <span class="doccomment">/// An error.
+    </span>Error,
+    <span class="doccomment">/// An unexpected bug.
+    </span>Bug,
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Severity</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">level</span>: <span class="ident">Severity</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">level</span> {
-            <span class="ident">Severity::Bug</span> =&gt; <span class="string">&quot;bug&quot;</span>,
-            <span class="ident">Severity::Error</span> =&gt; <span class="string">&quot;error&quot;</span>,
-            <span class="ident">Severity::Warning</span> =&gt; <span class="string">&quot;warning&quot;</span>,
-            <span class="ident">Severity::Help</span> =&gt; <span class="string">&quot;help&quot;</span>,
-            <span class="ident">Severity::Note</span> =&gt; <span class="string">&quot;note&quot;</span>,
+<span class="kw">impl </span>From&lt;Severity&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+    <span class="kw">fn </span>from(level: Severity) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>level {
+            Severity::Bug =&gt; <span class="string">&quot;bug&quot;</span>,
+            Severity::Error =&gt; <span class="string">&quot;error&quot;</span>,
+            Severity::Warning =&gt; <span class="string">&quot;warning&quot;</span>,
+            Severity::Help =&gt; <span class="string">&quot;help&quot;</span>,
+            Severity::Note =&gt; <span class="string">&quot;note&quot;</span>,
         }
     }
 }
 
-<span class="doccomment">/// Everything that can be added to a diagnostic, like</span>
-<span class="doccomment">/// a suggestion that will be displayed under the actual error.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SubDiagnostic</span> {
-    <span class="kw">pub</span> <span class="ident">severity</span>: <span class="ident">Severity</span>,
-    <span class="kw">pub</span> <span class="ident">msg</span>: <span class="ident">MarkupBuf</span>,
-    <span class="kw">pub</span> <span class="ident">span</span>: <span class="ident">FileSpan</span>,
+<span class="doccomment">/// Everything that can be added to a diagnostic, like
+/// a suggestion that will be displayed under the actual error.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>SubDiagnostic {
+    <span class="kw">pub </span>severity: Severity,
+    <span class="kw">pub </span>msg: MarkupBuf,
+    <span class="kw">pub </span>span: FileSpan,
 }
 
-<span class="doccomment">/// A note or help that is displayed under the diagnostic.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Footer</span> {
-    <span class="kw">pub</span> <span class="ident">msg</span>: <span class="ident">MarkupBuf</span>,
-    <span class="kw">pub</span> <span class="ident">severity</span>: <span class="ident">Severity</span>,
+<span class="doccomment">/// A note or help that is displayed under the diagnostic.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>Footer {
+    <span class="kw">pub </span>msg: MarkupBuf,
+    <span class="kw">pub </span>severity: Severity,
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

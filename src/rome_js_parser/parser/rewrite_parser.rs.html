@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/parser/rewrite_parser.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rewrite_parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/parser/rewrite_parser.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rewrite_parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -152,159 +152,159 @@
 <span id="152">152</span>
 <span id="153">153</span>
 <span id="154">154</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::token_source::TokenSourceCheckpoint</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CompletedMarker</span>, <span class="ident">Event</span>, <span class="ident">Marker</span>, <span class="ident">ParseDiagnostic</span>, <span class="ident">Parser</span>, <span class="ident">TextSize</span>, <span class="ident">ToDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::fmt::Display</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::v2::location::AsSpan</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>, <span class="ident">TextRange</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::token_source::TokenSourceCheckpoint;
+<span class="kw">use crate</span>::{CompletedMarker, Event, Marker, ParseDiagnostic, Parser, TextSize, ToDiagnostic};
+<span class="kw">use </span>rome_console::fmt::Display;
+<span class="kw">use </span>rome_diagnostics::v2::location::AsSpan;
+<span class="kw">use </span>rome_js_syntax::{JsSyntaxKind, TextRange};
 
-<span class="doccomment">/// Simplified parser API for when rewriting the AST structure with `rewrite_events`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The difference from the regular [Parser] is that the [TokenSource] must be detached during</span>
-<span class="doccomment">/// rewriting to avoid lexing previously lexed tokens in a different context. For example for `a[`test`] = &quot;b&quot;`.</span>
-<span class="doccomment">/// Template literal elements get lexed in the [TemplateElement] context. However, if the rewriter</span>
-<span class="doccomment">/// rewinds the token source then all tokens are lexed in the [LexContext::Regular] which yields</span>
-<span class="doccomment">/// complete different results.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is why the [RewriteParser] tracks the source offset without relying on the `TokenSource`</span>
-<span class="doccomment">/// and explicitly passes the positions to [Marker] and [CompletedMarker]. This further has the</span>
-<span class="doccomment">/// benefit that rewriting the events doesn&#39;t require re-lexing all tokens as well.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">RewriteParser</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;source</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The byte offset of the current token from the start of the source</span>
-    <span class="ident">offset</span>: <span class="ident">TextSize</span>,
+<span class="doccomment">/// Simplified parser API for when rewriting the AST structure with `rewrite_events`.
+///
+/// The difference from the regular [Parser] is that the [TokenSource] must be detached during
+/// rewriting to avoid lexing previously lexed tokens in a different context. For example for `a[`test`] = &quot;b&quot;`.
+/// Template literal elements get lexed in the [TemplateElement] context. However, if the rewriter
+/// rewinds the token source then all tokens are lexed in the [LexContext::Regular] which yields
+/// complete different results.
+///
+/// This is why the [RewriteParser] tracks the source offset without relying on the `TokenSource`
+/// and explicitly passes the positions to [Marker] and [CompletedMarker]. This further has the
+/// benefit that rewriting the events doesn&#39;t require re-lexing all tokens as well.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>RewriteParser&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;source</span>&gt; {
+    <span class="doccomment">/// The byte offset of the current token from the start of the source
+    </span>offset: TextSize,
 
-    <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span>,
+    inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser </span><span class="kw-2">mut </span>Parser&lt;<span class="lifetime">&#39;source</span>&gt;,
 
-    <span class="doccomment">/// Offset to the next not yet processed trivia in [TokenSource::trivia_list].</span>
-    <span class="ident">trivia_offset</span>: <span class="ident">usize</span>,
+    <span class="doccomment">/// Offset to the next not yet processed trivia in [TokenSource::trivia_list].
+    </span>trivia_offset: usize,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="ident">RewriteParser</span><span class="op">&lt;</span><span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;source</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span>, <span class="ident">checkpoint</span>: <span class="ident">TokenSourceCheckpoint</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">inner</span>: <span class="ident">p</span>,
-            <span class="ident">offset</span>: <span class="ident">checkpoint</span>.<span class="ident">current_start</span>(),
-            <span class="ident">trivia_offset</span>: <span class="ident">checkpoint</span>.<span class="ident">trivia_position</span>(),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;source</span>&gt; RewriteParser&lt;<span class="lifetime">&#39;parser</span>, <span class="lifetime">&#39;source</span>&gt; {
+    <span class="kw">pub fn </span>new(p: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser </span><span class="kw-2">mut </span>Parser&lt;<span class="lifetime">&#39;source</span>&gt;, checkpoint: TokenSourceCheckpoint) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            inner: p,
+            offset: checkpoint.current_start(),
+            trivia_offset: checkpoint.trivia_position(),
         }
     }
 
-    <span class="doccomment">/// Starts a marker for a new node.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">RewriteMarker</span> {
-        <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">events</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>;
-        <span class="self">self</span>.<span class="ident">skip_trivia</span>(<span class="bool-val">false</span>);
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">push_event</span>(<span class="ident">Event::tombstone</span>());
-        <span class="ident">RewriteMarker</span>(<span class="ident">Marker::new</span>(<span class="ident">pos</span>, <span class="self">self</span>.<span class="ident">offset</span>))
+    <span class="doccomment">/// Starts a marker for a new node.
+    </span><span class="kw">pub fn </span>start(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RewriteMarker {
+        <span class="kw">let </span>pos = <span class="self">self</span>.inner.events.len() <span class="kw">as </span>u32;
+        <span class="self">self</span>.skip_trivia(<span class="bool-val">false</span>);
+        <span class="self">self</span>.inner.push_event(Event::tombstone());
+        RewriteMarker(Marker::new(pos, <span class="self">self</span>.offset))
     }
 
-    <span class="doccomment">/// Bumps the passed in token</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bump</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">RewriteToken</span>) {
-        <span class="self">self</span>.<span class="ident">skip_trivia</span>(<span class="bool-val">false</span>);
-        <span class="macro">debug_assert!</span>(<span class="self">self</span>.<span class="ident">offset</span> <span class="op">&lt;</span> <span class="ident">token</span>.<span class="ident">end</span>);
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">push_token</span>(<span class="ident">token</span>.<span class="ident">kind</span>, <span class="ident">token</span>.<span class="ident">end</span>);
+    <span class="doccomment">/// Bumps the passed in token
+    </span><span class="kw">pub fn </span>bump(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: RewriteToken) {
+        <span class="self">self</span>.skip_trivia(<span class="bool-val">false</span>);
+        <span class="macro">debug_assert!</span>(<span class="self">self</span>.offset &lt; token.end);
+        <span class="self">self</span>.inner.push_token(token.kind, token.end);
 
-        <span class="comment">// test ts ts_decorator_assignment</span>
-        <span class="comment">// @test(--a)</span>
-        <span class="comment">// class Test {}</span>
+        <span class="comment">// test ts ts_decorator_assignment
+        // @test(--a)
+        // class Test {}
 
-        <span class="comment">// If the parser originally skipped this token as trivia, then make sure to also consume the trivia.</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">trivia</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">tokens</span>.<span class="ident">trivia_list</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="ident">trivia_offset</span>) {
-            <span class="kw">if</span> <span class="ident">trivia</span>.<span class="ident">kind</span>().<span class="ident">is_skipped</span>() <span class="op">&amp;&amp;</span> <span class="ident">trivia</span>.<span class="ident">offset</span>() <span class="op">==</span> <span class="self">self</span>.<span class="ident">offset</span> {
-                <span class="self">self</span>.<span class="ident">trivia_offset</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        // If the parser originally skipped this token as trivia, then make sure to also consume the trivia.
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(trivia) = <span class="self">self</span>.inner.tokens.trivia_list.get(<span class="self">self</span>.trivia_offset) {
+            <span class="kw">if </span>trivia.kind().is_skipped() &amp;&amp; trivia.offset() == <span class="self">self</span>.offset {
+                <span class="self">self</span>.trivia_offset += <span class="number">1</span>;
             }
         }
 
-        <span class="self">self</span>.<span class="ident">offset</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">end</span>;
-        <span class="self">self</span>.<span class="ident">skip_trivia</span>(<span class="bool-val">true</span>);
+        <span class="self">self</span>.offset = token.end;
+        <span class="self">self</span>.skip_trivia(<span class="bool-val">true</span>);
     }
 
-    <span class="kw">fn</span> <span class="ident">skip_trivia</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">trailing</span>: <span class="ident">bool</span>) {
-        <span class="kw">let</span> <span class="ident">remaining_trivia</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">tokens</span>.<span class="ident">trivia_list</span>[<span class="self">self</span>.<span class="ident">trivia_offset</span>..];
-        <span class="kw">for</span> <span class="ident">trivia</span> <span class="kw">in</span> <span class="ident">remaining_trivia</span> {
-            <span class="comment">// Don&#39;t skip over any &quot;skipped token trivia&quot;. These get consumed when bumping the token.</span>
-            <span class="kw">if</span> <span class="ident">trailing</span> <span class="op">!</span><span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">trailing</span>()
-                <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">offset</span> <span class="op">!</span><span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">offset</span>()
-                <span class="op">|</span><span class="op">|</span> <span class="ident">trivia</span>.<span class="ident">kind</span>().<span class="ident">is_skipped</span>()
+    <span class="kw">fn </span>skip_trivia(<span class="kw-2">&amp;mut </span><span class="self">self</span>, trailing: bool) {
+        <span class="kw">let </span>remaining_trivia = <span class="kw-2">&amp;</span><span class="self">self</span>.inner.tokens.trivia_list[<span class="self">self</span>.trivia_offset..];
+        <span class="kw">for </span>trivia <span class="kw">in </span>remaining_trivia {
+            <span class="comment">// Don&#39;t skip over any &quot;skipped token trivia&quot;. These get consumed when bumping the token.
+            </span><span class="kw">if </span>trailing != trivia.trailing()
+                || <span class="self">self</span>.offset != trivia.offset()
+                || trivia.kind().is_skipped()
             {
                 <span class="kw">break</span>;
             }
 
-            <span class="self">self</span>.<span class="ident">trivia_offset</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">trivia</span>.<span class="ident">len</span>();
+            <span class="self">self</span>.trivia_offset += <span class="number">1</span>;
+            <span class="self">self</span>.offset += trivia.len();
         }
     }
 
-    <span class="doccomment">/// Finishes the rewriter</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Panics</span>
-    <span class="doccomment">/// If not all tokens have been consumed or if they have been consumed out of order</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">skip_trivia</span>(<span class="bool-val">false</span>); <span class="comment">// Skip the leading trivia up to the current token.</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="self">self</span>.<span class="ident">offset</span>,
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">tokens</span>.<span class="ident">position</span>(),
-            <span class="string">&quot;Rewrite didn&#39;t consume all tokens&quot;</span>
-        );
+    <span class="doccomment">/// Finishes the rewriter
+    ///
+    /// ## Panics
+    /// If not all tokens have been consumed or if they have been consumed out of order
+    </span><span class="kw">pub fn </span>finish(<span class="kw-2">mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.skip_trivia(<span class="bool-val">false</span>); <span class="comment">// Skip the leading trivia up to the current token.
+        </span><span class="macro">assert_eq!</span>(
+            <span class="self">self</span>.offset,
+            <span class="self">self</span>.inner.tokens.position(),
+            <span class="string">&quot;Rewrite didn&#39;t consume all tokens&quot;
+        </span>);
     }
 
-    <span class="doccomment">/// Returns true if the parser is in strict mode</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_strict_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">strict</span>().<span class="ident">is_some</span>()
+    <span class="doccomment">/// Returns true if the parser is in strict mode
+    </span><span class="kw">pub fn </span>is_strict_mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.inner.state.strict().is_some()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">err_builder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">message</span>: <span class="kw">impl</span> <span class="ident">Display</span>, <span class="ident">span</span>: <span class="kw">impl</span> <span class="ident">AsSpan</span>) -&gt; <span class="ident">ParseDiagnostic</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">err_builder</span>(<span class="ident">message</span>, <span class="ident">span</span>)
+    <span class="kw">pub fn </span>err_builder(<span class="kw-2">&amp;</span><span class="self">self</span>, message: <span class="kw">impl </span>Display, span: <span class="kw">impl </span>AsSpan) -&gt; ParseDiagnostic {
+        <span class="self">self</span>.inner.err_builder(message, span)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">diagnostic</span>: <span class="kw">impl</span> <span class="ident">ToDiagnostic</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">error</span>(<span class="ident">diagnostic</span>)
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">RewriteToken</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>,
-    <span class="ident">end</span>: <span class="ident">TextSize</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">RewriteToken</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>, <span class="ident">end</span>: <span class="ident">TextSize</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">kind</span>, <span class="ident">end</span> }
+    <span class="kw">pub fn </span>error(<span class="kw-2">&amp;mut </span><span class="self">self</span>, diagnostic: <span class="kw">impl </span>ToDiagnostic) {
+        <span class="self">self</span>.inner.error(diagnostic)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">RewriteMarker</span>(<span class="ident">Marker</span>);
+<span class="attribute">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>RewriteToken {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) kind: JsSyntaxKind,
+    end: TextSize,
+}
 
-<span class="kw">impl</span> <span class="ident">RewriteMarker</span> {
-    <span class="doccomment">/// Completes the node with the specified kind</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">complete</span>(<span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">RewriteParser</span>, <span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>) -&gt; <span class="ident">RewriteCompletedMarker</span> {
-        <span class="ident">RewriteCompletedMarker</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">complete</span>(<span class="ident">p</span>.<span class="ident">inner</span>, <span class="ident">kind</span>))
+<span class="kw">impl </span>RewriteToken {
+    <span class="kw">pub fn </span>new(kind: JsSyntaxKind, end: TextSize) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ kind, end }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">RewriteCompletedMarker</span>(<span class="ident">CompletedMarker</span>);
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>RewriteMarker(Marker);
 
-<span class="kw">impl</span> <span class="ident">RewriteCompletedMarker</span> {
-    <span class="doccomment">/// Returns the range of the marker</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">RewriteParser</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">range</span>(<span class="ident">p</span>.<span class="ident">inner</span>)
-    }
-
-    <span class="doccomment">/// Returns the source text of the marker</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">RewriteParser</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text</span>(<span class="ident">p</span>.<span class="ident">inner</span>)
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">change_to_unknown</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">RewriteParser</span>) {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>.<span class="ident">inner</span>)
+<span class="kw">impl </span>RewriteMarker {
+    <span class="doccomment">/// Completes the node with the specified kind
+    </span><span class="kw">pub fn </span>complete(<span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>RewriteParser, kind: JsSyntaxKind) -&gt; RewriteCompletedMarker {
+        RewriteCompletedMarker(<span class="self">self</span>.<span class="number">0</span>.complete(p.inner, kind))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">RewriteCompletedMarker</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CompletedMarker</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">inner</span>: <span class="ident">RewriteCompletedMarker</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">inner</span>.<span class="number">0</span>
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>RewriteCompletedMarker(CompletedMarker);
+
+<span class="kw">impl </span>RewriteCompletedMarker {
+    <span class="doccomment">/// Returns the range of the marker
+    </span><span class="kw">pub fn </span>range(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;</span>RewriteParser) -&gt; TextRange {
+        <span class="self">self</span>.<span class="number">0</span>.range(p.inner)
     }
+
+    <span class="doccomment">/// Returns the source text of the marker
+    </span><span class="kw">pub fn </span>text&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>RewriteParser) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str {
+        <span class="self">self</span>.<span class="number">0</span>.text(p.inner)
+    }
+
+    <span class="kw">pub fn </span>change_to_unknown(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>RewriteParser) {
+        <span class="self">self</span>.<span class="number">0</span>.change_to_unknown(p.inner)
+    }
+}
+
+<span class="kw">impl </span>From&lt;RewriteCompletedMarker&gt; <span class="kw">for </span>CompletedMarker {
+    <span class="kw">fn </span>from(inner: RewriteCompletedMarker) -&gt; <span class="self">Self </span>{
+        inner.<span class="number">0
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

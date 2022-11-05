@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/comments/builder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_formatter/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_formatter/src/comments/builder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_formatter/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_formatter/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -1053,468 +1053,468 @@
 <span id="1053">1053</span>
 <span id="1054">1054</span>
 <span id="1055">1055</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">map::CommentsMap</span>, <span class="ident">CommentPlacement</span>, <span class="ident">CommentStyle</span>, <span class="ident">CommentTextPosition</span>, <span class="ident">DecoratedComment</span>,
-    <span class="ident">SourceComment</span>, <span class="ident">TransformSourceMap</span>,
+</pre><pre class="rust"><code><span class="kw">use super</span>::{
+    map::CommentsMap, CommentPlacement, CommentStyle, CommentTextPosition, DecoratedComment,
+    SourceComment, TransformSourceMap,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::source_map</span>::{<span class="ident">DeletedRangeEntry</span>, <span class="ident">DeletedRanges</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan::syntax::SyntaxElementKey</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{
-    <span class="ident">Direction</span>, <span class="ident">Language</span>, <span class="ident">SyntaxElement</span>, <span class="ident">SyntaxKind</span>, <span class="ident">SyntaxNode</span>, <span class="ident">SyntaxToken</span>, <span class="ident">WalkEvent</span>,
+<span class="kw">use </span><span class="kw">crate</span>::source_map::{DeletedRangeEntry, DeletedRanges};
+<span class="kw">use crate</span>::{TextRange, TextSize};
+<span class="kw">use </span>rome_rowan::syntax::SyntaxElementKey;
+<span class="kw">use </span>rome_rowan::{
+    Direction, Language, SyntaxElement, SyntaxKind, SyntaxNode, SyntaxToken, WalkEvent,
 };
-<span class="kw">use</span> <span class="ident">rustc_hash::FxHashSet</span>;
+<span class="kw">use </span>rustc_hash::FxHashSet;
 
-<span class="doccomment">/// Extracts all comments from a syntax tree.</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">CommentsBuilderVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Style</span>: <span class="ident">CommentStyle</span><span class="op">&gt;</span> {
-    <span class="ident">builder</span>: <span class="ident">CommentsBuilder</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span>,
-    <span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Style</span>,
-    <span class="ident">parentheses</span>: <span class="ident">SourceParentheses</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Extracts all comments from a syntax tree.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>CommentsBuilderVisitor&lt;<span class="lifetime">&#39;a</span>, Style: CommentStyle&gt; {
+    builder: CommentsBuilder&lt;Style::Language&gt;,
+    style: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Style,
+    parentheses: SourceParentheses&lt;<span class="lifetime">&#39;a</span>&gt;,
 
-    <span class="comment">// State</span>
-    <span class="ident">pending_comments</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">preceding_node</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">following_node_index</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">parents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">last_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="comment">// State
+    </span>pending_comments: Vec&lt;DecoratedComment&lt;Style::Language&gt;&gt;,
+    preceding_node: <span class="prelude-ty">Option</span>&lt;SyntaxNode&lt;Style::Language&gt;&gt;,
+    following_node_index: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+    parents: Vec&lt;SyntaxNode&lt;Style::Language&gt;&gt;,
+    last_token: <span class="prelude-ty">Option</span>&lt;SyntaxToken&lt;Style::Language&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Style</span><span class="op">&gt;</span> <span class="ident">CommentsBuilderVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Style</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Style</span>: <span class="ident">CommentStyle</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, Style&gt; CommentsBuilderVisitor&lt;<span class="lifetime">&#39;a</span>, Style&gt;
+<span class="kw">where
+    </span>Style: CommentStyle,
 {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Style</span>, <span class="ident">source_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">TransformSourceMap</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">style</span>,
-            <span class="ident">builder</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">parentheses</span>: <span class="ident">SourceParentheses::from_source_map</span>(<span class="ident">source_map</span>),
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(style: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Style, source_map: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TransformSourceMap&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            style,
+            builder: Default::default(),
+            parentheses: SourceParentheses::from_source_map(source_map),
 
-            <span class="ident">pending_comments</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">preceding_node</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">following_node_index</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">parents</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">last_token</span>: <span class="ident">Default::default</span>(),
+            pending_comments: Default::default(),
+            preceding_node: Default::default(),
+            following_node_index: Default::default(),
+            parents: Default::default(),
+            last_token: Default::default(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">visit</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>visit(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        root: <span class="kw-2">&amp;</span>SyntaxNode&lt;Style::Language&gt;,
     ) -&gt; (
-        <span class="ident">CommentsMap</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span>, <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">FxHashSet</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span><span class="op">&gt;</span>,
+        CommentsMap&lt;SyntaxElementKey, SourceComment&lt;Style::Language&gt;&gt;,
+        FxHashSet&lt;SyntaxElementKey&gt;,
     ) {
-        <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="ident">root</span>.<span class="ident">preorder_with_tokens</span>(<span class="ident">Direction::Next</span>) {
-            <span class="kw">match</span> <span class="ident">event</span> {
-                <span class="ident">WalkEvent::Enter</span>(<span class="ident">SyntaxElement::Node</span>(<span class="ident">node</span>)) =&gt; {
-                    <span class="self">self</span>.<span class="ident">visit_node</span>(<span class="ident">WalkEvent::Enter</span>(<span class="ident">node</span>))
+        <span class="kw">for </span>event <span class="kw">in </span>root.preorder_with_tokens(Direction::Next) {
+            <span class="kw">match </span>event {
+                WalkEvent::Enter(SyntaxElement::Node(node)) =&gt; {
+                    <span class="self">self</span>.visit_node(WalkEvent::Enter(node))
                 }
 
-                <span class="ident">WalkEvent::Leave</span>(<span class="ident">SyntaxElement::Node</span>(<span class="ident">node</span>)) =&gt; {
-                    <span class="self">self</span>.<span class="ident">visit_node</span>(<span class="ident">WalkEvent::Leave</span>(<span class="ident">node</span>))
+                WalkEvent::Leave(SyntaxElement::Node(node)) =&gt; {
+                    <span class="self">self</span>.visit_node(WalkEvent::Leave(node))
                 }
 
-                <span class="ident">WalkEvent::Enter</span>(<span class="ident">SyntaxElement::Token</span>(<span class="ident">token</span>)) =&gt; <span class="self">self</span>.<span class="ident">visit_token</span>(<span class="ident">token</span>),
-                <span class="ident">WalkEvent::Leave</span>(<span class="ident">SyntaxElement::Token</span>(<span class="kw">_</span>)) =&gt; {
-                    <span class="comment">// Handled as part of enter</span>
-                }
+                WalkEvent::Enter(SyntaxElement::Token(token)) =&gt; <span class="self">self</span>.visit_token(token),
+                WalkEvent::Leave(SyntaxElement::Token(<span class="kw">_</span>)) =&gt; {
+                    <span class="comment">// Handled as part of enter
+                </span>}
             }
         }
 
         <span class="macro">assert!</span>(
-            <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">is_empty</span>(),
+            <span class="self">self</span>.parents.is_empty(),
             <span class="string">&quot;Expected all enclosing nodes to have been processed but contains {:#?}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">parents</span>
+            <span class="self">self</span>.parents
         );
 
-        <span class="comment">// Process any comments attached to the last token.</span>
-        <span class="comment">// Important for range formatting where it isn&#39;t guaranteed that the</span>
-        <span class="comment">// last token is an EOF token.</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last_token</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">last_token</span>.<span class="ident">take</span>() {
-            <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">push</span>(<span class="ident">root</span>.<span class="ident">clone</span>());
-            <span class="kw">let</span> (<span class="ident">comments_start</span>, <span class="ident">lines_before</span>, <span class="ident">position</span>, <span class="ident">trailing_end</span>) <span class="op">=</span>
-                <span class="self">self</span>.<span class="ident">visit_trailing_comments</span>(<span class="ident">last_token</span>, <span class="prelude-val">None</span>);
-            <span class="ident"><span class="self">Self</span>::update_comments</span>(
-                <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">pending_comments</span>[<span class="ident">comments_start</span>..],
-                <span class="ident">position</span>,
-                <span class="ident">lines_before</span>,
-                <span class="ident">trailing_end</span>,
+        <span class="comment">// Process any comments attached to the last token.
+        // Important for range formatting where it isn&#39;t guaranteed that the
+        // last token is an EOF token.
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(last_token) = <span class="self">self</span>.last_token.take() {
+            <span class="self">self</span>.parents.push(root.clone());
+            <span class="kw">let </span>(comments_start, lines_before, position, trailing_end) =
+                <span class="self">self</span>.visit_trailing_comments(last_token, <span class="prelude-val">None</span>);
+            <span class="self">Self</span>::update_comments(
+                <span class="kw-2">&amp;mut </span><span class="self">self</span>.pending_comments[comments_start..],
+                position,
+                lines_before,
+                trailing_end,
             );
         }
 
-        <span class="self">self</span>.<span class="ident">flush_comments</span>(<span class="prelude-val">None</span>);
+        <span class="self">self</span>.flush_comments(<span class="prelude-val">None</span>);
 
-        <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">finish</span>()
+        <span class="self">self</span>.builder.finish()
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="ident">WalkEvent</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-        <span class="kw">match</span> <span class="ident">event</span> {
-            <span class="ident">WalkEvent::Enter</span>(<span class="ident">node</span>) =&gt; {
-                <span class="comment">// Lists cannot have comments attached. They either belong to the entire parent or to</span>
-                <span class="comment">// the first child. So we ignore lists all together</span>
-                <span class="kw">if</span> <span class="ident">node</span>.<span class="ident">kind</span>().<span class="ident">is_list</span>() {
+    <span class="kw">fn </span>visit_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: WalkEvent&lt;SyntaxNode&lt;Style::Language&gt;&gt;) {
+        <span class="kw">match </span>event {
+            WalkEvent::Enter(node) =&gt; {
+                <span class="comment">// Lists cannot have comments attached. They either belong to the entire parent or to
+                // the first child. So we ignore lists all together
+                </span><span class="kw">if </span>node.kind().is_list() {
                     <span class="kw">return</span>;
                 }
 
-                <span class="kw">let</span> <span class="ident">is_root</span> <span class="op">=</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">following_node_index</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>));
+                <span class="kw">let </span>is_root = <span class="macro">matches!</span>(<span class="self">self</span>.following_node_index, <span class="prelude-val">Some</span>(<span class="number">0</span>));
 
-                <span class="comment">// Associate comments with the most outer node</span>
-                <span class="comment">// Set following here because it is the &quot;following node&quot; of the next token&#39;s leading trivia.</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">following_node_index</span>.<span class="ident">is_none</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">is_root</span> {
-                    <span class="comment">// Flush in case the node doesn&#39;t have any tokens.</span>
-                    <span class="self">self</span>.<span class="ident">flush_comments</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>));
-                    <span class="self">self</span>.<span class="ident">following_node_index</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">len</span>());
+                <span class="comment">// Associate comments with the most outer node
+                // Set following here because it is the &quot;following node&quot; of the next token&#39;s leading trivia.
+                </span><span class="kw">if </span><span class="self">self</span>.following_node_index.is_none() || is_root {
+                    <span class="comment">// Flush in case the node doesn&#39;t have any tokens.
+                    </span><span class="self">self</span>.flush_comments(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>node));
+                    <span class="self">self</span>.following_node_index = <span class="prelude-val">Some</span>(<span class="self">self</span>.parents.len());
                 }
 
-                <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">push</span>(<span class="ident">node</span>);
+                <span class="self">self</span>.parents.push(node);
             }
 
-            <span class="ident">WalkEvent::Leave</span>(<span class="ident">node</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">node</span>.<span class="ident">kind</span>().<span class="ident">is_list</span>() {
+            WalkEvent::Leave(node) =&gt; {
+                <span class="kw">if </span>node.kind().is_list() {
                     <span class="kw">return</span>;
                 }
 
-                <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>();
+                <span class="self">self</span>.parents.pop().unwrap();
 
-                <span class="comment">// We&#39;re passed this node, flush any pending comments for its children</span>
-                <span class="self">self</span>.<span class="ident">following_node_index</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                <span class="self">self</span>.<span class="ident">flush_comments</span>(<span class="prelude-val">None</span>);
+                <span class="comment">// We&#39;re passed this node, flush any pending comments for its children
+                </span><span class="self">self</span>.following_node_index = <span class="prelude-val">None</span>;
+                <span class="self">self</span>.flush_comments(<span class="prelude-val">None</span>);
 
-                <span class="comment">// We&#39;re passed this node, so it must precede the sibling that comes next.</span>
-                <span class="self">self</span>.<span class="ident">preceding_node</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>);
+                <span class="comment">// We&#39;re passed this node, so it must precede the sibling that comes next.
+                </span><span class="self">self</span>.preceding_node = <span class="prelude-val">Some</span>(node);
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span>) {
-        <span class="comment">// Process the trailing trivia of the last token</span>
-        <span class="kw">let</span> (<span class="ident">comments_start</span>, <span class="kw-2">mut</span> <span class="ident">lines_before</span>, <span class="kw-2">mut</span> <span class="ident">position</span>, <span class="kw-2">mut</span> <span class="ident">trailing_end</span>) <span class="op">=</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last_token</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">last_token</span>.<span class="ident">take</span>() {
-                <span class="self">self</span>.<span class="ident">visit_trailing_comments</span>(<span class="ident">last_token</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">token</span>))
-            } <span class="kw">else</span> {
+    <span class="kw">fn </span>visit_token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: SyntaxToken&lt;Style::Language&gt;) {
+        <span class="comment">// Process the trailing trivia of the last token
+        </span><span class="kw">let </span>(comments_start, <span class="kw-2">mut </span>lines_before, <span class="kw-2">mut </span>position, <span class="kw-2">mut </span>trailing_end) =
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(last_token) = <span class="self">self</span>.last_token.take() {
+                <span class="self">self</span>.visit_trailing_comments(last_token, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>token))
+            } <span class="kw">else </span>{
                 (
-                    <span class="self">self</span>.<span class="ident">pending_comments</span>.<span class="ident">len</span>(),
+                    <span class="self">self</span>.pending_comments.len(),
                     <span class="number">0</span>,
-                    <span class="ident">CommentTextPosition::SameLine</span>,
+                    CommentTextPosition::SameLine,
                     <span class="prelude-val">None</span>,
                 )
             };
 
-        <span class="comment">// Process the leading trivia of the current token. the trailing trivia is handled as part of the next token</span>
-        <span class="kw">for</span> <span class="ident">leading</span> <span class="kw">in</span> <span class="ident">token</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>() {
-            <span class="kw">if</span> <span class="ident">leading</span>.<span class="ident">is_newline</span>() {
-                <span class="ident">lines_before</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                <span class="comment">// All comments following from here are own line comments</span>
-                <span class="ident">position</span> <span class="op">=</span> <span class="ident">CommentTextPosition::OwnLine</span>;
+        <span class="comment">// Process the leading trivia of the current token. the trailing trivia is handled as part of the next token
+        </span><span class="kw">for </span>leading <span class="kw">in </span>token.leading_trivia().pieces() {
+            <span class="kw">if </span>leading.is_newline() {
+                lines_before += <span class="number">1</span>;
+                <span class="comment">// All comments following from here are own line comments
+                </span>position = CommentTextPosition::OwnLine;
 
-                <span class="kw">if</span> <span class="ident">trailing_end</span>.<span class="ident">is_none</span>() {
-                    <span class="ident">trailing_end</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">pending_comments</span>.<span class="ident">len</span>());
+                <span class="kw">if </span>trailing_end.is_none() {
+                    trailing_end = <span class="prelude-val">Some</span>(<span class="self">self</span>.pending_comments.len());
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">leading</span>.<span class="ident">is_skipped</span>() {
-                <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">mark_has_skipped</span>(<span class="kw-2">&amp;</span><span class="ident">token</span>);
+            } <span class="kw">else if </span>leading.is_skipped() {
+                <span class="self">self</span>.builder.mark_has_skipped(<span class="kw-2">&amp;</span>token);
 
-                <span class="ident">lines_before</span> <span class="op">=</span> <span class="number">0</span>;
+                lines_before = <span class="number">0</span>;
                 <span class="kw">break</span>;
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comment</span>) <span class="op">=</span> <span class="ident">leading</span>.<span class="ident">as_comments</span>() {
-                <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Style::get_comment_kind</span>(<span class="kw-2">&amp;</span><span class="ident">comment</span>);
+            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(comment) = leading.as_comments() {
+                <span class="kw">let </span>kind = Style::get_comment_kind(<span class="kw-2">&amp;</span>comment);
 
-                <span class="self">self</span>.<span class="ident">queue_comment</span>(<span class="ident">DecoratedComment</span> {
-                    <span class="ident">enclosing</span>: <span class="self">self</span>.<span class="ident">enclosing_node</span>().<span class="ident">clone</span>(),
-                    <span class="ident">preceding</span>: <span class="self">self</span>.<span class="ident">preceding_node</span>.<span class="ident">clone</span>(),
-                    <span class="ident">following</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">following_token</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">clone</span>()),
-                    <span class="ident">lines_before</span>,
-                    <span class="ident">lines_after</span>: <span class="number">0</span>,
-                    <span class="ident">text_position</span>: <span class="ident">position</span>,
-                    <span class="ident">kind</span>,
-                    <span class="ident">comment</span>,
+                <span class="self">self</span>.queue_comment(DecoratedComment {
+                    enclosing: <span class="self">self</span>.enclosing_node().clone(),
+                    preceding: <span class="self">self</span>.preceding_node.clone(),
+                    following: <span class="prelude-val">None</span>,
+                    following_token: <span class="prelude-val">Some</span>(token.clone()),
+                    lines_before,
+                    lines_after: <span class="number">0</span>,
+                    text_position: position,
+                    kind,
+                    comment,
                 });
 
-                <span class="ident">lines_before</span> <span class="op">=</span> <span class="number">0</span>;
+                lines_before = <span class="number">0</span>;
             }
         }
 
-        <span class="self">self</span>.<span class="ident">last_token</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">token</span>);
+        <span class="self">self</span>.last_token = <span class="prelude-val">Some</span>(token);
 
-        <span class="ident"><span class="self">Self</span>::update_comments</span>(
-            <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">pending_comments</span>[<span class="ident">comments_start</span>..],
-            <span class="ident">position</span>,
-            <span class="ident">lines_before</span>,
-            <span class="ident">trailing_end</span>,
+        <span class="self">Self</span>::update_comments(
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>.pending_comments[comments_start..],
+            position,
+            lines_before,
+            trailing_end,
         );
 
-        <span class="comment">// Set following node to `None` because it now becomes the enclosing node.</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">following_node</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">following_node</span>() {
-            <span class="self">self</span>.<span class="ident">flush_comments</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">following_node</span>.<span class="ident">clone</span>()));
-            <span class="self">self</span>.<span class="ident">following_node_index</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="comment">// Set following node to `None` because it now becomes the enclosing node.
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(following_node) = <span class="self">self</span>.following_node() {
+            <span class="self">self</span>.flush_comments(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>following_node.clone()));
+            <span class="self">self</span>.following_node_index = <span class="prelude-val">None</span>;
 
-            <span class="comment">// The following node is only set after entering a node</span>
-            <span class="comment">// That means, following node is only set for the first token of a node.</span>
-            <span class="comment">// Unset preceding node if this is the first token because the preceding node belongs to the parent.</span>
-            <span class="self">self</span>.<span class="ident">preceding_node</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+            <span class="comment">// The following node is only set after entering a node
+            // That means, following node is only set for the first token of a node.
+            // Unset preceding node if this is the first token because the preceding node belongs to the parent.
+            </span><span class="self">self</span>.preceding_node = <span class="prelude-val">None</span>;
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">enclosing_node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">following_node_index</span> {
-            <span class="prelude-val">None</span> =&gt; <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">last</span>(),
-            <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="kw">if</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">0</span> =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">parents</span>[<span class="number">0</span>]),
-            <span class="prelude-val">Some</span>(<span class="ident">index</span>) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">parents</span>[<span class="ident">index</span> <span class="op">-</span> <span class="number">1</span>]),
+    <span class="kw">fn </span>enclosing_node(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxNode&lt;Style::Language&gt; {
+        <span class="kw">let </span>element = <span class="kw">match </span><span class="self">self</span>.following_node_index {
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.parents.last(),
+            <span class="prelude-val">Some</span>(index) <span class="kw">if </span>index == <span class="number">0 </span>=&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.parents[<span class="number">0</span>]),
+            <span class="prelude-val">Some</span>(index) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.parents[index - <span class="number">1</span>]),
         };
 
-        <span class="ident">element</span>.<span class="ident">expect</span>(<span class="string">&quot;Expected enclosing nodes to at least contain the root node.&quot;</span>)
+        element.expect(<span class="string">&quot;Expected enclosing nodes to at least contain the root node.&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">following_node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">following_node_index</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> {
-            <span class="self">self</span>.<span class="ident">parents</span>
-                .<span class="ident">get</span>(<span class="ident">index</span>)
-                .<span class="ident">expect</span>(<span class="string">&quot;Expected following node index to point to a valid parent node&quot;</span>)
+    <span class="kw">fn </span>following_node(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SyntaxNode&lt;Style::Language&gt;&gt; {
+        <span class="self">self</span>.following_node_index.map(|index| {
+            <span class="self">self</span>.parents
+                .get(index)
+                .expect(<span class="string">&quot;Expected following node index to point to a valid parent node&quot;</span>)
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">queue_comment</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">comment</span>: <span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">pending_comments</span>.<span class="ident">push</span>(<span class="ident">comment</span>);
+    <span class="kw">fn </span>queue_comment(<span class="kw-2">&amp;mut </span><span class="self">self</span>, comment: DecoratedComment&lt;Style::Language&gt;) {
+        <span class="self">self</span>.pending_comments.push(comment);
     }
 
-    <span class="kw">fn</span> <span class="ident">update_comments</span>(
-        <span class="ident">comments</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span>],
-        <span class="ident">position</span>: <span class="ident">CommentTextPosition</span>,
-        <span class="ident">lines_before</span>: <span class="ident">u32</span>,
-        <span class="ident">trailing_end</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>update_comments(
+        comments: <span class="kw-2">&amp;mut </span>[DecoratedComment&lt;Style::Language&gt;],
+        position: CommentTextPosition,
+        lines_before: u32,
+        trailing_end: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     ) {
-        <span class="kw">let</span> <span class="ident">trailing_end</span> <span class="op">=</span> <span class="ident">trailing_end</span>.<span class="ident">unwrap_or</span>(<span class="ident">comments</span>.<span class="ident">len</span>());
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">comments</span> <span class="op">=</span> <span class="ident">comments</span>.<span class="ident">iter_mut</span>().<span class="ident">enumerate</span>().<span class="ident">peekable</span>();
+        <span class="kw">let </span>trailing_end = trailing_end.unwrap_or(comments.len());
+        <span class="kw">let </span><span class="kw-2">mut </span>comments = comments.iter_mut().enumerate().peekable();
 
-        <span class="comment">// Update the lines after of all comments as well as the positioning of end of line comments.</span>
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">index</span>, <span class="ident">comment</span>)) <span class="op">=</span> <span class="ident">comments</span>.<span class="ident">next</span>() {
-            <span class="comment">// Update the position of all trailing comments to be end of line as we&#39;ve seen a line break since.</span>
-            <span class="kw">if</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">trailing_end</span> <span class="op">&amp;&amp;</span> <span class="ident">position</span>.<span class="ident">is_own_line</span>() {
-                <span class="ident">comment</span>.<span class="ident">text_position</span> <span class="op">=</span> <span class="ident">CommentTextPosition::EndOfLine</span>;
+        <span class="comment">// Update the lines after of all comments as well as the positioning of end of line comments.
+        </span><span class="kw">while let </span><span class="prelude-val">Some</span>((index, comment)) = comments.next() {
+            <span class="comment">// Update the position of all trailing comments to be end of line as we&#39;ve seen a line break since.
+            </span><span class="kw">if </span>index &lt; trailing_end &amp;&amp; position.is_own_line() {
+                comment.text_position = CommentTextPosition::EndOfLine;
             }
 
-            <span class="ident">comment</span>.<span class="ident">lines_after</span> <span class="op">=</span> <span class="ident">comments</span>
-                .<span class="ident">peek</span>()
-                .<span class="ident">map_or</span>(<span class="ident">lines_before</span>, <span class="op">|</span>(<span class="kw">_</span>, <span class="ident">next</span>)<span class="op">|</span> <span class="ident">next</span>.<span class="ident">lines_before</span>);
+            comment.lines_after = comments
+                .peek()
+                .map_or(lines_before, |(<span class="kw">_</span>, next)| next.lines_before);
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">flush_comments</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">following</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-        <span class="kw">for</span> <span class="kw-2">mut</span> <span class="ident">comment</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">pending_comments</span>.<span class="ident">drain</span>(..) {
-            <span class="ident">comment</span>.<span class="ident">following</span> <span class="op">=</span> <span class="ident">following</span>.<span class="ident">cloned</span>();
+    <span class="kw">fn </span>flush_comments(<span class="kw-2">&amp;mut </span><span class="self">self</span>, following: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SyntaxNode&lt;Style::Language&gt;&gt;) {
+        <span class="kw">for </span><span class="kw-2">mut </span>comment <span class="kw">in </span><span class="self">self</span>.pending_comments.drain(..) {
+            comment.following = following.cloned();
 
-            <span class="kw">let</span> <span class="ident">placement</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">place_comment</span>(<span class="ident">comment</span>);
-            <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">add_comment</span>(<span class="ident">placement</span>);
+            <span class="kw">let </span>placement = <span class="self">self</span>.style.place_comment(comment);
+            <span class="self">self</span>.builder.add_comment(placement);
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_trailing_comments</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span>,
-        <span class="ident">following_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; (<span class="ident">usize</span>, <span class="ident">u32</span>, <span class="ident">CommentTextPosition</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">comments_start</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">fn </span>visit_trailing_comments(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        token: SyntaxToken&lt;Style::Language&gt;,
+        following_token: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SyntaxToken&lt;Style::Language&gt;&gt;,
+    ) -&gt; (usize, u32, CommentTextPosition, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="kw">let </span><span class="kw-2">mut </span>comments_start = <span class="number">0</span>;
 
-        <span class="comment">// The index of the last trailing comment in `pending_comments`.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trailing_end</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="comment">// The index of the last trailing comment in `pending_comments`.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>trailing_end: <span class="prelude-ty">Option</span>&lt;usize&gt; = <span class="prelude-val">None</span>;
 
-        <span class="comment">// Number of lines before the next comment, token, or skipped token trivia</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lines_before</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="comment">// Number of lines before the next comment, token, or skipped token trivia
+        </span><span class="kw">let </span><span class="kw-2">mut </span>lines_before = <span class="number">0</span>;
 
-        <span class="comment">// Trailing comments are all `SameLine` comments EXCEPT if any is followed by a line break,</span>
-        <span class="comment">// a leading comment (that always have line breaks), or there&#39;s a line break before the token.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">CommentTextPosition::SameLine</span>;
+        <span class="comment">// Trailing comments are all `SameLine` comments EXCEPT if any is followed by a line break,
+        // a leading comment (that always have line breaks), or there&#39;s a line break before the token.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>position = CommentTextPosition::SameLine;
 
-        <span class="comment">// Process the trailing trivia of the last token</span>
-        <span class="kw">for</span> <span class="ident">piece</span> <span class="kw">in</span> <span class="ident">token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>() {
-            <span class="kw">if</span> <span class="ident">piece</span>.<span class="ident">is_newline</span>() {
-                <span class="ident">lines_before</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                <span class="comment">// All comments following from here are own line comments</span>
-                <span class="ident">position</span> <span class="op">=</span> <span class="ident">CommentTextPosition::OwnLine</span>;
+        <span class="comment">// Process the trailing trivia of the last token
+        </span><span class="kw">for </span>piece <span class="kw">in </span>token.trailing_trivia().pieces() {
+            <span class="kw">if </span>piece.is_newline() {
+                lines_before += <span class="number">1</span>;
+                <span class="comment">// All comments following from here are own line comments
+                </span>position = CommentTextPosition::OwnLine;
 
-                <span class="kw">if</span> <span class="ident">trailing_end</span>.<span class="ident">is_none</span>() {
-                    <span class="ident">trailing_end</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">pending_comments</span>.<span class="ident">len</span>());
+                <span class="kw">if </span>trailing_end.is_none() {
+                    trailing_end = <span class="prelude-val">Some</span>(<span class="self">self</span>.pending_comments.len());
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comment</span>) <span class="op">=</span> <span class="ident">piece</span>.<span class="ident">as_comments</span>() {
-                <span class="self">self</span>.<span class="ident">queue_comment</span>(<span class="ident">DecoratedComment</span> {
-                    <span class="ident">enclosing</span>: <span class="self">self</span>.<span class="ident">enclosing_node</span>().<span class="ident">clone</span>(),
-                    <span class="ident">preceding</span>: <span class="self">self</span>.<span class="ident">preceding_node</span>.<span class="ident">clone</span>(),
-                    <span class="ident">following</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">following_token</span>: <span class="ident">following_token</span>.<span class="ident">cloned</span>(),
-                    <span class="ident">lines_before</span>,
-                    <span class="ident">lines_after</span>: <span class="number">0</span>, <span class="comment">// Will be initialized after</span>
-                    <span class="ident">text_position</span>: <span class="ident">position</span>,
-                    <span class="ident">kind</span>: <span class="ident">Style::get_comment_kind</span>(<span class="kw-2">&amp;</span><span class="ident">comment</span>),
-                    <span class="ident">comment</span>,
+            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(comment) = piece.as_comments() {
+                <span class="self">self</span>.queue_comment(DecoratedComment {
+                    enclosing: <span class="self">self</span>.enclosing_node().clone(),
+                    preceding: <span class="self">self</span>.preceding_node.clone(),
+                    following: <span class="prelude-val">None</span>,
+                    following_token: following_token.cloned(),
+                    lines_before,
+                    lines_after: <span class="number">0</span>, <span class="comment">// Will be initialized after
+                    </span>text_position: position,
+                    kind: Style::get_comment_kind(<span class="kw-2">&amp;</span>comment),
+                    comment,
                 });
 
-                <span class="ident">lines_before</span> <span class="op">=</span> <span class="number">0</span>;
+                lines_before = <span class="number">0</span>;
             }
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parens_source_range</span>) <span class="op">=</span> <span class="self">self</span>
-                .<span class="ident">parentheses</span>
-                .<span class="ident">r_paren_source_range</span>(<span class="ident">piece</span>.<span class="ident">text_range</span>().<span class="ident">end</span>())
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(parens_source_range) = <span class="self">self
+                </span>.parentheses
+                .r_paren_source_range(piece.text_range().end())
             {
-                <span class="self">self</span>.<span class="ident">flush_before_r_paren_comments</span>(
-                    <span class="ident">parens_source_range</span>,
-                    <span class="kw-2">&amp;</span><span class="ident">token</span>,
-                    <span class="ident">position</span>,
-                    <span class="ident">lines_before</span>,
-                    <span class="ident">comments_start</span>,
-                    <span class="ident">trailing_end</span>,
+                <span class="self">self</span>.flush_before_r_paren_comments(
+                    parens_source_range,
+                    <span class="kw-2">&amp;</span>token,
+                    position,
+                    lines_before,
+                    comments_start,
+                    trailing_end,
                 );
 
-                <span class="ident">lines_before</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="ident">position</span> <span class="op">=</span> <span class="ident">CommentTextPosition::SameLine</span>;
-                <span class="ident">comments_start</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="ident">trailing_end</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                lines_before = <span class="number">0</span>;
+                position = CommentTextPosition::SameLine;
+                comments_start = <span class="number">0</span>;
+                trailing_end = <span class="prelude-val">None</span>;
             }
         }
 
-        (<span class="ident">comments_start</span>, <span class="ident">lines_before</span>, <span class="ident">position</span>, <span class="ident">trailing_end</span>)
+        (comments_start, lines_before, position, trailing_end)
     }
 
-    <span class="doccomment">/// Processes comments appearing right before a `)` of a parenthesized expressions.</span>
-    <span class="attribute">#[<span class="ident">cold</span>]</span>
-    <span class="kw">fn</span> <span class="ident">flush_before_r_paren_comments</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">parens_source_range</span>: <span class="ident">TextRange</span>,
-        <span class="ident">last_token</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">Style::Language</span><span class="op">&gt;</span>,
-        <span class="ident">position</span>: <span class="ident">CommentTextPosition</span>,
-        <span class="ident">lines_before</span>: <span class="ident">u32</span>,
-        <span class="ident">start</span>: <span class="ident">usize</span>,
-        <span class="ident">trailing_end</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Processes comments appearing right before a `)` of a parenthesized expressions.
+    </span><span class="attribute">#[cold]
+    </span><span class="kw">fn </span>flush_before_r_paren_comments(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        parens_source_range: TextRange,
+        last_token: <span class="kw-2">&amp;</span>SyntaxToken&lt;Style::Language&gt;,
+        position: CommentTextPosition,
+        lines_before: u32,
+        start: usize,
+        trailing_end: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     ) {
-        <span class="kw">let</span> <span class="ident">enclosing</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">enclosing_node</span>().<span class="ident">clone</span>();
+        <span class="kw">let </span>enclosing = <span class="self">self</span>.enclosing_node().clone();
 
-        <span class="kw">let</span> <span class="ident">comments</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">pending_comments</span>[<span class="ident">start</span>..];
-        <span class="kw">let</span> <span class="ident">trailing_end</span> <span class="op">=</span> <span class="ident">trailing_end</span>.<span class="ident">unwrap_or</span>(<span class="ident">comments</span>.<span class="ident">len</span>());
+        <span class="kw">let </span>comments = <span class="kw-2">&amp;mut </span><span class="self">self</span>.pending_comments[start..];
+        <span class="kw">let </span>trailing_end = trailing_end.unwrap_or(comments.len());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">comments</span> <span class="op">=</span> <span class="ident">comments</span>.<span class="ident">iter_mut</span>().<span class="ident">enumerate</span>().<span class="ident">peekable</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>comments = comments.iter_mut().enumerate().peekable();
 
-        <span class="kw">let</span> <span class="ident">parenthesized_node</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">parentheses</span>
-            .<span class="ident">outer_most_parenthesized_node</span>(<span class="ident">last_token</span>, <span class="ident">parens_source_range</span>);
+        <span class="kw">let </span>parenthesized_node = <span class="self">self
+            </span>.parentheses
+            .outer_most_parenthesized_node(last_token, parens_source_range);
 
-        <span class="kw">let</span> <span class="ident">preceding</span> <span class="op">=</span> <span class="ident">parenthesized_node</span>;
+        <span class="kw">let </span>preceding = parenthesized_node;
 
-        <span class="comment">// Using the `enclosing` as default but it&#39;s mainly to satisfy Rust. The only case where it is used</span>
-        <span class="comment">// is if someone formats a Parenthesized expression as the root. Something we explicitly disallow</span>
-        <span class="comment">// in rome_js_formatter</span>
-        <span class="kw">let</span> <span class="ident">enclosing</span> <span class="op">=</span> <span class="ident">preceding</span>.<span class="ident">parent</span>().<span class="ident">unwrap_or</span>(<span class="ident">enclosing</span>);
+        <span class="comment">// Using the `enclosing` as default but it&#39;s mainly to satisfy Rust. The only case where it is used
+        // is if someone formats a Parenthesized expression as the root. Something we explicitly disallow
+        // in rome_js_formatter
+        </span><span class="kw">let </span>enclosing = preceding.parent().unwrap_or(enclosing);
 
-        <span class="comment">// Update the lines after of all comments as well as the positioning of end of line comments.</span>
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">index</span>, <span class="ident">comment</span>)) <span class="op">=</span> <span class="ident">comments</span>.<span class="ident">next</span>() {
-            <span class="comment">// Update the position of all trailing comments to be end of line as we&#39;ve seen a line break since.</span>
-            <span class="kw">if</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">trailing_end</span> <span class="op">&amp;&amp;</span> <span class="ident">position</span>.<span class="ident">is_own_line</span>() {
-                <span class="ident">comment</span>.<span class="ident">text_position</span> <span class="op">=</span> <span class="ident">CommentTextPosition::EndOfLine</span>;
+        <span class="comment">// Update the lines after of all comments as well as the positioning of end of line comments.
+        </span><span class="kw">while let </span><span class="prelude-val">Some</span>((index, comment)) = comments.next() {
+            <span class="comment">// Update the position of all trailing comments to be end of line as we&#39;ve seen a line break since.
+            </span><span class="kw">if </span>index &lt; trailing_end &amp;&amp; position.is_own_line() {
+                comment.text_position = CommentTextPosition::EndOfLine;
             }
 
-            <span class="ident">comment</span>.<span class="ident">preceding</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">preceding</span>.<span class="ident">clone</span>());
-            <span class="ident">comment</span>.<span class="ident">enclosing</span> <span class="op">=</span> <span class="ident">enclosing</span>.<span class="ident">clone</span>();
-            <span class="ident">comment</span>.<span class="ident">lines_after</span> <span class="op">=</span> <span class="ident">comments</span>
-                .<span class="ident">peek</span>()
-                .<span class="ident">map_or</span>(<span class="ident">lines_before</span>, <span class="op">|</span>(<span class="kw">_</span>, <span class="ident">next</span>)<span class="op">|</span> <span class="ident">next</span>.<span class="ident">lines_before</span>);
+            comment.preceding = <span class="prelude-val">Some</span>(preceding.clone());
+            comment.enclosing = enclosing.clone();
+            comment.lines_after = comments
+                .peek()
+                .map_or(lines_before, |(<span class="kw">_</span>, next)| next.lines_before);
         }
 
-        <span class="self">self</span>.<span class="ident">flush_comments</span>(<span class="prelude-val">None</span>);
+        <span class="self">self</span>.flush_comments(<span class="prelude-val">None</span>);
     }
 }
 
-<span class="kw">struct</span> <span class="ident">CommentsBuilder</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">comments</span>: <span class="ident">CommentsMap</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span>, <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">skipped</span>: <span class="ident">FxHashSet</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>CommentsBuilder&lt;L: Language&gt; {
+    comments: CommentsMap&lt;SyntaxElementKey, SourceComment&lt;L&gt;&gt;,
+    skipped: FxHashSet&lt;SyntaxElementKey&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">CommentsBuilder</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">add_comment</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">placement</span>: <span class="ident">CommentPlacement</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="kw">match</span> <span class="ident">placement</span> {
-            <span class="ident">CommentPlacement::Leading</span> { <span class="ident">node</span>, <span class="ident">comment</span> } =&gt; {
-                <span class="self">self</span>.<span class="ident">push_leading_comment</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>, <span class="ident">comment</span>);
+<span class="kw">impl</span>&lt;L: Language&gt; CommentsBuilder&lt;L&gt; {
+    <span class="kw">fn </span>add_comment(<span class="kw-2">&amp;mut </span><span class="self">self</span>, placement: CommentPlacement&lt;L&gt;) {
+        <span class="kw">match </span>placement {
+            CommentPlacement::Leading { node, comment } =&gt; {
+                <span class="self">self</span>.push_leading_comment(<span class="kw-2">&amp;</span>node, comment);
             }
-            <span class="ident">CommentPlacement::Trailing</span> { <span class="ident">node</span>, <span class="ident">comment</span> } =&gt; {
-                <span class="self">self</span>.<span class="ident">push_trailing_comment</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>, <span class="ident">comment</span>);
+            CommentPlacement::Trailing { node, comment } =&gt; {
+                <span class="self">self</span>.push_trailing_comment(<span class="kw-2">&amp;</span>node, comment);
             }
-            <span class="ident">CommentPlacement::Dangling</span> { <span class="ident">node</span>, <span class="ident">comment</span> } =&gt; {
-                <span class="self">self</span>.<span class="ident">push_dangling_comment</span>(<span class="kw-2">&amp;</span><span class="ident">node</span>, <span class="ident">comment</span>)
+            CommentPlacement::Dangling { node, comment } =&gt; {
+                <span class="self">self</span>.push_dangling_comment(<span class="kw-2">&amp;</span>node, comment)
             }
-            <span class="ident">CommentPlacement::Default</span>(<span class="kw-2">mut</span> <span class="ident">comment</span>) =&gt; {
-                <span class="kw">match</span> <span class="ident">comment</span>.<span class="ident">text_position</span> {
-                    <span class="ident">CommentTextPosition::EndOfLine</span> =&gt; {
-                        <span class="kw">match</span> (<span class="ident">comment</span>.<span class="ident">take_preceding_node</span>(), <span class="ident">comment</span>.<span class="ident">take_following_node</span>()) {
-                            (<span class="prelude-val">Some</span>(<span class="ident">preceding</span>), <span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; {
-                                <span class="comment">// Attach comments with both preceding and following node to the preceding</span>
-                                <span class="comment">// because there&#39;s a line break separating it from the following node.</span>
-                                <span class="comment">// ```javascript</span>
-                                <span class="comment">// a; // comment</span>
-                                <span class="comment">// b</span>
-                                <span class="comment">// ```</span>
-                                <span class="self">self</span>.<span class="ident">push_trailing_comment</span>(<span class="kw-2">&amp;</span><span class="ident">preceding</span>, <span class="ident">comment</span>);
+            CommentPlacement::Default(<span class="kw-2">mut </span>comment) =&gt; {
+                <span class="kw">match </span>comment.text_position {
+                    CommentTextPosition::EndOfLine =&gt; {
+                        <span class="kw">match </span>(comment.take_preceding_node(), comment.take_following_node()) {
+                            (<span class="prelude-val">Some</span>(preceding), <span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; {
+                                <span class="comment">// Attach comments with both preceding and following node to the preceding
+                                // because there&#39;s a line break separating it from the following node.
+                                // ```javascript
+                                // a; // comment
+                                // b
+                                // ```
+                                </span><span class="self">self</span>.push_trailing_comment(<span class="kw-2">&amp;</span>preceding, comment);
                             }
-                            (<span class="prelude-val">Some</span>(<span class="ident">preceding</span>), <span class="prelude-val">None</span>) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_trailing_comment</span>(<span class="kw-2">&amp;</span><span class="ident">preceding</span>, <span class="ident">comment</span>);
+                            (<span class="prelude-val">Some</span>(preceding), <span class="prelude-val">None</span>) =&gt; {
+                                <span class="self">self</span>.push_trailing_comment(<span class="kw-2">&amp;</span>preceding, comment);
                             }
-                            (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">following</span>)) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_leading_comment</span>(<span class="kw-2">&amp;</span><span class="ident">following</span>, <span class="ident">comment</span>);
+                            (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(following)) =&gt; {
+                                <span class="self">self</span>.push_leading_comment(<span class="kw-2">&amp;</span>following, comment);
                             }
                             (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_dangling_comment</span>(
-                                    <span class="kw-2">&amp;</span><span class="ident">comment</span>.<span class="ident">enclosing_node</span>().<span class="ident">clone</span>(),
-                                    <span class="ident">comment</span>,
+                                <span class="self">self</span>.push_dangling_comment(
+                                    <span class="kw-2">&amp;</span>comment.enclosing_node().clone(),
+                                    comment,
                                 );
                             }
                         }
                     }
-                    <span class="ident">CommentTextPosition::OwnLine</span> =&gt; {
-                        <span class="kw">match</span> (<span class="ident">comment</span>.<span class="ident">take_preceding_node</span>(), <span class="ident">comment</span>.<span class="ident">take_following_node</span>()) {
-                            <span class="comment">// Following always wins for a leading comment</span>
-                            <span class="comment">// ```javascript</span>
-                            <span class="comment">// a;</span>
-                            <span class="comment">// // comment</span>
-                            <span class="comment">// b</span>
-                            <span class="comment">// ```</span>
-                            <span class="comment">// attach the comment to the `b` expression statement</span>
-                            (<span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">following</span>)) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_leading_comment</span>(<span class="kw-2">&amp;</span><span class="ident">following</span>, <span class="ident">comment</span>);
+                    CommentTextPosition::OwnLine =&gt; {
+                        <span class="kw">match </span>(comment.take_preceding_node(), comment.take_following_node()) {
+                            <span class="comment">// Following always wins for a leading comment
+                            // ```javascript
+                            // a;
+                            // // comment
+                            // b
+                            // ```
+                            // attach the comment to the `b` expression statement
+                            </span>(<span class="kw">_</span>, <span class="prelude-val">Some</span>(following)) =&gt; {
+                                <span class="self">self</span>.push_leading_comment(<span class="kw-2">&amp;</span>following, comment);
                             }
-                            (<span class="prelude-val">Some</span>(<span class="ident">preceding</span>), <span class="prelude-val">None</span>) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_trailing_comment</span>(<span class="kw-2">&amp;</span><span class="ident">preceding</span>, <span class="ident">comment</span>);
+                            (<span class="prelude-val">Some</span>(preceding), <span class="prelude-val">None</span>) =&gt; {
+                                <span class="self">self</span>.push_trailing_comment(<span class="kw-2">&amp;</span>preceding, comment);
                             }
                             (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_dangling_comment</span>(
-                                    <span class="kw-2">&amp;</span><span class="ident">comment</span>.<span class="ident">enclosing_node</span>().<span class="ident">clone</span>(),
-                                    <span class="ident">comment</span>,
+                                <span class="self">self</span>.push_dangling_comment(
+                                    <span class="kw-2">&amp;</span>comment.enclosing_node().clone(),
+                                    comment,
                                 );
                             }
                         }
                     }
-                    <span class="ident">CommentTextPosition::SameLine</span> =&gt; {
-                        <span class="kw">match</span> (<span class="ident">comment</span>.<span class="ident">take_preceding_node</span>(), <span class="ident">comment</span>.<span class="ident">take_following_node</span>()) {
-                            (<span class="prelude-val">Some</span>(<span class="ident">preceding</span>), <span class="prelude-val">Some</span>(<span class="ident">following</span>)) =&gt; {
-                                <span class="comment">// Only make it a trailing comment if it directly follows the preceding node but not if it is separated</span>
-                                <span class="comment">// by one or more tokens</span>
-                                <span class="comment">// ```javascript</span>
-                                <span class="comment">// a /* comment */ b;   //  Comment is a trailing comment</span>
-                                <span class="comment">// a, /* comment */ b;  // Comment should be a leading comment</span>
-                                <span class="comment">// ```</span>
-                                <span class="kw">if</span> <span class="ident">preceding</span>.<span class="ident">text_range</span>().<span class="ident">end</span>()
-                                    <span class="op">==</span> <span class="ident">comment</span>.<span class="ident">piece</span>().<span class="ident">as_piece</span>().<span class="ident">token</span>().<span class="ident">text_range</span>().<span class="ident">end</span>()
+                    CommentTextPosition::SameLine =&gt; {
+                        <span class="kw">match </span>(comment.take_preceding_node(), comment.take_following_node()) {
+                            (<span class="prelude-val">Some</span>(preceding), <span class="prelude-val">Some</span>(following)) =&gt; {
+                                <span class="comment">// Only make it a trailing comment if it directly follows the preceding node but not if it is separated
+                                // by one or more tokens
+                                // ```javascript
+                                // a /* comment */ b;   //  Comment is a trailing comment
+                                // a, /* comment */ b;  // Comment should be a leading comment
+                                // ```
+                                </span><span class="kw">if </span>preceding.text_range().end()
+                                    == comment.piece().as_piece().token().text_range().end()
                                 {
-                                    <span class="self">self</span>.<span class="ident">push_trailing_comment</span>(<span class="kw-2">&amp;</span><span class="ident">preceding</span>, <span class="ident">comment</span>);
-                                } <span class="kw">else</span> {
-                                    <span class="self">self</span>.<span class="ident">push_leading_comment</span>(<span class="kw-2">&amp;</span><span class="ident">following</span>, <span class="ident">comment</span>);
+                                    <span class="self">self</span>.push_trailing_comment(<span class="kw-2">&amp;</span>preceding, comment);
+                                } <span class="kw">else </span>{
+                                    <span class="self">self</span>.push_leading_comment(<span class="kw-2">&amp;</span>following, comment);
                                 }
                             }
-                            (<span class="prelude-val">Some</span>(<span class="ident">preceding</span>), <span class="prelude-val">None</span>) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_trailing_comment</span>(<span class="kw-2">&amp;</span><span class="ident">preceding</span>, <span class="ident">comment</span>);
+                            (<span class="prelude-val">Some</span>(preceding), <span class="prelude-val">None</span>) =&gt; {
+                                <span class="self">self</span>.push_trailing_comment(<span class="kw-2">&amp;</span>preceding, comment);
                             }
-                            (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">following</span>)) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_leading_comment</span>(<span class="kw-2">&amp;</span><span class="ident">following</span>, <span class="ident">comment</span>);
+                            (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(following)) =&gt; {
+                                <span class="self">self</span>.push_leading_comment(<span class="kw-2">&amp;</span>following, comment);
                             }
                             (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; {
-                                <span class="self">self</span>.<span class="ident">push_dangling_comment</span>(
-                                    <span class="kw-2">&amp;</span><span class="ident">comment</span>.<span class="ident">enclosing_node</span>().<span class="ident">clone</span>(),
-                                    <span class="ident">comment</span>,
+                                <span class="self">self</span>.push_dangling_comment(
+                                    <span class="kw-2">&amp;</span>comment.enclosing_node().clone(),
+                                    comment,
                                 );
                             }
                         }
@@ -1524,190 +1524,190 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">mark_has_skipped</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">skipped</span>.<span class="ident">insert</span>(<span class="ident">token</span>.<span class="ident">key</span>());
+    <span class="kw">fn </span>mark_has_skipped(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: <span class="kw-2">&amp;</span>SyntaxToken&lt;L&gt;) {
+        <span class="self">self</span>.skipped.insert(token.key());
     }
 
-    <span class="kw">fn</span> <span class="ident">push_leading_comment</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">comment</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">comments</span>.<span class="ident">push_leading</span>(<span class="ident">node</span>.<span class="ident">key</span>(), <span class="ident">comment</span>.<span class="ident">into</span>());
+    <span class="kw">fn </span>push_leading_comment(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;, comment: <span class="kw">impl </span>Into&lt;SourceComment&lt;L&gt;&gt;) {
+        <span class="self">self</span>.comments.push_leading(node.key(), comment.into());
     }
 
-    <span class="kw">fn</span> <span class="ident">push_dangling_comment</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">comment</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>push_dangling_comment(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;,
+        comment: <span class="kw">impl </span>Into&lt;SourceComment&lt;L&gt;&gt;,
     ) {
-        <span class="self">self</span>.<span class="ident">comments</span>.<span class="ident">push_dangling</span>(<span class="ident">node</span>.<span class="ident">key</span>(), <span class="ident">comment</span>.<span class="ident">into</span>());
+        <span class="self">self</span>.comments.push_dangling(node.key(), comment.into());
     }
 
-    <span class="kw">fn</span> <span class="ident">push_trailing_comment</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">comment</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>push_trailing_comment(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;,
+        comment: <span class="kw">impl </span>Into&lt;SourceComment&lt;L&gt;&gt;,
     ) {
-        <span class="self">self</span>.<span class="ident">comments</span>.<span class="ident">push_trailing</span>(<span class="ident">node</span>.<span class="ident">key</span>(), <span class="ident">comment</span>.<span class="ident">into</span>());
+        <span class="self">self</span>.comments.push_trailing(node.key(), comment.into());
     }
 
-    <span class="kw">fn</span> <span class="ident">finish</span>(
+    <span class="kw">fn </span>finish(
         <span class="self">self</span>,
     ) -&gt; (
-        <span class="ident">CommentsMap</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span>, <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">FxHashSet</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span><span class="op">&gt;</span>,
+        CommentsMap&lt;SyntaxElementKey, SourceComment&lt;L&gt;&gt;,
+        FxHashSet&lt;SyntaxElementKey&gt;,
     ) {
-        (<span class="self">self</span>.<span class="ident">comments</span>, <span class="self">self</span>.<span class="ident">skipped</span>)
+        (<span class="self">self</span>.comments, <span class="self">self</span>.skipped)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">CommentsBuilder</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">comments</span>: <span class="ident">CommentsMap::new</span>(),
-            <span class="ident">skipped</span>: <span class="ident">FxHashSet::default</span>(),
+<span class="kw">impl</span>&lt;L: Language&gt; Default <span class="kw">for </span>CommentsBuilder&lt;L&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            comments: CommentsMap::new(),
+            skipped: FxHashSet::default(),
         }
     }
 }
 
-<span class="kw">enum</span> <span class="ident">SourceParentheses</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">Empty</span>,
-    <span class="ident">SourceMap</span> {
-        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">TransformSourceMap</span>,
-        <span class="ident">next</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeletedRangeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">tail</span>: <span class="ident">DeletedRanges</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="kw">enum </span>SourceParentheses&lt;<span class="lifetime">&#39;a</span>&gt; {
+    Empty,
+    SourceMap {
+        map: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TransformSourceMap,
+        next: <span class="prelude-ty">Option</span>&lt;DeletedRangeEntry&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+        tail: DeletedRanges&lt;<span class="lifetime">&#39;a</span>&gt;,
     },
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">SourceParentheses</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from_source_map</span>(<span class="ident">source_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">TransformSourceMap</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">source_map</span> {
-            <span class="prelude-val">None</span> =&gt; <span class="ident"><span class="self">Self</span>::Empty</span>,
-            <span class="prelude-val">Some</span>(<span class="ident">source_map</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">deleted</span> <span class="op">=</span> <span class="ident">source_map</span>.<span class="ident">deleted_ranges</span>();
-                <span class="ident">SourceParentheses::SourceMap</span> {
-                    <span class="ident">map</span>: <span class="ident">source_map</span>,
-                    <span class="ident">next</span>: <span class="ident">deleted</span>.<span class="ident">next</span>(),
-                    <span class="ident">tail</span>: <span class="ident">deleted</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; SourceParentheses&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>from_source_map(source_map: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TransformSourceMap&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>source_map {
+            <span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::Empty,
+            <span class="prelude-val">Some</span>(source_map) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>deleted = source_map.deleted_ranges();
+                SourceParentheses::SourceMap {
+                    map: source_map,
+                    next: deleted.next(),
+                    tail: deleted,
                 }
             }
         }
     }
 
-    <span class="doccomment">/// Returns the range of `node` including its parentheses if any. Otherwise returns the range as is</span>
-    <span class="kw">fn</span> <span class="ident">parenthesized_range</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">SourceParentheses::Empty</span> =&gt; <span class="ident">node</span>.<span class="ident">text_trimmed_range</span>(),
-            <span class="ident">SourceParentheses::SourceMap</span> { <span class="ident">map</span>, .. } =&gt; <span class="ident">map</span>.<span class="ident">trimmed_source_range</span>(<span class="ident">node</span>),
+    <span class="doccomment">/// Returns the range of `node` including its parentheses if any. Otherwise returns the range as is
+    </span><span class="kw">fn </span>parenthesized_range&lt;L: Language&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>SyntaxNode&lt;L&gt;) -&gt; TextRange {
+        <span class="kw">match </span><span class="self">self </span>{
+            SourceParentheses::Empty =&gt; node.text_trimmed_range(),
+            SourceParentheses::SourceMap { map, .. } =&gt; map.trimmed_source_range(node),
         }
     }
 
-    <span class="doccomment">/// Tests if the next offset is at a position where the original source document used to have an `)`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Must be called with offsets in increasing order.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns the source range of the `)` if there&#39;s any `)` in the deleted range at this offset. Returns `None` otherwise</span>
+    <span class="doccomment">/// Tests if the next offset is at a position where the original source document used to have an `)`.
+    ///
+    /// Must be called with offsets in increasing order.
+    ///
+    /// Returns the source range of the `)` if there&#39;s any `)` in the deleted range at this offset. Returns `None` otherwise
 
-    <span class="kw">fn</span> <span class="ident">r_paren_source_range</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">offset</span>: <span class="ident">TextSize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">SourceParentheses::Empty</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">SourceParentheses::SourceMap</span> { <span class="ident">next</span>, <span class="ident">tail</span>, .. } =&gt; {
-                <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">range</span>) <span class="op">=</span> <span class="ident">next</span> {
-                    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::comparison_chain</span>)]</span>
-                    <span class="kw">if</span> <span class="ident">range</span>.<span class="ident">transformed</span> <span class="op">==</span> <span class="ident">offset</span> {
-                        <span class="comment">// A deleted range can contain multiple tokens. See if there&#39;s any `)` in the deleted</span>
-                        <span class="comment">// range and compute its source range.</span>
-                        <span class="kw">return</span> <span class="ident">range</span>.<span class="ident">text</span>.<span class="ident">find</span>(<span class="string">&#39;)&#39;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">r_paren_position</span><span class="op">|</span> {
-                            <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">range</span>.<span class="ident">source</span> <span class="op">+</span> <span class="ident">TextSize::from</span>(<span class="ident">r_paren_position</span> <span class="kw">as</span> <span class="ident">u32</span>);
-                            <span class="ident">TextRange::at</span>(<span class="ident">start</span>, <span class="ident">TextSize::from</span>(<span class="number">1</span>))
+    </span><span class="kw">fn </span>r_paren_source_range(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: TextSize) -&gt; <span class="prelude-ty">Option</span>&lt;TextRange&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            SourceParentheses::Empty =&gt; <span class="prelude-val">None</span>,
+            SourceParentheses::SourceMap { next, tail, .. } =&gt; {
+                <span class="kw">while let </span><span class="prelude-val">Some</span>(range) = next {
+                    <span class="attribute">#[allow(clippy::comparison_chain)]
+                    </span><span class="kw">if </span>range.transformed == offset {
+                        <span class="comment">// A deleted range can contain multiple tokens. See if there&#39;s any `)` in the deleted
+                        // range and compute its source range.
+                        </span><span class="kw">return </span>range.text.find(<span class="string">&#39;)&#39;</span>).map(|r_paren_position| {
+                            <span class="kw">let </span>start = range.source + TextSize::from(r_paren_position <span class="kw">as </span>u32);
+                            TextRange::at(start, TextSize::from(<span class="number">1</span>))
                         });
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">range</span>.<span class="ident">transformed</span> <span class="op">&gt;</span> <span class="ident">offset</span> {
-                        <span class="kw">return</span> <span class="prelude-val">None</span>;
-                    } <span class="kw">else</span> {
-                        <span class="kw-2">*</span><span class="ident">next</span> <span class="op">=</span> <span class="ident">tail</span>.<span class="ident">next</span>();
+                    } <span class="kw">else if </span>range.transformed &gt; offset {
+                        <span class="kw">return </span><span class="prelude-val">None</span>;
+                    } <span class="kw">else </span>{
+                        <span class="kw-2">*</span>next = tail.next();
                     }
                 }
 
-                <span class="prelude-val">None</span>
-            }
+                <span class="prelude-val">None
+            </span>}
         }
     }
 
-    <span class="doccomment">/// Searches the outer most node that still is inside of the parentheses specified by the `parentheses_source_range`.</span>
-    <span class="kw">fn</span> <span class="ident">outer_most_parenthesized_node</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span>(
+    <span class="doccomment">/// Searches the outer most node that still is inside of the parentheses specified by the `parentheses_source_range`.
+    </span><span class="kw">fn </span>outer_most_parenthesized_node&lt;L: Language&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="ident">parentheses_source_range</span>: <span class="ident">TextRange</span>,
-    ) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">SourceParentheses::Empty</span> =&gt; <span class="ident">token</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">SourceParentheses::SourceMap</span> { <span class="ident">map</span>, .. } =&gt; {
-                <span class="macro">debug_assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">map</span>.<span class="ident">text</span>()[<span class="ident">parentheses_source_range</span>], <span class="string">&quot;)&quot;</span>);
+        token: <span class="kw-2">&amp;</span>SyntaxToken&lt;L&gt;,
+        parentheses_source_range: TextRange,
+    ) -&gt; SyntaxNode&lt;L&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            SourceParentheses::Empty =&gt; token.parent().unwrap(),
+            SourceParentheses::SourceMap { map, .. } =&gt; {
+                <span class="macro">debug_assert_eq!</span>(<span class="kw-2">&amp;</span>map.text()[parentheses_source_range], <span class="string">&quot;)&quot;</span>);
 
-                <span class="comment">// How this works: We search the outer most node that, in the source document ends right after the `)`.</span>
-                <span class="comment">// The issue is, it is possible that multiple nodes end right after the `)`</span>
-                <span class="comment">//</span>
-                <span class="comment">// ```javascript</span>
-                <span class="comment">// !(</span>
-                <span class="comment">//     a</span>
-                <span class="comment">//     /* comment */</span>
-                <span class="comment">//  )</span>
-                <span class="comment">// ```</span>
-                <span class="comment">// The issue is, that in the transformed document, the `ReferenceIdentifier`, `IdentifierExpression`, `UnaryExpression`, and `ExpressionStatement`</span>
-                <span class="comment">// all end at the end position of `)`.</span>
-                <span class="comment">// However, not all the nodes start at the same position. That&#39;s why this code also tracks the start.</span>
-                <span class="comment">// We first find the closest node that directly ends at the position of the right paren. We then continue</span>
-                <span class="comment">// upwards to find the most outer node that starts at the same position as that node. (In this case,</span>
-                <span class="comment">// `ReferenceIdentifier` -&gt; `IdentifierExpression`.</span>
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start_offset</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                <span class="kw">let</span> <span class="ident">r_paren_source_end</span> <span class="op">=</span> <span class="ident">parentheses_source_range</span>.<span class="ident">end</span>();
+                <span class="comment">// How this works: We search the outer most node that, in the source document ends right after the `)`.
+                // The issue is, it is possible that multiple nodes end right after the `)`
+                //
+                // ```javascript
+                // !(
+                //     a
+                //     /* comment */
+                //  )
+                // ```
+                // The issue is, that in the transformed document, the `ReferenceIdentifier`, `IdentifierExpression`, `UnaryExpression`, and `ExpressionStatement`
+                // all end at the end position of `)`.
+                // However, not all the nodes start at the same position. That&#39;s why this code also tracks the start.
+                // We first find the closest node that directly ends at the position of the right paren. We then continue
+                // upwards to find the most outer node that starts at the same position as that node. (In this case,
+                // `ReferenceIdentifier` -&gt; `IdentifierExpression`.
+                </span><span class="kw">let </span><span class="kw-2">mut </span>start_offset = <span class="prelude-val">None</span>;
+                <span class="kw">let </span>r_paren_source_end = parentheses_source_range.end();
 
-                <span class="kw">let</span> <span class="ident">ancestors</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">ancestors</span>().<span class="ident">take_while</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">source_range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parenthesized_range</span>(<span class="ident">node</span>);
+                <span class="kw">let </span>ancestors = token.ancestors().take_while(|node| {
+                    <span class="kw">let </span>source_range = <span class="self">self</span>.parenthesized_range(node);
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">start</span>) <span class="op">=</span> <span class="ident">start_offset</span> {
-                        <span class="ident">TextRange::new</span>(<span class="ident">start</span>, <span class="ident">r_paren_source_end</span>).<span class="ident">contains_range</span>(<span class="ident">source_range</span>)
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(start) = start_offset {
+                        TextRange::new(start, r_paren_source_end).contains_range(source_range)
                     }
-                    <span class="comment">// Greater than to guarantee that we always return at least one node AND</span>
-                    <span class="comment">// handle the case where a node is wrapped in multiple parentheses.</span>
-                    <span class="comment">// Take the first node that fully encloses the parentheses</span>
-                    <span class="kw">else</span> <span class="kw">if</span> <span class="ident">source_range</span>.<span class="ident">end</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">r_paren_source_end</span> {
-                        <span class="ident">start_offset</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">source_range</span>.<span class="ident">start</span>());
-                        <span class="bool-val">true</span>
-                    } <span class="kw">else</span> {
-                        <span class="ident">source_range</span>.<span class="ident">end</span>() <span class="op">&lt;</span> <span class="ident">r_paren_source_end</span>
+                    <span class="comment">// Greater than to guarantee that we always return at least one node AND
+                    // handle the case where a node is wrapped in multiple parentheses.
+                    // Take the first node that fully encloses the parentheses
+                    </span><span class="kw">else if </span>source_range.end() &gt;= r_paren_source_end {
+                        start_offset = <span class="prelude-val">Some</span>(source_range.start());
+                        <span class="bool-val">true
+                    </span>} <span class="kw">else </span>{
+                        source_range.end() &lt; r_paren_source_end
                     }
                 });
 
-                <span class="comment">// SAFETY:</span>
-                <span class="comment">// * The builder starts with a node which guarantees that every token has a parent node.</span>
-                <span class="comment">// * The above `take_while` guarantees to return `true` for the parent of the token.</span>
-                <span class="comment">// Thus, there&#39;s always at least one node</span>
-                <span class="ident">ancestors</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>()
+                <span class="comment">// SAFETY:
+                // * The builder starts with a node which guarantees that every token has a parent node.
+                // * The above `take_while` guarantees to return `true` for the parent of the token.
+                // Thus, there&#39;s always at least one node
+                </span>ancestors.last().unwrap()
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::CommentsBuilderVisitor</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::comments</span>::{
-        <span class="ident">CommentKind</span>, <span class="ident">CommentPlacement</span>, <span class="ident">CommentStyle</span>, <span class="ident">CommentTextPosition</span>, <span class="ident">CommentsMap</span>,
-        <span class="ident">DecoratedComment</span>, <span class="ident">SourceComment</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::CommentsBuilderVisitor;
+    <span class="kw">use </span><span class="kw">crate</span>::comments::{
+        CommentKind, CommentPlacement, CommentStyle, CommentTextPosition, CommentsMap,
+        DecoratedComment, SourceComment,
     };
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">TextSize</span>, <span class="ident">TransformSourceMap</span>, <span class="ident">TransformSourceMapBuilder</span>};
-    <span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileId</span>;
-    <span class="kw">use</span> <span class="ident">rome_js_parser::parse_module</span>;
-    <span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-        <span class="ident">JsIdentifierExpression</span>, <span class="ident">JsLanguage</span>, <span class="ident">JsParameters</span>, <span class="ident">JsParenthesizedExpression</span>,
-        <span class="ident">JsPropertyObjectMember</span>, <span class="ident">JsReferenceIdentifier</span>, <span class="ident">JsShorthandPropertyObjectMember</span>,
-        <span class="ident">JsSyntaxKind</span>, <span class="ident">JsSyntaxNode</span>, <span class="ident">JsUnaryExpression</span>,
+    <span class="kw">use crate</span>::{TextSize, TransformSourceMap, TransformSourceMapBuilder};
+    <span class="kw">use </span>rome_diagnostics::file::FileId;
+    <span class="kw">use </span>rome_js_parser::parse_module;
+    <span class="kw">use </span>rome_js_syntax::{
+        JsIdentifierExpression, JsLanguage, JsParameters, JsParenthesizedExpression,
+        JsPropertyObjectMember, JsReferenceIdentifier, JsShorthandPropertyObjectMember,
+        JsSyntaxKind, JsSyntaxNode, JsUnaryExpression,
     };
-    <span class="kw">use</span> <span class="ident">rome_rowan::syntax::SyntaxElementKey</span>;
-    <span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">BatchMutation</span>, <span class="ident">SyntaxNode</span>, <span class="ident">SyntaxTriviaPieceComments</span>, <span class="ident">TextRange</span>};
-    <span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
+    <span class="kw">use </span>rome_rowan::syntax::SyntaxElementKey;
+    <span class="kw">use </span>rome_rowan::{AstNode, BatchMutation, SyntaxNode, SyntaxTriviaPieceComments, TextRange};
+    <span class="kw">use </span>std::cell::RefCell;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">leading_comment</span>() {
-        <span class="kw">let</span> (<span class="ident">root</span>, <span class="ident">decorated</span>, <span class="ident">comments</span>) <span class="op">=</span> <span class="ident">extract_comments</span>(
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>leading_comment() {
+        <span class="kw">let </span>(root, decorated, comments) = extract_comments(
             <span class="string">r#&quot;const foo = {
   a: &#39;a&#39;,
   /* comment for this line */
@@ -1715,398 +1715,398 @@
 };&quot;#</span>,
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">len</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(decorated.len(), <span class="number">1</span>);
 
-        <span class="kw">let</span> <span class="ident">comment</span> <span class="op">=</span> <span class="ident">decorated</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>comment = decorated.last().unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">text_position</span>(), <span class="ident">CommentTextPosition::OwnLine</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">lines_before</span>(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">lines_after</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(comment.text_position(), CommentTextPosition::OwnLine);
+        <span class="macro">assert_eq!</span>(comment.lines_before(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(comment.lines_after(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>
-                .<span class="ident">preceding_node</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text_trimmed</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            comment
+                .preceding_node()
+                .map(|node| node.text_trimmed().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;a: &#39;a&#39;&quot;</span>)
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>
-                .<span class="ident">following_node</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text_trimmed</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            comment
+                .following_node()
+                .map(|node| node.text_trimmed().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>)
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(),
-            <span class="ident">JsSyntaxKind::JS_OBJECT_EXPRESSION</span>
+            comment.enclosing_node().kind(),
+            JsSyntaxKind::JS_OBJECT_EXPRESSION
         );
 
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsShorthandPropertyObjectMember::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>b = root
+            .descendants()
+            .find_map(JsShorthandPropertyObjectMember::cast)
+            .unwrap();
 
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">comments</span>.<span class="ident">leading</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">syntax</span>().<span class="ident">key</span>()).<span class="ident">is_empty</span>());
+        <span class="macro">assert!</span>(!comments.leading(<span class="kw-2">&amp;</span>b.syntax().key()).is_empty());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">trailing_comment</span>() {
-        <span class="kw">let</span> (<span class="ident">root</span>, <span class="ident">decorated</span>, <span class="ident">comments</span>) <span class="op">=</span> <span class="ident">extract_comments</span>(
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>trailing_comment() {
+        <span class="kw">let </span>(root, decorated, comments) = extract_comments(
             <span class="string">r#&quot;const foo = {
   a: &#39;a&#39; /* comment for this line */,
   b
 };&quot;#</span>,
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">len</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(decorated.len(), <span class="number">1</span>);
 
-        <span class="kw">let</span> <span class="ident">comment</span> <span class="op">=</span> <span class="ident">decorated</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>comment = decorated.last().unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">text_position</span>(), <span class="ident">CommentTextPosition::SameLine</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">lines_after</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">lines_before</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(comment.text_position(), CommentTextPosition::SameLine);
+        <span class="macro">assert_eq!</span>(comment.lines_after(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(comment.lines_before(), <span class="number">0</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>
-                .<span class="ident">preceding_node</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text_trimmed</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            comment
+                .preceding_node()
+                .map(|node| node.text_trimmed().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;a: &#39;a&#39;&quot;</span>)
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>
-                .<span class="ident">following_node</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text_trimmed</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            comment
+                .following_node()
+                .map(|node| node.text_trimmed().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>)
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(),
-            <span class="ident">JsSyntaxKind::JS_OBJECT_EXPRESSION</span>
+            comment.enclosing_node().kind(),
+            JsSyntaxKind::JS_OBJECT_EXPRESSION
         );
 
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsPropertyObjectMember::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>a = root
+            .descendants()
+            .find_map(JsPropertyObjectMember::cast)
+            .unwrap();
 
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">comments</span>.<span class="ident">trailing</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">syntax</span>().<span class="ident">key</span>()).<span class="ident">is_empty</span>());
+        <span class="macro">assert!</span>(!comments.trailing(<span class="kw-2">&amp;</span>a.syntax().key()).is_empty());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">end_of_line_comment</span>() {
-        <span class="kw">let</span> (<span class="ident">root</span>, <span class="ident">decorated</span>, <span class="ident">comments</span>) <span class="op">=</span> <span class="ident">extract_comments</span>(
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>end_of_line_comment() {
+        <span class="kw">let </span>(root, decorated, comments) = extract_comments(
             <span class="string">r#&quot;const foo = {
   a: &#39;a&#39;, /* comment for this line */
   b
 };&quot;#</span>,
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">len</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(decorated.len(), <span class="number">1</span>);
 
-        <span class="kw">let</span> <span class="ident">comment</span> <span class="op">=</span> <span class="ident">decorated</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>comment = decorated.last().unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">text_position</span>(), <span class="ident">CommentTextPosition::EndOfLine</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">lines_before</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">comment</span>.<span class="ident">lines_after</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(comment.text_position(), CommentTextPosition::EndOfLine);
+        <span class="macro">assert_eq!</span>(comment.lines_before(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(comment.lines_after(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>
-                .<span class="ident">preceding_node</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text_trimmed</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            comment
+                .preceding_node()
+                .map(|node| node.text_trimmed().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;a: &#39;a&#39;&quot;</span>)
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>
-                .<span class="ident">following_node</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">text_trimmed</span>().<span class="ident">to_string</span>())
-                .<span class="ident">as_deref</span>(),
+            comment
+                .following_node()
+                .map(|node| node.text_trimmed().to_string())
+                .as_deref(),
             <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>)
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">comment</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(),
-            <span class="ident">JsSyntaxKind::JS_OBJECT_EXPRESSION</span>
+            comment.enclosing_node().kind(),
+            JsSyntaxKind::JS_OBJECT_EXPRESSION
         );
 
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsPropertyObjectMember::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>a = root
+            .descendants()
+            .find_map(JsPropertyObjectMember::cast)
+            .unwrap();
 
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">comments</span>.<span class="ident">trailing</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">syntax</span>().<span class="ident">key</span>()).<span class="ident">is_empty</span>());
+        <span class="macro">assert!</span>(!comments.trailing(<span class="kw-2">&amp;</span>a.syntax().key()).is_empty());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">dangling_arrow</span>() {
-        <span class="kw">let</span> (<span class="ident">root</span>, <span class="ident">decorated_comments</span>, <span class="ident">comments</span>) <span class="op">=</span> <span class="ident">extract_comments</span>(<span class="string">&quot;(/* comment */)  =&gt; true&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>dangling_arrow() {
+        <span class="kw">let </span>(root, decorated_comments, comments) = extract_comments(<span class="string">&quot;(/* comment */)  =&gt; true&quot;</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated_comments</span>.<span class="ident">len</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(decorated_comments.len(), <span class="number">1</span>);
 
-        <span class="kw">let</span> <span class="ident">decorated</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">decorated_comments</span>[<span class="number">0</span>];
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">text_position</span>(), <span class="ident">CommentTextPosition::SameLine</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">lines_before</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">lines_after</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">preceding_node</span>(), <span class="prelude-val">None</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">following_node</span>(), <span class="prelude-val">None</span>);
+        <span class="kw">let </span>decorated = <span class="kw-2">&amp;</span>decorated_comments[<span class="number">0</span>];
+        <span class="macro">assert_eq!</span>(decorated.text_position(), CommentTextPosition::SameLine);
+        <span class="macro">assert_eq!</span>(decorated.lines_before(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(decorated.lines_after(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(decorated.preceding_node(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(decorated.following_node(), <span class="prelude-val">None</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">decorated</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(),
-            <span class="ident">JsSyntaxKind::JS_PARAMETERS</span>
+            decorated.enclosing_node().kind(),
+            JsSyntaxKind::JS_PARAMETERS
         );
 
-        <span class="kw">let</span> <span class="ident">parameters</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">descendants</span>().<span class="ident">find_map</span>(<span class="ident">JsParameters::cast</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">comments</span>.<span class="ident">dangling</span>(<span class="kw-2">&amp;</span><span class="ident">parameters</span>.<span class="ident">syntax</span>().<span class="ident">key</span>()).<span class="ident">is_empty</span>());
+        <span class="kw">let </span>parameters = root.descendants().find_map(JsParameters::cast).unwrap();
+        <span class="macro">assert!</span>(!comments.dangling(<span class="kw-2">&amp;</span>parameters.syntax().key()).is_empty());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">dangling_comments</span>() {
-        <span class="kw">let</span> (<span class="ident">root</span>, <span class="ident">decorated_comments</span>, <span class="ident">comments</span>) <span class="op">=</span> <span class="ident">extract_comments</span>(
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>dangling_comments() {
+        <span class="kw">let </span>(root, decorated_comments, comments) = extract_comments(
             <span class="string">r#&quot;
             function (/* test */) {}
             &quot;#</span>,
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated_comments</span>.<span class="ident">len</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(decorated_comments.len(), <span class="number">1</span>);
 
-        <span class="kw">let</span> <span class="ident">decorated</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">decorated_comments</span>[<span class="number">0</span>];
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">text_position</span>(), <span class="ident">CommentTextPosition::SameLine</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">lines_before</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">lines_after</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">preceding_node</span>(), <span class="prelude-val">None</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">following_node</span>(), <span class="prelude-val">None</span>);
+        <span class="kw">let </span>decorated = <span class="kw-2">&amp;</span>decorated_comments[<span class="number">0</span>];
+        <span class="macro">assert_eq!</span>(decorated.text_position(), CommentTextPosition::SameLine);
+        <span class="macro">assert_eq!</span>(decorated.lines_before(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(decorated.lines_after(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(decorated.preceding_node(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(decorated.following_node(), <span class="prelude-val">None</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">decorated</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(),
-            <span class="ident">JsSyntaxKind::JS_PARAMETERS</span>
+            decorated.enclosing_node().kind(),
+            JsSyntaxKind::JS_PARAMETERS
         );
 
-        <span class="kw">let</span> <span class="ident">parameters</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">descendants</span>().<span class="ident">find_map</span>(<span class="ident">JsParameters::cast</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">comments</span>.<span class="ident">dangling</span>(<span class="kw-2">&amp;</span><span class="ident">parameters</span>.<span class="ident">syntax</span>().<span class="ident">key</span>()).<span class="ident">is_empty</span>());
+        <span class="kw">let </span>parameters = root.descendants().find_map(JsParameters::cast).unwrap();
+        <span class="macro">assert!</span>(!comments.dangling(<span class="kw-2">&amp;</span>parameters.syntax().key()).is_empty());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">r_paren</span>() {
-        <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="string">r#&quot;!(
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>r_paren() {
+        <span class="kw">let </span>source = <span class="string">r#&quot;!(
     a
     /* comment */
 )
 /* comment */
 b;&quot;#</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">source_map_builder</span> <span class="op">=</span> <span class="ident">TransformSourceMapBuilder::with_source</span>(<span class="ident">source</span>.<span class="ident">to_string</span>());
-        <span class="kw">let</span> <span class="ident">l_paren_range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">1</span>), <span class="ident">TextSize::from</span>(<span class="number">2</span>));
-        <span class="kw">let</span> <span class="ident">r_paren_range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">27</span>), <span class="ident">TextSize::from</span>(<span class="number">28</span>));
+        <span class="kw">let </span><span class="kw-2">mut </span>source_map_builder = TransformSourceMapBuilder::with_source(source.to_string());
+        <span class="kw">let </span>l_paren_range = TextRange::new(TextSize::from(<span class="number">1</span>), TextSize::from(<span class="number">2</span>));
+        <span class="kw">let </span>r_paren_range = TextRange::new(TextSize::from(<span class="number">27</span>), TextSize::from(<span class="number">28</span>));
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>[<span class="ident">l_paren_range</span>], <span class="string">&quot;(&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>[<span class="ident">r_paren_range</span>], <span class="string">&quot;)&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>source[l_paren_range], <span class="string">&quot;(&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>source[r_paren_range], <span class="string">&quot;)&quot;</span>);
 
-        <span class="ident">source_map_builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">l_paren_range</span>);
-        <span class="ident">source_map_builder</span>.<span class="ident">add_deleted_range</span>(<span class="ident">r_paren_range</span>);
-        <span class="ident">source_map_builder</span>.<span class="ident">extend_trimmed_node_range</span>(
-            <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">7</span>), <span class="ident">TextSize::from</span>(<span class="number">8</span>)),
-            <span class="ident">TextRange::new</span>(<span class="ident">l_paren_range</span>.<span class="ident">start</span>(), <span class="ident">r_paren_range</span>.<span class="ident">end</span>()),
+        source_map_builder.add_deleted_range(l_paren_range);
+        source_map_builder.add_deleted_range(r_paren_range);
+        source_map_builder.extend_trimmed_node_range(
+            TextRange::new(TextSize::from(<span class="number">7</span>), TextSize::from(<span class="number">8</span>)),
+            TextRange::new(l_paren_range.start(), r_paren_range.end()),
         );
 
-        <span class="kw">let</span> <span class="ident">source_map</span> <span class="op">=</span> <span class="ident">source_map_builder</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span>source_map = source_map_builder.finish();
 
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">parse_module</span>(<span class="ident">source</span>, <span class="ident">FileId::zero</span>()).<span class="ident">syntax</span>();
+        <span class="kw">let </span>root = parse_module(source, FileId::zero()).syntax();
 
-        <span class="comment">// A lot of code that simply removes the parenthesized expression and moves the parens</span>
-        <span class="comment">// trivia to the identifiers leading / trailing trivia.</span>
-        <span class="kw">let</span> <span class="ident">parenthesized</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsParenthesizedExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="comment">// A lot of code that simply removes the parenthesized expression and moves the parens
+        // trivia to the identifiers leading / trailing trivia.
+        </span><span class="kw">let </span>parenthesized = root
+            .descendants()
+            .find_map(JsParenthesizedExpression::cast)
+            .unwrap();
 
-        <span class="kw">let</span> <span class="ident">reference_identifier</span> <span class="op">=</span> <span class="ident">root</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsReferenceIdentifier::cast</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let </span>reference_identifier = root
+            .descendants()
+            .find_map(JsReferenceIdentifier::cast)
+            .unwrap();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">BatchMutation::new</span>(<span class="ident">root</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>mutation = BatchMutation::new(root);
 
-        <span class="kw">let</span> <span class="ident">identifier_expression</span> <span class="op">=</span>
-            <span class="ident">JsIdentifierExpression::cast</span>(<span class="ident">parenthesized</span>.<span class="ident">expression</span>().<span class="ident">unwrap</span>().<span class="ident">into_syntax</span>())
-                .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">l_paren</span> <span class="op">=</span> <span class="ident">parenthesized</span>.<span class="ident">l_paren_token</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">r_paren</span> <span class="op">=</span> <span class="ident">parenthesized</span>.<span class="ident">r_paren_token</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>identifier_expression =
+            JsIdentifierExpression::cast(parenthesized.expression().unwrap().into_syntax())
+                .unwrap();
+        <span class="kw">let </span>l_paren = parenthesized.l_paren_token().unwrap();
+        <span class="kw">let </span>r_paren = parenthesized.r_paren_token().unwrap();
 
-        <span class="kw">let</span> <span class="ident">identifier_token</span> <span class="op">=</span> <span class="ident">reference_identifier</span>.<span class="ident">value_token</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">new_identifier_token</span> <span class="op">=</span> <span class="ident">identifier_token</span>
-            .<span class="ident">with_leading_trivia_pieces</span>(
-                <span class="ident">l_paren</span>
-                    .<span class="ident">leading_trivia</span>()
-                    .<span class="ident">pieces</span>()
-                    .<span class="ident">chain</span>(<span class="ident">l_paren</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>())
-                    .<span class="ident">chain</span>(<span class="ident">identifier_token</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>())
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+        <span class="kw">let </span>identifier_token = reference_identifier.value_token().unwrap();
+        <span class="kw">let </span>new_identifier_token = identifier_token
+            .with_leading_trivia_pieces(
+                l_paren
+                    .leading_trivia()
+                    .pieces()
+                    .chain(l_paren.trailing_trivia().pieces())
+                    .chain(identifier_token.leading_trivia().pieces())
+                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
             )
-            .<span class="ident">with_trailing_trivia_pieces</span>(
-                <span class="ident">identifier_token</span>
-                    .<span class="ident">trailing_trivia</span>()
-                    .<span class="ident">pieces</span>()
-                    .<span class="ident">chain</span>(<span class="ident">r_paren</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>())
-                    .<span class="ident">chain</span>(<span class="ident">r_paren</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>())
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+            .with_trailing_trivia_pieces(
+                identifier_token
+                    .trailing_trivia()
+                    .pieces()
+                    .chain(r_paren.leading_trivia().pieces())
+                    .chain(r_paren.trailing_trivia().pieces())
+                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
             );
 
-        <span class="kw">let</span> <span class="ident">new_reference_identifier</span> <span class="op">=</span> <span class="ident">reference_identifier</span>.<span class="ident">with_value_token</span>(<span class="ident">new_identifier_token</span>);
+        <span class="kw">let </span>new_reference_identifier = reference_identifier.with_value_token(new_identifier_token);
 
-        <span class="kw">let</span> <span class="ident">new_identifier_expression</span> <span class="op">=</span> <span class="ident">identifier_expression</span>.<span class="ident">with_name</span>(<span class="ident">new_reference_identifier</span>);
+        <span class="kw">let </span>new_identifier_expression = identifier_expression.with_name(new_reference_identifier);
 
-        <span class="ident">mutation</span>.<span class="ident">replace_element_discard_trivia</span>(
-            <span class="ident">parenthesized</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
-            <span class="ident">new_identifier_expression</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
+        mutation.replace_element_discard_trivia(
+            parenthesized.into_syntax().into(),
+            new_identifier_expression.into_syntax().into(),
         );
 
-        <span class="kw">let</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">mutation</span>.<span class="ident">commit</span>();
+        <span class="kw">let </span>transformed = mutation.commit();
 
-        <span class="kw">let</span> <span class="ident">style</span> <span class="op">=</span> <span class="ident">TestCommentStyle::default</span>();
-        <span class="kw">let</span> <span class="ident">comments_builder</span> <span class="op">=</span> <span class="ident">CommentsBuilderVisitor::new</span>(<span class="kw-2">&amp;</span><span class="ident">style</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">source_map</span>));
-        <span class="kw">let</span> (<span class="ident">comments</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">comments_builder</span>.<span class="ident">visit</span>(<span class="kw-2">&amp;</span><span class="ident">transformed</span>);
+        <span class="kw">let </span>style = TestCommentStyle::default();
+        <span class="kw">let </span>comments_builder = CommentsBuilderVisitor::new(<span class="kw-2">&amp;</span>style, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>source_map));
+        <span class="kw">let </span>(comments, <span class="kw">_</span>) = comments_builder.visit(<span class="kw-2">&amp;</span>transformed);
 
-        <span class="kw">let</span> <span class="ident">decorated_comments</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">finish</span>();
+        <span class="kw">let </span>decorated_comments = style.finish();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated_comments</span>.<span class="ident">len</span>(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(decorated_comments.len(), <span class="number">2</span>);
 
-        <span class="kw">let</span> <span class="ident">argument_trailing</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">decorated_comments</span>[<span class="number">0</span>];
+        <span class="kw">let </span>argument_trailing = <span class="kw-2">&amp;</span>decorated_comments[<span class="number">0</span>];
         <span class="macro">assert_eq!</span>(
-            <span class="ident">argument_trailing</span>.<span class="ident">text_position</span>(),
-            <span class="ident">CommentTextPosition::OwnLine</span>
+            argument_trailing.text_position(),
+            CommentTextPosition::OwnLine
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">argument_trailing</span>.<span class="ident">lines_before</span>(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">argument_trailing</span>.<span class="ident">lines_after</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(argument_trailing.lines_before(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(argument_trailing.lines_after(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">argument_trailing</span>
-                .<span class="ident">preceding_node</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">preceding</span><span class="op">|</span> <span class="ident">preceding</span>.<span class="ident">kind</span>()),
-            <span class="prelude-val">Some</span>(<span class="ident">JsSyntaxKind::JS_IDENTIFIER_EXPRESSION</span>)
+            argument_trailing
+                .preceding_node()
+                .map(|preceding| preceding.kind()),
+            <span class="prelude-val">Some</span>(JsSyntaxKind::JS_IDENTIFIER_EXPRESSION)
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">argument_trailing</span>.<span class="ident">following_node</span>(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(argument_trailing.following_node(), <span class="prelude-val">None</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">argument_trailing</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(),
-            <span class="ident">JsSyntaxKind::JS_UNARY_EXPRESSION</span>
+            argument_trailing.enclosing_node().kind(),
+            JsSyntaxKind::JS_UNARY_EXPRESSION
         );
 
-        <span class="kw">let</span> <span class="ident">identifier_leading</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">decorated_comments</span>[<span class="number">1</span>];
+        <span class="kw">let </span>identifier_leading = <span class="kw-2">&amp;</span>decorated_comments[<span class="number">1</span>];
         <span class="macro">assert_eq!</span>(
-            <span class="ident">identifier_leading</span>.<span class="ident">text_position</span>(),
-            <span class="ident">CommentTextPosition::OwnLine</span>
+            identifier_leading.text_position(),
+            CommentTextPosition::OwnLine
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">identifier_leading</span>.<span class="ident">lines_before</span>(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">identifier_leading</span>.<span class="ident">lines_after</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(identifier_leading.lines_before(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(identifier_leading.lines_after(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">identifier_leading</span>.<span class="ident">preceding_node</span>().<span class="ident">map</span>(<span class="ident">SyntaxNode::kind</span>),
-            <span class="prelude-val">Some</span>(<span class="ident">JsSyntaxKind::JS_EXPRESSION_STATEMENT</span>)
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">identifier_leading</span>.<span class="ident">following_node</span>().<span class="ident">map</span>(<span class="ident">SyntaxNode::kind</span>),
-            <span class="prelude-val">Some</span>(<span class="ident">JsSyntaxKind::JS_EXPRESSION_STATEMENT</span>)
+            identifier_leading.preceding_node().map(SyntaxNode::kind),
+            <span class="prelude-val">Some</span>(JsSyntaxKind::JS_EXPRESSION_STATEMENT)
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">identifier_leading</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(),
-            <span class="ident">JsSyntaxKind::JS_MODULE</span>
+            identifier_leading.following_node().map(SyntaxNode::kind),
+            <span class="prelude-val">Some</span>(JsSyntaxKind::JS_EXPRESSION_STATEMENT)
+        );
+        <span class="macro">assert_eq!</span>(
+            identifier_leading.enclosing_node().kind(),
+            JsSyntaxKind::JS_MODULE
         );
 
-        <span class="kw">let</span> <span class="ident">unary</span> <span class="op">=</span> <span class="ident">transformed</span>
-            .<span class="ident">descendants</span>()
-            .<span class="ident">find_map</span>(<span class="ident">JsUnaryExpression::cast</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">comments</span>
-            .<span class="ident">trailing</span>(<span class="kw-2">&amp;</span><span class="ident">unary</span>.<span class="ident">argument</span>().<span class="ident">unwrap</span>().<span class="ident">syntax</span>().<span class="ident">key</span>())
-            .<span class="ident">is_empty</span>());
+        <span class="kw">let </span>unary = transformed
+            .descendants()
+            .find_map(JsUnaryExpression::cast)
+            .unwrap();
+        <span class="macro">assert!</span>(!comments
+            .trailing(<span class="kw-2">&amp;</span>unary.argument().unwrap().syntax().key())
+            .is_empty());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">comment_only_program</span>() {
-        <span class="kw">let</span> (<span class="ident">root</span>, <span class="ident">decorated</span>, <span class="ident">comments</span>) <span class="op">=</span> <span class="ident">extract_comments</span>(
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>comment_only_program() {
+        <span class="kw">let </span>(root, decorated, comments) = extract_comments(
             <span class="string">r#&quot;/* test */
 
 /* test */&quot;#</span>,
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">decorated</span>.<span class="ident">len</span>(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(decorated.len(), <span class="number">2</span>);
 
-        <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">decorated</span>[<span class="number">0</span>];
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">text_position</span>(), <span class="ident">CommentTextPosition::EndOfLine</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">lines_before</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">lines_after</span>(), <span class="number">2</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">preceding_node</span>(), <span class="prelude-val">None</span>);
+        <span class="kw">let </span>first = <span class="kw-2">&amp;</span>decorated[<span class="number">0</span>];
+        <span class="macro">assert_eq!</span>(first.text_position(), CommentTextPosition::EndOfLine);
+        <span class="macro">assert_eq!</span>(first.lines_before(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(first.lines_after(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(first.preceding_node(), <span class="prelude-val">None</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">first</span>.<span class="ident">following_node</span>().<span class="ident">map</span>(<span class="ident">SyntaxNode::kind</span>),
-            <span class="prelude-val">Some</span>(<span class="ident">JsSyntaxKind::JS_MODULE</span>)
+            first.following_node().map(SyntaxNode::kind),
+            <span class="prelude-val">Some</span>(JsSyntaxKind::JS_MODULE)
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">first</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(), <span class="ident">JsSyntaxKind::JS_MODULE</span>);
+        <span class="macro">assert_eq!</span>(first.enclosing_node().kind(), JsSyntaxKind::JS_MODULE);
 
-        <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">decorated</span>[<span class="number">1</span>];
-        <span class="macro">assert_eq!</span>(<span class="ident">second</span>.<span class="ident">text_position</span>(), <span class="ident">CommentTextPosition::OwnLine</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">second</span>.<span class="ident">lines_before</span>(), <span class="number">2</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">second</span>.<span class="ident">lines_after</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">second</span>.<span class="ident">preceding_node</span>(), <span class="prelude-val">None</span>);
+        <span class="kw">let </span>second = <span class="kw-2">&amp;</span>decorated[<span class="number">1</span>];
+        <span class="macro">assert_eq!</span>(second.text_position(), CommentTextPosition::OwnLine);
+        <span class="macro">assert_eq!</span>(second.lines_before(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(second.lines_after(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(second.preceding_node(), <span class="prelude-val">None</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">first</span>.<span class="ident">following_node</span>().<span class="ident">map</span>(<span class="ident">SyntaxNode::kind</span>),
-            <span class="prelude-val">Some</span>(<span class="ident">JsSyntaxKind::JS_MODULE</span>)
+            first.following_node().map(SyntaxNode::kind),
+            <span class="prelude-val">Some</span>(JsSyntaxKind::JS_MODULE)
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">second</span>.<span class="ident">enclosing_node</span>().<span class="ident">kind</span>(), <span class="ident">JsSyntaxKind::JS_MODULE</span>);
+        <span class="macro">assert_eq!</span>(second.enclosing_node().kind(), JsSyntaxKind::JS_MODULE);
 
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">comments</span>.<span class="ident">leading</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>.<span class="ident">key</span>()).<span class="ident">is_empty</span>());
+        <span class="macro">assert!</span>(!comments.leading(<span class="kw-2">&amp;</span>root.key()).is_empty());
     }
 
-    <span class="kw">fn</span> <span class="ident">extract_comments</span>(
-        <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    <span class="kw">fn </span>extract_comments(
+        source: <span class="kw-2">&amp;</span>str,
     ) -&gt; (
-        <span class="ident">JsSyntaxNode</span>,
-        <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">CommentsMap</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span>, <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        JsSyntaxNode,
+        Vec&lt;DecoratedComment&lt;JsLanguage&gt;&gt;,
+        CommentsMap&lt;SyntaxElementKey, SourceComment&lt;JsLanguage&gt;&gt;,
     ) {
-        <span class="ident">extract_with_source_map</span>(<span class="ident">source</span>, <span class="prelude-val">None</span>)
+        extract_with_source_map(source, <span class="prelude-val">None</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">extract_with_source_map</span>(
-        <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">source_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TransformSourceMap</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>extract_with_source_map(
+        source: <span class="kw-2">&amp;</span>str,
+        source_map: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TransformSourceMap&gt;,
     ) -&gt; (
-        <span class="ident">JsSyntaxNode</span>,
-        <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">CommentsMap</span><span class="op">&lt;</span><span class="ident">SyntaxElementKey</span>, <span class="ident">SourceComment</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        JsSyntaxNode,
+        Vec&lt;DecoratedComment&lt;JsLanguage&gt;&gt;,
+        CommentsMap&lt;SyntaxElementKey, SourceComment&lt;JsLanguage&gt;&gt;,
     ) {
-        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">parse_module</span>(<span class="ident">source</span>, <span class="ident">FileId::zero</span>());
+        <span class="kw">let </span>tree = parse_module(source, FileId::zero());
 
-        <span class="kw">let</span> <span class="ident">style</span> <span class="op">=</span> <span class="ident">TestCommentStyle::default</span>();
-        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">CommentsBuilderVisitor::new</span>(<span class="kw-2">&amp;</span><span class="ident">style</span>, <span class="ident">source_map</span>);
-        <span class="kw">let</span> (<span class="ident">comments</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">visit</span>(<span class="kw-2">&amp;</span><span class="ident">tree</span>.<span class="ident">syntax</span>());
+        <span class="kw">let </span>style = TestCommentStyle::default();
+        <span class="kw">let </span>builder = CommentsBuilderVisitor::new(<span class="kw-2">&amp;</span>style, source_map);
+        <span class="kw">let </span>(comments, <span class="kw">_</span>) = builder.visit(<span class="kw-2">&amp;</span>tree.syntax());
 
-        (<span class="ident">tree</span>.<span class="ident">syntax</span>(), <span class="ident">style</span>.<span class="ident">finish</span>(), <span class="ident">comments</span>)
+        (tree.syntax(), style.finish(), comments)
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">TestCommentStyle</span> {
-        <span class="ident">recorded_comments</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[derive(Default)]
+    </span><span class="kw">struct </span>TestCommentStyle {
+        recorded_comments: RefCell&lt;Vec&lt;DecoratedComment&lt;JsLanguage&gt;&gt;&gt;,
     }
 
-    <span class="kw">impl</span> <span class="ident">CommentStyle</span> <span class="kw">for</span> <span class="ident">TestCommentStyle</span> {
-        <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">JsLanguage</span>;
+    <span class="kw">impl </span>CommentStyle <span class="kw">for </span>TestCommentStyle {
+        <span class="kw">type </span>Language = JsLanguage;
 
-        <span class="kw">fn</span> <span class="ident">is_suppression</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-            <span class="bool-val">false</span>
+        <span class="kw">fn </span>is_suppression(<span class="kw">_</span>: <span class="kw-2">&amp;</span>str) -&gt; bool {
+            <span class="bool-val">false
+        </span>}
+
+        <span class="kw">fn </span>get_comment_kind(<span class="kw">_</span>: <span class="kw-2">&amp;</span>SyntaxTriviaPieceComments&lt;<span class="self">Self</span>::Language&gt;) -&gt; CommentKind {
+            CommentKind::Block
         }
 
-        <span class="kw">fn</span> <span class="ident">get_comment_kind</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxTriviaPieceComments</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>) -&gt; <span class="ident">CommentKind</span> {
-            <span class="ident">CommentKind::Block</span>
-        }
-
-        <span class="kw">fn</span> <span class="ident">place_comment</span>(
+        <span class="kw">fn </span>place_comment(
             <span class="kw-2">&amp;</span><span class="self">self</span>,
-            <span class="ident">comment</span>: <span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        ) -&gt; <span class="ident">CommentPlacement</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span> {
-            <span class="self">self</span>.<span class="ident">recorded_comments</span>.<span class="ident">borrow_mut</span>().<span class="ident">push</span>(<span class="ident">comment</span>.<span class="ident">clone</span>());
+            comment: DecoratedComment&lt;<span class="self">Self</span>::Language&gt;,
+        ) -&gt; CommentPlacement&lt;<span class="self">Self</span>::Language&gt; {
+            <span class="self">self</span>.recorded_comments.borrow_mut().push(comment.clone());
 
-            <span class="ident">CommentPlacement::Default</span>(<span class="ident">comment</span>)
+            CommentPlacement::Default(comment)
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">TestCommentStyle</span> {
-        <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DecoratedComment</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-            <span class="self">self</span>.<span class="ident">recorded_comments</span>.<span class="ident">take</span>()
+    <span class="kw">impl </span>TestCommentStyle {
+        <span class="kw">fn </span>finish(<span class="self">self</span>) -&gt; Vec&lt;DecoratedComment&lt;JsLanguage&gt;&gt; {
+            <span class="self">self</span>.recorded_comments.take()
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_formatter" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

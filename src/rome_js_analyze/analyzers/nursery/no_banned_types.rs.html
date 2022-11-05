@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/nursery/no_banned_types.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>no_banned_types.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/nursery/no_banned_types.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>no_banned_types.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -238,245 +238,245 @@
 <span id="238">238</span>
 <span id="239">239</span>
 <span id="240">240</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_analyze::context::RuleContext</span>;
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_factory::make</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsReferenceIdentifier</span>, <span class="ident">JsSyntaxKind</span>, <span class="ident">TextRange</span>, <span class="ident">TsObjectType</span>, <span class="ident">TsReferenceType</span>,
+</pre><pre class="rust"><code><span class="kw">use </span>rome_analyze::context::RuleContext;
+<span class="kw">use </span>rome_analyze::{declare_rule, ActionCategory, Ast, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_factory::make;
+<span class="kw">use </span>rome_js_syntax::{
+    JsReferenceIdentifier, JsSyntaxKind, TextRange, TsObjectType, TsReferenceType,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">declare_node_union</span>, <span class="ident">AstNodeList</span>, <span class="ident">BatchMutationExt</span>};
+<span class="kw">use </span>rome_rowan::{declare_node_union, AstNodeList, BatchMutationExt};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsRuleAction</span>;
+<span class="kw">use </span><span class="kw">crate</span>::JsRuleAction;
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Disallow certain types.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// &gt; Some built-in types have aliases, while some types are considered dangerous or harmful. It&#39;s often a good idea to ban certain types to help with consistency and safety.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// &gt; This rule bans specific types and can suggest alternatives. Note that it doesn&#39;t ban the corresponding runtime objects from being used.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Source: https://typescript-eslint.io/rules/ban-types</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ts,expect_diagnostic</span>
-    <span class="doccomment">/// let foo: String = &quot;bar&quot;;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ts,expect_diagnostic</span>
-    <span class="doccomment">/// let bool = true as Boolean;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ts,expect_diagnostic</span>
-    <span class="doccomment">/// let invalidTuple: [string, Boolean] = [&quot;foo&quot;, false];</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Valid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ts</span>
-    <span class="doccomment">/// let foo: string = &quot;bar&quot;;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ts</span>
-    <span class="doccomment">/// let tuple: [boolean, string] = [false, &quot;foo&quot;];</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">NoBannedTypes</span> {
-        <span class="ident">version</span>: <span class="string">&quot;10.0.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;noBannedTypes&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">false</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Disallow certain types.
+    ///
+    /// &gt; Some built-in types have aliases, while some types are considered dangerous or harmful. It&#39;s often a good idea to ban certain types to help with consistency and safety.
+    ///
+    /// &gt; This rule bans specific types and can suggest alternatives. Note that it doesn&#39;t ban the corresponding runtime objects from being used.
+    ///
+    /// Source: https://typescript-eslint.io/rules/ban-types
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```ts,expect_diagnostic
+    /// let foo: String = &quot;bar&quot;;
+    /// ```
+    ///
+    /// ```ts,expect_diagnostic
+    /// let bool = true as Boolean;
+    /// ```
+    ///
+    /// ```ts,expect_diagnostic
+    /// let invalidTuple: [string, Boolean] = [&quot;foo&quot;, false];
+    /// ```
+    ///
+    /// ### Valid
+    ///
+    /// ```ts
+    /// let foo: string = &quot;bar&quot;;
+    /// ```
+    ///
+    /// ```ts
+    /// let tuple: [boolean, string] = [false, &quot;foo&quot;];
+    /// ```
+    ///
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) NoBannedTypes {
+        version: <span class="string">&quot;10.0.0&quot;</span>,
+        name: <span class="string">&quot;noBannedTypes&quot;</span>,
+        recommended: <span class="bool-val">false</span>,
     }
 }
 
-<span class="macro">declare_node_union!</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">TsBannedType</span> <span class="op">=</span> <span class="ident">TsReferenceType</span> <span class="op">|</span> <span class="ident">TsObjectType</span>
+<span class="macro">declare_node_union! </span>{
+    <span class="kw">pub</span>(<span class="kw">crate</span>) TsBannedType = TsReferenceType | TsObjectType
 }
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BannedType</span> {
-    <span class="ident">BigInt</span>,
-    <span class="ident">Boolean</span>,
-    <span class="ident">Function</span>,
-    <span class="ident">Number</span>,
-    <span class="ident">Object</span>,
-    <span class="ident">String</span>,
-    <span class="ident">Symbol</span>,
-    <span class="doccomment">/// {}</span>
-    <span class="ident">EmptyObject</span>,
+<span class="kw">pub enum </span>BannedType {
+    BigInt,
+    Boolean,
+    Function,
+    Number,
+    Object,
+    String,
+    Symbol,
+    <span class="doccomment">/// {}
+    </span>EmptyObject,
 }
 
-<span class="kw">impl</span> <span class="ident">BannedType</span> {
-    <span class="doccomment">/// construct a [BannedType] from the textual name of a JavaScript type</span>
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="ident">s</span> {
-            <span class="string">&quot;BigInt&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::BigInt</span>,
-            <span class="string">&quot;Boolean&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::Boolean</span>,
-            <span class="string">&quot;Function&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::Function</span>,
-            <span class="string">&quot;Number&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::Number</span>,
-            <span class="string">&quot;Object&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::Object</span>,
-            <span class="string">&quot;String&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::String</span>,
-            <span class="string">&quot;Symbol&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::Symbol</span>,
-            <span class="string">&quot;{}&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::EmptyObject</span>,
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+<span class="kw">impl </span>BannedType {
+    <span class="doccomment">/// construct a [BannedType] from the textual name of a JavaScript type
+    </span><span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="prelude-val">Some</span>(<span class="kw">match </span>s {
+            <span class="string">&quot;BigInt&quot; </span>=&gt; <span class="self">Self</span>::BigInt,
+            <span class="string">&quot;Boolean&quot; </span>=&gt; <span class="self">Self</span>::Boolean,
+            <span class="string">&quot;Function&quot; </span>=&gt; <span class="self">Self</span>::Function,
+            <span class="string">&quot;Number&quot; </span>=&gt; <span class="self">Self</span>::Number,
+            <span class="string">&quot;Object&quot; </span>=&gt; <span class="self">Self</span>::Object,
+            <span class="string">&quot;String&quot; </span>=&gt; <span class="self">Self</span>::String,
+            <span class="string">&quot;Symbol&quot; </span>=&gt; <span class="self">Self</span>::Symbol,
+            <span class="string">&quot;{}&quot; </span>=&gt; <span class="self">Self</span>::EmptyObject,
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
         })
     }
 
-    <span class="doccomment">/// Convert a [BannedType] to a JS string literal</span>
-    <span class="kw">fn</span> <span class="ident">as_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::BigInt</span> =&gt; <span class="string">&quot;BigInt&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::Boolean</span> =&gt; <span class="string">&quot;Boolean&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::Function</span> =&gt; <span class="string">&quot;Function&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::Number</span> =&gt; <span class="string">&quot;Number&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::Object</span> =&gt; <span class="string">&quot;Object&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::String</span> =&gt; <span class="string">&quot;String&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::Symbol</span> =&gt; <span class="string">&quot;Symbol&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::EmptyObject</span> =&gt; <span class="string">&quot;{}&quot;</span>,
+    <span class="doccomment">/// Convert a [BannedType] to a JS string literal
+    </span><span class="kw">fn </span>as_str(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::BigInt =&gt; <span class="string">&quot;BigInt&quot;</span>,
+            <span class="self">Self</span>::Boolean =&gt; <span class="string">&quot;Boolean&quot;</span>,
+            <span class="self">Self</span>::Function =&gt; <span class="string">&quot;Function&quot;</span>,
+            <span class="self">Self</span>::Number =&gt; <span class="string">&quot;Number&quot;</span>,
+            <span class="self">Self</span>::Object =&gt; <span class="string">&quot;Object&quot;</span>,
+            <span class="self">Self</span>::String =&gt; <span class="string">&quot;String&quot;</span>,
+            <span class="self">Self</span>::Symbol =&gt; <span class="string">&quot;Symbol&quot;</span>,
+            <span class="self">Self</span>::EmptyObject =&gt; <span class="string">&quot;{}&quot;</span>,
         }
     }
 
-    <span class="doccomment">/// Retrieves a diagnostic message from a [BannedType]</span>
-    <span class="kw">fn</span> <span class="ident">message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-			<span class="op">|</span> <span class="ident"><span class="self">Self</span>::BigInt</span>
-			<span class="op">|</span> <span class="ident"><span class="self">Self</span>::Boolean</span>
-			<span class="op">|</span> <span class="ident"><span class="self">Self</span>::Number</span>
-			<span class="op">|</span> <span class="ident"><span class="self">Self</span>::String</span>
-			<span class="op">|</span> <span class="ident"><span class="self">Self</span>::Symbol</span> =&gt; <span class="string">&quot;Use lowercase primitives for consistency.&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::Function</span> =&gt;
+    <span class="doccomment">/// Retrieves a diagnostic message from a [BannedType]
+    </span><span class="kw">fn </span>message(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+			| <span class="self">Self</span>::BigInt
+			| <span class="self">Self</span>::Boolean
+			| <span class="self">Self</span>::Number
+			| <span class="self">Self</span>::String
+			| <span class="self">Self</span>::Symbol =&gt; <span class="string">&quot;Use lowercase primitives for consistency.&quot;</span>,
+			<span class="self">Self</span>::Function =&gt;
 				<span class="string">&quot;Prefer explicitly define the function shape. This type accepts any function-like value, which can be a common source of bugs.&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::Object</span> =&gt;
+			<span class="self">Self</span>::Object =&gt;
 				<span class="string">&quot;Prefer explicitly define the object shape. This type means \&quot;any non-nullish value\&quot;, which is slightly better than &#39;unknown&#39;, but it&#39;s still a broad type.&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::EmptyObject</span> =&gt; <span class="string">&quot;Prefer explicitly define the object shape. &#39;{}&#39; means \&quot;any non-nullish value\&quot;.&quot;</span>,
+			<span class="self">Self</span>::EmptyObject =&gt; <span class="string">&quot;Prefer explicitly define the object shape. &#39;{}&#39; means \&quot;any non-nullish value\&quot;.&quot;</span>,
 		}
     }
 
-    <span class="doccomment">/// Converts a [BannedType] to a [JsSyntaxKind]</span>
-    <span class="kw">fn</span> <span class="ident">as_js_syntax_kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsSyntaxKind</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::BigInt</span> =&gt; <span class="ident">JsSyntaxKind::BIGINT_KW</span>,
-            <span class="ident"><span class="self">Self</span>::Boolean</span> =&gt; <span class="ident">JsSyntaxKind::BOOLEAN_KW</span>,
-            <span class="ident"><span class="self">Self</span>::Number</span> =&gt; <span class="ident">JsSyntaxKind::NUMBER_KW</span>,
-            <span class="ident"><span class="self">Self</span>::String</span> =&gt; <span class="ident">JsSyntaxKind::STRING_KW</span>,
-            <span class="ident"><span class="self">Self</span>::Symbol</span> =&gt; <span class="ident">JsSyntaxKind::SYMBOL_KW</span>,
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+    <span class="doccomment">/// Converts a [BannedType] to a [JsSyntaxKind]
+    </span><span class="kw">fn </span>as_js_syntax_kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;JsSyntaxKind&gt; {
+        <span class="prelude-val">Some</span>(<span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+            <span class="self">Self</span>::BigInt =&gt; JsSyntaxKind::BIGINT_KW,
+            <span class="self">Self</span>::Boolean =&gt; JsSyntaxKind::BOOLEAN_KW,
+            <span class="self">Self</span>::Number =&gt; JsSyntaxKind::NUMBER_KW,
+            <span class="self">Self</span>::String =&gt; JsSyntaxKind::STRING_KW,
+            <span class="self">Self</span>::Symbol =&gt; JsSyntaxKind::SYMBOL_KW,
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
         })
     }
 
-    <span class="doccomment">/// Retrieves a [JsReferenceIdentifier] from a [BannedType] that will be used to</span>
-    <span class="doccomment">/// replace it on the rule action</span>
-    <span class="kw">fn</span> <span class="ident">fix_with</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsReferenceIdentifier</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::BigInt</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Boolean</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Number</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::String</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Symbol</span> =&gt; {
-                <span class="ident">make::js_reference_identifier</span>(<span class="ident">make::token</span>(<span class="ident"><span class="self">Self</span>::as_js_syntax_kind</span>(<span class="self">self</span>)<span class="question-mark">?</span>))
+    <span class="doccomment">/// Retrieves a [JsReferenceIdentifier] from a [BannedType] that will be used to
+    /// replace it on the rule action
+    </span><span class="kw">fn </span>fix_with(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;JsReferenceIdentifier&gt; {
+        <span class="prelude-val">Some</span>(<span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+            <span class="self">Self</span>::BigInt | <span class="self">Self</span>::Boolean | <span class="self">Self</span>::Number | <span class="self">Self</span>::String | <span class="self">Self</span>::Symbol =&gt; {
+                make::js_reference_identifier(make::token(<span class="self">Self</span>::as_js_syntax_kind(<span class="self">self</span>)<span class="question-mark">?</span>))
             }
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
         })
     }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuleState</span> {
-    <span class="doccomment">/// Reference to the enum item containing the banned type.</span>
-    <span class="doccomment">/// Used for both diagnostic and action.</span>
-    <span class="ident">banned_type</span>: <span class="ident">BannedType</span>,
-    <span class="doccomment">/// Text range used to diagnostic the banned type.</span>
-    <span class="ident">banned_type_range</span>: <span class="ident">TextRange</span>,
-    <span class="doccomment">/// Reference to the node to be replaced in the action.</span>
-    <span class="doccomment">/// This is optional because we don&#39;t replace empty objects references.</span>
-    <span class="ident">reference_identifier</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsReferenceIdentifier</span><span class="op">&gt;</span>,
+<span class="kw">pub struct </span>RuleState {
+    <span class="doccomment">/// Reference to the enum item containing the banned type.
+    /// Used for both diagnostic and action.
+    </span>banned_type: BannedType,
+    <span class="doccomment">/// Text range used to diagnostic the banned type.
+    </span>banned_type_range: TextRange,
+    <span class="doccomment">/// Reference to the node to be replaced in the action.
+    /// This is optional because we don&#39;t replace empty objects references.
+    </span>reference_identifier: <span class="prelude-ty">Option</span>&lt;JsReferenceIdentifier&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">NoBannedTypes</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">TsBannedType</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> <span class="ident">RuleState</span>;
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>NoBannedTypes {
+    <span class="kw">type </span>Query = Ast&lt;TsBannedType&gt;;
+    <span class="kw">type </span>State = RuleState;
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::Signals</span> {
-        <span class="kw">let</span> <span class="ident">query</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="self">Self</span>::Signals {
+        <span class="kw">let </span>query = ctx.query();
 
-        <span class="kw">match</span> <span class="ident">query</span> {
-            <span class="ident">TsBannedType::TsObjectType</span>(<span class="ident">ts_object_type</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">ts_object_type</span>.<span class="ident">members</span>().<span class="ident">is_empty</span>() {
-                    <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(
-                        <span class="ident">ts_object_type</span>
-                            .<span class="ident">l_curly_token</span>()
-                            .<span class="ident">ok</span>()<span class="question-mark">?</span>
-                            .<span class="ident">text_trimmed_range</span>()
-                            .<span class="ident">start</span>(),
-                        <span class="ident">ts_object_type</span>
-                            .<span class="ident">r_curly_token</span>()
-                            .<span class="ident">ok</span>()<span class="question-mark">?</span>
-                            .<span class="ident">text_trimmed_range</span>()
-                            .<span class="ident">end</span>(),
+        <span class="kw">match </span>query {
+            TsBannedType::TsObjectType(ts_object_type) =&gt; {
+                <span class="kw">if </span>ts_object_type.members().is_empty() {
+                    <span class="kw">let </span>range = TextRange::new(
+                        ts_object_type
+                            .l_curly_token()
+                            .ok()<span class="question-mark">?
+                            </span>.text_trimmed_range()
+                            .start(),
+                        ts_object_type
+                            .r_curly_token()
+                            .ok()<span class="question-mark">?
+                            </span>.text_trimmed_range()
+                            .end(),
                     );
 
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">RuleState</span> {
-                        <span class="ident">banned_type</span>: <span class="ident">BannedType::EmptyObject</span>,
-                        <span class="ident">banned_type_range</span>: <span class="ident">range</span>,
-                        <span class="ident">reference_identifier</span>: <span class="prelude-val">None</span>,
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(RuleState {
+                        banned_type: BannedType::EmptyObject,
+                        banned_type_range: range,
+                        reference_identifier: <span class="prelude-val">None</span>,
                     });
                 }
             }
-            <span class="ident">TsBannedType::TsReferenceType</span>(<span class="ident">ts_reference_type</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">ts_any_name</span> <span class="op">=</span> <span class="ident">ts_reference_type</span>.<span class="ident">name</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">reference_identifier</span> <span class="op">=</span> <span class="ident">ts_any_name</span>.<span class="ident">as_js_reference_identifier</span>()<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">identifier_token</span> <span class="op">=</span> <span class="ident">reference_identifier</span>.<span class="ident">value_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
+            TsBannedType::TsReferenceType(ts_reference_type) =&gt; {
+                <span class="kw">let </span>ts_any_name = ts_reference_type.name().ok()<span class="question-mark">?</span>;
+                <span class="kw">let </span>reference_identifier = ts_any_name.as_js_reference_identifier()<span class="question-mark">?</span>;
+                <span class="kw">let </span>identifier_token = reference_identifier.value_token().ok()<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">banned_type</span>) <span class="op">=</span> <span class="ident">BannedType::from_str</span>(<span class="ident">identifier_token</span>.<span class="ident">text_trimmed</span>()) {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">RuleState</span> {
-                        <span class="ident">banned_type</span>,
-                        <span class="ident">banned_type_range</span>: <span class="ident">identifier_token</span>.<span class="ident">text_trimmed_range</span>(),
-                        <span class="ident">reference_identifier</span>: <span class="prelude-val">Some</span>(<span class="ident">reference_identifier</span>.<span class="ident">clone</span>()),
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(banned_type) = BannedType::from_str(identifier_token.text_trimmed()) {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(RuleState {
+                        banned_type,
+                        banned_type_range: identifier_token.text_trimmed_range(),
+                        reference_identifier: <span class="prelude-val">Some</span>(reference_identifier.clone()),
                     });
                 }
             }
         }
 
-        <span class="prelude-val">None</span>
-    }
+        <span class="prelude-val">None
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(
-        <span class="ident">_ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
-        <span class="ident">RuleState</span> {
-            <span class="ident">banned_type</span>,
-            <span class="ident">banned_type_range</span>,
+    <span class="kw">fn </span>diagnostic(
+        _ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;,
+        RuleState {
+            banned_type,
+            banned_type_range,
             ..
-        }: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">RuleDiagnostic::new</span>(
+        }: <span class="kw-2">&amp;</span><span class="self">Self</span>::State,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>diagnostic = RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">banned_type_range</span>,
-            <span class="macro">markup!</span> {<span class="string">&quot;Don&#39;t use &#39;&quot;</span>{<span class="ident">banned_type</span>.<span class="ident">as_str</span>()}<span class="string">&quot;&#39; as a type.&quot;</span>}.<span class="ident">to_owned</span>(),
+            banned_type_range,
+            <span class="macro">markup! </span>{<span class="string">&quot;Don&#39;t use &#39;&quot;</span>{banned_type.as_str()}<span class="string">&quot;&#39; as a type.&quot;</span>}.to_owned(),
         )
-        .<span class="ident">note</span>(<span class="macro">markup!</span> { {<span class="ident">banned_type</span>.<span class="ident">message</span>()} }.<span class="ident">to_owned</span>());
+        .note(<span class="macro">markup! </span>{ {banned_type.message()} }.to_owned());
 
-        <span class="prelude-val">Some</span>(<span class="ident">diagnostic</span>)
+        <span class="prelude-val">Some</span>(diagnostic)
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(
-        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
-        <span class="ident">RuleState</span> {
-            <span class="ident">banned_type</span>,
-            <span class="ident">reference_identifier</span>,
+    <span class="kw">fn </span>action(
+        ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;,
+        RuleState {
+            banned_type,
+            reference_identifier,
             ..
-        }: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
-        <span class="kw">let</span> <span class="ident">suggested_type</span> <span class="op">=</span> <span class="ident">banned_type</span>.<span class="ident">as_js_syntax_kind</span>()<span class="question-mark">?</span>.<span class="ident">to_string</span>()<span class="question-mark">?</span>;
+        }: <span class="kw-2">&amp;</span><span class="self">Self</span>::State,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
+        <span class="kw">let </span>suggested_type = banned_type.as_js_syntax_kind()<span class="question-mark">?</span>.to_string()<span class="question-mark">?</span>;
 
-        <span class="ident">mutation</span>.<span class="ident">replace_node</span>(<span class="ident">reference_identifier</span>.<span class="ident">clone</span>()<span class="question-mark">?</span>, <span class="ident">banned_type</span>.<span class="ident">fix_with</span>()<span class="question-mark">?</span>);
+        mutation.replace_node(reference_identifier.clone()<span class="question-mark">?</span>, banned_type.fix_with()<span class="question-mark">?</span>);
 
-        <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-            <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
-            <span class="ident">applicability</span>: <span class="ident">Applicability::Always</span>,
-            <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;Use &#39;&quot;</span>{<span class="ident">suggested_type</span>}<span class="string">&quot;&#39; instead&quot;</span> }.<span class="ident">to_owned</span>(),
-            <span class="ident">mutation</span>,
+        <span class="prelude-val">Some</span>(JsRuleAction {
+            category: ActionCategory::QuickFix,
+            applicability: Applicability::Always,
+            message: <span class="macro">markup! </span>{ <span class="string">&quot;Use &#39;&quot;</span>{suggested_type}<span class="string">&quot;&#39; instead&quot; </span>}.to_owned(),
+            mutation,
         })
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

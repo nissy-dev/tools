@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/ast/mutation.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mutation.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/ast/mutation.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mutation.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -226,233 +226,233 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::ops</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::ops;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">AstNode</span>, <span class="ident">AstNodeList</span>, <span class="ident">AstSeparatedList</span>, <span class="ident">SyntaxToken</span>};
+<span class="kw">use crate</span>::{AstNode, AstNodeList, AstSeparatedList, SyntaxToken};
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AstNodeExt</span>: <span class="ident">AstNode</span> {
-    <span class="doccomment">/// Return a new version of this node with the node `prev_node` replaced with `next_node`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `prev_node` can be a direct child of this node, or an indirect child through any descendant node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `None` if `prev_node` is not a descendant of this node</span>
-    <span class="kw">fn</span> <span class="ident">replace_node_discard_trivia</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">prev_node</span>: <span class="ident">N</span>, <span class="ident">next_node</span>: <span class="ident">N</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">N</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        <span class="self">Self</span>: <span class="ident">Sized</span>;
+<span class="kw">pub trait </span>AstNodeExt: AstNode {
+    <span class="doccomment">/// Return a new version of this node with the node `prev_node` replaced with `next_node`
+    ///
+    /// `prev_node` can be a direct child of this node, or an indirect child through any descendant node
+    ///
+    /// Returns `None` if `prev_node` is not a descendant of this node
+    </span><span class="kw">fn </span>replace_node_discard_trivia&lt;N&gt;(<span class="self">self</span>, prev_node: N, next_node: N) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>N: AstNode&lt;Language = <span class="self">Self</span>::Language&gt;,
+        <span class="self">Self</span>: Sized;
 
-    <span class="doccomment">/// Return a new version of this node with the node `prev_node` replaced with `next_node`,</span>
-    <span class="doccomment">/// transfering the leading and trailing trivia of `prev_node` to `next_node`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `prev_node` can be a direct child of this node, or an indirect child through any descendant node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `None` if `prev_node` is not a descendant of this node</span>
-    <span class="kw">fn</span> <span class="ident">replace_node</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">prev_node</span>: <span class="ident">N</span>, <span class="ident">next_node</span>: <span class="ident">N</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">N</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        <span class="self">Self</span>: <span class="ident">Sized</span>;
+    <span class="doccomment">/// Return a new version of this node with the node `prev_node` replaced with `next_node`,
+    /// transfering the leading and trailing trivia of `prev_node` to `next_node`
+    ///
+    /// `prev_node` can be a direct child of this node, or an indirect child through any descendant node
+    ///
+    /// Returns `None` if `prev_node` is not a descendant of this node
+    </span><span class="kw">fn </span>replace_node&lt;N&gt;(<span class="self">self</span>, prev_node: N, next_node: N) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>N: AstNode&lt;Language = <span class="self">Self</span>::Language&gt;,
+        <span class="self">Self</span>: Sized;
 
-    <span class="doccomment">/// Return a new version of this node with the token `prev_token` replaced with `next_token`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `prev_token` can be a direct child of this node, or an indirect child through any descendant node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `None` if `prev_token` is not a descendant of this node</span>
-    <span class="kw">fn</span> <span class="ident">replace_token_discard_trivia</span>(
+    <span class="doccomment">/// Return a new version of this node with the token `prev_token` replaced with `next_token`
+    ///
+    /// `prev_token` can be a direct child of this node, or an indirect child through any descendant node
+    ///
+    /// Returns `None` if `prev_token` is not a descendant of this node
+    </span><span class="kw">fn </span>replace_token_discard_trivia(
         <span class="self">self</span>,
-        <span class="ident">prev_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        <span class="ident">next_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>;
+        prev_token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+        next_token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized;
 
-    <span class="doccomment">/// Return a new version of this node with the token `prev_token` replaced with `next_token`,</span>
-    <span class="doccomment">/// transfering the leading and trailing trivia of `prev_token` to `next_token`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `prev_token` can be a direct child of this node, or an indirect child through any descendant node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `None` if `prev_token` is not a descendant of this node</span>
-    <span class="kw">fn</span> <span class="ident">replace_token</span>(
+    <span class="doccomment">/// Return a new version of this node with the token `prev_token` replaced with `next_token`,
+    /// transfering the leading and trailing trivia of `prev_token` to `next_token`
+    ///
+    /// `prev_token` can be a direct child of this node, or an indirect child through any descendant node
+    ///
+    /// Returns `None` if `prev_token` is not a descendant of this node
+    </span><span class="kw">fn </span>replace_token(
         <span class="self">self</span>,
-        <span class="ident">prev_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        <span class="ident">next_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>;
+        prev_token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+        next_token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized;
 
-    <span class="kw">fn</span> <span class="ident">detach</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span>;
+    <span class="kw">fn </span>detach(<span class="self">self</span>) -&gt; <span class="self">Self</span>;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AstNodeExt</span> <span class="kw">for</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">AstNode</span>,
+<span class="kw">impl</span>&lt;T&gt; AstNodeExt <span class="kw">for </span>T
+<span class="kw">where
+    </span>T: AstNode,
 {
-    <span class="kw">fn</span> <span class="ident">replace_node_discard_trivia</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">prev_node</span>: <span class="ident">N</span>, <span class="ident">next_node</span>: <span class="ident">N</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">N</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="kw">fn </span>replace_node_discard_trivia&lt;N&gt;(<span class="self">self</span>, prev_node: N, next_node: N) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>N: AstNode&lt;Language = <span class="self">Self</span>::Language&gt;,
+        <span class="self">Self</span>: Sized,
     {
-        <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::unwrap_cast</span>(<span class="self">self</span>.<span class="ident">into_syntax</span>().<span class="ident">replace_child</span>(
-            <span class="ident">prev_node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
-            <span class="ident">next_node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>(),
+        <span class="prelude-val">Some</span>(<span class="self">Self</span>::unwrap_cast(<span class="self">self</span>.into_syntax().replace_child(
+            prev_node.into_syntax().into(),
+            next_node.into_syntax().into(),
         )<span class="question-mark">?</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">replace_node</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">prev_node</span>: <span class="ident">N</span>, <span class="kw-2">mut</span> <span class="ident">next_node</span>: <span class="ident">N</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">N</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="kw">fn </span>replace_node&lt;N&gt;(<span class="self">self</span>, prev_node: N, <span class="kw-2">mut </span>next_node: N) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>N: AstNode&lt;Language = <span class="self">Self</span>::Language&gt;,
+        <span class="self">Self</span>: Sized,
     {
-        <span class="comment">// Lookup the first token of `prev_node` and `next_node`, and transfer the leading</span>
-        <span class="comment">// trivia of the former to the later</span>
-        <span class="kw">let</span> <span class="ident">prev_first</span> <span class="op">=</span> <span class="ident">prev_node</span>.<span class="ident">syntax</span>().<span class="ident">first_token</span>();
-        <span class="kw">let</span> <span class="ident">next_first</span> <span class="op">=</span> <span class="ident">next_node</span>.<span class="ident">syntax</span>().<span class="ident">first_token</span>();
+        <span class="comment">// Lookup the first token of `prev_node` and `next_node`, and transfer the leading
+        // trivia of the former to the later
+        </span><span class="kw">let </span>prev_first = prev_node.syntax().first_token();
+        <span class="kw">let </span>next_first = next_node.syntax().first_token();
 
-        <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">prev_first</span>), <span class="prelude-val">Some</span>(<span class="ident">next_first</span>)) <span class="op">=</span> (<span class="ident">prev_first</span>, <span class="ident">next_first</span>) {
-            <span class="kw">let</span> <span class="ident">pieces</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">prev_first</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>().<span class="ident">collect</span>();
+        <span class="kw">if let </span>(<span class="prelude-val">Some</span>(prev_first), <span class="prelude-val">Some</span>(next_first)) = (prev_first, next_first) {
+            <span class="kw">let </span>pieces: Vec&lt;<span class="kw">_</span>&gt; = prev_first.leading_trivia().pieces().collect();
 
-            <span class="ident">next_node</span> <span class="op">=</span> <span class="ident">next_node</span>.<span class="ident">replace_token_discard_trivia</span>(
-                <span class="ident">next_first</span>.<span class="ident">clone</span>(),
-                <span class="ident">next_first</span>
-                    .<span class="ident">with_leading_trivia</span>(<span class="ident">pieces</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> (<span class="ident">piece</span>.<span class="ident">kind</span>(), <span class="ident">piece</span>.<span class="ident">text</span>()))),
+            next_node = next_node.replace_token_discard_trivia(
+                next_first.clone(),
+                next_first
+                    .with_leading_trivia(pieces.iter().map(|piece| (piece.kind(), piece.text()))),
             )<span class="question-mark">?</span>;
         }
 
-        <span class="comment">// Lookup the last token of `prev_node` and `next_node`, and transfer the trailing</span>
-        <span class="comment">// trivia of the former to the later</span>
-        <span class="kw">let</span> <span class="ident">prev_last</span> <span class="op">=</span> <span class="ident">prev_node</span>.<span class="ident">syntax</span>().<span class="ident">last_token</span>();
-        <span class="kw">let</span> <span class="ident">next_last</span> <span class="op">=</span> <span class="ident">next_node</span>.<span class="ident">syntax</span>().<span class="ident">last_token</span>();
+        <span class="comment">// Lookup the last token of `prev_node` and `next_node`, and transfer the trailing
+        // trivia of the former to the later
+        </span><span class="kw">let </span>prev_last = prev_node.syntax().last_token();
+        <span class="kw">let </span>next_last = next_node.syntax().last_token();
 
-        <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">prev_last</span>), <span class="prelude-val">Some</span>(<span class="ident">next_last</span>)) <span class="op">=</span> (<span class="ident">prev_last</span>, <span class="ident">next_last</span>) {
-            <span class="ident">next_node</span> <span class="op">=</span> <span class="ident">next_node</span>.<span class="ident">replace_token_discard_trivia</span>(
-                <span class="ident">next_last</span>.<span class="ident">clone</span>(),
-                <span class="ident">next_last</span>.<span class="ident">with_trailing_trivia_pieces</span>(<span class="ident">prev_last</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>()),
+        <span class="kw">if let </span>(<span class="prelude-val">Some</span>(prev_last), <span class="prelude-val">Some</span>(next_last)) = (prev_last, next_last) {
+            next_node = next_node.replace_token_discard_trivia(
+                next_last.clone(),
+                next_last.with_trailing_trivia_pieces(prev_last.trailing_trivia().pieces()),
             )<span class="question-mark">?</span>;
         }
 
-        <span class="comment">// Call replace node with the modified `next_node`</span>
-        <span class="self">self</span>.<span class="ident">replace_node_discard_trivia</span>(<span class="ident">prev_node</span>, <span class="ident">next_node</span>)
+        <span class="comment">// Call replace node with the modified `next_node`
+        </span><span class="self">self</span>.replace_node_discard_trivia(prev_node, next_node)
     }
 
-    <span class="kw">fn</span> <span class="ident">replace_token_discard_trivia</span>(
+    <span class="kw">fn </span>replace_token_discard_trivia(
         <span class="self">self</span>,
-        <span class="ident">prev_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        <span class="ident">next_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+        prev_token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+        next_token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::unwrap_cast</span>(
-            <span class="self">self</span>.<span class="ident">into_syntax</span>()
-                .<span class="ident">replace_child</span>(<span class="ident">prev_token</span>.<span class="ident">into</span>(), <span class="ident">next_token</span>.<span class="ident">into</span>())<span class="question-mark">?</span>,
+        <span class="prelude-val">Some</span>(<span class="self">Self</span>::unwrap_cast(
+            <span class="self">self</span>.into_syntax()
+                .replace_child(prev_token.into(), next_token.into())<span class="question-mark">?</span>,
         ))
     }
 
-    <span class="kw">fn</span> <span class="ident">replace_token</span>(
+    <span class="kw">fn </span>replace_token(
         <span class="self">self</span>,
-        <span class="ident">prev_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-        <span class="ident">next_token</span>: <span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Language</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+        prev_token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+        next_token: SyntaxToken&lt;<span class="self">Self</span>::Language&gt;,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="kw">let</span> <span class="ident">leading_trivia</span> <span class="op">=</span> <span class="ident">prev_token</span>.<span class="ident">leading_trivia</span>().<span class="ident">pieces</span>();
-        <span class="kw">let</span> <span class="ident">trailing_trivia</span> <span class="op">=</span> <span class="ident">prev_token</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>();
+        <span class="kw">let </span>leading_trivia = prev_token.leading_trivia().pieces();
+        <span class="kw">let </span>trailing_trivia = prev_token.trailing_trivia().pieces();
 
-        <span class="self">self</span>.<span class="ident">replace_token_discard_trivia</span>(
-            <span class="ident">prev_token</span>,
-            <span class="ident">next_token</span>
-                .<span class="ident">with_leading_trivia_pieces</span>(<span class="ident">leading_trivia</span>)
-                .<span class="ident">with_trailing_trivia_pieces</span>(<span class="ident">trailing_trivia</span>),
+        <span class="self">self</span>.replace_token_discard_trivia(
+            prev_token,
+            next_token
+                .with_leading_trivia_pieces(leading_trivia)
+                .with_trailing_trivia_pieces(trailing_trivia),
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">detach</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::unwrap_cast</span>(<span class="self">self</span>.<span class="ident">into_syntax</span>().<span class="ident">detach</span>())
+    <span class="kw">fn </span>detach(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::unwrap_cast(<span class="self">self</span>.into_syntax().detach())
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AstNodeListExt</span>: <span class="ident">AstNodeList</span> {
-    <span class="doccomment">/// Replace a range of the children of this list with the content of an iterator</span>
-    <span class="kw">fn</span> <span class="ident">splice</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">range</span>: <span class="ident">R</span>, <span class="ident">replace_with</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">AstNodeList</span><span class="op">&gt;</span><span class="ident">::Language</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span>,
-        <span class="ident">R</span>: <span class="ident">ops::RangeBounds</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Node</span><span class="op">&gt;</span>;
+<span class="kw">pub trait </span>AstNodeListExt: AstNodeList {
+    <span class="doccomment">/// Replace a range of the children of this list with the content of an iterator
+    </span><span class="kw">fn </span>splice&lt;R, I&gt;(<span class="self">self</span>, range: R, replace_with: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span><span class="self">Self</span>: AstNode&lt;Language = &lt;<span class="self">Self </span><span class="kw">as </span>AstNodeList&gt;::Language&gt; + Sized,
+        R: ops::RangeBounds&lt;usize&gt;,
+        I: IntoIterator&lt;Item = <span class="self">Self</span>::Node&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AstNodeListExt</span> <span class="kw">for</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">AstNodeList</span>,
+<span class="kw">impl</span>&lt;T&gt; AstNodeListExt <span class="kw">for </span>T
+<span class="kw">where
+    </span>T: AstNodeList,
 {
-    <span class="kw">fn</span> <span class="ident">splice</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">range</span>: <span class="ident">R</span>, <span class="ident">replace_with</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">AstNodeList</span><span class="op">&gt;</span><span class="ident">::Language</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span>,
-        <span class="ident">R</span>: <span class="ident">ops::RangeBounds</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Node</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>splice&lt;R, I&gt;(<span class="self">self</span>, range: R, replace_with: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span><span class="self">Self</span>: AstNode&lt;Language = &lt;<span class="self">Self </span><span class="kw">as </span>AstNodeList&gt;::Language&gt; + Sized,
+        R: ops::RangeBounds&lt;usize&gt;,
+        I: IntoIterator&lt;Item = <span class="self">Self</span>::Node&gt;,
     {
-        <span class="ident"><span class="self">Self</span>::unwrap_cast</span>(
-            <span class="self">self</span>.<span class="ident">into_syntax_list</span>().<span class="ident">into_node</span>().<span class="ident">splice_slots</span>(
-                <span class="ident">range</span>,
-                <span class="ident">replace_with</span>
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>())),
+        <span class="self">Self</span>::unwrap_cast(
+            <span class="self">self</span>.into_syntax_list().into_node().splice_slots(
+                range,
+                replace_with
+                    .into_iter()
+                    .map(|node| <span class="prelude-val">Some</span>(node.into_syntax().into())),
             ),
         )
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AstSeparatedListExt</span>: <span class="ident">AstSeparatedList</span> {
-    <span class="doccomment">/// Replace a range of the children of this list with the content of an iterator</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Both the range and iterator work on pairs of node and separator token</span>
-    <span class="kw">fn</span> <span class="ident">splice</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">range</span>: <span class="ident">R</span>, <span class="ident">replace_with</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">AstSeparatedList</span><span class="op">&gt;</span><span class="ident">::Language</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span>,
-        <span class="ident">R</span>: <span class="ident">ops::RangeBounds</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span>
-            <span class="ident">Item</span> <span class="op">=</span> (
-                <span class="ident"><span class="self">Self</span>::Node</span>,
-                <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">AstSeparatedList</span><span class="op">&gt;</span><span class="ident">::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">pub trait </span>AstSeparatedListExt: AstSeparatedList {
+    <span class="doccomment">/// Replace a range of the children of this list with the content of an iterator
+    ///
+    /// Both the range and iterator work on pairs of node and separator token
+    </span><span class="kw">fn </span>splice&lt;R, I&gt;(<span class="self">self</span>, range: R, replace_with: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span><span class="self">Self</span>: AstNode&lt;Language = &lt;<span class="self">Self </span><span class="kw">as </span>AstSeparatedList&gt;::Language&gt; + Sized,
+        R: ops::RangeBounds&lt;usize&gt;,
+        I: IntoIterator&lt;
+            Item = (
+                <span class="self">Self</span>::Node,
+                <span class="prelude-ty">Option</span>&lt;SyntaxToken&lt;&lt;<span class="self">Self </span><span class="kw">as </span>AstSeparatedList&gt;::Language&gt;&gt;,
             ),
-        <span class="op">&gt;</span>;
+        &gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AstSeparatedListExt</span> <span class="kw">for</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">AstSeparatedList</span>,
+<span class="kw">impl</span>&lt;T&gt; AstSeparatedListExt <span class="kw">for </span>T
+<span class="kw">where
+    </span>T: AstSeparatedList,
 {
-    <span class="kw">fn</span> <span class="ident">splice</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">range</span>: <span class="ident">R</span>, <span class="ident">replace_with</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">AstNode</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">AstSeparatedList</span><span class="op">&gt;</span><span class="ident">::Language</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span>,
-        <span class="ident">R</span>: <span class="ident">ops::RangeBounds</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span>
-            <span class="ident">Item</span> <span class="op">=</span> (
-                <span class="ident"><span class="self">Self</span>::Node</span>,
-                <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxToken</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">AstSeparatedList</span><span class="op">&gt;</span><span class="ident">::Language</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>splice&lt;R, I&gt;(<span class="self">self</span>, range: R, replace_with: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span><span class="self">Self</span>: AstNode&lt;Language = &lt;<span class="self">Self </span><span class="kw">as </span>AstSeparatedList&gt;::Language&gt; + Sized,
+        R: ops::RangeBounds&lt;usize&gt;,
+        I: IntoIterator&lt;
+            Item = (
+                <span class="self">Self</span>::Node,
+                <span class="prelude-ty">Option</span>&lt;SyntaxToken&lt;&lt;<span class="self">Self </span><span class="kw">as </span>AstSeparatedList&gt;::Language&gt;&gt;,
             ),
-        <span class="op">&gt;</span>,
+        &gt;,
     {
-        <span class="kw">let</span> <span class="ident">start_bound</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">start_bound</span>() {
-            <span class="ident">ops::Bound::Included</span>(<span class="ident">index</span>) =&gt; <span class="ident">ops::Bound::Included</span>(<span class="kw-2">*</span><span class="ident">index</span> <span class="op">*</span> <span class="number">2</span>),
-            <span class="ident">ops::Bound::Excluded</span>(<span class="ident">index</span>) =&gt; <span class="ident">ops::Bound::Excluded</span>(<span class="kw-2">*</span><span class="ident">index</span> <span class="op">*</span> <span class="number">2</span>),
-            <span class="ident">ops::Bound::Unbounded</span> =&gt; <span class="ident">ops::Bound::Unbounded</span>,
+        <span class="kw">let </span>start_bound = <span class="kw">match </span>range.start_bound() {
+            ops::Bound::Included(index) =&gt; ops::Bound::Included(<span class="kw-2">*</span>index * <span class="number">2</span>),
+            ops::Bound::Excluded(index) =&gt; ops::Bound::Excluded(<span class="kw-2">*</span>index * <span class="number">2</span>),
+            ops::Bound::Unbounded =&gt; ops::Bound::Unbounded,
         };
-        <span class="kw">let</span> <span class="ident">end_bound</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">end_bound</span>() {
-            <span class="ident">ops::Bound::Included</span>(<span class="ident">index</span>) =&gt; <span class="ident">ops::Bound::Included</span>(<span class="kw-2">*</span><span class="ident">index</span> <span class="op">*</span> <span class="number">2</span>),
-            <span class="ident">ops::Bound::Excluded</span>(<span class="ident">index</span>) =&gt; <span class="ident">ops::Bound::Excluded</span>(<span class="kw-2">*</span><span class="ident">index</span> <span class="op">*</span> <span class="number">2</span>),
-            <span class="ident">ops::Bound::Unbounded</span> =&gt; <span class="ident">ops::Bound::Unbounded</span>,
+        <span class="kw">let </span>end_bound = <span class="kw">match </span>range.end_bound() {
+            ops::Bound::Included(index) =&gt; ops::Bound::Included(<span class="kw-2">*</span>index * <span class="number">2</span>),
+            ops::Bound::Excluded(index) =&gt; ops::Bound::Excluded(<span class="kw-2">*</span>index * <span class="number">2</span>),
+            ops::Bound::Unbounded =&gt; ops::Bound::Unbounded,
         };
 
-        <span class="ident"><span class="self">Self</span>::unwrap_cast</span>(<span class="self">self</span>.<span class="ident">into_syntax_list</span>().<span class="ident">into_node</span>().<span class="ident">splice_slots</span>(
-            (<span class="ident">start_bound</span>, <span class="ident">end_bound</span>),
-            <span class="ident">replace_with</span>.<span class="ident">into_iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span>(<span class="ident">node</span>, <span class="ident">separator</span>)<span class="op">|</span> {
+        <span class="self">Self</span>::unwrap_cast(<span class="self">self</span>.into_syntax_list().into_node().splice_slots(
+            (start_bound, end_bound),
+            replace_with.into_iter().flat_map(|(node, separator)| {
                 [
-                    <span class="prelude-val">Some</span>(<span class="ident">node</span>.<span class="ident">into_syntax</span>().<span class="ident">into</span>()),
-                    <span class="ident">separator</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident">token</span>.<span class="ident">into</span>()),
+                    <span class="prelude-val">Some</span>(node.into_syntax().into()),
+                    separator.map(|token| token.into()),
                 ]
             }),
         ))
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/workspace.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>workspace.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_service/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/workspace.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>workspace.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_service/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -511,518 +511,518 @@
 <span id="511">511</span>
 <span id="512">512</span>
 <span id="513">513</span>
-</pre><pre class="rust"><code><span class="doccomment">//! The [Workspace] is the main entry point for high-level clients (the Rome</span>
-<span class="doccomment">//! CLI and Language Server) into the various language-specific services of the</span>
-<span class="doccomment">//! Rome toolchain (parser, formatter, analyzer ...)</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Documents</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A [Workspace] instance operates on a set of open documents managed by one</span>
-<span class="doccomment">//! or multiple clients, and provides language services for these documents</span>
-<span class="doccomment">//! like diagnostics, code actions or formatting in a language independent way.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! In this regard the [Workspace] trait shares many similarities with the</span>
-<span class="doccomment">//! Language Server Protocol, and in the context of the Language Server the</span>
-<span class="doccomment">//! state of the [Workspace] instance is intended to closely mirror the state</span>
-<span class="doccomment">//! of the actual in-editor workspace (the set of documents open in the</span>
-<span class="doccomment">//! [Workspace] is the set of files currently open in the editor)</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! In the context of the CLI most commands will generally work on batches of</span>
-<span class="doccomment">//! files, and as such the set of &quot;open documents&quot; instead corresponds to the</span>
-<span class="doccomment">//! list of files the CLI is currently actively processing</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # State</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A [Workspace] instance is stateful: this is not reflected on the trait (all</span>
-<span class="doccomment">//! methods take an immutable `&amp;self` borrow) because the interface is also</span>
-<span class="doccomment">//! required to be thread-safe ([Send] + [Sync]), but the workspace is allowed</span>
-<span class="doccomment">//! to internally cache data across calls (this is in fact the main reason for</span>
-<span class="doccomment">//! the use of the &quot;open documents&quot; set, those documents can serve as</span>
-<span class="doccomment">//! conceptual garbage collection roots to manage the caching and eviction of</span>
-<span class="doccomment">//! parse trees, intermediate analysis data or diagnostics)</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Implementations</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Currently the [Workspace] trait is implemented for a single `WorkspaceServer`</span>
-<span class="doccomment">//! type. However it is eventually intended to also be implemented for a</span>
-<span class="doccomment">//! potential `WorkspaceClient` type and to operate on a remote workspace</span>
-<span class="doccomment">//! server through a transport layer. This would allow the CLI and Language</span>
-<span class="doccomment">//! Server process to share a the same [Workspace] instance in a common daemon</span>
-<span class="doccomment">//! process for instance</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Errors</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Because of the aforementioned client-server abstraction, the [Workspace]</span>
-<span class="doccomment">//! is designed to let any operation fail: all methods return a [Result] with a</span>
-<span class="doccomment">//! [RomeError] enum wrapping the underlying issue. Some common errors are:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! - [RomeError::NotFound]: This error is returned when an operation is being</span>
-<span class="doccomment">//! run on a path that doesn&#39;t correspond to any open document: either the</span>
-<span class="doccomment">//! document has been closed or the client didn&#39;t open it in the first place</span>
-<span class="doccomment">//! - [RomeError::SourceFileNotSupported]: This error is returned when an</span>
-<span class="doccomment">//! operation could not be completed because the language associated with the</span>
-<span class="doccomment">//! document does not implement the required capability: for instance trying to</span>
-<span class="doccomment">//! format a file with a language that does not have a formatter</span>
+</pre><pre class="rust"><code><span class="doccomment">//! The [Workspace] is the main entry point for high-level clients (the Rome
+//! CLI and Language Server) into the various language-specific services of the
+//! Rome toolchain (parser, formatter, analyzer ...)
+//!
+//! # Documents
+//!
+//! A [Workspace] instance operates on a set of open documents managed by one
+//! or multiple clients, and provides language services for these documents
+//! like diagnostics, code actions or formatting in a language independent way.
+//!
+//! In this regard the [Workspace] trait shares many similarities with the
+//! Language Server Protocol, and in the context of the Language Server the
+//! state of the [Workspace] instance is intended to closely mirror the state
+//! of the actual in-editor workspace (the set of documents open in the
+//! [Workspace] is the set of files currently open in the editor)
+//!
+//! In the context of the CLI most commands will generally work on batches of
+//! files, and as such the set of &quot;open documents&quot; instead corresponds to the
+//! list of files the CLI is currently actively processing
+//!
+//! # State
+//!
+//! A [Workspace] instance is stateful: this is not reflected on the trait (all
+//! methods take an immutable `&amp;self` borrow) because the interface is also
+//! required to be thread-safe ([Send] + [Sync]), but the workspace is allowed
+//! to internally cache data across calls (this is in fact the main reason for
+//! the use of the &quot;open documents&quot; set, those documents can serve as
+//! conceptual garbage collection roots to manage the caching and eviction of
+//! parse trees, intermediate analysis data or diagnostics)
+//!
+//! # Implementations
+//!
+//! Currently the [Workspace] trait is implemented for a single `WorkspaceServer`
+//! type. However it is eventually intended to also be implemented for a
+//! potential `WorkspaceClient` type and to operate on a remote workspace
+//! server through a transport layer. This would allow the CLI and Language
+//! Server process to share a the same [Workspace] instance in a common daemon
+//! process for instance
+//!
+//! # Errors
+//!
+//! Because of the aforementioned client-server abstraction, the [Workspace]
+//! is designed to let any operation fail: all methods return a [Result] with a
+//! [RomeError] enum wrapping the underlying issue. Some common errors are:
+//!
+//! - [RomeError::NotFound]: This error is returned when an operation is being
+//! run on a path that doesn&#39;t correspond to any open document: either the
+//! document has been closed or the client didn&#39;t open it in the first place
+//! - [RomeError::SourceFileNotSupported]: This error is returned when an
+//! operation could not be completed because the language associated with the
+//! document does not implement the required capability: for instance trying to
+//! format a file with a language that does not have a formatter
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Configuration</span>, <span class="ident">Deserialize</span>, <span class="ident">RomeError</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">rome_analyze::ActionCategory</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">rome_analyze::RuleCategories</span>;
-<span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">markup</span>, <span class="ident">Markup</span>, <span class="ident">MarkupBuf</span>};
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">v2</span>, <span class="ident">CodeSuggestion</span>};
-<span class="kw">use</span> <span class="ident">rome_formatter::Printed</span>;
-<span class="kw">use</span> <span class="ident">rome_fs::RomePath</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-<span class="kw">use</span> <span class="ident">rome_text_edit::TextEdit</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">panic::RefUnwindSafe</span>, <span class="ident">sync::Arc</span>};
+</span><span class="kw">use crate</span>::{Configuration, Deserialize, RomeError, Serialize};
+<span class="kw">use </span>rome_analyze::ActionCategory;
+<span class="kw">pub use </span>rome_analyze::RuleCategories;
+<span class="kw">use </span>rome_console::{markup, Markup, MarkupBuf};
+<span class="kw">use </span>rome_diagnostics::{v2, CodeSuggestion};
+<span class="kw">use </span>rome_formatter::Printed;
+<span class="kw">use </span>rome_fs::RomePath;
+<span class="kw">use </span>rome_js_syntax::{TextRange, TextSize};
+<span class="kw">use </span>rome_text_edit::TextEdit;
+<span class="kw">use </span>std::{borrow::Cow, panic::RefUnwindSafe, sync::Arc};
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::client</span>::{<span class="ident">TransportRequest</span>, <span class="ident">WorkspaceClient</span>, <span class="ident">WorkspaceTransport</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::file_handlers::Language</span>;
+<span class="kw">pub use </span><span class="self">self</span>::client::{TransportRequest, WorkspaceClient, WorkspaceTransport};
+<span class="kw">pub use </span><span class="kw">crate</span>::file_handlers::Language;
 
-<span class="kw">mod</span> <span class="ident">client</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">server</span>;
+<span class="kw">mod </span>client;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>server;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SupportsFeatureParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">feature</span>: <span class="ident">FeatureName</span>,
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>SupportsFeatureParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>feature: FeatureName,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>, <span class="ident">Default</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SupportsFeatureResult</span> {
-    <span class="kw">pub</span> <span class="ident">reason</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UnsupportedReason</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize, Default)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>SupportsFeatureResult {
+    <span class="kw">pub </span>reason: <span class="prelude-ty">Option</span>&lt;UnsupportedReason&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">SupportsFeatureResult</span> {
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">ignored</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">reason</span>: <span class="prelude-val">Some</span>(<span class="ident">UnsupportedReason::Ignored</span>),
+<span class="kw">impl </span>SupportsFeatureResult {
+    <span class="kw">const fn </span>ignored() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            reason: <span class="prelude-val">Some</span>(UnsupportedReason::Ignored),
         }
     }
 
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">disabled</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">reason</span>: <span class="prelude-val">Some</span>(<span class="ident">UnsupportedReason::FeatureNotEnabled</span>),
+    <span class="kw">const fn </span>disabled() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            reason: <span class="prelude-val">Some</span>(UnsupportedReason::FeatureNotEnabled),
         }
     }
 
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">file_not_supported</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">reason</span>: <span class="prelude-val">Some</span>(<span class="ident">UnsupportedReason::FileNotSupported</span>),
-        }
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UnsupportedReason</span> {
-    <span class="ident">Ignored</span>,
-    <span class="ident">FeatureNotEnabled</span>,
-    <span class="ident">FileNotSupported</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FeatureName</span> {
-    <span class="ident">Format</span>,
-    <span class="ident">Lint</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UpdateSettingsParams</span> {
-    <span class="kw">pub</span> <span class="ident">configuration</span>: <span class="ident">Configuration</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpenFileParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">content</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">i32</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">language_hint</span>: <span class="ident">Language</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetSyntaxTreeParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetSyntaxTreeResult</span> {
-    <span class="kw">pub</span> <span class="ident">cst</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">ast</span>: <span class="ident">String</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetControlFlowGraphParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">cursor</span>: <span class="ident">TextSize</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetFormatterIRParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChangeFileParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">content</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">i32</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CloseFileParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PullDiagnosticsParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">categories</span>: <span class="ident">RuleCategories</span>,
-    <span class="kw">pub</span> <span class="ident">max_diagnostics</span>: <span class="ident">u64</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PullDiagnosticsResult</span> {
-    <span class="kw">pub</span> <span class="ident">diagnostics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">v2::serde::Diagnostic</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">has_errors</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">skipped_diagnostics</span>: <span class="ident">u64</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PullActionsParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">range</span>: <span class="ident">TextRange</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PullActionsResult</span> {
-    <span class="kw">pub</span> <span class="ident">actions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CodeAction</span><span class="op">&gt;</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CodeAction</span> {
-    <span class="kw">pub</span> <span class="ident">category</span>: <span class="ident">ActionCategory</span>,
-    <span class="kw">pub</span> <span class="ident">rule_name</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">suggestion</span>: <span class="ident">CodeSuggestion</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FormatFileParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FormatRangeParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">range</span>: <span class="ident">TextRange</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FormatOnTypeParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">offset</span>: <span class="ident">TextSize</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="doccomment">/// Which fixes should be applied during the analyzing phase</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FixFileMode</span> {
-    <span class="doccomment">/// Applies [safe](rome_diagnostics::Applicability::Always) fixes</span>
-    <span class="ident">SafeFixes</span>,
-    <span class="doccomment">/// Applies [safe](rome_diagnostics::Applicability::Always) and suggested [safe](rome_diagnostics::Applicability::MaybeIncorrect)</span>
-    <span class="ident">SafeAndSuggestedFixes</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FixFileParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">fix_file_mode</span>: <span class="ident">FixFileMode</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FixFileResult</span> {
-    <span class="doccomment">/// New source code for the file with all fixes applied</span>
-    <span class="kw">pub</span> <span class="ident">code</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// List of all the code actions applied to the file</span>
-    <span class="kw">pub</span> <span class="ident">actions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FixAction</span><span class="op">&gt;</span>,
-
-    <span class="doccomment">/// number of skipped suggested fixes</span>
-    <span class="kw">pub</span> <span class="ident">skipped_suggested_fixes</span>: <span class="ident">u32</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FixAction</span> {
-    <span class="doccomment">/// Name of the rule that emitted this code action</span>
-    <span class="kw">pub</span> <span class="ident">rule_name</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Source range at which this action was applied</span>
-    <span class="kw">pub</span> <span class="ident">range</span>: <span class="ident">TextRange</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RenameParams</span> {
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">RomePath</span>,
-    <span class="kw">pub</span> <span class="ident">symbol_at</span>: <span class="ident">TextSize</span>,
-    <span class="kw">pub</span> <span class="ident">new_name</span>: <span class="ident">String</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RenameResult</span> {
-    <span class="doccomment">/// Range of source code modified by this rename operation</span>
-    <span class="kw">pub</span> <span class="ident">range</span>: <span class="ident">TextRange</span>,
-    <span class="doccomment">/// List of text edit operations to apply on the source code</span>
-    <span class="kw">pub</span> <span class="ident">indels</span>: <span class="ident">TextEdit</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ServerInfo</span> {
-    <span class="doccomment">/// The name of the server as defined by the server.</span>
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-
-    <span class="doccomment">/// The server&#39;s version as defined by the server.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">version</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RageParams</span> {}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RageResult</span> {
-    <span class="kw">pub</span> <span class="ident">entries</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RageEntry</span><span class="op">&gt;</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RageEntry</span> {
-    <span class="ident">Section</span>(<span class="ident">String</span>),
-    <span class="ident">Pair</span> { <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">value</span>: <span class="ident">MarkupBuf</span> },
-    <span class="ident">Markup</span>(<span class="ident">MarkupBuf</span>),
-}
-
-<span class="kw">impl</span> <span class="ident">RageEntry</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">section</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Section</span>(<span class="ident">name</span>.<span class="ident">to_string</span>())
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">markup</span>(<span class="ident">markup</span>: <span class="ident">Markup</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Markup</span>(<span class="ident">markup</span>.<span class="ident">to_owned</span>())
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pair</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::pair_markup</span>(<span class="ident">name</span>, <span class="macro">markup!</span>({ <span class="ident">value</span> }))
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pair_markup</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">value</span>: <span class="ident">Markup</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Pair</span> {
-            <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
-            <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">to_owned</span>(),
+    <span class="kw">const fn </span>file_not_supported() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            reason: <span class="prelude-val">Some</span>(UnsupportedReason::FileNotSupported),
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Workspace</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">RefUnwindSafe</span> {
-    <span class="doccomment">/// Checks whether a certain feature is supported. There are different conditions:</span>
-    <span class="doccomment">/// - Rome doesn&#39;t recognize a file, so it can&#39;t provide the feature;</span>
-    <span class="doccomment">/// - the feature is disabled inside the configuration;</span>
-    <span class="doccomment">/// - the file is ignored</span>
-    <span class="kw">fn</span> <span class="ident">supports_feature</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">SupportsFeatureParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SupportsFeatureResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Update the global settings for this workspace</span>
-    <span class="kw">fn</span> <span class="ident">update_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">UpdateSettingsParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Add a new file to the workspace</span>
-    <span class="kw">fn</span> <span class="ident">open_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">OpenFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="comment">// Return a textual, debug representation of the syntax tree for a given document</span>
-    <span class="kw">fn</span> <span class="ident">get_syntax_tree</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">GetSyntaxTreeParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GetSyntaxTreeResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="comment">// Return a textual, debug representation of the control flow graph at a given position in the document</span>
-    <span class="kw">fn</span> <span class="ident">get_control_flow_graph</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">GetControlFlowGraphParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="comment">// Return a textual, debug representation of the formatter IR for a given document</span>
-    <span class="kw">fn</span> <span class="ident">get_formatter_ir</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">GetFormatterIRParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Change the content of an open file</span>
-    <span class="kw">fn</span> <span class="ident">change_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">ChangeFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Remove a file from the workspace</span>
-    <span class="kw">fn</span> <span class="ident">close_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">CloseFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Retrieves the list of diagnostics associated to a file</span>
-    <span class="kw">fn</span> <span class="ident">pull_diagnostics</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">params</span>: <span class="ident">PullDiagnosticsParams</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullDiagnosticsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Retrieves the list of code actions available for a given cursor</span>
-    <span class="doccomment">/// position within a file</span>
-    <span class="kw">fn</span> <span class="ident">pull_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">PullActionsParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullActionsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Runs the given file through the formatter using the provided options</span>
-    <span class="doccomment">/// and returns the resulting source code</span>
-    <span class="kw">fn</span> <span class="ident">format_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Runs a range of an open document through the formatter</span>
-    <span class="kw">fn</span> <span class="ident">format_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatRangeParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Runs a &quot;block&quot; ending at the specified character of an open document</span>
-    <span class="doccomment">/// through the formatter</span>
-    <span class="kw">fn</span> <span class="ident">format_on_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FormatOnTypeParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Return the content of the file with all safe code actions applied</span>
-    <span class="kw">fn</span> <span class="ident">fix_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">FixFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FixFileResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Return the content of the file after renaming a symbol</span>
-    <span class="kw">fn</span> <span class="ident">rename</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">RenameParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RenameResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Returns debug information about this workspace.</span>
-    <span class="kw">fn</span> <span class="ident">rage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">params</span>: <span class="ident">RageParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RageResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Returns information about the server this workspace is connected to or `None` if the workspace isn&#39;t connected to a server.</span>
-    <span class="kw">fn</span> <span class="ident">server_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ServerInfo</span><span class="op">&gt;</span>;
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize, Eq, PartialEq)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub enum </span>UnsupportedReason {
+    Ignored,
+    FeatureNotEnabled,
+    FileNotSupported,
 }
 
-<span class="doccomment">/// Convenience function for constructing a server instance of [Workspace]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">server</span>() -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Workspace</span><span class="op">&gt;</span> {
-    <span class="ident">Box::new</span>(<span class="ident">server::WorkspaceServer::new</span>())
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub enum </span>FeatureName {
+    Format,
+    Lint,
 }
 
-<span class="doccomment">/// Convenience function for constructing a server instance of [Workspace]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">server_sync</span>() -&gt; <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Workspace</span><span class="op">&gt;</span> {
-    <span class="ident">Arc::new</span>(<span class="ident">server::WorkspaceServer::new</span>())
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>UpdateSettingsParams {
+    <span class="kw">pub </span>configuration: Configuration,
 }
 
-<span class="doccomment">/// Convenience function for constructing a client instance of [Workspace]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">client</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">transport</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Workspace</span><span class="op">&gt;</span>, <span class="ident">RomeError</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">WorkspaceTransport</span> <span class="op">+</span> <span class="ident">RefUnwindSafe</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>OpenFileParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>content: String,
+    <span class="kw">pub </span>version: i32,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>language_hint: Language,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>GetSyntaxTreeParams {
+    <span class="kw">pub </span>path: RomePath,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>GetSyntaxTreeResult {
+    <span class="kw">pub </span>cst: String,
+    <span class="kw">pub </span>ast: String,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>GetControlFlowGraphParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>cursor: TextSize,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>GetFormatterIRParams {
+    <span class="kw">pub </span>path: RomePath,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>ChangeFileParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>content: String,
+    <span class="kw">pub </span>version: i32,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>CloseFileParams {
+    <span class="kw">pub </span>path: RomePath,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>PullDiagnosticsParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>categories: RuleCategories,
+    <span class="kw">pub </span>max_diagnostics: u64,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>PullDiagnosticsResult {
+    <span class="kw">pub </span>diagnostics: Vec&lt;v2::serde::Diagnostic&gt;,
+    <span class="kw">pub </span>has_errors: bool,
+    <span class="kw">pub </span>skipped_diagnostics: u64,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>PullActionsParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>range: TextRange,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>PullActionsResult {
+    <span class="kw">pub </span>actions: Vec&lt;CodeAction&gt;,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>CodeAction {
+    <span class="kw">pub </span>category: ActionCategory,
+    <span class="kw">pub </span>rule_name: Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;,
+    <span class="kw">pub </span>suggestion: CodeSuggestion,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>FormatFileParams {
+    <span class="kw">pub </span>path: RomePath,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>FormatRangeParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>range: TextRange,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>FormatOnTypeParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>offset: TextSize,
+}
+
+<span class="attribute">#[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="doccomment">/// Which fixes should be applied during the analyzing phase
+</span><span class="kw">pub enum </span>FixFileMode {
+    <span class="doccomment">/// Applies [safe](rome_diagnostics::Applicability::Always) fixes
+    </span>SafeFixes,
+    <span class="doccomment">/// Applies [safe](rome_diagnostics::Applicability::Always) and suggested [safe](rome_diagnostics::Applicability::MaybeIncorrect)
+    </span>SafeAndSuggestedFixes,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>FixFileParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>fix_file_mode: FixFileMode,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>FixFileResult {
+    <span class="doccomment">/// New source code for the file with all fixes applied
+    </span><span class="kw">pub </span>code: String,
+    <span class="doccomment">/// List of all the code actions applied to the file
+    </span><span class="kw">pub </span>actions: Vec&lt;FixAction&gt;,
+
+    <span class="doccomment">/// number of skipped suggested fixes
+    </span><span class="kw">pub </span>skipped_suggested_fixes: u32,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>FixAction {
+    <span class="doccomment">/// Name of the rule that emitted this code action
+    </span><span class="kw">pub </span>rule_name: Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;,
+    <span class="doccomment">/// Source range at which this action was applied
+    </span><span class="kw">pub </span>range: TextRange,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>RenameParams {
+    <span class="kw">pub </span>path: RomePath,
+    <span class="kw">pub </span>symbol_at: TextSize,
+    <span class="kw">pub </span>new_name: String,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>RenameResult {
+    <span class="doccomment">/// Range of source code modified by this rename operation
+    </span><span class="kw">pub </span>range: TextRange,
+    <span class="doccomment">/// List of text edit operations to apply on the source code
+    </span><span class="kw">pub </span>indels: TextEdit,
+}
+
+<span class="attribute">#[derive(Debug, Eq, PartialEq, Clone, Default, Deserialize, Serialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>ServerInfo {
+    <span class="doccomment">/// The name of the server as defined by the server.
+    </span><span class="kw">pub </span>name: String,
+
+    <span class="doccomment">/// The server&#39;s version as defined by the server.
+    </span><span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span><span class="kw">pub </span>version: <span class="prelude-ty">Option</span>&lt;String&gt;,
+}
+
+<span class="attribute">#[derive(Copy, Clone, Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>RageParams {}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>RageResult {
+    <span class="kw">pub </span>entries: Vec&lt;RageEntry&gt;,
+}
+
+<span class="attribute">#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub enum </span>RageEntry {
+    Section(String),
+    Pair { name: String, value: MarkupBuf },
+    Markup(MarkupBuf),
+}
+
+<span class="kw">impl </span>RageEntry {
+    <span class="kw">pub fn </span>section(name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Section(name.to_string())
+    }
+
+    <span class="kw">pub fn </span>markup(markup: Markup) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Markup(markup.to_owned())
+    }
+
+    <span class="kw">pub fn </span>pair(name: <span class="kw-2">&amp;</span>str, value: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::pair_markup(name, <span class="macro">markup!</span>({ value }))
+    }
+
+    <span class="kw">pub fn </span>pair_markup(name: <span class="kw-2">&amp;</span>str, value: Markup) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Pair {
+            name: name.to_string(),
+            value: value.to_owned(),
+        }
+    }
+}
+
+<span class="kw">pub trait </span>Workspace: Send + Sync + RefUnwindSafe {
+    <span class="doccomment">/// Checks whether a certain feature is supported. There are different conditions:
+    /// - Rome doesn&#39;t recognize a file, so it can&#39;t provide the feature;
+    /// - the feature is disabled inside the configuration;
+    /// - the file is ignored
+    </span><span class="kw">fn </span>supports_feature(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        params: SupportsFeatureParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;SupportsFeatureResult, RomeError&gt;;
+
+    <span class="doccomment">/// Update the global settings for this workspace
+    </span><span class="kw">fn </span>update_settings(<span class="kw-2">&amp;</span><span class="self">self</span>, params: UpdateSettingsParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt;;
+
+    <span class="doccomment">/// Add a new file to the workspace
+    </span><span class="kw">fn </span>open_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: OpenFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt;;
+
+    <span class="comment">// Return a textual, debug representation of the syntax tree for a given document
+    </span><span class="kw">fn </span>get_syntax_tree(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        params: GetSyntaxTreeParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;GetSyntaxTreeResult, RomeError&gt;;
+
+    <span class="comment">// Return a textual, debug representation of the control flow graph at a given position in the document
+    </span><span class="kw">fn </span>get_control_flow_graph(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        params: GetControlFlowGraphParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;String, RomeError&gt;;
+
+    <span class="comment">// Return a textual, debug representation of the formatter IR for a given document
+    </span><span class="kw">fn </span>get_formatter_ir(<span class="kw-2">&amp;</span><span class="self">self</span>, params: GetFormatterIRParams) -&gt; <span class="prelude-ty">Result</span>&lt;String, RomeError&gt;;
+
+    <span class="doccomment">/// Change the content of an open file
+    </span><span class="kw">fn </span>change_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: ChangeFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt;;
+
+    <span class="doccomment">/// Remove a file from the workspace
+    </span><span class="kw">fn </span>close_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: CloseFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt;;
+
+    <span class="doccomment">/// Retrieves the list of diagnostics associated to a file
+    </span><span class="kw">fn </span>pull_diagnostics(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        params: PullDiagnosticsParams,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;PullDiagnosticsResult, RomeError&gt;;
+
+    <span class="doccomment">/// Retrieves the list of code actions available for a given cursor
+    /// position within a file
+    </span><span class="kw">fn </span>pull_actions(<span class="kw-2">&amp;</span><span class="self">self</span>, params: PullActionsParams) -&gt; <span class="prelude-ty">Result</span>&lt;PullActionsResult, RomeError&gt;;
+
+    <span class="doccomment">/// Runs the given file through the formatter using the provided options
+    /// and returns the resulting source code
+    </span><span class="kw">fn </span>format_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt;;
+
+    <span class="doccomment">/// Runs a range of an open document through the formatter
+    </span><span class="kw">fn </span>format_range(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatRangeParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt;;
+
+    <span class="doccomment">/// Runs a &quot;block&quot; ending at the specified character of an open document
+    /// through the formatter
+    </span><span class="kw">fn </span>format_on_type(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FormatOnTypeParams) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt;;
+
+    <span class="doccomment">/// Return the content of the file with all safe code actions applied
+    </span><span class="kw">fn </span>fix_file(<span class="kw-2">&amp;</span><span class="self">self</span>, params: FixFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;FixFileResult, RomeError&gt;;
+
+    <span class="doccomment">/// Return the content of the file after renaming a symbol
+    </span><span class="kw">fn </span>rename(<span class="kw-2">&amp;</span><span class="self">self</span>, params: RenameParams) -&gt; <span class="prelude-ty">Result</span>&lt;RenameResult, RomeError&gt;;
+
+    <span class="doccomment">/// Returns debug information about this workspace.
+    </span><span class="kw">fn </span>rage(<span class="kw-2">&amp;</span><span class="self">self</span>, params: RageParams) -&gt; <span class="prelude-ty">Result</span>&lt;RageResult, RomeError&gt;;
+
+    <span class="doccomment">/// Returns information about the server this workspace is connected to or `None` if the workspace isn&#39;t connected to a server.
+    </span><span class="kw">fn </span>server_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>ServerInfo&gt;;
+}
+
+<span class="doccomment">/// Convenience function for constructing a server instance of [Workspace]
+</span><span class="kw">pub fn </span>server() -&gt; Box&lt;<span class="kw">dyn </span>Workspace&gt; {
+    Box::new(server::WorkspaceServer::new())
+}
+
+<span class="doccomment">/// Convenience function for constructing a server instance of [Workspace]
+</span><span class="kw">pub fn </span>server_sync() -&gt; Arc&lt;<span class="kw">dyn </span>Workspace&gt; {
+    Arc::new(server::WorkspaceServer::new())
+}
+
+<span class="doccomment">/// Convenience function for constructing a client instance of [Workspace]
+</span><span class="kw">pub fn </span>client&lt;T&gt;(transport: T) -&gt; <span class="prelude-ty">Result</span>&lt;Box&lt;<span class="kw">dyn </span>Workspace&gt;, RomeError&gt;
+<span class="kw">where
+    </span>T: WorkspaceTransport + RefUnwindSafe + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
-    <span class="prelude-val">Ok</span>(<span class="ident">Box::new</span>(<span class="ident">client::WorkspaceClient::new</span>(<span class="ident">transport</span>)<span class="question-mark">?</span>))
+    <span class="prelude-val">Ok</span>(Box::new(client::WorkspaceClient::new(transport)<span class="question-mark">?</span>))
 }
 
-<span class="doccomment">/// [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization)</span>
-<span class="doccomment">/// guard for an open file in a workspace, takes care of closing the file</span>
-<span class="doccomment">/// automatically on drop</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FileGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;app</span>, <span class="ident">W</span>: <span class="ident">Workspace</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> {
-    <span class="ident">workspace</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;app</span> <span class="ident">W</span>,
-    <span class="ident">path</span>: <span class="ident">RomePath</span>,
+<span class="doccomment">/// [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization)
+/// guard for an open file in a workspace, takes care of closing the file
+/// automatically on drop
+</span><span class="kw">pub struct </span>FileGuard&lt;<span class="lifetime">&#39;app</span>, W: Workspace + <span class="question-mark">?</span>Sized&gt; {
+    workspace: <span class="kw-2">&amp;</span><span class="lifetime">&#39;app </span>W,
+    path: RomePath,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;app</span>, <span class="ident">W</span>: <span class="ident">Workspace</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">FileGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;app</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">workspace</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;app</span> <span class="ident">W</span>, <span class="ident">params</span>: <span class="ident">OpenFileParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">path</span>.<span class="ident">clone</span>();
-        <span class="ident">workspace</span>.<span class="ident">open_file</span>(<span class="ident">params</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> { <span class="ident">workspace</span>, <span class="ident">path</span> })
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;app</span>, W: Workspace + <span class="question-mark">?</span>Sized&gt; FileGuard&lt;<span class="lifetime">&#39;app</span>, W&gt; {
+    <span class="kw">pub fn </span>open(workspace: <span class="kw-2">&amp;</span><span class="lifetime">&#39;app </span>W, params: OpenFileParams) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, RomeError&gt; {
+        <span class="kw">let </span>path = params.path.clone();
+        workspace.open_file(params)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ workspace, path })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_syntax_tree</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GetSyntaxTreeResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">get_syntax_tree</span>(<span class="ident">GetSyntaxTreeParams</span> {
-            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
+    <span class="kw">pub fn </span>get_syntax_tree(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;GetSyntaxTreeResult, RomeError&gt; {
+        <span class="self">self</span>.workspace.get_syntax_tree(GetSyntaxTreeParams {
+            path: <span class="self">self</span>.path.clone(),
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">change_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">version</span>: <span class="ident">i32</span>, <span class="ident">content</span>: <span class="ident">String</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">change_file</span>(<span class="ident">ChangeFileParams</span> {
-            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
-            <span class="ident">version</span>,
-            <span class="ident">content</span>,
+    <span class="kw">pub fn </span>change_file(<span class="kw-2">&amp;</span><span class="self">self</span>, version: i32, content: String) -&gt; <span class="prelude-ty">Result</span>&lt;(), RomeError&gt; {
+        <span class="self">self</span>.workspace.change_file(ChangeFileParams {
+            path: <span class="self">self</span>.path.clone(),
+            version,
+            content,
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pull_diagnostics</span>(
+    <span class="kw">pub fn </span>pull_diagnostics(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">categories</span>: <span class="ident">RuleCategories</span>,
-        <span class="ident">max_diagnostics</span>: <span class="ident">u64</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullDiagnosticsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">pull_diagnostics</span>(<span class="ident">PullDiagnosticsParams</span> {
-            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
-            <span class="ident">categories</span>,
-            <span class="ident">max_diagnostics</span>,
+        categories: RuleCategories,
+        max_diagnostics: u64,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;PullDiagnosticsResult, RomeError&gt; {
+        <span class="self">self</span>.workspace.pull_diagnostics(PullDiagnosticsParams {
+            path: <span class="self">self</span>.path.clone(),
+            categories,
+            max_diagnostics,
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pull_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PullActionsResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">pull_actions</span>(<span class="ident">PullActionsParams</span> {
-            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
-            <span class="ident">range</span>,
+    <span class="kw">pub fn </span>pull_actions(<span class="kw-2">&amp;</span><span class="self">self</span>, range: TextRange) -&gt; <span class="prelude-ty">Result</span>&lt;PullActionsResult, RomeError&gt; {
+        <span class="self">self</span>.workspace.pull_actions(PullActionsParams {
+            path: <span class="self">self</span>.path.clone(),
+            range,
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">format_file</span>(<span class="ident">FormatFileParams</span> {
-            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
+    <span class="kw">pub fn </span>format_file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="self">self</span>.workspace.format_file(FormatFileParams {
+            path: <span class="self">self</span>.path.clone(),
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">format_range</span>(<span class="ident">FormatRangeParams</span> {
-            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
-            <span class="ident">range</span>,
+    <span class="kw">pub fn </span>format_range(<span class="kw-2">&amp;</span><span class="self">self</span>, range: TextRange) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="self">self</span>.workspace.format_range(FormatRangeParams {
+            path: <span class="self">self</span>.path.clone(),
+            range,
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format_on_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">offset</span>: <span class="ident">TextSize</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">format_on_type</span>(<span class="ident">FormatOnTypeParams</span> {
-            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
-            <span class="ident">offset</span>,
+    <span class="kw">pub fn </span>format_on_type(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TextSize) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+        <span class="self">self</span>.workspace.format_on_type(FormatOnTypeParams {
+            path: <span class="self">self</span>.path.clone(),
+            offset,
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fix_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fix_file_mode</span>: <span class="ident">FixFileMode</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FixFileResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">fix_file</span>(<span class="ident">FixFileParams</span> {
-            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
-            <span class="ident">fix_file_mode</span>,
+    <span class="kw">pub fn </span>fix_file(<span class="kw-2">&amp;</span><span class="self">self</span>, fix_file_mode: FixFileMode) -&gt; <span class="prelude-ty">Result</span>&lt;FixFileResult, RomeError&gt; {
+        <span class="self">self</span>.workspace.fix_file(FixFileParams {
+            path: <span class="self">self</span>.path.clone(),
+            fix_file_mode,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;app</span>, <span class="ident">W</span>: <span class="ident">Workspace</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">FileGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;app</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">workspace</span>
-            .<span class="ident">close_file</span>(<span class="ident">CloseFileParams</span> {
-                <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;app</span>, W: Workspace + <span class="question-mark">?</span>Sized&gt; Drop <span class="kw">for </span>FileGuard&lt;<span class="lifetime">&#39;app</span>, W&gt; {
+    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.workspace
+            .close_file(CloseFileParams {
+                path: <span class="self">self</span>.path.clone(),
             })
-            <span class="comment">// `close_file` can only error if the file was already closed, in</span>
-            <span class="comment">// this case it&#39;s generally better to silently matcher the error</span>
-            <span class="comment">// than panic (especially in a drop handler)</span>
-            .<span class="ident">ok</span>();
+            <span class="comment">// `close_file` can only error if the file was already closed, in
+            // this case it&#39;s generally better to silently matcher the error
+            // than panic (especially in a drop handler)
+            </span>.ok();
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

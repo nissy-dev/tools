@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/parser/parse_lists.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>parse_lists.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/parser/parse_lists.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>parse_lists.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -157,164 +157,164 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
-</pre><pre class="rust"><code><span class="doccomment">///! A set of traits useful to parse various types of lists</span>
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ParsedSyntax</span>, <span class="ident">ParserProgress</span>, <span class="ident">RecoveryResult</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CompletedMarker</span>, <span class="ident">Marker</span>, <span class="ident">Parser</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>;
+</pre><pre class="rust"><code><span class="doccomment">///! A set of traits useful to parse various types of lists
+</span><span class="kw">use super</span>::{ParsedSyntax, ParserProgress, RecoveryResult};
+<span class="kw">use crate</span>::{CompletedMarker, Marker, Parser};
+<span class="kw">use </span>rome_js_syntax::JsSyntaxKind;
 
-<span class="doccomment">/// Use this trait to parse simple lists that don&#39;t have particular requirements.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// In order to use this trait, you need to implement the [List] trait too.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```rust,ignore</span>
-<span class="doccomment">/// use rome_js_parser::{ParseSeparatedList};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// struct MyList;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// impl ParseNormalList for MyList {</span>
-<span class="doccomment">///   // impl missing members</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">ParseNodeList</span> {
-    <span class="doccomment">/// Parses a single element of the list</span>
-    <span class="kw">fn</span> <span class="ident">parse_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span>;
+<span class="doccomment">/// Use this trait to parse simple lists that don&#39;t have particular requirements.
+///
+/// In order to use this trait, you need to implement the [List] trait too.
+///
+/// ```rust,ignore
+/// use rome_js_parser::{ParseSeparatedList};
+///
+/// struct MyList;
+///
+///
+/// impl ParseNormalList for MyList {
+///   // impl missing members
+/// }
+/// ```
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ParseNodeList {
+    <span class="doccomment">/// Parses a single element of the list
+    </span><span class="kw">fn </span>parse_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax;
 
-    <span class="doccomment">/// It creates a marker just before starting a list</span>
-    <span class="kw">fn</span> <span class="ident">start_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">Marker</span> {
-        <span class="ident">p</span>.<span class="ident">start</span>()
+    <span class="doccomment">/// It creates a marker just before starting a list
+    </span><span class="kw">fn </span>start_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; Marker {
+        p.start()
     }
 
-    <span class="doccomment">/// This method is used to check the current token inside the loop. When this method return [false],</span>
-    <span class="doccomment">/// the trait will exit from the loop.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Usually here you want to check the current token.</span>
-    <span class="kw">fn</span> <span class="ident">is_at_list_end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// This method is used to check the current token inside the loop. When this method return [false],
+    /// the trait will exit from the loop.
+    ///
+    /// Usually here you want to check the current token.
+    </span><span class="kw">fn </span>is_at_list_end(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool;
 
-    <span class="doccomment">/// This method is used to recover the parser in case [Self::parse_element] returns [ParsedSyntax::Absent]</span>
-    <span class="kw">fn</span> <span class="ident">recover</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">parsed_element</span>: <span class="ident">ParsedSyntax</span>) -&gt; <span class="ident">RecoveryResult</span>;
+    <span class="doccomment">/// This method is used to recover the parser in case [Self::parse_element] returns [ParsedSyntax::Absent]
+    </span><span class="kw">fn </span>recover(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser, parsed_element: ParsedSyntax) -&gt; RecoveryResult;
 
-    <span class="doccomment">/// It creates a [ParsedSyntax] that will contain the list</span>
-    <span class="kw">fn</span> <span class="ident">finish_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">m</span>: <span class="ident">Marker</span>) {
-        <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::list_kind</span>());
+    <span class="doccomment">/// It creates a [ParsedSyntax] that will contain the list
+    </span><span class="kw">fn </span>finish_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser, m: Marker) {
+        m.complete(p, <span class="self">Self</span>::list_kind());
     }
 
-    <span class="doccomment">/// The kind of the list node</span>
-    <span class="kw">fn</span> <span class="ident">list_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
+    <span class="doccomment">/// The kind of the list node
+    </span><span class="kw">fn </span>list_kind() -&gt; JsSyntaxKind;
 
-    <span class="doccomment">/// Parses a simple list</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Panics</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It panics if the parser doesn&#39;t advance at each cycle of the loop</span>
-    <span class="kw">fn</span> <span class="ident">parse_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) {
-        <span class="kw">let</span> <span class="ident">elements</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">start_list</span>(<span class="ident">p</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">progress</span> <span class="op">=</span> <span class="ident">ParserProgress::default</span>();
+    <span class="doccomment">/// Parses a simple list
+    ///
+    /// # Panics
+    ///
+    /// It panics if the parser doesn&#39;t advance at each cycle of the loop
+    </span><span class="kw">fn </span>parse_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) {
+        <span class="kw">let </span>elements = <span class="self">self</span>.start_list(p);
+        <span class="kw">let </span><span class="kw-2">mut </span>progress = ParserProgress::default();
 
-        <span class="kw">while</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="ident">JsSyntaxKind::EOF</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">is_at_list_end</span>(<span class="ident">p</span>) {
-            <span class="ident">progress</span>.<span class="ident">assert_progressing</span>(<span class="ident">p</span>);
+        <span class="kw">while </span>!p.at(JsSyntaxKind::EOF) &amp;&amp; !<span class="self">self</span>.is_at_list_end(p) {
+            progress.assert_progressing(p);
 
-            <span class="kw">let</span> <span class="ident">parsed_element</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parse_element</span>(<span class="ident">p</span>);
+            <span class="kw">let </span>parsed_element = <span class="self">self</span>.parse_element(p);
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">recover</span>(<span class="ident">p</span>, <span class="ident">parsed_element</span>).<span class="ident">is_err</span>() {
+            <span class="kw">if </span><span class="self">self</span>.recover(p, parsed_element).is_err() {
                 <span class="kw">break</span>;
             }
         }
 
-        <span class="self">self</span>.<span class="ident">finish_list</span>(<span class="ident">p</span>, <span class="ident">elements</span>);
+        <span class="self">self</span>.finish_list(p, elements);
     }
 }
 
-<span class="doccomment">/// A trait to parse lists that will be separated by a recurring element</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// In order to use this trait, you need to implement the [List] trait too.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```rust,ignore</span>
-<span class="doccomment">/// use rome_js_parser::{ParseSeparatedList};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// struct MyList;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// impl ParseSeparatedList for MyList {</span>
-<span class="doccomment">///   // impl missing members</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">ParseSeparatedList</span> {
-    <span class="doccomment">/// Parses a single element of the list</span>
-    <span class="kw">fn</span> <span class="ident">parse_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span>;
+<span class="doccomment">/// A trait to parse lists that will be separated by a recurring element
+///
+/// In order to use this trait, you need to implement the [List] trait too.
+///
+/// ```rust,ignore
+/// use rome_js_parser::{ParseSeparatedList};
+///
+/// struct MyList;
+///
+/// impl ParseSeparatedList for MyList {
+///   // impl missing members
+/// }
+/// ```
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ParseSeparatedList {
+    <span class="doccomment">/// Parses a single element of the list
+    </span><span class="kw">fn </span>parse_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax;
 
-    <span class="doccomment">/// It creates a marker just before starting a list</span>
-    <span class="kw">fn</span> <span class="ident">start_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">Marker</span> {
-        <span class="ident">p</span>.<span class="ident">start</span>()
+    <span class="doccomment">/// It creates a marker just before starting a list
+    </span><span class="kw">fn </span>start_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; Marker {
+        p.start()
     }
 
-    <span class="doccomment">/// This method is used to check the current token inside the loop. When this method return [false],</span>
-    <span class="doccomment">/// the trait will exit from the loop.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Usually here you want to check the current token.</span>
-    <span class="kw">fn</span> <span class="ident">is_at_list_end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// This method is used to check the current token inside the loop. When this method return [false],
+    /// the trait will exit from the loop.
+    ///
+    /// Usually here you want to check the current token.
+    </span><span class="kw">fn </span>is_at_list_end(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool;
 
-    <span class="doccomment">/// This method is used to recover the parser in case [Self::parse_element] returns [ParsedSyntax::Absent]</span>
-    <span class="kw">fn</span> <span class="ident">recover</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">parsed_element</span>: <span class="ident">ParsedSyntax</span>) -&gt; <span class="ident">RecoveryResult</span>;
+    <span class="doccomment">/// This method is used to recover the parser in case [Self::parse_element] returns [ParsedSyntax::Absent]
+    </span><span class="kw">fn </span>recover(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser, parsed_element: ParsedSyntax) -&gt; RecoveryResult;
 
-    <span class="doccomment">/// It creates a [ParsedSyntax] that will contain the list</span>
-    <span class="doccomment">/// Only called if the list isn&#39;t empty</span>
-    <span class="kw">fn</span> <span class="ident">finish_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">m</span>: <span class="ident">Marker</span>) -&gt; <span class="ident">CompletedMarker</span> {
-        <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident"><span class="self">Self</span>::list_kind</span>())
+    <span class="doccomment">/// It creates a [ParsedSyntax] that will contain the list
+    /// Only called if the list isn&#39;t empty
+    </span><span class="kw">fn </span>finish_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser, m: Marker) -&gt; CompletedMarker {
+        m.complete(p, <span class="self">Self</span>::list_kind())
     }
 
-    <span class="doccomment">/// The kind of the list node</span>
-    <span class="kw">fn</span> <span class="ident">list_kind</span>() -&gt; <span class="ident">JsSyntaxKind</span>;
+    <span class="doccomment">/// The kind of the list node
+    </span><span class="kw">fn </span>list_kind() -&gt; JsSyntaxKind;
 
-    <span class="doccomment">/// The [SyntaxKind] of the element that separates the elements of the list</span>
-    <span class="kw">fn</span> <span class="ident">separating_element_kind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">JsSyntaxKind</span>;
+    <span class="doccomment">/// The [SyntaxKind] of the element that separates the elements of the list
+    </span><span class="kw">fn </span>separating_element_kind(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; JsSyntaxKind;
 
-    <span class="doccomment">/// `true` if the list allows for an optional trailing element</span>
-    <span class="kw">fn</span> <span class="ident">allow_trailing_separating_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="bool-val">false</span>
+    <span class="doccomment">/// `true` if the list allows for an optional trailing element
+    </span><span class="kw">fn </span>allow_trailing_separating_element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="bool-val">false
+    </span>}
+
+    <span class="doccomment">/// Method called at each iteration of the the loop and checks if the expected
+    /// separator is present.
+    ///
+    /// If present, it [parses](Self::parse_separating_element) it and continues with loop.
+    /// If not present, it adds a missing marker.
+    </span><span class="kw">fn </span>expect_separator(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool {
+        p.expect(<span class="self">self</span>.separating_element_kind())
     }
 
-    <span class="doccomment">/// Method called at each iteration of the the loop and checks if the expected</span>
-    <span class="doccomment">/// separator is present.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If present, it [parses](Self::parse_separating_element) it and continues with loop.</span>
-    <span class="doccomment">/// If not present, it adds a missing marker.</span>
-    <span class="kw">fn</span> <span class="ident">expect_separator</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">p</span>.<span class="ident">expect</span>(<span class="self">self</span>.<span class="ident">separating_element_kind</span>())
-    }
+    <span class="doccomment">/// Parses a list of elements separated by a recurring element
+    ///
+    /// # Panics
+    ///
+    /// It panics if the parser doesn&#39;t advance at each cycle of the loop
+    </span><span class="kw">fn </span>parse_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>Parser) -&gt; CompletedMarker {
+        <span class="kw">let </span>elements = <span class="self">self</span>.start_list(p);
+        <span class="kw">let </span><span class="kw-2">mut </span>progress = ParserProgress::default();
+        <span class="kw">let </span><span class="kw-2">mut </span>first = <span class="bool-val">true</span>;
+        <span class="kw">while </span>!p.at(JsSyntaxKind::EOF) &amp;&amp; !<span class="self">self</span>.is_at_list_end(p) {
+            <span class="kw">if </span>first {
+                first = <span class="bool-val">false</span>;
+            } <span class="kw">else </span>{
+                <span class="self">self</span>.expect_separator(p);
 
-    <span class="doccomment">/// Parses a list of elements separated by a recurring element</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Panics</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It panics if the parser doesn&#39;t advance at each cycle of the loop</span>
-    <span class="kw">fn</span> <span class="ident">parse_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">CompletedMarker</span> {
-        <span class="kw">let</span> <span class="ident">elements</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">start_list</span>(<span class="ident">p</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">progress</span> <span class="op">=</span> <span class="ident">ParserProgress::default</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">first</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="kw">while</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="ident">JsSyntaxKind::EOF</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">is_at_list_end</span>(<span class="ident">p</span>) {
-            <span class="kw">if</span> <span class="ident">first</span> {
-                <span class="ident">first</span> <span class="op">=</span> <span class="bool-val">false</span>;
-            } <span class="kw">else</span> {
-                <span class="self">self</span>.<span class="ident">expect_separator</span>(<span class="ident">p</span>);
-
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">allow_trailing_separating_element</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">is_at_list_end</span>(<span class="ident">p</span>) {
+                <span class="kw">if </span><span class="self">self</span>.allow_trailing_separating_element() &amp;&amp; <span class="self">self</span>.is_at_list_end(p) {
                     <span class="kw">break</span>;
                 }
             }
 
-            <span class="ident">progress</span>.<span class="ident">assert_progressing</span>(<span class="ident">p</span>);
+            progress.assert_progressing(p);
 
-            <span class="kw">let</span> <span class="ident">parsed_element</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parse_element</span>(<span class="ident">p</span>);
+            <span class="kw">let </span>parsed_element = <span class="self">self</span>.parse_element(p);
 
-            <span class="kw">if</span> <span class="ident">parsed_element</span>.<span class="ident">is_absent</span>() <span class="op">&amp;&amp;</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="self">self</span>.<span class="ident">separating_element_kind</span>()) {
-                <span class="comment">// a missing element</span>
-                <span class="kw">continue</span>;
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">recover</span>(<span class="ident">p</span>, <span class="ident">parsed_element</span>).<span class="ident">is_err</span>() {
+            <span class="kw">if </span>parsed_element.is_absent() &amp;&amp; p.at(<span class="self">self</span>.separating_element_kind()) {
+                <span class="comment">// a missing element
+                </span><span class="kw">continue</span>;
+            } <span class="kw">else if </span><span class="self">self</span>.recover(p, parsed_element).is_err() {
                 <span class="kw">break</span>;
             }
         }
-        <span class="self">self</span>.<span class="ident">finish_list</span>(<span class="ident">p</span>, <span class="ident">elements</span>)
+        <span class="self">self</span>.finish_list(p, elements)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

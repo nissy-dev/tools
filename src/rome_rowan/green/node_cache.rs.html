@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/green/node_cache.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>node_cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/green/node_cache.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>node_cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_rowan/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -356,363 +356,363 @@
 <span id="356">356</span>
 <span id="357">357</span>
 <span id="358">358</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">hashbrown::hash_map</span>::{<span class="ident">RawEntryMut</span>, <span class="ident">RawOccupiedEntryMut</span>, <span class="ident">RawVacantEntryMut</span>};
-<span class="kw">use</span> <span class="ident">rome_text_size::TextSize</span>;
-<span class="kw">use</span> <span class="ident">rustc_hash::FxHasher</span>;
-<span class="kw">use</span> <span class="ident">std::hash</span>::{<span class="ident">BuildHasherDefault</span>, <span class="ident">Hash</span>, <span class="ident">Hasher</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>hashbrown::hash_map::{RawEntryMut, RawOccupiedEntryMut, RawVacantEntryMut};
+<span class="kw">use </span>rome_text_size::TextSize;
+<span class="kw">use </span>rustc_hash::FxHasher;
+<span class="kw">use </span>std::hash::{BuildHasherDefault, Hash, Hasher};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green::Slot</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax</span>::{<span class="ident">TriviaPiece</span>, <span class="ident">TriviaPieceKind</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">green::GreenElementRef</span>, <span class="ident">GreenNode</span>, <span class="ident">GreenNodeData</span>, <span class="ident">GreenToken</span>, <span class="ident">GreenTokenData</span>, <span class="ident">NodeOrToken</span>,
-    <span class="ident">RawSyntaxKind</span>,
+<span class="kw">use </span><span class="kw">crate</span>::green::Slot;
+<span class="kw">use </span><span class="kw">crate</span>::syntax::{TriviaPiece, TriviaPieceKind};
+<span class="kw">use crate</span>::{
+    green::GreenElementRef, GreenNode, GreenNodeData, GreenToken, GreenTokenData, NodeOrToken,
+    RawSyntaxKind,
 };
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::element::GreenElement</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::trivia::GreenTrivia</span>;
+<span class="kw">use </span><span class="kw">super</span>::element::GreenElement;
+<span class="kw">use </span><span class="kw">super</span>::trivia::GreenTrivia;
 
-<span class="kw">type</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">hashbrown::HashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span>, <span class="ident">BuildHasherDefault</span><span class="op">&lt;</span><span class="ident">FxHasher</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="kw">type </span>HashMap&lt;K, V&gt; = hashbrown::HashMap&lt;K, V, BuildHasherDefault&lt;FxHasher&gt;&gt;;
 
-<span class="doccomment">/// A token stored in the `NodeCache`.</span>
-<span class="doccomment">/// Does intentionally not implement `Hash` to have compile-time guarantees that the `NodeCache`</span>
-<span class="doccomment">/// uses the correct hash.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">CachedToken</span>(<span class="ident">GreenToken</span>);
+<span class="doccomment">/// A token stored in the `NodeCache`.
+/// Does intentionally not implement `Hash` to have compile-time guarantees that the `NodeCache`
+/// uses the correct hash.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>CachedToken(GreenToken);
 
-<span class="doccomment">/// A node stored in the `NodeCache`. It stores a pre-computed hash</span>
-<span class="doccomment">/// because re-computing the hash requires traversing the whole sub-tree.</span>
-<span class="doccomment">/// The hash also differs from the `GreenNode` hash implementation as it</span>
-<span class="doccomment">/// only hashes occupied slots and excludes empty slots.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Does intentionally not implement `Hash` to have compile-time guarantees that the `NodeCache`</span>
-<span class="doccomment">/// uses the correct hash.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">CachedNode</span> {
-    <span class="ident">node</span>: <span class="ident">GreenNode</span>,
-    <span class="comment">// Store the hash as it&#39;s expensive to re-compute</span>
-    <span class="comment">// involves re-computing the hash of the whole sub-tree</span>
-    <span class="ident">hash</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// A node stored in the `NodeCache`. It stores a pre-computed hash
+/// because re-computing the hash requires traversing the whole sub-tree.
+/// The hash also differs from the `GreenNode` hash implementation as it
+/// only hashes occupied slots and excludes empty slots.
+///
+/// Does intentionally not implement `Hash` to have compile-time guarantees that the `NodeCache`
+/// uses the correct hash.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>CachedNode {
+    node: GreenNode,
+    <span class="comment">// Store the hash as it&#39;s expensive to re-compute
+    // involves re-computing the hash of the whole sub-tree
+    </span>hash: u64,
 }
 
-<span class="doccomment">/// Interner for GreenTokens and GreenNodes</span>
-<span class="comment">// XXX: the impl is a bit tricky. As usual when writing interners, we want to</span>
-<span class="comment">// store all values in one HashSet.</span>
-<span class="comment">//</span>
-<span class="comment">// However, hashing trees is fun: hash of the tree is recursively defined. We</span>
-<span class="comment">// maintain an invariant -- if the tree is interned, then all of its children</span>
-<span class="comment">// are interned as well.</span>
-<span class="comment">//</span>
-<span class="comment">// That means that computing the hash naively is wasteful -- we just *know*</span>
-<span class="comment">// hashes of children, and we can re-use those.</span>
-<span class="comment">//</span>
-<span class="comment">// So here we use *raw* API of hashbrown and provide the hashes manually,</span>
-<span class="comment">// instead of going via a `Hash` impl. Our manual `Hash` and the</span>
-<span class="comment">// `#[derive(Hash)]` are actually different! At some point we had a fun bug,</span>
-<span class="comment">// where we accidentally mixed the two hashes, which made the cache much less</span>
-<span class="comment">// efficient.</span>
-<span class="comment">//</span>
-<span class="comment">// To fix that, we additionally wrap the data in `Cached*` wrappers, to make sure</span>
-<span class="comment">// we don&#39;t accidentally use the wrong hash!</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NodeCache</span> {
-    <span class="ident">nodes</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">CachedNode</span>, ()<span class="op">&gt;</span>,
-    <span class="ident">tokens</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">CachedToken</span>, ()<span class="op">&gt;</span>,
-    <span class="ident">trivia</span>: <span class="ident">TriviaCache</span>,
+<span class="doccomment">/// Interner for GreenTokens and GreenNodes
+</span><span class="comment">// XXX: the impl is a bit tricky. As usual when writing interners, we want to
+// store all values in one HashSet.
+//
+// However, hashing trees is fun: hash of the tree is recursively defined. We
+// maintain an invariant -- if the tree is interned, then all of its children
+// are interned as well.
+//
+// That means that computing the hash naively is wasteful -- we just *know*
+// hashes of children, and we can re-use those.
+//
+// So here we use *raw* API of hashbrown and provide the hashes manually,
+// instead of going via a `Hash` impl. Our manual `Hash` and the
+// `#[derive(Hash)]` are actually different! At some point we had a fun bug,
+// where we accidentally mixed the two hashes, which made the cache much less
+// efficient.
+//
+// To fix that, we additionally wrap the data in `Cached*` wrappers, to make sure
+// we don&#39;t accidentally use the wrong hash!
+</span><span class="attribute">#[derive(Default, Debug)]
+</span><span class="kw">pub struct </span>NodeCache {
+    nodes: HashMap&lt;CachedNode, ()&gt;,
+    tokens: HashMap&lt;CachedToken, ()&gt;,
+    trivia: TriviaCache,
 }
 
-<span class="kw">fn</span> <span class="ident">token_hash_of</span>(<span class="ident">kind</span>: <span class="ident">RawSyntaxKind</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">u64</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">FxHasher::default</span>();
-    <span class="ident">kind</span>.<span class="ident">hash</span>(<span class="kw-2">&amp;mut</span> <span class="ident">h</span>);
-    <span class="ident">text</span>.<span class="ident">hash</span>(<span class="kw-2">&amp;mut</span> <span class="ident">h</span>);
-    <span class="ident">h</span>.<span class="ident">finish</span>()
+<span class="kw">fn </span>token_hash_of(kind: RawSyntaxKind, text: <span class="kw-2">&amp;</span>str) -&gt; u64 {
+    <span class="kw">let </span><span class="kw-2">mut </span>h = FxHasher::default();
+    kind.hash(<span class="kw-2">&amp;mut </span>h);
+    text.hash(<span class="kw-2">&amp;mut </span>h);
+    h.finish()
 }
 
-<span class="kw">fn</span> <span class="ident">token_hash</span>(<span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">GreenTokenData</span>) -&gt; <span class="ident">u64</span> {
-    <span class="ident">token_hash_of</span>(<span class="ident">token</span>.<span class="ident">kind</span>(), <span class="ident">token</span>.<span class="ident">text</span>())
+<span class="kw">fn </span>token_hash(token: <span class="kw-2">&amp;</span>GreenTokenData) -&gt; u64 {
+    token_hash_of(token.kind(), token.text())
 }
 
-<span class="kw">fn</span> <span class="ident">element_id</span>(<span class="ident">elem</span>: <span class="ident">GreenElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="kw-2">*const</span> () {
-    <span class="kw">match</span> <span class="ident">elem</span> {
-        <span class="ident">NodeOrToken::Node</span>(<span class="ident">it</span>) =&gt; <span class="ident">it</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">GreenNodeData</span> <span class="kw">as</span> <span class="kw-2">*const</span> (),
-        <span class="ident">NodeOrToken::Token</span>(<span class="ident">it</span>) =&gt; <span class="ident">it</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">GreenTokenData</span> <span class="kw">as</span> <span class="kw-2">*const</span> (),
+<span class="kw">fn </span>element_id(elem: GreenElementRef&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="kw-2">*const </span>() {
+    <span class="kw">match </span>elem {
+        NodeOrToken::Node(it) =&gt; it <span class="kw">as </span><span class="kw-2">*const </span>GreenNodeData <span class="kw">as </span><span class="kw-2">*const </span>(),
+        NodeOrToken::Token(it) =&gt; it <span class="kw">as </span><span class="kw-2">*const </span>GreenTokenData <span class="kw">as </span><span class="kw-2">*const </span>(),
     }
 }
 
-<span class="kw">impl</span> <span class="ident">NodeCache</span> {
-    <span class="doccomment">/// Hash used for nodes that haven&#39;t been cached because it has too many slots or</span>
-    <span class="doccomment">/// one of its children wasn&#39;t cached.</span>
-    <span class="kw">const</span> <span class="ident">UNCACHED_NODE_HASH</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">0</span>;
+<span class="kw">impl </span>NodeCache {
+    <span class="doccomment">/// Hash used for nodes that haven&#39;t been cached because it has too many slots or
+    /// one of its children wasn&#39;t cached.
+    </span><span class="kw">const </span>UNCACHED_NODE_HASH: u64 = <span class="number">0</span>;
 
-    <span class="doccomment">/// Tries to retrieve a node with the given `kind` and `children` from the cache.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an entry that allows the caller to:</span>
-    <span class="doccomment">/// * Retrieve the cached node if it is present in the cache</span>
-    <span class="doccomment">/// * Insert a node if it isn&#39;t present in the cache</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">node</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">kind</span>: <span class="ident">RawSyntaxKind</span>,
-        <span class="ident">children</span>: <span class="kw-2">&amp;</span>[(<span class="ident">u64</span>, <span class="ident">GreenElement</span>)],
-    ) -&gt; <span class="ident">NodeCacheNodeEntryMut</span> {
-        <span class="kw">if</span> <span class="ident">children</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">3</span> {
-            <span class="kw">return</span> <span class="ident">NodeCacheNodeEntryMut::NoCache</span>(<span class="ident"><span class="self">Self</span>::UNCACHED_NODE_HASH</span>);
+    <span class="doccomment">/// Tries to retrieve a node with the given `kind` and `children` from the cache.
+    ///
+    /// Returns an entry that allows the caller to:
+    /// * Retrieve the cached node if it is present in the cache
+    /// * Insert a node if it isn&#39;t present in the cache
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>node(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        kind: RawSyntaxKind,
+        children: <span class="kw-2">&amp;</span>[(u64, GreenElement)],
+    ) -&gt; NodeCacheNodeEntryMut {
+        <span class="kw">if </span>children.len() &gt; <span class="number">3 </span>{
+            <span class="kw">return </span>NodeCacheNodeEntryMut::NoCache(<span class="self">Self</span>::UNCACHED_NODE_HASH);
         }
 
-        <span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">FxHasher::default</span>();
-            <span class="ident">kind</span>.<span class="ident">hash</span>(<span class="kw-2">&amp;mut</span> <span class="ident">h</span>);
-            <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="ident">hash</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="ident">children</span> {
-                <span class="kw">if</span> <span class="ident">hash</span> <span class="op">==</span> <span class="ident"><span class="self">Self</span>::UNCACHED_NODE_HASH</span> {
-                    <span class="kw">return</span> <span class="ident">NodeCacheNodeEntryMut::NoCache</span>(<span class="ident"><span class="self">Self</span>::UNCACHED_NODE_HASH</span>);
+        <span class="kw">let </span>hash = {
+            <span class="kw">let </span><span class="kw-2">mut </span>h = FxHasher::default();
+            kind.hash(<span class="kw-2">&amp;mut </span>h);
+            <span class="kw">for </span><span class="kw-2">&amp;</span>(hash, <span class="kw">_</span>) <span class="kw">in </span>children {
+                <span class="kw">if </span>hash == <span class="self">Self</span>::UNCACHED_NODE_HASH {
+                    <span class="kw">return </span>NodeCacheNodeEntryMut::NoCache(<span class="self">Self</span>::UNCACHED_NODE_HASH);
                 }
-                <span class="ident">hash</span>.<span class="ident">hash</span>(<span class="kw-2">&amp;mut</span> <span class="ident">h</span>);
+                hash.hash(<span class="kw-2">&amp;mut </span>h);
             }
-            <span class="ident">h</span>.<span class="ident">finish</span>()
+            h.finish()
         };
 
-        <span class="comment">// Green nodes are fully immutable, so it&#39;s ok to deduplicate them.</span>
-        <span class="comment">// This is the same optimization that Roslyn does</span>
-        <span class="comment">// https://github.com/KirillOsenkov/Bliki/wiki/Roslyn-Immutable-Trees</span>
-        <span class="comment">//</span>
-        <span class="comment">// For example, all `#[inline]` in this file share the same green node!</span>
-        <span class="comment">// For `libsyntax/parse/parser.rs`, measurements show that deduping saves</span>
-        <span class="comment">// 17% of the memory for green nodes!</span>
-        <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">nodes</span>.<span class="ident">raw_entry_mut</span>().<span class="ident">from_hash</span>(<span class="ident">hash</span>, <span class="op">|</span><span class="ident">no_hash</span><span class="op">|</span> {
-            <span class="ident">no_hash</span>.<span class="ident">node</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">kind</span> <span class="op">&amp;&amp;</span> {
-                <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">no_hash</span>.<span class="ident">node</span>.<span class="ident">slots</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">slot</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">slot</span> {
-                    <span class="comment">// Ignore empty slots. The queried node only has the present children</span>
-                    <span class="ident">Slot::Empty</span> { .. } =&gt; <span class="prelude-val">None</span>,
-                    <span class="ident">Slot::Node</span> { <span class="ident">node</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="ident">element_id</span>(<span class="ident">NodeOrToken::Node</span>(<span class="ident">node</span>))),
-                    <span class="ident">Slot::Token</span> { <span class="ident">token</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="ident">element_id</span>(<span class="ident">NodeOrToken::Token</span>(<span class="ident">token</span>))),
+        <span class="comment">// Green nodes are fully immutable, so it&#39;s ok to deduplicate them.
+        // This is the same optimization that Roslyn does
+        // https://github.com/KirillOsenkov/Bliki/wiki/Roslyn-Immutable-Trees
+        //
+        // For example, all `#[inline]` in this file share the same green node!
+        // For `libsyntax/parse/parser.rs`, measurements show that deduping saves
+        // 17% of the memory for green nodes!
+        </span><span class="kw">let </span>entry = <span class="self">self</span>.nodes.raw_entry_mut().from_hash(hash, |no_hash| {
+            no_hash.node.kind() == kind &amp;&amp; {
+                <span class="kw">let </span>lhs = no_hash.node.slots().filter_map(|slot| <span class="kw">match </span>slot {
+                    <span class="comment">// Ignore empty slots. The queried node only has the present children
+                    </span>Slot::Empty { .. } =&gt; <span class="prelude-val">None</span>,
+                    Slot::Node { node, .. } =&gt; <span class="prelude-val">Some</span>(element_id(NodeOrToken::Node(node))),
+                    Slot::Token { token, .. } =&gt; <span class="prelude-val">Some</span>(element_id(NodeOrToken::Token(token))),
                 });
 
-                <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">children</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">element</span>)<span class="op">|</span> <span class="ident">element_id</span>(<span class="ident">element</span>.<span class="ident">as_deref</span>()));
+                <span class="kw">let </span>rhs = children
+                    .iter()
+                    .map(|(<span class="kw">_</span>, element)| element_id(element.as_deref()));
 
-                <span class="ident">lhs</span>.<span class="ident">eq</span>(<span class="ident">rhs</span>)
+                lhs.eq(rhs)
             }
         });
 
-        <span class="kw">match</span> <span class="ident">entry</span> {
-            <span class="ident">RawEntryMut::Occupied</span>(<span class="ident">entry</span>) =&gt; <span class="ident">NodeCacheNodeEntryMut::Cached</span>(<span class="ident">CachedNodeEntry</span> {
-                <span class="ident">hash</span>,
-                <span class="ident">raw_entry</span>: <span class="ident">entry</span>,
+        <span class="kw">match </span>entry {
+            RawEntryMut::Occupied(entry) =&gt; NodeCacheNodeEntryMut::Cached(CachedNodeEntry {
+                hash,
+                raw_entry: entry,
             }),
-            <span class="ident">RawEntryMut::Vacant</span>(<span class="ident">entry</span>) =&gt; <span class="ident">NodeCacheNodeEntryMut::Vacant</span>(<span class="ident">VacantNodeEntry</span> {
-                <span class="ident">raw_entry</span>: <span class="ident">entry</span>,
-                <span class="ident">original_kind</span>: <span class="ident">kind</span>,
-                <span class="ident">hash</span>,
+            RawEntryMut::Vacant(entry) =&gt; NodeCacheNodeEntryMut::Vacant(VacantNodeEntry {
+                raw_entry: entry,
+                original_kind: kind,
+                hash,
             }),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">RawSyntaxKind</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; (<span class="ident">u64</span>, <span class="ident">GreenToken</span>) {
-        <span class="self">self</span>.<span class="ident">token_with_trivia</span>(<span class="ident">kind</span>, <span class="ident">text</span>, <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[])
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>token(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: RawSyntaxKind, text: <span class="kw-2">&amp;</span>str) -&gt; (u64, GreenToken) {
+        <span class="self">self</span>.token_with_trivia(kind, text, <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[])
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">token_with_trivia</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">kind</span>: <span class="ident">RawSyntaxKind</span>,
-        <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">leading</span>: <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece</span>],
-        <span class="ident">trailing</span>: <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece</span>],
-    ) -&gt; (<span class="ident">u64</span>, <span class="ident">GreenToken</span>) {
-        <span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">token_hash_of</span>(<span class="ident">kind</span>, <span class="ident">text</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>token_with_trivia(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        kind: RawSyntaxKind,
+        text: <span class="kw-2">&amp;</span>str,
+        leading: <span class="kw-2">&amp;</span>[TriviaPiece],
+        trailing: <span class="kw-2">&amp;</span>[TriviaPiece],
+    ) -&gt; (u64, GreenToken) {
+        <span class="kw">let </span>hash = token_hash_of(kind, text);
 
-        <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">raw_entry_mut</span>().<span class="ident">from_hash</span>(<span class="ident">hash</span>, <span class="op">|</span><span class="ident">token</span><span class="op">|</span> {
-            <span class="ident">token</span>.<span class="number">0</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">kind</span> <span class="op">&amp;&amp;</span> <span class="ident">token</span>.<span class="number">0</span>.<span class="ident">text</span>() <span class="op">==</span> <span class="ident">text</span>
+        <span class="kw">let </span>entry = <span class="self">self</span>.tokens.raw_entry_mut().from_hash(hash, |token| {
+            token.<span class="number">0</span>.kind() == kind &amp;&amp; token.<span class="number">0</span>.text() == text
         });
 
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">entry</span> {
-            <span class="ident">RawEntryMut::Occupied</span>(<span class="ident">entry</span>) =&gt; <span class="ident">entry</span>.<span class="ident">key</span>().<span class="number">0</span>.<span class="ident">clone</span>(),
-            <span class="ident">RawEntryMut::Vacant</span>(<span class="ident">entry</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">leading</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">get</span>(<span class="ident">leading</span>);
-                <span class="kw">let</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">trivia</span>.<span class="ident">get</span>(<span class="ident">trailing</span>);
+        <span class="kw">let </span>token = <span class="kw">match </span>entry {
+            RawEntryMut::Occupied(entry) =&gt; entry.key().<span class="number">0</span>.clone(),
+            RawEntryMut::Vacant(entry) =&gt; {
+                <span class="kw">let </span>leading = <span class="self">self</span>.trivia.get(leading);
+                <span class="kw">let </span>trailing = <span class="self">self</span>.trivia.get(trailing);
 
-                <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">GreenToken::with_trivia</span>(<span class="ident">kind</span>, <span class="ident">text</span>, <span class="ident">leading</span>, <span class="ident">trailing</span>);
-                <span class="ident">entry</span>
-                    .<span class="ident">insert_with_hasher</span>(<span class="ident">hash</span>, <span class="ident">CachedToken</span>(<span class="ident">token</span>.<span class="ident">clone</span>()), (), <span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">token_hash</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>.<span class="number">0</span>));
-                <span class="ident">token</span>
+                <span class="kw">let </span>token = GreenToken::with_trivia(kind, text, leading, trailing);
+                entry
+                    .insert_with_hasher(hash, CachedToken(token.clone()), (), |t| token_hash(<span class="kw-2">&amp;</span>t.<span class="number">0</span>));
+                token
             }
         };
 
-        (<span class="ident">hash</span>, <span class="ident">token</span>)
+        (hash, token)
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">NodeCacheNodeEntryMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">Cached</span>(<span class="ident">CachedNodeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>),
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>NodeCacheNodeEntryMut&lt;<span class="lifetime">&#39;a</span>&gt; {
+    Cached(CachedNodeEntry&lt;<span class="lifetime">&#39;a</span>&gt;),
 
-    <span class="doccomment">/// A node that should not be cached</span>
-    <span class="ident">NoCache</span>(<span class="ident">u64</span>),
-    <span class="ident">Vacant</span>(<span class="ident">VacantNodeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// A node that should not be cached
+    </span>NoCache(u64),
+    Vacant(VacantNodeEntry&lt;<span class="lifetime">&#39;a</span>&gt;),
 }
 
-<span class="doccomment">/// Represents a vacant entry, a node that hasn&#39;t been cached yet.</span>
-<span class="doccomment">/// The `insert` method allows to place a node inside of the vacant entry. The inserted node</span>
-<span class="doccomment">/// may have a different representation (kind or children) than the originally queried node.</span>
-<span class="doccomment">/// For example, a node may change its kind to unknown or add empty slots. The only importance is</span>
-<span class="doccomment">/// that these changes apply for all nodes that have the same shape as the originally queried node.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">VacantNodeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">hash</span>: <span class="ident">u64</span>,
-    <span class="ident">original_kind</span>: <span class="ident">RawSyntaxKind</span>,
-    <span class="ident">raw_entry</span>: <span class="ident">RawVacantEntryMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">CachedNode</span>, (), <span class="ident">BuildHasherDefault</span><span class="op">&lt;</span><span class="ident">FxHasher</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Represents a vacant entry, a node that hasn&#39;t been cached yet.
+/// The `insert` method allows to place a node inside of the vacant entry. The inserted node
+/// may have a different representation (kind or children) than the originally queried node.
+/// For example, a node may change its kind to unknown or add empty slots. The only importance is
+/// that these changes apply for all nodes that have the same shape as the originally queried node.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>VacantNodeEntry&lt;<span class="lifetime">&#39;a</span>&gt; {
+    hash: u64,
+    original_kind: RawSyntaxKind,
+    raw_entry: RawVacantEntryMut&lt;<span class="lifetime">&#39;a</span>, CachedNode, (), BuildHasherDefault&lt;FxHasher&gt;&gt;,
 }
 
-<span class="doccomment">/// Represents an entry of a cached node.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">CachedNodeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">hash</span>: <span class="ident">u64</span>,
-    <span class="ident">raw_entry</span>: <span class="ident">RawOccupiedEntryMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">CachedNode</span>, (), <span class="ident">BuildHasherDefault</span><span class="op">&lt;</span><span class="ident">FxHasher</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Represents an entry of a cached node.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>CachedNodeEntry&lt;<span class="lifetime">&#39;a</span>&gt; {
+    hash: u64,
+    raw_entry: RawOccupiedEntryMut&lt;<span class="lifetime">&#39;a</span>, CachedNode, (), BuildHasherDefault&lt;FxHasher&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CachedNodeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GreenNode</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">raw_entry</span>.<span class="ident">key</span>().<span class="ident">node</span>
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; CachedNodeEntry&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>node(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>GreenNode {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.raw_entry.key().node
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">hash</span>
+    <span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.hash
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">VacantNodeEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Inserts the `node` into the cache so that future queries for the same kind and children resolve to the passed `node`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns the hash of the node.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The cache does not cache the `node` if the kind doesn&#39;t match the `kind` of the queried node because</span>
-    <span class="doccomment">/// cache lookups wouldn&#39;t be successful because the hash collision prevention check compares the kinds of the</span>
-    <span class="doccomment">/// cached and queried node.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cache</span>(<span class="self">self</span>, <span class="ident">node</span>: <span class="ident">GreenNode</span>) -&gt; <span class="ident">u64</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">original_kind</span> <span class="op">!</span><span class="op">=</span> <span class="ident">node</span>.<span class="ident">kind</span>() {
-            <span class="comment">// The kind has changed since it has been queried. For example, the node has been converted to an</span>
-            <span class="comment">// unknown node. Never cache these nodes because cache lookups will never match.</span>
-            <span class="ident">NodeCache::UNCACHED_NODE_HASH</span>
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">raw_entry</span>.<span class="ident">insert_with_hasher</span>(
-                <span class="self">self</span>.<span class="ident">hash</span>,
-                <span class="ident">CachedNode</span> {
-                    <span class="ident">node</span>,
-                    <span class="ident">hash</span>: <span class="self">self</span>.<span class="ident">hash</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; VacantNodeEntry&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Inserts the `node` into the cache so that future queries for the same kind and children resolve to the passed `node`.
+    ///
+    /// Returns the hash of the node.
+    ///
+    /// The cache does not cache the `node` if the kind doesn&#39;t match the `kind` of the queried node because
+    /// cache lookups wouldn&#39;t be successful because the hash collision prevention check compares the kinds of the
+    /// cached and queried node.
+    </span><span class="kw">pub fn </span>cache(<span class="self">self</span>, node: GreenNode) -&gt; u64 {
+        <span class="kw">if </span><span class="self">self</span>.original_kind != node.kind() {
+            <span class="comment">// The kind has changed since it has been queried. For example, the node has been converted to an
+            // unknown node. Never cache these nodes because cache lookups will never match.
+            </span>NodeCache::UNCACHED_NODE_HASH
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.raw_entry.insert_with_hasher(
+                <span class="self">self</span>.hash,
+                CachedNode {
+                    node,
+                    hash: <span class="self">self</span>.hash,
                 },
                 (),
-                <span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">hash</span>,
+                |n| n.hash,
             );
-            <span class="self">self</span>.<span class="ident">hash</span>
+            <span class="self">self</span>.hash
         }
     }
 }
 
-<span class="doccomment">/// A cached [GreenTrivia].</span>
-<span class="doccomment">/// Deliberately doesn&#39;t implement `Hash` to make sure all</span>
-<span class="doccomment">/// usages go through the custom `FxHasher`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">CachedTrivia</span>(<span class="ident">GreenTrivia</span>);
+<span class="doccomment">/// A cached [GreenTrivia].
+/// Deliberately doesn&#39;t implement `Hash` to make sure all
+/// usages go through the custom `FxHasher`.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>CachedTrivia(GreenTrivia);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">TriviaCache</span> {
-    <span class="doccomment">/// Generic cache for trivia</span>
-    <span class="ident">cache</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">CachedTrivia</span>, ()<span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>TriviaCache {
+    <span class="doccomment">/// Generic cache for trivia
+    </span>cache: HashMap&lt;CachedTrivia, ()&gt;,
 
-    <span class="doccomment">/// Cached single whitespace trivia.</span>
-    <span class="ident">whitespace</span>: <span class="ident">GreenTrivia</span>,
+    <span class="doccomment">/// Cached single whitespace trivia.
+    </span>whitespace: GreenTrivia,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">TriviaCache</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">cache</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">whitespace</span>: <span class="ident">GreenTrivia::new</span>([<span class="ident">TriviaPiece::whitespace</span>(<span class="number">1</span>)]),
+<span class="kw">impl </span>Default <span class="kw">for </span>TriviaCache {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            cache: Default::default(),
+            whitespace: GreenTrivia::new([TriviaPiece::whitespace(<span class="number">1</span>)]),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TriviaCache</span> {
-    <span class="doccomment">/// Tries to retrieve a [GreenTrivia] with the given pieces from the cache or creates a new one and caches</span>
-    <span class="doccomment">/// it for further calls.</span>
-    <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">pieces</span>: <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece</span>]) -&gt; <span class="ident">GreenTrivia</span> {
-        <span class="kw">match</span> <span class="ident">pieces</span> {
-            [] =&gt; <span class="ident">GreenTrivia::empty</span>(),
-            [<span class="ident">TriviaPiece</span> {
-                <span class="ident">kind</span>: <span class="ident">TriviaPieceKind::Whitespace</span>,
-                <span class="ident">length</span>,
-            }] <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">length</span> <span class="op">==</span> <span class="ident">TextSize::from</span>(<span class="number">1</span>) =&gt; <span class="self">self</span>.<span class="ident">whitespace</span>.<span class="ident">clone</span>(),
+<span class="kw">impl </span>TriviaCache {
+    <span class="doccomment">/// Tries to retrieve a [GreenTrivia] with the given pieces from the cache or creates a new one and caches
+    /// it for further calls.
+    </span><span class="kw">fn </span>get(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pieces: <span class="kw-2">&amp;</span>[TriviaPiece]) -&gt; GreenTrivia {
+        <span class="kw">match </span>pieces {
+            [] =&gt; GreenTrivia::empty(),
+            [TriviaPiece {
+                kind: TriviaPieceKind::Whitespace,
+                length,
+            }] <span class="kw">if </span><span class="kw-2">*</span>length == TextSize::from(<span class="number">1</span>) =&gt; <span class="self">self</span>.whitespace.clone(),
 
-            <span class="kw">_</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::trivia_hash_of</span>(<span class="ident">pieces</span>);
+            <span class="kw">_ </span>=&gt; {
+                <span class="kw">let </span>hash = <span class="self">Self</span>::trivia_hash_of(pieces);
 
-                <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="self">self</span>
-                    .<span class="ident">cache</span>
-                    .<span class="ident">raw_entry_mut</span>()
-                    .<span class="ident">from_hash</span>(<span class="ident">hash</span>, <span class="op">|</span><span class="ident">trivia</span><span class="op">|</span> <span class="ident">trivia</span>.<span class="number">0</span>.<span class="ident">pieces</span>() <span class="op">==</span> <span class="ident">pieces</span>);
+                <span class="kw">let </span>entry = <span class="self">self
+                    </span>.cache
+                    .raw_entry_mut()
+                    .from_hash(hash, |trivia| trivia.<span class="number">0</span>.pieces() == pieces);
 
-                <span class="kw">match</span> <span class="ident">entry</span> {
-                    <span class="ident">RawEntryMut::Occupied</span>(<span class="ident">entry</span>) =&gt; <span class="ident">entry</span>.<span class="ident">key</span>().<span class="number">0</span>.<span class="ident">clone</span>(),
-                    <span class="ident">RawEntryMut::Vacant</span>(<span class="ident">entry</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">trivia</span> <span class="op">=</span> <span class="ident">GreenTrivia::new</span>(<span class="ident">pieces</span>.<span class="ident">iter</span>().<span class="ident">copied</span>());
-                        <span class="ident">entry</span>.<span class="ident">insert_with_hasher</span>(
-                            <span class="ident">hash</span>,
-                            <span class="ident">CachedTrivia</span>(<span class="ident">trivia</span>.<span class="ident">clone</span>()),
+                <span class="kw">match </span>entry {
+                    RawEntryMut::Occupied(entry) =&gt; entry.key().<span class="number">0</span>.clone(),
+                    RawEntryMut::Vacant(entry) =&gt; {
+                        <span class="kw">let </span>trivia = GreenTrivia::new(pieces.iter().copied());
+                        entry.insert_with_hasher(
+                            hash,
+                            CachedTrivia(trivia.clone()),
                             (),
-                            <span class="op">|</span><span class="ident">cached</span><span class="op">|</span> <span class="ident"><span class="self">Self</span>::trivia_hash_of</span>(<span class="ident">cached</span>.<span class="number">0</span>.<span class="ident">pieces</span>()),
+                            |cached| <span class="self">Self</span>::trivia_hash_of(cached.<span class="number">0</span>.pieces()),
                         );
-                        <span class="ident">trivia</span>
+                        trivia
                     }
                 }
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">trivia_hash_of</span>(<span class="ident">pieces</span>: <span class="kw-2">&amp;</span>[<span class="ident">TriviaPiece</span>]) -&gt; <span class="ident">u64</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">FxHasher::default</span>();
+    <span class="kw">fn </span>trivia_hash_of(pieces: <span class="kw-2">&amp;</span>[TriviaPiece]) -&gt; u64 {
+        <span class="kw">let </span><span class="kw-2">mut </span>h = FxHasher::default();
 
-        <span class="ident">pieces</span>.<span class="ident">len</span>().<span class="ident">hash</span>(<span class="kw-2">&amp;mut</span> <span class="ident">h</span>);
+        pieces.len().hash(<span class="kw-2">&amp;mut </span>h);
 
-        <span class="kw">for</span> <span class="ident">piece</span> <span class="kw">in</span> <span class="ident">pieces</span> {
-            <span class="ident">piece</span>.<span class="ident">hash</span>(<span class="kw-2">&amp;mut</span> <span class="ident">h</span>);
+        <span class="kw">for </span>piece <span class="kw">in </span>pieces {
+            piece.hash(<span class="kw-2">&amp;mut </span>h);
         }
 
-        <span class="ident">h</span>.<span class="ident">finish</span>()
+        h.finish()
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green::node_cache::token_hash</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green::trivia::GreenTrivia</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">GreenToken</span>, <span class="ident">RawSyntaxKind</span>};
-    <span class="kw">use</span> <span class="ident">rome_text_size::TextSize</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::green::node_cache::token_hash;
+    <span class="kw">use </span><span class="kw">crate</span>::green::trivia::GreenTrivia;
+    <span class="kw">use crate</span>::{GreenToken, RawSyntaxKind};
+    <span class="kw">use </span>rome_text_size::TextSize;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">green_token_hash</span>() {
-        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">RawSyntaxKind</span>(<span class="number">0</span>);
-        <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="string">&quot; let &quot;</span>;
-        <span class="kw">let</span> <span class="ident">t1</span> <span class="op">=</span> <span class="ident">GreenToken::with_trivia</span>(
-            <span class="ident">kind</span>,
-            <span class="ident">text</span>,
-            <span class="ident">GreenTrivia::whitespace</span>(<span class="ident">TextSize::from</span>(<span class="number">1</span>)),
-            <span class="ident">GreenTrivia::whitespace</span>(<span class="ident">TextSize::from</span>(<span class="number">1</span>)),
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>green_token_hash() {
+        <span class="kw">let </span>kind = RawSyntaxKind(<span class="number">0</span>);
+        <span class="kw">let </span>text = <span class="string">&quot; let &quot;</span>;
+        <span class="kw">let </span>t1 = GreenToken::with_trivia(
+            kind,
+            text,
+            GreenTrivia::whitespace(TextSize::from(<span class="number">1</span>)),
+            GreenTrivia::whitespace(TextSize::from(<span class="number">1</span>)),
         );
-        <span class="kw">let</span> <span class="ident">t2</span> <span class="op">=</span> <span class="ident">GreenToken::with_trivia</span>(
-            <span class="ident">kind</span>,
-            <span class="ident">text</span>,
-            <span class="ident">GreenTrivia::whitespace</span>(<span class="number">1</span>),
-            <span class="ident">GreenTrivia::whitespace</span>(<span class="number">1</span>),
+        <span class="kw">let </span>t2 = GreenToken::with_trivia(
+            kind,
+            text,
+            GreenTrivia::whitespace(<span class="number">1</span>),
+            GreenTrivia::whitespace(<span class="number">1</span>),
         );
 
-        <span class="macro">assert_eq!</span>(<span class="ident">token_hash</span>(<span class="kw-2">&amp;</span><span class="ident">t1</span>), <span class="ident">token_hash</span>(<span class="kw-2">&amp;</span><span class="ident">t2</span>));
+        <span class="macro">assert_eq!</span>(token_hash(<span class="kw-2">&amp;</span>t1), token_hash(<span class="kw-2">&amp;</span>t2));
 
-        <span class="kw">let</span> <span class="ident">t3</span> <span class="op">=</span> <span class="ident">GreenToken::new</span>(<span class="ident">kind</span>, <span class="string">&quot;let&quot;</span>);
-        <span class="macro">assert_ne!</span>(<span class="ident">token_hash</span>(<span class="kw-2">&amp;</span><span class="ident">t1</span>), <span class="ident">token_hash</span>(<span class="kw-2">&amp;</span><span class="ident">t3</span>));
+        <span class="kw">let </span>t3 = GreenToken::new(kind, <span class="string">&quot;let&quot;</span>);
+        <span class="macro">assert_ne!</span>(token_hash(<span class="kw-2">&amp;</span>t1), token_hash(<span class="kw-2">&amp;</span>t3));
 
-        <span class="kw">let</span> <span class="ident">t4</span> <span class="op">=</span> <span class="ident">GreenToken::with_trivia</span>(
-            <span class="ident">kind</span>,
+        <span class="kw">let </span>t4 = GreenToken::with_trivia(
+            kind,
             <span class="string">&quot;\tlet &quot;</span>,
-            <span class="ident">GreenTrivia::whitespace</span>(<span class="number">1</span>),
-            <span class="ident">GreenTrivia::whitespace</span>(<span class="number">1</span>),
+            GreenTrivia::whitespace(<span class="number">1</span>),
+            GreenTrivia::whitespace(<span class="number">1</span>),
         );
-        <span class="macro">assert_ne!</span>(<span class="ident">token_hash</span>(<span class="kw-2">&amp;</span><span class="ident">t1</span>), <span class="ident">token_hash</span>(<span class="kw-2">&amp;</span><span class="ident">t4</span>));
+        <span class="macro">assert_ne!</span>(token_hash(<span class="kw-2">&amp;</span>t1), token_hash(<span class="kw-2">&amp;</span>t4));
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

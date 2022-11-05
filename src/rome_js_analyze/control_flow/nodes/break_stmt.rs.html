@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/control_flow/nodes/break_stmt.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>break_stmt.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/control_flow/nodes/break_stmt.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>break_stmt.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -75,82 +75,82 @@
 <span id="75">75</span>
 <span id="76">76</span>
 <span id="77">77</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::any::TypeId</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
 
-<span class="kw">use</span> <span class="ident">rome_js_syntax::JsBreakStatement</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">SyntaxError</span>, <span class="ident">SyntaxResult</span>};
+<span class="kw">use </span>rome_js_syntax::JsBreakStatement;
+<span class="kw">use </span>rome_rowan::{AstNode, SyntaxError, SyntaxResult};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>::{
-    <span class="ident">nodes</span>::{
-        <span class="ident">BlockVisitor</span>, <span class="ident">DoWhileVisitor</span>, <span class="ident">ForInVisitor</span>, <span class="ident">ForOfVisitor</span>, <span class="ident">ForVisitor</span>, <span class="ident">SwitchVisitor</span>,
-        <span class="ident">WhileVisitor</span>,
+<span class="kw">use </span><span class="kw">crate</span>::control_flow::{
+    nodes::{
+        BlockVisitor, DoWhileVisitor, ForInVisitor, ForOfVisitor, ForVisitor, SwitchVisitor,
+        WhileVisitor,
     },
-    <span class="ident">visitor</span>::{<span class="ident">FunctionVisitor</span>, <span class="ident">NodeVisitor</span>, <span class="ident">StatementStack</span>, <span class="ident">VisitorAdapter</span>},
-    <span class="ident">FunctionBuilder</span>,
+    visitor::{FunctionVisitor, NodeVisitor, StatementStack, VisitorAdapter},
+    FunctionBuilder,
 };
 
-<span class="kw">pub</span>(<span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::control_flow</span>) <span class="kw">struct</span> <span class="ident">BreakVisitor</span>;
+<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::control_flow) <span class="kw">struct </span>BreakVisitor;
 
-<span class="kw">impl</span> <span class="ident">NodeVisitor</span> <span class="kw">for</span> <span class="ident">BreakVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Node</span> <span class="op">=</span> <span class="ident">JsBreakStatement</span>;
+<span class="kw">impl </span>NodeVisitor <span class="kw">for </span>BreakVisitor {
+    <span class="kw">type </span>Node = JsBreakStatement;
 
-    <span class="kw">fn</span> <span class="ident">enter</span>(
-        <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Node</span>,
-        <span class="ident">builder</span>: <span class="kw-2">&amp;mut</span> <span class="ident">FunctionBuilder</span>,
-        <span class="ident">state</span>: <span class="ident">StatementStack</span>,
-    ) -&gt; <span class="ident">SyntaxResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">label</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">label_token</span>();
+    <span class="kw">fn </span>enter(
+        node: <span class="self">Self</span>::Node,
+        builder: <span class="kw-2">&amp;mut </span>FunctionBuilder,
+        state: StatementStack,
+    ) -&gt; SyntaxResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>label = node.label_token();
 
-        <span class="kw">let</span> <span class="ident">break_block</span> <span class="op">=</span> <span class="ident">state</span>
-            .<span class="ident">stack</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">rev</span>()
-            .<span class="ident">take_while</span>(<span class="op">|</span>(<span class="ident">type_id</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">type_id</span> <span class="op">!</span><span class="op">=</span> <span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">VisitorAdapter</span><span class="op">&lt;</span><span class="ident">FunctionVisitor</span><span class="op">&gt;</span><span class="op">&gt;</span>())
-            .<span class="ident">find_map</span>(<span class="op">|</span>(<span class="ident">type_id</span>, <span class="ident">index</span>)<span class="op">|</span> {
-                <span class="kw">let</span> (<span class="ident">block_label</span>, <span class="ident">block</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visitor</span>) <span class="op">=</span>
-                    <span class="ident">state</span>.<span class="ident">try_downcast</span>::<span class="op">&lt;</span><span class="ident">ForVisitor</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="ident">type_id</span>, <span class="kw-2">*</span><span class="ident">index</span>)
+        <span class="kw">let </span>break_block = state
+            .stack
+            .iter()
+            .rev()
+            .take_while(|(type_id, <span class="kw">_</span>)| <span class="kw-2">*</span>type_id != TypeId::of::&lt;VisitorAdapter&lt;FunctionVisitor&gt;&gt;())
+            .find_map(|(type_id, index)| {
+                <span class="kw">let </span>(block_label, block) = <span class="kw">if let </span><span class="prelude-val">Some</span>(visitor) =
+                    state.try_downcast::&lt;ForVisitor&gt;(<span class="kw-2">*</span>type_id, <span class="kw-2">*</span>index)
                 {
-                    (<span class="ident">visitor</span>.<span class="ident">label</span>.<span class="ident">as_ref</span>(), <span class="ident">visitor</span>.<span class="ident">break_block</span>)
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visitor</span>) <span class="op">=</span> <span class="ident">state</span>.<span class="ident">try_downcast</span>::<span class="op">&lt;</span><span class="ident">ForInVisitor</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="ident">type_id</span>, <span class="kw-2">*</span><span class="ident">index</span>) {
-                    (<span class="ident">visitor</span>.<span class="ident">label</span>.<span class="ident">as_ref</span>(), <span class="ident">visitor</span>.<span class="ident">break_block</span>)
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visitor</span>) <span class="op">=</span> <span class="ident">state</span>.<span class="ident">try_downcast</span>::<span class="op">&lt;</span><span class="ident">ForOfVisitor</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="ident">type_id</span>, <span class="kw-2">*</span><span class="ident">index</span>) {
-                    (<span class="ident">visitor</span>.<span class="ident">label</span>.<span class="ident">as_ref</span>(), <span class="ident">visitor</span>.<span class="ident">break_block</span>)
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visitor</span>) <span class="op">=</span> <span class="ident">state</span>.<span class="ident">try_downcast</span>::<span class="op">&lt;</span><span class="ident">WhileVisitor</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="ident">type_id</span>, <span class="kw-2">*</span><span class="ident">index</span>) {
-                    (<span class="ident">visitor</span>.<span class="ident">label</span>.<span class="ident">as_ref</span>(), <span class="ident">visitor</span>.<span class="ident">break_block</span>)
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visitor</span>) <span class="op">=</span> <span class="ident">state</span>.<span class="ident">try_downcast</span>::<span class="op">&lt;</span><span class="ident">DoWhileVisitor</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="ident">type_id</span>, <span class="kw-2">*</span><span class="ident">index</span>)
+                    (visitor.label.as_ref(), visitor.break_block)
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(visitor) = state.try_downcast::&lt;ForInVisitor&gt;(<span class="kw-2">*</span>type_id, <span class="kw-2">*</span>index) {
+                    (visitor.label.as_ref(), visitor.break_block)
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(visitor) = state.try_downcast::&lt;ForOfVisitor&gt;(<span class="kw-2">*</span>type_id, <span class="kw-2">*</span>index) {
+                    (visitor.label.as_ref(), visitor.break_block)
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(visitor) = state.try_downcast::&lt;WhileVisitor&gt;(<span class="kw-2">*</span>type_id, <span class="kw-2">*</span>index) {
+                    (visitor.label.as_ref(), visitor.break_block)
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(visitor) = state.try_downcast::&lt;DoWhileVisitor&gt;(<span class="kw-2">*</span>type_id, <span class="kw-2">*</span>index)
                 {
-                    (<span class="ident">visitor</span>.<span class="ident">label</span>.<span class="ident">as_ref</span>(), <span class="ident">visitor</span>.<span class="ident">break_block</span>)
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visitor</span>) <span class="op">=</span> <span class="ident">state</span>.<span class="ident">try_downcast</span>::<span class="op">&lt;</span><span class="ident">SwitchVisitor</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="ident">type_id</span>, <span class="kw-2">*</span><span class="ident">index</span>)
+                    (visitor.label.as_ref(), visitor.break_block)
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(visitor) = state.try_downcast::&lt;SwitchVisitor&gt;(<span class="kw-2">*</span>type_id, <span class="kw-2">*</span>index)
                 {
-                    (<span class="ident">visitor</span>.<span class="ident">label</span>.<span class="ident">as_ref</span>(), <span class="ident">visitor</span>.<span class="ident">break_block</span>)
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visitor</span>) <span class="op">=</span> <span class="ident">state</span>.<span class="ident">try_downcast</span>::<span class="op">&lt;</span><span class="ident">BlockVisitor</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="ident">type_id</span>, <span class="kw-2">*</span><span class="ident">index</span>) {
-                    <span class="kw">let</span> (<span class="ident">label</span>, <span class="ident">block</span>) <span class="op">=</span> <span class="ident">visitor</span>.<span class="ident">break_block</span>.<span class="ident">as_ref</span>()<span class="question-mark">?</span>;
-                    (<span class="prelude-val">Some</span>(<span class="ident">label</span>), <span class="kw-2">*</span><span class="ident">block</span>)
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">None</span>;
+                    (visitor.label.as_ref(), visitor.break_block)
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(visitor) = state.try_downcast::&lt;BlockVisitor&gt;(<span class="kw-2">*</span>type_id, <span class="kw-2">*</span>index) {
+                    <span class="kw">let </span>(label, block) = visitor.break_block.as_ref()<span class="question-mark">?</span>;
+                    (<span class="prelude-val">Some</span>(label), <span class="kw-2">*</span>block)
+                } <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">None</span>;
                 };
 
-                <span class="kw">match</span> (<span class="ident">block_label</span>, <span class="kw-2">&amp;</span><span class="ident">label</span>) {
-                    (<span class="prelude-val">Some</span>(<span class="ident">a</span>), <span class="prelude-val">Some</span>(<span class="ident">b</span>)) =&gt; {
-                        <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">text_trimmed</span>() <span class="op">==</span> <span class="ident">b</span>.<span class="ident">text_trimmed</span>() {
-                            <span class="prelude-val">Some</span>(<span class="ident">block</span>)
-                        } <span class="kw">else</span> {
-                            <span class="prelude-val">None</span>
-                        }
+                <span class="kw">match </span>(block_label, <span class="kw-2">&amp;</span>label) {
+                    (<span class="prelude-val">Some</span>(a), <span class="prelude-val">Some</span>(b)) =&gt; {
+                        <span class="kw">if </span>a.text_trimmed() == b.text_trimmed() {
+                            <span class="prelude-val">Some</span>(block)
+                        } <span class="kw">else </span>{
+                            <span class="prelude-val">None
+                        </span>}
                     }
 
-                    (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">block</span>),
-                    <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                    (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Some</span>(block),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
                 }
             })
-            .<span class="ident">ok_or</span>(<span class="ident">SyntaxError::MissingRequiredChild</span>)<span class="question-mark">?</span>;
+            .ok_or(SyntaxError::MissingRequiredChild)<span class="question-mark">?</span>;
 
-        <span class="ident">builder</span>
-            .<span class="ident">append_jump</span>(<span class="bool-val">false</span>, <span class="ident">break_block</span>)
-            .<span class="ident">with_node</span>(<span class="ident">node</span>.<span class="ident">into_syntax</span>());
+        builder
+            .append_jump(<span class="bool-val">false</span>, break_block)
+            .with_node(node.into_syntax());
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

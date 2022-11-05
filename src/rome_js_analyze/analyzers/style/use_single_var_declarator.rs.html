@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/style/use_single_var_declarator.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_single_var_declarator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/style/use_single_var_declarator.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_single_var_declarator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -226,233 +226,233 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::iter</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::iter;
 
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">context::RuleContext</span>, <span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_factory::make</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsModuleItemList</span>, <span class="ident">JsStatementList</span>, <span class="ident">JsSyntaxToken</span>, <span class="ident">JsVariableDeclarationFields</span>,
-    <span class="ident">JsVariableDeclaratorList</span>, <span class="ident">JsVariableStatement</span>, <span class="ident">JsVariableStatementFields</span>, <span class="ident">TextSize</span>,
-    <span class="ident">TriviaPieceKind</span>, <span class="ident">T</span>,
+<span class="kw">use </span>rome_analyze::{context::RuleContext, declare_rule, ActionCategory, Ast, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_factory::make;
+<span class="kw">use </span>rome_js_syntax::{
+    JsModuleItemList, JsStatementList, JsSyntaxToken, JsVariableDeclarationFields,
+    JsVariableDeclaratorList, JsVariableStatement, JsVariableStatementFields, TextSize,
+    TriviaPieceKind, T,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">AstNodeExt</span>, <span class="ident">AstSeparatedList</span>, <span class="ident">BatchMutationExt</span>, <span class="ident">TriviaPiece</span>};
+<span class="kw">use </span>rome_rowan::{AstNode, AstNodeExt, AstSeparatedList, BatchMutationExt, TriviaPiece};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsRuleAction</span>;
+<span class="kw">use </span><span class="kw">crate</span>::JsRuleAction;
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Disallow multiple variable declarations in the same variable statement</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// let foo, bar;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Valid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// for (let i = 0, x = 1; i &lt; arr.length; i++) {}</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseSingleVarDeclarator</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;useSingleVarDeclarator&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">true</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Disallow multiple variable declarations in the same variable statement
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    /// let foo, bar;
+    /// ```
+    ///
+    /// ### Valid
+    ///
+    /// ```js
+    /// for (let i = 0, x = 1; i &lt; arr.length; i++) {}
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) UseSingleVarDeclarator {
+        version: <span class="string">&quot;0.7.0&quot;</span>,
+        name: <span class="string">&quot;useSingleVarDeclarator&quot;</span>,
+        recommended: <span class="bool-val">true</span>,
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseSingleVarDeclarator</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">JsVariableStatement</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> (
-        <span class="ident">JsSyntaxToken</span>,
-        <span class="ident">JsVariableDeclaratorList</span>,
-        <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsSyntaxToken</span><span class="op">&gt;</span>,
+<span class="kw">impl </span>Rule <span class="kw">for </span>UseSingleVarDeclarator {
+    <span class="kw">type </span>Query = Ast&lt;JsVariableStatement&gt;;
+    <span class="kw">type </span>State = (
+        JsSyntaxToken,
+        JsVariableDeclaratorList,
+        <span class="prelude-ty">Option</span>&lt;JsSyntaxToken&gt;,
     );
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt; {
+        <span class="kw">let </span>node = ctx.query();
 
-        <span class="kw">let</span> <span class="ident">JsVariableStatementFields</span> {
-            <span class="ident">declaration</span>,
-            <span class="ident">semicolon_token</span>,
-        } <span class="op">=</span> <span class="ident">node</span>.<span class="ident">as_fields</span>();
+        <span class="kw">let </span>JsVariableStatementFields {
+            declaration,
+            semicolon_token,
+        } = node.as_fields();
 
-        <span class="kw">let</span> <span class="ident">JsVariableDeclarationFields</span> { <span class="ident">kind</span>, <span class="ident">declarators</span> } <span class="op">=</span> <span class="ident">declaration</span>.<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">as_fields</span>();
+        <span class="kw">let </span>JsVariableDeclarationFields { kind, declarators } = declaration.ok()<span class="question-mark">?</span>.as_fields();
 
-        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">kind</span>.<span class="ident">ok</span>()<span class="question-mark">?</span>;
+        <span class="kw">let </span>kind = kind.ok()<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="ident">declarators</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="number">2</span> {
-            <span class="kw">return</span> <span class="prelude-val">None</span>;
+        <span class="kw">if </span>declarators.len() &lt; <span class="number">2 </span>{
+            <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="prelude-val">Some</span>((<span class="ident">kind</span>, <span class="ident">declarators</span>, <span class="ident">semicolon_token</span>))
+        <span class="prelude-val">Some</span>((kind, declarators, semicolon_token))
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+    <span class="kw">fn </span>diagnostic(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, _state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>node = ctx.query();
 
-        <span class="prelude-val">Some</span>(<span class="ident">RuleDiagnostic::new</span>(
+        <span class="prelude-val">Some</span>(RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">node</span>.<span class="ident">range</span>(),
+            node.range(),
             <span class="string">&quot;Declare variables separately&quot;</span>,
         ))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="ident">prev_parent</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">syntax</span>().<span class="ident">parent</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>action(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="kw">let </span>prev_parent = node.syntax().parent()<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">JsStatementList::can_cast</span>(<span class="ident">prev_parent</span>.<span class="ident">kind</span>())
-            <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">JsModuleItemList::can_cast</span>(<span class="ident">prev_parent</span>.<span class="ident">kind</span>())
+        <span class="kw">if </span>!JsStatementList::can_cast(prev_parent.kind())
+            &amp;&amp; !JsModuleItemList::can_cast(prev_parent.kind())
         {
-            <span class="kw">return</span> <span class="prelude-val">None</span>;
+            <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">declarators</span>, <span class="ident">semicolon_token</span>) <span class="op">=</span> <span class="ident">state</span>;
+        <span class="kw">let </span>(kind, declarators, semicolon_token) = state;
 
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">prev_parent</span>
-            .<span class="ident">children</span>()
-            .<span class="ident">position</span>(<span class="op">|</span><span class="ident">slot</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">slot</span> <span class="op">==</span> <span class="ident">node</span>.<span class="ident">syntax</span>())<span class="question-mark">?</span>;
+        <span class="kw">let </span>index = prev_parent
+            .children()
+            .position(|slot| <span class="kw-2">&amp;</span>slot == node.syntax())<span class="question-mark">?</span>;
 
-        <span class="comment">// Extract the indentation part from the leading trivia of the kind</span>
-        <span class="comment">// token, defined as all whitespace and newline trivia pieces starting</span>
-        <span class="comment">// from the token going backwards up to the first newline (included).</span>
-        <span class="comment">// If the leading trivia for the token is empty, a single newline trivia</span>
-        <span class="comment">// piece is created.  For efficiency, the trivia pieces are stored in</span>
-        <span class="comment">// reverse order (the vector is then reversed again on iteration)</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_newline</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="kw">let</span> <span class="ident">leading_trivia</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">kind</span>
-            .<span class="ident">leading_trivia</span>()
-            .<span class="ident">pieces</span>()
-            .<span class="ident">rev</span>()
-            .<span class="ident">take_while</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">has_previous_newline</span> <span class="op">=</span> <span class="ident">has_newline</span>;
-                <span class="ident">has_newline</span> <span class="op">|</span><span class="op">=</span> <span class="ident">piece</span>.<span class="ident">is_newline</span>();
-                <span class="op">!</span><span class="ident">has_previous_newline</span>
+        <span class="comment">// Extract the indentation part from the leading trivia of the kind
+        // token, defined as all whitespace and newline trivia pieces starting
+        // from the token going backwards up to the first newline (included).
+        // If the leading trivia for the token is empty, a single newline trivia
+        // piece is created.  For efficiency, the trivia pieces are stored in
+        // reverse order (the vector is then reversed again on iteration)
+        </span><span class="kw">let </span><span class="kw-2">mut </span>has_newline = <span class="bool-val">false</span>;
+        <span class="kw">let </span>leading_trivia: Vec&lt;<span class="kw">_</span>&gt; = kind
+            .leading_trivia()
+            .pieces()
+            .rev()
+            .take_while(|piece| {
+                <span class="kw">let </span>has_previous_newline = has_newline;
+                has_newline |= piece.is_newline();
+                !has_previous_newline
             })
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="ident">piece</span>.<span class="ident">is_whitespace</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_newline</span>() {
-                    <span class="prelude-val">Some</span>((<span class="ident">piece</span>.<span class="ident">kind</span>(), <span class="ident">piece</span>.<span class="ident">text</span>().<span class="ident">to_string</span>()))
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">None</span>
-                }
+            .filter_map(|piece| {
+                <span class="kw">if </span>piece.is_whitespace() || piece.is_newline() {
+                    <span class="prelude-val">Some</span>((piece.kind(), piece.text().to_string()))
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">None
+                </span>}
             })
-            .<span class="ident">collect</span>();
+            .collect();
 
-        <span class="kw">let</span> <span class="ident">kind_indent</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">leading_trivia</span>.<span class="ident">is_empty</span>() {
-            <span class="ident">leading_trivia</span>
-        } <span class="kw">else</span> {
-            <span class="macro">vec!</span>[(<span class="ident">TriviaPieceKind::Newline</span>, <span class="ident">String::from</span>(<span class="string">&quot;\n&quot;</span>))]
+        <span class="kw">let </span>kind_indent = <span class="kw">if </span>!leading_trivia.is_empty() {
+            leading_trivia
+        } <span class="kw">else </span>{
+            <span class="macro">vec!</span>[(TriviaPieceKind::Newline, String::from(<span class="string">&quot;\n&quot;</span>))]
         };
 
-        <span class="kw">let</span> <span class="ident">last_semicolon_token</span> <span class="op">=</span> <span class="ident">semicolon_token</span>.<span class="ident">as_ref</span>();
-        <span class="kw">let</span> <span class="ident">remaining_semicolon_token</span> <span class="op">=</span> <span class="ident">semicolon_token</span>.<span class="ident">clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">make::token</span>(<span class="macro">T!</span>[;]));
+        <span class="kw">let </span>last_semicolon_token = semicolon_token.as_ref();
+        <span class="kw">let </span>remaining_semicolon_token = semicolon_token.clone().map(|<span class="kw">_</span>| make::token(<span class="macro">T!</span>[;]));
 
-        <span class="kw">let</span> <span class="ident">declarators_len</span> <span class="op">=</span> <span class="ident">declarators</span>.<span class="ident">len</span>();
+        <span class="kw">let </span>declarators_len = declarators.len();
 
-        <span class="kw">let</span> <span class="ident">next_parent</span> <span class="op">=</span> <span class="ident">prev_parent</span>.<span class="ident">clone</span>().<span class="ident">splice_slots</span>(
-            <span class="ident">index</span>..<span class="op">=</span><span class="ident">index</span>,
-            <span class="ident">declarators</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">enumerate</span>()
-                .<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">index</span>, <span class="ident">declarator</span>)<span class="op">|</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">declarator</span> <span class="op">=</span> <span class="ident">declarator</span>.<span class="ident">ok</span>()<span class="question-mark">?</span>;
+        <span class="kw">let </span>next_parent = prev_parent.clone().splice_slots(
+            index..=index,
+            declarators
+                .iter()
+                .enumerate()
+                .filter_map(|(index, declarator)| {
+                    <span class="kw">let </span><span class="kw-2">mut </span>declarator = declarator.ok()<span class="question-mark">?</span>;
 
-                    <span class="comment">// Remove the leading trivia for the declarators</span>
-                    <span class="kw">let</span> <span class="ident">first_token</span> <span class="op">=</span> <span class="ident">declarator</span>.<span class="ident">syntax</span>().<span class="ident">first_token</span>()<span class="question-mark">?</span>;
-                    <span class="kw">let</span> <span class="ident">first_token_leading_trivia</span> <span class="op">=</span> <span class="ident">first_token</span>.<span class="ident">leading_trivia</span>();
+                    <span class="comment">// Remove the leading trivia for the declarators
+                    </span><span class="kw">let </span>first_token = declarator.syntax().first_token()<span class="question-mark">?</span>;
+                    <span class="kw">let </span>first_token_leading_trivia = first_token.leading_trivia();
 
-                    <span class="ident">declarator</span> <span class="op">=</span> <span class="ident">declarator</span>
-                        .<span class="ident">replace_token_discard_trivia</span>(
-                            <span class="ident">first_token</span>.<span class="ident">clone</span>(),
-                            <span class="ident">first_token</span>.<span class="ident">with_leading_trivia</span>(<span class="ident">iter::empty</span>()),
+                    declarator = declarator
+                        .replace_token_discard_trivia(
+                            first_token.clone(),
+                            first_token.with_leading_trivia(iter::empty()),
                         )
-                        <span class="comment">// SAFETY: first_token is a known child of declarator</span>
-                        .<span class="ident">unwrap</span>();
+                        <span class="comment">// SAFETY: first_token is a known child of declarator
+                        </span>.unwrap();
 
-                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">0</span> {
-                        <span class="comment">// Clone the kind token with its entire leading trivia</span>
-                        <span class="comment">// for the first statement</span>
-                        <span class="ident">kind</span>.<span class="ident">clone</span>()
-                    } <span class="kw">else</span> {
-                        <span class="comment">// For the remaining statements, clone the kind token</span>
-                        <span class="comment">// with the leading trivia pieces previously removed</span>
-                        <span class="comment">// from the first token of the declarator node, with</span>
-                        <span class="comment">// the indentation fixed up to match the original kind</span>
-                        <span class="comment">// token</span>
-                        <span class="kw">let</span> <span class="ident">indent</span>: <span class="kw-2">&amp;</span>[(<span class="ident">TriviaPieceKind</span>, <span class="ident">String</span>)] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">kind_indent</span>;
-                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trivia_pieces</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_text</span> <span class="op">=</span> <span class="ident">String::new</span>();
+                    <span class="kw">let </span>kind = <span class="kw">if </span>index == <span class="number">0 </span>{
+                        <span class="comment">// Clone the kind token with its entire leading trivia
+                        // for the first statement
+                        </span>kind.clone()
+                    } <span class="kw">else </span>{
+                        <span class="comment">// For the remaining statements, clone the kind token
+                        // with the leading trivia pieces previously removed
+                        // from the first token of the declarator node, with
+                        // the indentation fixed up to match the original kind
+                        // token
+                        </span><span class="kw">let </span>indent: <span class="kw-2">&amp;</span>[(TriviaPieceKind, String)] = <span class="kw-2">&amp;</span>kind_indent;
+                        <span class="kw">let </span><span class="kw-2">mut </span>trivia_pieces = Vec::new();
+                        <span class="kw">let </span><span class="kw-2">mut </span>token_text = String::new();
 
-                        <span class="kw">for</span> <span class="ident">piece</span> <span class="kw">in</span> <span class="ident">first_token_leading_trivia</span>.<span class="ident">pieces</span>() {
-                            <span class="kw">if</span> <span class="op">!</span><span class="ident">piece</span>.<span class="ident">is_comments</span>() {
+                        <span class="kw">for </span>piece <span class="kw">in </span>first_token_leading_trivia.pieces() {
+                            <span class="kw">if </span>!piece.is_comments() {
                                 <span class="kw">continue</span>;
                             }
 
-                            <span class="kw">for</span> (<span class="ident">kind</span>, <span class="ident">text</span>) <span class="kw">in</span> <span class="ident">indent</span>.<span class="ident">iter</span>().<span class="ident">rev</span>() {
-                                <span class="ident">trivia_pieces</span>.<span class="ident">push</span>(<span class="ident">TriviaPiece::new</span>(<span class="kw-2">*</span><span class="ident">kind</span>, <span class="ident">TextSize::of</span>(<span class="ident">text</span>)));
-                                <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">text</span>);
+                            <span class="kw">for </span>(kind, text) <span class="kw">in </span>indent.iter().rev() {
+                                trivia_pieces.push(TriviaPiece::new(<span class="kw-2">*</span>kind, TextSize::of(text)));
+                                token_text.push_str(text);
                             }
 
-                            <span class="ident">trivia_pieces</span>.<span class="ident">push</span>(<span class="ident">TriviaPiece::new</span>(<span class="ident">piece</span>.<span class="ident">kind</span>(), <span class="ident">piece</span>.<span class="ident">text_len</span>()));
-                            <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">piece</span>.<span class="ident">text</span>());
+                            trivia_pieces.push(TriviaPiece::new(piece.kind(), piece.text_len()));
+                            token_text.push_str(piece.text());
                         }
 
-                        <span class="kw">for</span> (<span class="ident">kind</span>, <span class="ident">text</span>) <span class="kw">in</span> <span class="ident">indent</span>.<span class="ident">iter</span>().<span class="ident">rev</span>() {
-                            <span class="ident">trivia_pieces</span>.<span class="ident">push</span>(<span class="ident">TriviaPiece::new</span>(<span class="kw-2">*</span><span class="ident">kind</span>, <span class="ident">TextSize::of</span>(<span class="ident">text</span>)));
-                            <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">text</span>);
+                        <span class="kw">for </span>(kind, text) <span class="kw">in </span>indent.iter().rev() {
+                            trivia_pieces.push(TriviaPiece::new(<span class="kw-2">*</span>kind, TextSize::of(text)));
+                            token_text.push_str(text);
                         }
 
-                        <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">kind</span>.<span class="ident">text_trimmed</span>());
+                        token_text.push_str(kind.text_trimmed());
 
-                        <span class="kw">for</span> <span class="ident">piece</span> <span class="kw">in</span> <span class="ident">kind</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>() {
-                            <span class="ident">token_text</span>.<span class="ident">push_str</span>(<span class="ident">piece</span>.<span class="ident">text</span>());
+                        <span class="kw">for </span>piece <span class="kw">in </span>kind.trailing_trivia().pieces() {
+                            token_text.push_str(piece.text());
                         }
 
-                        <span class="ident">JsSyntaxToken::new_detached</span>(
-                            <span class="ident">kind</span>.<span class="ident">kind</span>(),
-                            <span class="kw-2">&amp;</span><span class="ident">token_text</span>,
-                            <span class="ident">trivia_pieces</span>,
-                            <span class="ident">kind</span>.<span class="ident">trailing_trivia</span>().<span class="ident">pieces</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> {
-                                <span class="ident">TriviaPiece::new</span>(<span class="ident">piece</span>.<span class="ident">kind</span>(), <span class="ident">TextSize::of</span>(<span class="ident">piece</span>.<span class="ident">text</span>()))
+                        JsSyntaxToken::new_detached(
+                            kind.kind(),
+                            <span class="kw-2">&amp;</span>token_text,
+                            trivia_pieces,
+                            kind.trailing_trivia().pieces().map(|piece| {
+                                TriviaPiece::new(piece.kind(), TextSize::of(piece.text()))
                             }),
                         )
                     };
 
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">make::js_variable_statement</span>(<span class="ident">make::js_variable_declaration</span>(
-                        <span class="ident">kind</span>,
-                        <span class="ident">make::js_variable_declarator_list</span>(<span class="ident">iter::once</span>(<span class="ident">declarator</span>), <span class="ident">iter::empty</span>()),
+                    <span class="kw">let </span><span class="kw-2">mut </span>builder = make::js_variable_statement(make::js_variable_declaration(
+                        kind,
+                        make::js_variable_declarator_list(iter::once(declarator), iter::empty()),
                     ));
 
-                    <span class="kw">let</span> <span class="ident">semicolon_token</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">index</span> <span class="op">+</span> <span class="number">1</span> <span class="op">==</span> <span class="ident">declarators_len</span> {
-                        <span class="ident">last_semicolon_token</span>
-                    } <span class="kw">else</span> {
-                        <span class="ident">remaining_semicolon_token</span>.<span class="ident">as_ref</span>()
+                    <span class="kw">let </span>semicolon_token = <span class="kw">if </span>index + <span class="number">1 </span>== declarators_len {
+                        last_semicolon_token
+                    } <span class="kw">else </span>{
+                        remaining_semicolon_token.as_ref()
                     };
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">semicolon_token</span>) <span class="op">=</span> <span class="ident">semicolon_token</span> {
-                        <span class="ident">builder</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">with_semicolon_token</span>(<span class="ident">semicolon_token</span>.<span class="ident">clone</span>());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(semicolon_token) = semicolon_token {
+                        builder = builder.with_semicolon_token(semicolon_token.clone());
                     }
 
-                    <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="ident">builder</span>.<span class="ident">build</span>().<span class="ident">into_syntax</span>().<span class="ident">into</span>()))
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(builder.build().into_syntax().into()))
                 }),
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
-        <span class="ident">mutation</span>.<span class="ident">replace_element</span>(<span class="ident">prev_parent</span>.<span class="ident">into</span>(), <span class="ident">next_parent</span>.<span class="ident">into</span>());
+        <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
+        mutation.replace_element(prev_parent.into(), next_parent.into());
 
-        <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-            <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
-            <span class="ident">applicability</span>: <span class="ident">Applicability::MaybeIncorrect</span>,
-            <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;Break out into multiple declarations&quot;</span> }.<span class="ident">to_owned</span>(),
-            <span class="ident">mutation</span>,
+        <span class="prelude-val">Some</span>(JsRuleAction {
+            category: ActionCategory::QuickFix,
+            applicability: Applicability::MaybeIncorrect,
+            message: <span class="macro">markup! </span>{ <span class="string">&quot;Break out into multiple declarations&quot; </span>}.to_owned(),
+            mutation,
         })
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

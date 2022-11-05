@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/utils/batch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>batch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/utils/batch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>batch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -231,59 +231,59 @@
 <span id="231">231</span>
 <span id="232">232</span>
 <span id="233">233</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsAnyConstructorParameter</span>, <span class="ident">JsAnyFormalParameter</span>, <span class="ident">JsAnyParameter</span>, <span class="ident">JsConstructorParameterList</span>,
-    <span class="ident">JsFormalParameter</span>, <span class="ident">JsLanguage</span>, <span class="ident">JsParameterList</span>, <span class="ident">JsSyntaxKind</span>, <span class="ident">JsSyntaxNode</span>,
-    <span class="ident">JsVariableDeclaration</span>, <span class="ident">JsVariableDeclarator</span>, <span class="ident">JsVariableDeclaratorList</span>, <span class="ident">JsVariableStatement</span>,
+</pre><pre class="rust"><code><span class="kw">use </span>rome_js_syntax::{
+    JsAnyConstructorParameter, JsAnyFormalParameter, JsAnyParameter, JsConstructorParameterList,
+    JsFormalParameter, JsLanguage, JsParameterList, JsSyntaxKind, JsSyntaxNode,
+    JsVariableDeclaration, JsVariableDeclarator, JsVariableDeclaratorList, JsVariableStatement,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">AstSeparatedList</span>, <span class="ident">BatchMutation</span>};
+<span class="kw">use </span>rome_rowan::{AstNode, AstSeparatedList, BatchMutation};
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">JsBatchMutation</span> {
-    <span class="doccomment">/// Removes the declarator, and:</span>
-    <span class="doccomment">/// 1 - removes the statement if the declaration only has one declarator;</span>
-    <span class="doccomment">/// 2 - removes commas around the declarator to keep the list valid.</span>
-    <span class="kw">fn</span> <span class="ident">remove_js_variable_declarator</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">declarator</span>: <span class="kw-2">&amp;</span><span class="ident">JsVariableDeclarator</span>) -&gt; <span class="ident">bool</span>;
+<span class="kw">pub trait </span>JsBatchMutation {
+    <span class="doccomment">/// Removes the declarator, and:
+    /// 1 - removes the statement if the declaration only has one declarator;
+    /// 2 - removes commas around the declarator to keep the list valid.
+    </span><span class="kw">fn </span>remove_js_variable_declarator(<span class="kw-2">&amp;mut </span><span class="self">self</span>, declarator: <span class="kw-2">&amp;</span>JsVariableDeclarator) -&gt; bool;
 
-    <span class="doccomment">/// Removes the parameter, and:</span>
-    <span class="doccomment">/// 1 - removes commas around the parameter to keep the list valid.</span>
-    <span class="kw">fn</span> <span class="ident">remove_js_formal_parameter</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">parameter</span>: <span class="kw-2">&amp;</span><span class="ident">JsFormalParameter</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// Removes the parameter, and:
+    /// 1 - removes commas around the parameter to keep the list valid.
+    </span><span class="kw">fn </span>remove_js_formal_parameter(<span class="kw-2">&amp;mut </span><span class="self">self</span>, parameter: <span class="kw-2">&amp;</span>JsFormalParameter) -&gt; bool;
 }
 
-<span class="kw">fn</span> <span class="ident">remove_js_formal_parameter_from_js_parameter_list</span>(
-    <span class="ident">batch</span>: <span class="kw-2">&amp;mut</span> <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>,
-    <span class="ident">parameter</span>: <span class="kw-2">&amp;</span><span class="ident">JsFormalParameter</span>,
-    <span class="ident">list</span>: <span class="ident">JsSyntaxNode</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">JsParameterList::cast</span>(<span class="ident">list</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">elements</span>();
+<span class="kw">fn </span>remove_js_formal_parameter_from_js_parameter_list(
+    batch: <span class="kw-2">&amp;mut </span>BatchMutation&lt;JsLanguage&gt;,
+    parameter: <span class="kw-2">&amp;</span>JsFormalParameter,
+    list: JsSyntaxNode,
+) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    <span class="kw">let </span>list = JsParameterList::cast(list)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>elements = list.elements();
 
-    <span class="comment">// Find the parameter we want to remove</span>
-    <span class="comment">// remove its trailing comma, if there is one</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_element</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">for</span> <span class="ident">element</span> <span class="kw">in</span> <span class="ident">elements</span>.<span class="ident">by_ref</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">node</span>() {
-            <span class="kw">match</span> <span class="ident">node</span> {
-                <span class="ident">JsAnyParameter::JsAnyFormalParameter</span>(<span class="ident">JsAnyFormalParameter::JsFormalParameter</span>(
-                    <span class="ident">node</span>,
-                )) <span class="kw">if</span> <span class="ident">node</span> <span class="op">==</span> <span class="ident">parameter</span> =&gt; {
-                    <span class="ident">batch</span>.<span class="ident">remove_node</span>(<span class="ident">node</span>.<span class="ident">clone</span>());
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comma</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">trailing_separator</span>().<span class="ident">ok</span>().<span class="ident">flatten</span>() {
-                        <span class="ident">batch</span>.<span class="ident">remove_token</span>(<span class="ident">comma</span>.<span class="ident">clone</span>());
+    <span class="comment">// Find the parameter we want to remove
+    // remove its trailing comma, if there is one
+    </span><span class="kw">let </span><span class="kw-2">mut </span>previous_element = <span class="prelude-val">None</span>;
+    <span class="kw">for </span>element <span class="kw">in </span>elements.by_ref() {
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(node) = element.node() {
+            <span class="kw">match </span>node {
+                JsAnyParameter::JsAnyFormalParameter(JsAnyFormalParameter::JsFormalParameter(
+                    node,
+                )) <span class="kw">if </span>node == parameter =&gt; {
+                    batch.remove_node(node.clone());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(comma) = element.trailing_separator().ok().flatten() {
+                        batch.remove_token(comma.clone());
                     }
                     <span class="kw">break</span>;
                 }
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             }
         }
-        <span class="ident">previous_element</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>);
+        previous_element = <span class="prelude-val">Some</span>(element);
     }
 
-    <span class="comment">// if it is the last parameter of the list</span>
-    <span class="comment">// removes the comma before this element</span>
-    <span class="kw">if</span> <span class="ident">elements</span>.<span class="ident">next</span>().<span class="ident">is_none</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="ident">previous_element</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comma</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">trailing_separator</span>().<span class="ident">ok</span>().<span class="ident">flatten</span>() {
-                <span class="ident">batch</span>.<span class="ident">remove_token</span>(<span class="ident">comma</span>.<span class="ident">clone</span>());
+    <span class="comment">// if it is the last parameter of the list
+    // removes the comma before this element
+    </span><span class="kw">if </span>elements.next().is_none() {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = previous_element {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(comma) = element.trailing_separator().ok().flatten() {
+                batch.remove_token(comma.clone());
             }
         }
     }
@@ -291,41 +291,41 @@
     <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">remove_js_formal_parameter_from_js_constructor_parameter_list</span>(
-    <span class="ident">batch</span>: <span class="kw-2">&amp;mut</span> <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>,
-    <span class="ident">parameter</span>: <span class="kw-2">&amp;</span><span class="ident">JsFormalParameter</span>,
-    <span class="ident">list</span>: <span class="ident">JsSyntaxNode</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">JsConstructorParameterList::cast</span>(<span class="ident">list</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">elements</span>();
+<span class="kw">fn </span>remove_js_formal_parameter_from_js_constructor_parameter_list(
+    batch: <span class="kw-2">&amp;mut </span>BatchMutation&lt;JsLanguage&gt;,
+    parameter: <span class="kw-2">&amp;</span>JsFormalParameter,
+    list: JsSyntaxNode,
+) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    <span class="kw">let </span>list = JsConstructorParameterList::cast(list)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>elements = list.elements();
 
-    <span class="comment">// Find the parameter we want to remove</span>
-    <span class="comment">// remove its trailing comma, if there is one</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_element</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">for</span> <span class="ident">element</span> <span class="kw">in</span> <span class="ident">elements</span>.<span class="ident">by_ref</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">node</span>() {
-            <span class="kw">match</span> <span class="ident">node</span> {
-                <span class="ident">JsAnyConstructorParameter::JsAnyFormalParameter</span>(
-                    <span class="ident">JsAnyFormalParameter::JsFormalParameter</span>(<span class="ident">node</span>),
-                ) <span class="kw">if</span> <span class="ident">node</span> <span class="op">==</span> <span class="ident">parameter</span> =&gt; {
-                    <span class="ident">batch</span>.<span class="ident">remove_node</span>(<span class="ident">node</span>.<span class="ident">clone</span>());
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comma</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">trailing_separator</span>().<span class="ident">ok</span>().<span class="ident">flatten</span>() {
-                        <span class="ident">batch</span>.<span class="ident">remove_token</span>(<span class="ident">comma</span>.<span class="ident">clone</span>());
+    <span class="comment">// Find the parameter we want to remove
+    // remove its trailing comma, if there is one
+    </span><span class="kw">let </span><span class="kw-2">mut </span>previous_element = <span class="prelude-val">None</span>;
+    <span class="kw">for </span>element <span class="kw">in </span>elements.by_ref() {
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(node) = element.node() {
+            <span class="kw">match </span>node {
+                JsAnyConstructorParameter::JsAnyFormalParameter(
+                    JsAnyFormalParameter::JsFormalParameter(node),
+                ) <span class="kw">if </span>node == parameter =&gt; {
+                    batch.remove_node(node.clone());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(comma) = element.trailing_separator().ok().flatten() {
+                        batch.remove_token(comma.clone());
                     }
                     <span class="kw">break</span>;
                 }
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             }
         }
-        <span class="ident">previous_element</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>);
+        previous_element = <span class="prelude-val">Some</span>(element);
     }
 
-    <span class="comment">// if it is the last parameter of the list</span>
-    <span class="comment">// removes the comma before this element</span>
-    <span class="kw">if</span> <span class="ident">elements</span>.<span class="ident">next</span>().<span class="ident">is_none</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="ident">previous_element</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comma</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">trailing_separator</span>().<span class="ident">ok</span>().<span class="ident">flatten</span>() {
-                <span class="ident">batch</span>.<span class="ident">remove_token</span>(<span class="ident">comma</span>.<span class="ident">clone</span>());
+    <span class="comment">// if it is the last parameter of the list
+    // removes the comma before this element
+    </span><span class="kw">if </span>elements.next().is_none() {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = previous_element {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(comma) = element.trailing_separator().ok().flatten() {
+                batch.remove_token(comma.clone());
             }
         }
     }
@@ -333,47 +333,47 @@
     <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)
 }
 
-<span class="kw">impl</span> <span class="ident">JsBatchMutation</span> <span class="kw">for</span> <span class="ident">BatchMutation</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">remove_js_variable_declarator</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">declarator</span>: <span class="kw-2">&amp;</span><span class="ident">JsVariableDeclarator</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">declarator</span>
-            .<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsVariableDeclaratorList</span><span class="op">&gt;</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">list</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">declaration</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsVariableDeclaration</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+<span class="kw">impl </span>JsBatchMutation <span class="kw">for </span>BatchMutation&lt;JsLanguage&gt; {
+    <span class="kw">fn </span>remove_js_variable_declarator(<span class="kw-2">&amp;mut </span><span class="self">self</span>, declarator: <span class="kw-2">&amp;</span>JsVariableDeclarator) -&gt; bool {
+        declarator
+            .parent::&lt;JsVariableDeclaratorList&gt;()
+            .and_then(|list| {
+                <span class="kw">let </span>declaration = list.parent::&lt;JsVariableDeclaration&gt;()<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="ident">list</span>.<span class="ident">syntax_list</span>().<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-                    <span class="kw">let</span> <span class="ident">statement</span> <span class="op">=</span> <span class="ident">declaration</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsVariableStatement</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-                    <span class="self">self</span>.<span class="ident">remove_node</span>(<span class="ident">statement</span>);
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">elements</span>();
+                <span class="kw">if </span>list.syntax_list().len() == <span class="number">1 </span>{
+                    <span class="kw">let </span>statement = declaration.parent::&lt;JsVariableStatement&gt;()<span class="question-mark">?</span>;
+                    <span class="self">self</span>.remove_node(statement);
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span><span class="kw-2">mut </span>elements = list.elements();
 
-                    <span class="comment">// Find the declarator we want to remove</span>
-                    <span class="comment">// remove its trailing comma, if there is one</span>
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_element</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                    <span class="kw">for</span> <span class="ident">element</span> <span class="kw">in</span> <span class="ident">elements</span>.<span class="ident">by_ref</span>() {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">node</span>() {
-                            <span class="kw">if</span> <span class="ident">node</span> <span class="op">==</span> <span class="ident">declarator</span> {
-                                <span class="self">self</span>.<span class="ident">remove_node</span>(<span class="ident">node</span>.<span class="ident">clone</span>());
-                                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comma</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">trailing_separator</span>().<span class="ident">ok</span>().<span class="ident">flatten</span>() {
-                                    <span class="self">self</span>.<span class="ident">remove_token</span>(<span class="ident">comma</span>.<span class="ident">clone</span>());
+                    <span class="comment">// Find the declarator we want to remove
+                    // remove its trailing comma, if there is one
+                    </span><span class="kw">let </span><span class="kw-2">mut </span>previous_element = <span class="prelude-val">None</span>;
+                    <span class="kw">for </span>element <span class="kw">in </span>elements.by_ref() {
+                        <span class="kw">if let </span><span class="prelude-val">Ok</span>(node) = element.node() {
+                            <span class="kw">if </span>node == declarator {
+                                <span class="self">self</span>.remove_node(node.clone());
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(comma) = element.trailing_separator().ok().flatten() {
+                                    <span class="self">self</span>.remove_token(comma.clone());
                                 }
                                 <span class="kw">break</span>;
                             }
                         }
-                        <span class="ident">previous_element</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>);
+                        previous_element = <span class="prelude-val">Some</span>(element);
                     }
 
-                    <span class="comment">// if it is the last declarator of the list</span>
-                    <span class="comment">// removes the comma before this element</span>
-                    <span class="kw">let</span> <span class="ident">remove_previous_element_comma</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">elements</span>.<span class="ident">next</span>() {
-                        <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">node</span>().<span class="ident">is_err</span>() =&gt; <span class="bool-val">true</span>,
-                        <span class="prelude-val">None</span> =&gt; <span class="bool-val">true</span>,
-                        <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
+                    <span class="comment">// if it is the last declarator of the list
+                    // removes the comma before this element
+                    </span><span class="kw">let </span>remove_previous_element_comma = <span class="kw">match </span>elements.next() {
+                        <span class="prelude-val">Some</span>(e) <span class="kw">if </span>e.node().is_err() =&gt; <span class="bool-val">true</span>,
+                        <span class="prelude-val">None </span>=&gt; <span class="bool-val">true</span>,
+                        <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
                     };
 
-                    <span class="kw">if</span> <span class="ident">remove_previous_element_comma</span> {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="ident">previous_element</span> {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">comma</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">trailing_separator</span>().<span class="ident">ok</span>().<span class="ident">flatten</span>() {
-                                <span class="self">self</span>.<span class="ident">remove_token</span>(<span class="ident">comma</span>.<span class="ident">clone</span>());
+                    <span class="kw">if </span>remove_previous_element_comma {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = previous_element {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(comma) = element.trailing_separator().ok().flatten() {
+                                <span class="self">self</span>.remove_token(comma.clone());
                             }
                         }
                     }
@@ -381,88 +381,88 @@
 
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)
             })
-            .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
+            .unwrap_or(<span class="bool-val">false</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">remove_js_formal_parameter</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">parameter</span>: <span class="kw-2">&amp;</span><span class="ident">JsFormalParameter</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">parameter</span>
-            .<span class="ident">syntax</span>()
-            .<span class="ident">parent</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">parent</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">parent</span>.<span class="ident">kind</span>() {
-                <span class="ident">JsSyntaxKind::JS_PARAMETER_LIST</span> =&gt; {
-                    <span class="ident">remove_js_formal_parameter_from_js_parameter_list</span>(<span class="self">self</span>, <span class="ident">parameter</span>, <span class="ident">parent</span>)
+    <span class="kw">fn </span>remove_js_formal_parameter(<span class="kw-2">&amp;mut </span><span class="self">self</span>, parameter: <span class="kw-2">&amp;</span>JsFormalParameter) -&gt; bool {
+        parameter
+            .syntax()
+            .parent()
+            .and_then(|parent| <span class="kw">match </span>parent.kind() {
+                JsSyntaxKind::JS_PARAMETER_LIST =&gt; {
+                    remove_js_formal_parameter_from_js_parameter_list(<span class="self">self</span>, parameter, parent)
                 }
-                <span class="ident">JsSyntaxKind::JS_CONSTRUCTOR_PARAMETER_LIST</span> =&gt; {
-                    <span class="ident">remove_js_formal_parameter_from_js_constructor_parameter_list</span>(
-                        <span class="self">self</span>, <span class="ident">parameter</span>, <span class="ident">parent</span>,
+                JsSyntaxKind::JS_CONSTRUCTOR_PARAMETER_LIST =&gt; {
+                    remove_js_formal_parameter_from_js_constructor_parameter_list(
+                        <span class="self">self</span>, parameter, parent,
                     )
                 }
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             })
-            .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
+            .unwrap_or(<span class="bool-val">false</span>)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::assert_remove_ok</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::assert_remove_ok;
 
-    <span class="comment">// Remove JsVariableDeclarator</span>
-    <span class="macro">assert_remove_ok!</span> {
-        <span class="ident">ok_remove_variable_declarator_single</span>,
+    <span class="comment">// Remove JsVariableDeclarator
+    </span><span class="macro">assert_remove_ok! </span>{
+        ok_remove_variable_declarator_single,
             <span class="string">&quot;let a;&quot;</span>,
             <span class="string">&quot;&quot;</span>,
-        <span class="ident">ok_remove_variable_declarator_fist</span>,
+        ok_remove_variable_declarator_fist,
             <span class="string">&quot;let a, b;&quot;</span>,
             <span class="string">&quot;let b;&quot;</span>,
-        <span class="ident">ok_remove_variable_declarator_second</span>,
+        ok_remove_variable_declarator_second,
             <span class="string">&quot;let b, a;&quot;</span>,
             <span class="string">&quot;let b;&quot;</span>,
-        <span class="ident">ok_remove_variable_declarator_second_trailling_comma</span>,
+        ok_remove_variable_declarator_second_trailling_comma,
             <span class="string">&quot;let b, a,;&quot;</span>,
             <span class="string">&quot;let b;&quot;</span>,
-        <span class="ident">ok_remove_variable_declarator_middle</span>,
+        ok_remove_variable_declarator_middle,
             <span class="string">&quot;let b, a, c;&quot;</span>,
             <span class="string">&quot;let b, c;&quot;</span>,
     }
 
-    <span class="comment">// Remove JsFormalParameter from functions</span>
-    <span class="macro">assert_remove_ok!</span> {
-        <span class="ident">ok_remove_formal_parameter_single</span>,
+    <span class="comment">// Remove JsFormalParameter from functions
+    </span><span class="macro">assert_remove_ok! </span>{
+        ok_remove_formal_parameter_single,
             <span class="string">&quot;function f(a) {}&quot;</span>,
             <span class="string">&quot;function f() {}&quot;</span>,
-        <span class="ident">ok_remove_formal_parameter_first</span>,
+        ok_remove_formal_parameter_first,
             <span class="string">&quot;function f(a, b) {}&quot;</span>,
             <span class="string">&quot;function f(b) {}&quot;</span>,
-        <span class="ident">ok_remove_formal_parameter_second</span>,
+        ok_remove_formal_parameter_second,
             <span class="string">&quot;function f(b, a) {}&quot;</span>,
             <span class="string">&quot;function f(b) {}&quot;</span>,
-        <span class="ident">ok_remove_formal_parameter_second_trailing_comma</span>,
+        ok_remove_formal_parameter_second_trailing_comma,
             <span class="string">&quot;function f(b, a,) {}&quot;</span>,
             <span class="string">&quot;function f(b) {}&quot;</span>,
-        <span class="ident">ok_remove_formal_parameter_middle</span>,
+        ok_remove_formal_parameter_middle,
             <span class="string">&quot;function f(b, a, c) {}&quot;</span>,
             <span class="string">&quot;function f(b, c) {}&quot;</span>,
     }
 
-    <span class="comment">// Remove JsFormalParameter from class constructors</span>
-    <span class="macro">assert_remove_ok!</span> {
-        <span class="ident">ok_remove_formal_parameter_from_class_constructor_single</span>,
+    <span class="comment">// Remove JsFormalParameter from class constructors
+    </span><span class="macro">assert_remove_ok! </span>{
+        ok_remove_formal_parameter_from_class_constructor_single,
             <span class="string">&quot;class A { constructor(a) {} }&quot;</span>,
             <span class="string">&quot;class A { constructor() {} }&quot;</span>,
-        <span class="ident">ok_remove_formal_parameter_from_class_constructor_first</span>,
+        ok_remove_formal_parameter_from_class_constructor_first,
             <span class="string">&quot;class A { constructor(a, b) {} }&quot;</span>,
             <span class="string">&quot;class A { constructor(b) {} }&quot;</span>,
-        <span class="ident">ok_remove_formal_parameter_from_class_constructor_second</span>,
+        ok_remove_formal_parameter_from_class_constructor_second,
             <span class="string">&quot;class A { constructor(b, a) {} }&quot;</span>,
             <span class="string">&quot;class A { constructor(b) {} }&quot;</span>,
-        <span class="ident">ok_remove_formal_parameter_from_class_constructor_second_trailing_comma</span>,
+        ok_remove_formal_parameter_from_class_constructor_second_trailing_comma,
             <span class="string">&quot;class A { constructor(b, a,) {} }&quot;</span>,
             <span class="string">&quot;class A { constructor(b) {} }&quot;</span>,
-        <span class="ident">ok_remove_formal_parameter_from_class_constructor_middle</span>,
+        ok_remove_formal_parameter_from_class_constructor_middle,
             <span class="string">&quot;class A { constructor(b, a, c) {} }&quot;</span>,
             <span class="string">&quot;class A { constructor(b, c) {} }&quot;</span>,
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

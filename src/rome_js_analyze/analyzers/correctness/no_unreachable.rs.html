@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/correctness/no_unreachable.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>no_unreachable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/correctness/no_unreachable.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>no_unreachable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -947,192 +947,192 @@
 <span id="947">947</span>
 <span id="948">948</span>
 <span id="949">949</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp::Ordering</span>, <span class="ident">collections::VecDeque</span>, <span class="ident">num::NonZeroU32</span>, <span class="ident">vec::IntoIter</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::{cmp::Ordering, collections::VecDeque, num::NonZeroU32, vec::IntoIter};
 
-<span class="kw">use</span> <span class="ident">roaring::bitmap::RoaringBitmap</span>;
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">context::RuleContext</span>, <span class="ident">declare_rule</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_control_flow</span>::{<span class="ident">builder::BlockId</span>, <span class="ident">ExceptionHandler</span>, <span class="ident">Instruction</span>, <span class="ident">InstructionKind</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsBlockStatement</span>, <span class="ident">JsCaseClause</span>, <span class="ident">JsDefaultClause</span>, <span class="ident">JsDoWhileStatement</span>, <span class="ident">JsForInStatement</span>,
-    <span class="ident">JsForOfStatement</span>, <span class="ident">JsForStatement</span>, <span class="ident">JsFunctionBody</span>, <span class="ident">JsIfStatement</span>, <span class="ident">JsLabeledStatement</span>,
-    <span class="ident">JsLanguage</span>, <span class="ident">JsReturnStatement</span>, <span class="ident">JsSwitchStatement</span>, <span class="ident">JsSyntaxElement</span>, <span class="ident">JsSyntaxKind</span>, <span class="ident">JsSyntaxNode</span>,
-    <span class="ident">JsTryFinallyStatement</span>, <span class="ident">JsTryStatement</span>, <span class="ident">JsVariableStatement</span>, <span class="ident">JsWhileStatement</span>, <span class="ident">TextRange</span>,
+<span class="kw">use </span>roaring::bitmap::RoaringBitmap;
+<span class="kw">use </span>rome_analyze::{context::RuleContext, declare_rule, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_control_flow::{builder::BlockId, ExceptionHandler, Instruction, InstructionKind};
+<span class="kw">use </span>rome_js_syntax::{
+    JsBlockStatement, JsCaseClause, JsDefaultClause, JsDoWhileStatement, JsForInStatement,
+    JsForOfStatement, JsForStatement, JsFunctionBody, JsIfStatement, JsLabeledStatement,
+    JsLanguage, JsReturnStatement, JsSwitchStatement, JsSyntaxElement, JsSyntaxKind, JsSyntaxNode,
+    JsTryFinallyStatement, JsTryStatement, JsVariableStatement, JsWhileStatement, TextRange,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">declare_node_union</span>, <span class="ident">AstNode</span>};
-<span class="kw">use</span> <span class="ident">rustc_hash::FxHashMap</span>;
+<span class="kw">use </span>rome_rowan::{declare_node_union, AstNode};
+<span class="kw">use </span>rustc_hash::FxHashMap;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::control_flow::ControlFlowGraph</span>;
+<span class="kw">use </span><span class="kw">crate</span>::control_flow::ControlFlowGraph;
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Disallow unreachable code</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// function example() {</span>
-    <span class="doccomment">///     return;</span>
-    <span class="doccomment">///     neverCalled();</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// function example() {</span>
-    <span class="doccomment">///     for(let i = 0; i &lt; 10; ++i) {</span>
-    <span class="doccomment">///         break;</span>
-    <span class="doccomment">///     }</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// function example() {</span>
-    <span class="doccomment">///     for(const key in value) {</span>
-    <span class="doccomment">///         continue;</span>
-    <span class="doccomment">///         neverCalled();</span>
-    <span class="doccomment">///     }</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">NoUnreachable</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;noUnreachable&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">true</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Disallow unreachable code
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    /// function example() {
+    ///     return;
+    ///     neverCalled();
+    /// }
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// function example() {
+    ///     for(let i = 0; i &lt; 10; ++i) {
+    ///         break;
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// function example() {
+    ///     for(const key in value) {
+    ///         continue;
+    ///         neverCalled();
+    ///     }
+    /// }
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) NoUnreachable {
+        version: <span class="string">&quot;0.7.0&quot;</span>,
+        name: <span class="string">&quot;noUnreachable&quot;</span>,
+        recommended: <span class="bool-val">true</span>,
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">NoUnreachable</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">ControlFlowGraph</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> <span class="ident">UnreachableRange</span>;
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="ident">UnreachableRanges</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>NoUnreachable {
+    <span class="kw">type </span>Query = ControlFlowGraph;
+    <span class="kw">type </span>State = UnreachableRange;
+    <span class="kw">type </span>Signals = UnreachableRanges;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::Signals</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">signals</span> <span class="op">=</span> <span class="ident">UnreachableRanges::new</span>();
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="self">Self</span>::Signals {
+        <span class="kw">let </span><span class="kw-2">mut </span>signals = UnreachableRanges::new();
 
-        <span class="kw">let</span> <span class="ident">cfg</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+        <span class="kw">let </span>cfg = ctx.query();
 
-        <span class="kw">if</span> <span class="ident">exceeds_complexity_threshold</span>(<span class="ident">cfg</span>) {
-            <span class="ident">analyze_simple</span>(<span class="ident">cfg</span>, <span class="kw-2">&amp;mut</span> <span class="ident">signals</span>)
-        } <span class="kw">else</span> {
-            <span class="ident">analyze_fine</span>(<span class="ident">cfg</span>, <span class="kw-2">&amp;mut</span> <span class="ident">signals</span>)
+        <span class="kw">if </span>exceeds_complexity_threshold(cfg) {
+            analyze_simple(cfg, <span class="kw-2">&amp;mut </span>signals)
+        } <span class="kw">else </span>{
+            analyze_fine(cfg, <span class="kw-2">&amp;mut </span>signals)
         }
 
-        <span class="ident">signals</span>
+        signals
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">RuleDiagnostic::new</span>(
+    <span class="kw">fn </span>diagnostic(<span class="kw">_</span>: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>diagnostic = RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">state</span>.<span class="ident">text_trimmed_range</span>,
-            <span class="kw">if</span> <span class="ident">state</span>.<span class="ident">terminators</span>.<span class="ident">is_empty</span>() {
-                <span class="string">&quot;This code is unreachable&quot;</span>
-            } <span class="kw">else</span> {
-                <span class="string">&quot;This code will never be reached ...&quot;</span>
-            },
+            state.text_trimmed_range,
+            <span class="kw">if </span>state.terminators.is_empty() {
+                <span class="string">&quot;This code is unreachable&quot;
+            </span>} <span class="kw">else </span>{
+                <span class="string">&quot;This code will never be reached ...&quot;
+            </span>},
         )
-        .<span class="ident">description</span>(<span class="string">&quot;This code is unreachable&quot;</span>)
-        .<span class="ident">unnecessary</span>();
+        .description(<span class="string">&quot;This code is unreachable&quot;</span>)
+        .unnecessary();
 
-        <span class="comment">// Pluralize and adapt the error message accordingly based on the</span>
-        <span class="comment">// number and position of secondary labels</span>
-        <span class="kw">match</span> <span class="ident">state</span>.<span class="ident">terminators</span>.<span class="ident">as_slice</span>() {
-            <span class="comment">// The CFG didn&#39;t contain enough informations to determine a cause</span>
-            <span class="comment">// for this range being unreachable</span>
-            [] =&gt; {}
-            <span class="comment">// A single node is responsible for this range being unreachable</span>
-            [<span class="ident">node</span>] =&gt; {
-                <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
-                    <span class="ident">node</span>.<span class="ident">range</span>,
+        <span class="comment">// Pluralize and adapt the error message accordingly based on the
+        // number and position of secondary labels
+        </span><span class="kw">match </span>state.terminators.as_slice() {
+            <span class="comment">// The CFG didn&#39;t contain enough informations to determine a cause
+            // for this range being unreachable
+            </span>[] =&gt; {}
+            <span class="comment">// A single node is responsible for this range being unreachable
+            </span>[node] =&gt; {
+                diagnostic = diagnostic.detail(
+                    node.range,
                     <span class="macro">format_args!</span>(
                         <span class="string">&quot;... because this statement will {} beforehand&quot;</span>,
-                        <span class="ident">node</span>.<span class="ident">reason</span>()
+                        node.reason()
                     ),
                 );
             }
-            <span class="comment">// The range has two dominating terminator instructions</span>
-            [<span class="ident">node_a</span>, <span class="ident">node_b</span>] =&gt; {
-                <span class="kw">if</span> <span class="ident">node_a</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">node_b</span>.<span class="ident">kind</span> {
-                    <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>
-                        .<span class="ident">detail</span>(<span class="ident">node_a</span>.<span class="ident">range</span>, <span class="string">&quot;... because either this statement ...&quot;</span>)
-                        .<span class="ident">detail</span>(
-                            <span class="ident">node_b</span>.<span class="ident">range</span>,
+            <span class="comment">// The range has two dominating terminator instructions
+            </span>[node_a, node_b] =&gt; {
+                <span class="kw">if </span>node_a.kind == node_b.kind {
+                    diagnostic = diagnostic
+                        .detail(node_a.range, <span class="string">&quot;... because either this statement ...&quot;</span>)
+                        .detail(
+                            node_b.range,
                             <span class="macro">format_args!</span>(
                                 <span class="string">&quot;... or this statement will {} beforehand&quot;</span>,
-                                <span class="ident">node_b</span>.<span class="ident">reason</span>()
+                                node_b.reason()
                             ),
                         );
-                } <span class="kw">else</span> {
-                    <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>
-                        .<span class="ident">detail</span>(
-                            <span class="ident">node_a</span>.<span class="ident">range</span>,
+                } <span class="kw">else </span>{
+                    diagnostic = diagnostic
+                        .detail(
+                            node_a.range,
                             <span class="macro">format_args!</span>(
                                 <span class="string">&quot;... because either this statement will {} ...&quot;</span>,
-                                <span class="ident">node_a</span>.<span class="ident">reason</span>()
+                                node_a.reason()
                             ),
                         )
-                        .<span class="ident">detail</span>(
-                            <span class="ident">node_b</span>.<span class="ident">range</span>,
+                        .detail(
+                            node_b.range,
                             <span class="macro">format_args!</span>(
                                 <span class="string">&quot;... or this statement will {} beforehand&quot;</span>,
-                                <span class="ident">node_b</span>.<span class="ident">reason</span>()
+                                node_b.reason()
                             ),
                         );
                 }
             }
-            <span class="comment">// The range has three or more dominating terminator instructions</span>
-            <span class="ident">terminators</span> =&gt; {
-                <span class="comment">// SAFETY: This substraction is safe since the match expression</span>
-                <span class="comment">// ensures the slice has at least 3 elements</span>
-                <span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="ident">terminators</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>;
+            <span class="comment">// The range has three or more dominating terminator instructions
+            </span>terminators =&gt; {
+                <span class="comment">// SAFETY: This substraction is safe since the match expression
+                // ensures the slice has at least 3 elements
+                </span><span class="kw">let </span>last = terminators.len() - <span class="number">1</span>;
 
-                <span class="comment">// Do not repeat the reason for each terminator if they all have the same kind</span>
-                <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">has_homogeneous_kind</span>) <span class="op">=</span> <span class="ident">terminators</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">fold</span>(<span class="prelude-val">None</span>, <span class="op">|</span><span class="ident">prev_kind</span>, <span class="ident">terminator</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">prev_kind</span> {
-                        <span class="prelude-val">Some</span>((<span class="ident">kind</span>, <span class="ident">state</span>)) =&gt; <span class="prelude-val">Some</span>((<span class="ident">kind</span>, <span class="ident">state</span> <span class="op">&amp;&amp;</span> <span class="ident">terminator</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">kind</span>)),
-                        <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Some</span>((<span class="ident">terminator</span>.<span class="ident">kind</span>, <span class="bool-val">true</span>)),
+                <span class="comment">// Do not repeat the reason for each terminator if they all have the same kind
+                </span><span class="kw">let </span>(<span class="kw">_</span>, has_homogeneous_kind) = terminators
+                    .iter()
+                    .fold(<span class="prelude-val">None</span>, |prev_kind, terminator| <span class="kw">match </span>prev_kind {
+                        <span class="prelude-val">Some</span>((kind, state)) =&gt; <span class="prelude-val">Some</span>((kind, state &amp;&amp; terminator.kind == kind)),
+                        <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Some</span>((terminator.kind, <span class="bool-val">true</span>)),
                     })
-                    <span class="comment">// SAFETY: terminators has at least 3 elements</span>
-                    .<span class="ident">unwrap</span>();
+                    <span class="comment">// SAFETY: terminators has at least 3 elements
+                    </span>.unwrap();
 
-                <span class="kw">if</span> <span class="ident">has_homogeneous_kind</span> {
-                    <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">node</span>) <span class="kw">in</span> <span class="ident">terminators</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                        <span class="kw">if</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">0</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>
-                                .<span class="ident">detail</span>(<span class="ident">node</span>.<span class="ident">range</span>, <span class="string">&quot;... because either this statement, ...&quot;</span>);
-                        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">last</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(<span class="ident">node</span>.<span class="ident">range</span>, <span class="string">&quot;... this statement, ...&quot;</span>);
-                        } <span class="kw">else</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
-                                <span class="ident">node</span>.<span class="ident">range</span>,
+                <span class="kw">if </span>has_homogeneous_kind {
+                    <span class="kw">for </span>(index, node) <span class="kw">in </span>terminators.iter().enumerate() {
+                        <span class="kw">if </span>index == <span class="number">0 </span>{
+                            diagnostic = diagnostic
+                                .detail(node.range, <span class="string">&quot;... because either this statement, ...&quot;</span>);
+                        } <span class="kw">else if </span>index &lt; last {
+                            diagnostic = diagnostic.detail(node.range, <span class="string">&quot;... this statement, ...&quot;</span>);
+                        } <span class="kw">else </span>{
+                            diagnostic = diagnostic.detail(
+                                node.range,
                                 <span class="macro">format_args!</span>(
                                     <span class="string">&quot;... or this statement will {} beforehand&quot;</span>,
-                                    <span class="ident">node</span>.<span class="ident">reason</span>()
+                                    node.reason()
                                 ),
                             );
                         }
                     }
-                } <span class="kw">else</span> {
-                    <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">node</span>) <span class="kw">in</span> <span class="ident">terminators</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                        <span class="kw">if</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">0</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
-                                <span class="ident">node</span>.<span class="ident">range</span>,
+                } <span class="kw">else </span>{
+                    <span class="kw">for </span>(index, node) <span class="kw">in </span>terminators.iter().enumerate() {
+                        <span class="kw">if </span>index == <span class="number">0 </span>{
+                            diagnostic = diagnostic.detail(
+                                node.range,
                                 <span class="macro">format_args!</span>(
                                     <span class="string">&quot;... because either this statement will {}, ...&quot;</span>,
-                                    <span class="ident">node</span>.<span class="ident">reason</span>()
+                                    node.reason()
                                 ),
                             );
-                        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">last</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
-                                <span class="ident">node</span>.<span class="ident">range</span>,
-                                <span class="macro">format_args!</span>(<span class="string">&quot;... this statement will {}, ...&quot;</span>, <span class="ident">node</span>.<span class="ident">reason</span>()),
+                        } <span class="kw">else if </span>index &lt; last {
+                            diagnostic = diagnostic.detail(
+                                node.range,
+                                <span class="macro">format_args!</span>(<span class="string">&quot;... this statement will {}, ...&quot;</span>, node.reason()),
                             );
-                        } <span class="kw">else</span> {
-                            <span class="ident">diagnostic</span> <span class="op">=</span> <span class="ident">diagnostic</span>.<span class="ident">detail</span>(
-                                <span class="ident">node</span>.<span class="ident">range</span>,
+                        } <span class="kw">else </span>{
+                            diagnostic = diagnostic.detail(
+                                node.range,
                                 <span class="macro">format_args!</span>(
                                     <span class="string">&quot;... or this statement will {} beforehand&quot;</span>,
-                                    <span class="ident">node</span>.<span class="ident">reason</span>()
+                                    node.reason()
                                 ),
                             );
                         }
@@ -1141,215 +1141,215 @@
             }
         }
 
-        <span class="prelude-val">Some</span>(<span class="ident">diagnostic</span>)
+        <span class="prelude-val">Some</span>(diagnostic)
     }
 }
 
-<span class="doccomment">/// Any function with a complexity score higher than this value will use the</span>
-<span class="doccomment">/// simple reachability analysis instead of the fine analysis</span>
-<span class="kw">const</span> <span class="ident">COMPLEXITY_THRESHOLD</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">20</span>;
+<span class="doccomment">/// Any function with a complexity score higher than this value will use the
+/// simple reachability analysis instead of the fine analysis
+</span><span class="kw">const </span>COMPLEXITY_THRESHOLD: u32 = <span class="number">20</span>;
 
-<span class="doccomment">/// Returns true if the &quot;complexity score&quot; for the [ControlFlowGraph] is higher</span>
-<span class="doccomment">/// than [COMPLEXITY_THRESHOLD]. This score is an arbritrary value (the formula</span>
-<span class="doccomment">/// is similar to the cyclomatic complexity of the function but this is only</span>
-<span class="doccomment">/// approximative) used to determine whether the NoDeadCode rule should perform</span>
-<span class="doccomment">/// a fine reachability analysis or fall back to a simpler algorithm to avoid</span>
-<span class="doccomment">/// spending too much time analyzing exceedingly complex functions</span>
-<span class="kw">fn</span> <span class="ident">exceeds_complexity_threshold</span>(<span class="ident">cfg</span>: <span class="kw-2">&amp;</span><span class="ident">ControlFlowGraph</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">let</span> <span class="ident">nodes</span> <span class="op">=</span> <span class="ident">cfg</span>.<span class="ident">blocks</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+<span class="doccomment">/// Returns true if the &quot;complexity score&quot; for the [ControlFlowGraph] is higher
+/// than [COMPLEXITY_THRESHOLD]. This score is an arbritrary value (the formula
+/// is similar to the cyclomatic complexity of the function but this is only
+/// approximative) used to determine whether the NoDeadCode rule should perform
+/// a fine reachability analysis or fall back to a simpler algorithm to avoid
+/// spending too much time analyzing exceedingly complex functions
+</span><span class="kw">fn </span>exceeds_complexity_threshold(cfg: <span class="kw-2">&amp;</span>ControlFlowGraph) -&gt; bool {
+    <span class="kw">let </span>nodes = cfg.blocks.len() <span class="kw">as </span>u32;
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">edges</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">conditionals</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>edges: u32 = <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>conditionals: u32 = <span class="number">0</span>;
 
-    <span class="kw">for</span> <span class="ident">block</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">cfg</span>.<span class="ident">blocks</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">exception_handlers</span> <span class="op">=</span> <span class="ident">NonZeroU32::new</span>(<span class="ident">block</span>.<span class="ident">exception_handlers</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cleanup_handlers</span> <span class="op">=</span> <span class="ident">NonZeroU32::new</span>(<span class="ident">block</span>.<span class="ident">cleanup_handlers</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>);
+    <span class="kw">for </span>block <span class="kw">in </span><span class="kw-2">&amp;</span>cfg.blocks {
+        <span class="kw">let </span><span class="kw-2">mut </span>exception_handlers = NonZeroU32::new(block.exception_handlers.len() <span class="kw">as </span>u32);
+        <span class="kw">let </span><span class="kw-2">mut </span>cleanup_handlers = NonZeroU32::new(block.cleanup_handlers.len() <span class="kw">as </span>u32);
 
-        <span class="kw">for</span> <span class="ident">inst</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">block</span>.<span class="ident">instructions</span> {
-            <span class="kw">if</span> <span class="ident">has_side_effects</span>(<span class="ident">inst</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">handlers</span>) <span class="op">=</span> <span class="ident">exception_handlers</span>.<span class="ident">take</span>() {
-                    <span class="ident">edges</span> <span class="op">+</span><span class="op">=</span> <span class="ident">handlers</span>.<span class="ident">get</span>();
-                    <span class="ident">conditionals</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">for </span>inst <span class="kw">in </span><span class="kw-2">&amp;</span>block.instructions {
+            <span class="kw">if </span>has_side_effects(inst) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(handlers) = exception_handlers.take() {
+                    edges += handlers.get();
+                    conditionals += <span class="number">1</span>;
                 }
             }
 
-            <span class="kw">match</span> <span class="ident">inst</span>.<span class="ident">kind</span> {
-                <span class="ident">InstructionKind::Statement</span> =&gt; {}
-                <span class="ident">InstructionKind::Jump</span> { <span class="ident">conditional</span>, .. } =&gt; {
-                    <span class="ident">edges</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+            <span class="kw">match </span>inst.kind {
+                InstructionKind::Statement =&gt; {}
+                InstructionKind::Jump { conditional, .. } =&gt; {
+                    edges += <span class="number">1</span>;
 
-                    <span class="kw">if</span> <span class="ident">conditional</span> {
-                        <span class="ident">conditionals</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="kw">if </span>conditional {
+                        conditionals += <span class="number">1</span>;
                     }
                 }
-                <span class="ident">InstructionKind::Return</span> =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">handlers</span>) <span class="op">=</span> <span class="ident">cleanup_handlers</span>.<span class="ident">take</span>() {
-                        <span class="ident">edges</span> <span class="op">+</span><span class="op">=</span> <span class="ident">handlers</span>.<span class="ident">get</span>();
-                        <span class="ident">conditionals</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                InstructionKind::Return =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(handlers) = cleanup_handlers.take() {
+                        edges += handlers.get();
+                        conditionals += <span class="number">1</span>;
                     }
                 }
             }
 
-            <span class="kw">let</span> <span class="ident">complexity</span> <span class="op">=</span> <span class="ident">edges</span>.<span class="ident">saturating_sub</span>(<span class="ident">nodes</span>) <span class="op">+</span> <span class="ident">conditionals</span> <span class="op">/</span> <span class="number">2</span>;
-            <span class="kw">if</span> <span class="ident">complexity</span> <span class="op">&gt;</span> <span class="ident">COMPLEXITY_THRESHOLD</span> {
-                <span class="kw">return</span> <span class="bool-val">true</span>;
+            <span class="kw">let </span>complexity = edges.saturating_sub(nodes) + conditionals / <span class="number">2</span>;
+            <span class="kw">if </span>complexity &gt; COMPLEXITY_THRESHOLD {
+                <span class="kw">return </span><span class="bool-val">true</span>;
             }
         }
     }
 
-    <span class="bool-val">false</span>
-}
+    <span class="bool-val">false
+</span>}
 
-<span class="doccomment">/// Perform a simple reachability analysis, does not attempt to determine a</span>
-<span class="doccomment">/// terminator instruction for unreachable ranges allowing blocks to be visited</span>
-<span class="doccomment">/// at most once and ensuring the algorithm finishes in a bounded time</span>
-<span class="kw">fn</span> <span class="ident">analyze_simple</span>(<span class="ident">cfg</span>: <span class="kw-2">&amp;</span><span class="ident">ControlFlowGraph</span>, <span class="ident">signals</span>: <span class="kw-2">&amp;mut</span> <span class="ident">UnreachableRanges</span>) {
-    <span class="comment">// Perform a simple reachability analysis on the control flow graph by</span>
-    <span class="comment">// traversing the function starting at the entry point</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reachable_blocks</span> <span class="op">=</span> <span class="ident">RoaringBitmap::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">queue</span> <span class="op">=</span> <span class="ident">VecDeque::new</span>();
+<span class="doccomment">/// Perform a simple reachability analysis, does not attempt to determine a
+/// terminator instruction for unreachable ranges allowing blocks to be visited
+/// at most once and ensuring the algorithm finishes in a bounded time
+</span><span class="kw">fn </span>analyze_simple(cfg: <span class="kw-2">&amp;</span>ControlFlowGraph, signals: <span class="kw-2">&amp;mut </span>UnreachableRanges) {
+    <span class="comment">// Perform a simple reachability analysis on the control flow graph by
+    // traversing the function starting at the entry point
+    </span><span class="kw">let </span><span class="kw-2">mut </span>reachable_blocks = RoaringBitmap::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>queue = VecDeque::new();
 
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">cfg</span>.<span class="ident">blocks</span>.<span class="ident">is_empty</span>() {
-        <span class="ident">reachable_blocks</span>.<span class="ident">insert</span>(<span class="number">0</span>);
-        <span class="ident">queue</span>.<span class="ident">push_back</span>((<span class="number">0</span>, <span class="prelude-val">None</span>));
+    <span class="kw">if </span>!cfg.blocks.is_empty() {
+        reachable_blocks.insert(<span class="number">0</span>);
+        queue.push_back((<span class="number">0</span>, <span class="prelude-val">None</span>));
     }
 
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">index</span>, <span class="ident">handlers</span>)) <span class="op">=</span> <span class="ident">queue</span>.<span class="ident">pop_front</span>() {
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">cfg</span>.<span class="ident">blocks</span>[<span class="ident">index</span>];
+    <span class="kw">while let </span><span class="prelude-val">Some</span>((index, handlers)) = queue.pop_front() {
+        <span class="kw">let </span>index = index <span class="kw">as </span>usize;
+        <span class="kw">let </span>block = <span class="kw-2">&amp;</span>cfg.blocks[index];
 
-        <span class="comment">// Lookup the existence of an exception edge for this block but</span>
-        <span class="comment">// defer its creation until an instruction that can throw is encountered</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">exception_handlers</span> <span class="op">=</span> <span class="ident">block</span>.<span class="ident">exception_handlers</span>.<span class="ident">split_first</span>();
+        <span class="comment">// Lookup the existence of an exception edge for this block but
+        // defer its creation until an instruction that can throw is encountered
+        </span><span class="kw">let </span><span class="kw-2">mut </span>exception_handlers = block.exception_handlers.split_first();
 
-        <span class="comment">// Tracks whether this block is &quot;terminated&quot;, if an instruction</span>
-        <span class="comment">// that unconditionally aborts the control flow of this block has</span>
-        <span class="comment">// been encountered</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_terminator</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        <span class="comment">// Tracks whether this block is &quot;terminated&quot;, if an instruction
+        // that unconditionally aborts the control flow of this block has
+        // been encountered
+        </span><span class="kw">let </span><span class="kw-2">mut </span>has_terminator = <span class="bool-val">false</span>;
 
-        <span class="kw">for</span> <span class="ident">inst</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">block</span>.<span class="ident">instructions</span> {
-            <span class="comment">// If this block is terminated, mark this instruction as unreachable and continue</span>
-            <span class="kw">if</span> <span class="ident">has_terminator</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">inst</span>.<span class="ident">node</span> {
-                    <span class="ident">signals</span>.<span class="ident">push</span>(<span class="ident">node</span>, <span class="prelude-val">None</span>);
+        <span class="kw">for </span>inst <span class="kw">in </span><span class="kw-2">&amp;</span>block.instructions {
+            <span class="comment">// If this block is terminated, mark this instruction as unreachable and continue
+            </span><span class="kw">if </span>has_terminator {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = <span class="kw-2">&amp;</span>inst.node {
+                    signals.push(node, <span class="prelude-val">None</span>);
                 }
                 <span class="kw">continue</span>;
             }
 
-            <span class="comment">// Do not create exception edges for instructions with no side effects</span>
-            <span class="kw">if</span> <span class="ident">has_side_effects</span>(<span class="ident">inst</span>) {
-                <span class="comment">// If this block has a pending exception edge, create an</span>
-                <span class="comment">// additional path diverging towards the corresponding</span>
-                <span class="comment">// catch or finally block</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">handler</span>, <span class="ident">handlers</span>)) <span class="op">=</span> <span class="ident">exception_handlers</span>.<span class="ident">take</span>() {
-                    <span class="kw">if</span> <span class="ident">reachable_blocks</span>.<span class="ident">insert</span>(<span class="ident">handler</span>.<span class="ident">target</span>) {
-                        <span class="ident">queue</span>.<span class="ident">push_back</span>((<span class="ident">handler</span>.<span class="ident">target</span>, <span class="prelude-val">Some</span>(<span class="ident">handlers</span>)));
+            <span class="comment">// Do not create exception edges for instructions with no side effects
+            </span><span class="kw">if </span>has_side_effects(inst) {
+                <span class="comment">// If this block has a pending exception edge, create an
+                // additional path diverging towards the corresponding
+                // catch or finally block
+                </span><span class="kw">if let </span><span class="prelude-val">Some</span>((handler, handlers)) = exception_handlers.take() {
+                    <span class="kw">if </span>reachable_blocks.insert(handler.target) {
+                        queue.push_back((handler.target, <span class="prelude-val">Some</span>(handlers)));
                     }
                 }
             }
 
-            <span class="kw">match</span> <span class="ident">inst</span>.<span class="ident">kind</span> {
-                <span class="ident">InstructionKind::Statement</span> =&gt; {}
-                <span class="ident">InstructionKind::Jump</span> {
-                    <span class="ident">conditional</span>,
-                    <span class="ident">block</span>,
-                    <span class="ident">finally_fallthrough</span>,
+            <span class="kw">match </span>inst.kind {
+                InstructionKind::Statement =&gt; {}
+                InstructionKind::Jump {
+                    conditional,
+                    block,
+                    finally_fallthrough,
                 } =&gt; {
-                    <span class="kw">if</span> <span class="ident">finally_fallthrough</span> <span class="op">&amp;&amp;</span> <span class="ident">handlers</span>.<span class="ident">is_some</span>() {
-                        <span class="comment">// Jump towards the corresponding block if there are pending exception</span>
-                        <span class="comment">// handlers, otherwise return from the function</span>
-                        <span class="kw">let</span> <span class="ident">handlers</span> <span class="op">=</span> <span class="ident">handlers</span>.<span class="ident">and_then</span>(<span class="op">&lt;</span>[<span class="kw">_</span>]<span class="op">&gt;</span><span class="ident">::split_first</span>);
+                    <span class="kw">if </span>finally_fallthrough &amp;&amp; handlers.is_some() {
+                        <span class="comment">// Jump towards the corresponding block if there are pending exception
+                        // handlers, otherwise return from the function
+                        </span><span class="kw">let </span>handlers = handlers.and_then(&lt;[<span class="kw">_</span>]&gt;::split_first);
 
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">handler</span>, <span class="ident">handlers</span>)) <span class="op">=</span> <span class="ident">handlers</span> {
-                            <span class="kw">if</span> <span class="ident">reachable_blocks</span>.<span class="ident">insert</span>(<span class="ident">handler</span>.<span class="ident">target</span>) {
-                                <span class="ident">queue</span>.<span class="ident">push_back</span>((<span class="ident">handler</span>.<span class="ident">target</span>, <span class="prelude-val">Some</span>(<span class="ident">handlers</span>)));
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>((handler, handlers)) = handlers {
+                            <span class="kw">if </span>reachable_blocks.insert(handler.target) {
+                                queue.push_back((handler.target, <span class="prelude-val">Some</span>(handlers)));
                             }
                         }
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">reachable_blocks</span>.<span class="ident">insert</span>(<span class="ident">block</span>.<span class="ident">index</span>()) {
-                        <span class="comment">// Insert an edge if this jump is reachable</span>
-                        <span class="ident">queue</span>.<span class="ident">push_back</span>((<span class="ident">block</span>.<span class="ident">index</span>(), <span class="ident">handlers</span>));
+                    } <span class="kw">else if </span>reachable_blocks.insert(block.index()) {
+                        <span class="comment">// Insert an edge if this jump is reachable
+                        </span>queue.push_back((block.index(), handlers));
                     }
 
-                    <span class="comment">// Jump is a terminator instruction if it&#39;s unconditional</span>
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">conditional</span> {
-                        <span class="ident">has_terminator</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                    <span class="comment">// Jump is a terminator instruction if it&#39;s unconditional
+                    </span><span class="kw">if </span>!conditional {
+                        has_terminator = <span class="bool-val">true</span>;
                     }
                 }
-                <span class="ident">InstructionKind::Return</span> =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">handler</span>, <span class="ident">handlers</span>)) <span class="op">=</span> <span class="ident">block</span>.<span class="ident">cleanup_handlers</span>.<span class="ident">split_first</span>() {
-                        <span class="kw">if</span> <span class="ident">reachable_blocks</span>.<span class="ident">insert</span>(<span class="ident">handler</span>.<span class="ident">target</span>) {
-                            <span class="ident">queue</span>.<span class="ident">push_back</span>((<span class="ident">handler</span>.<span class="ident">target</span>, <span class="prelude-val">Some</span>(<span class="ident">handlers</span>)));
+                InstructionKind::Return =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>((handler, handlers)) = block.cleanup_handlers.split_first() {
+                        <span class="kw">if </span>reachable_blocks.insert(handler.target) {
+                            queue.push_back((handler.target, <span class="prelude-val">Some</span>(handlers)));
                         }
                     }
 
-                    <span class="ident">has_terminator</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                    has_terminator = <span class="bool-val">true</span>;
                 }
             }
         }
     }
 
-    <span class="comment">// Detect blocks that were never reached by the above traversal</span>
-    <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">block</span>) <span class="kw">in</span> <span class="ident">cfg</span>.<span class="ident">blocks</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span> <span class="kw">as</span> <span class="ident">u32</span>;
-        <span class="kw">if</span> <span class="ident">reachable_blocks</span>.<span class="ident">contains</span>(<span class="ident">index</span>) {
+    <span class="comment">// Detect blocks that were never reached by the above traversal
+    </span><span class="kw">for </span>(index, block) <span class="kw">in </span>cfg.blocks.iter().enumerate() {
+        <span class="kw">let </span>index = index <span class="kw">as </span>u32;
+        <span class="kw">if </span>reachable_blocks.contains(index) {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">for</span> <span class="ident">inst</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">block</span>.<span class="ident">instructions</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">inst</span>.<span class="ident">node</span> {
-                <span class="ident">signals</span>.<span class="ident">push</span>(<span class="ident">node</span>, <span class="prelude-val">None</span>);
+        <span class="kw">for </span>inst <span class="kw">in </span><span class="kw-2">&amp;</span>block.instructions {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = <span class="kw-2">&amp;</span>inst.node {
+                signals.push(node, <span class="prelude-val">None</span>);
             }
         }
     }
 }
 
-<span class="doccomment">/// Performs a fine reachability analysis of the control flow graph: this</span>
-<span class="doccomment">/// algorithm traverse all the possible paths through the function to determine</span>
-<span class="doccomment">/// the reachability of each block and instruction but also find one or more</span>
-<span class="doccomment">/// &quot;terminator instructions&quot; for each unreachable range of code that cause it</span>
-<span class="doccomment">/// to be impossible to reach</span>
-<span class="kw">fn</span> <span class="ident">analyze_fine</span>(<span class="ident">cfg</span>: <span class="kw-2">&amp;</span><span class="ident">ControlFlowGraph</span>, <span class="ident">signals</span>: <span class="kw-2">&amp;mut</span> <span class="ident">UnreachableRanges</span>) {
-    <span class="comment">// Traverse the CFG and calculate block / instruction reachability</span>
-    <span class="kw">let</span> <span class="ident">block_paths</span> <span class="op">=</span> <span class="ident">traverse_cfg</span>(<span class="ident">cfg</span>, <span class="ident">signals</span>);
+<span class="doccomment">/// Performs a fine reachability analysis of the control flow graph: this
+/// algorithm traverse all the possible paths through the function to determine
+/// the reachability of each block and instruction but also find one or more
+/// &quot;terminator instructions&quot; for each unreachable range of code that cause it
+/// to be impossible to reach
+</span><span class="kw">fn </span>analyze_fine(cfg: <span class="kw-2">&amp;</span>ControlFlowGraph, signals: <span class="kw-2">&amp;mut </span>UnreachableRanges) {
+    <span class="comment">// Traverse the CFG and calculate block / instruction reachability
+    </span><span class="kw">let </span>block_paths = traverse_cfg(cfg, signals);
 
-    <span class="comment">// Detect unreachable blocks using the result of the above traversal</span>
-    <span class="lifetime">&#39;blocks</span>: <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">block</span>) <span class="kw">in</span> <span class="ident">cfg</span>.<span class="ident">blocks</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span> <span class="kw">as</span> <span class="ident">u32</span>;
-        <span class="kw">match</span> <span class="ident">block_paths</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">index</span>) {
-            <span class="comment">// Block has incoming paths, but may be unreachable if they all</span>
-            <span class="comment">// have a dominating terminator intruction</span>
-            <span class="prelude-val">Some</span>(<span class="ident">paths</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">terminators</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                <span class="kw">for</span> <span class="ident">path</span> <span class="kw">in</span> <span class="ident">paths</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">terminator</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">path</span> {
-                        <span class="ident">terminators</span>.<span class="ident">push</span>(<span class="ident">terminator</span>);
-                    } <span class="kw">else</span> {
-                        <span class="comment">// This path has no terminator, the block is reachable</span>
-                        <span class="kw">continue</span> <span class="lifetime">&#39;blocks</span>;
+    <span class="comment">// Detect unreachable blocks using the result of the above traversal
+    </span><span class="lifetime">&#39;blocks</span>: <span class="kw">for </span>(index, block) <span class="kw">in </span>cfg.blocks.iter().enumerate() {
+        <span class="kw">let </span>index = index <span class="kw">as </span>u32;
+        <span class="kw">match </span>block_paths.get(<span class="kw-2">&amp;</span>index) {
+            <span class="comment">// Block has incoming paths, but may be unreachable if they all
+            // have a dominating terminator intruction
+            </span><span class="prelude-val">Some</span>(paths) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>terminators = Vec::new();
+                <span class="kw">for </span>path <span class="kw">in </span>paths {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(terminator) = <span class="kw-2">*</span>path {
+                        terminators.push(terminator);
+                    } <span class="kw">else </span>{
+                        <span class="comment">// This path has no terminator, the block is reachable
+                        </span><span class="kw">continue </span><span class="lifetime">&#39;blocks</span>;
                     }
                 }
 
-                <span class="comment">// Mark each instruction in the block as unreachable with</span>
-                <span class="comment">// the appropriate terminator labels</span>
-                <span class="kw">for</span> <span class="ident">inst</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">block</span>.<span class="ident">instructions</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">inst</span>.<span class="ident">node</span> {
-                        <span class="kw">for</span> <span class="ident">terminator</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">terminators</span> {
-                            <span class="ident">signals</span>.<span class="ident">push</span>(<span class="ident">node</span>, <span class="kw-2">*</span><span class="ident">terminator</span>);
+                <span class="comment">// Mark each instruction in the block as unreachable with
+                // the appropriate terminator labels
+                </span><span class="kw">for </span>inst <span class="kw">in </span><span class="kw-2">&amp;</span>block.instructions {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = <span class="kw-2">&amp;</span>inst.node {
+                        <span class="kw">for </span>terminator <span class="kw">in </span><span class="kw-2">&amp;</span>terminators {
+                            signals.push(node, <span class="kw-2">*</span>terminator);
                         }
                     }
                 }
             }
-            <span class="comment">// Block has no incoming paths, is completely cut off from the CFG</span>
-            <span class="comment">// In theory this shouldn&#39;t happen as our CFG also stores</span>
-            <span class="comment">// unreachable edges, if we get here there might be a bug in</span>
-            <span class="comment">// the control flow analysis</span>
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">for</span> <span class="ident">inst</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">block</span>.<span class="ident">instructions</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">inst</span>.<span class="ident">node</span> {
-                        <span class="comment">// There is no incoming control flow so we can&#39;t</span>
-                        <span class="comment">// determine a terminator instruction for this</span>
-                        <span class="comment">// unreachable range</span>
-                        <span class="ident">signals</span>.<span class="ident">push</span>(<span class="ident">node</span>, <span class="prelude-val">None</span>);
+            <span class="comment">// Block has no incoming paths, is completely cut off from the CFG
+            // In theory this shouldn&#39;t happen as our CFG also stores
+            // unreachable edges, if we get here there might be a bug in
+            // the control flow analysis
+            </span><span class="prelude-val">None </span>=&gt; {
+                <span class="kw">for </span>inst <span class="kw">in </span><span class="kw-2">&amp;</span>block.instructions {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = <span class="kw-2">&amp;</span>inst.node {
+                        <span class="comment">// There is no incoming control flow so we can&#39;t
+                        // determine a terminator instruction for this
+                        // unreachable range
+                        </span>signals.push(node, <span class="prelude-val">None</span>);
                     }
                 }
             }
@@ -1357,544 +1357,544 @@
     }
 }
 
-<span class="doccomment">/// Individual entry in the traversal queue, holding the state for a</span>
-<span class="doccomment">/// single &quot;linearly independent path&quot; through the function as it gets</span>
-<span class="doccomment">/// created during the control flow traversal</span>
-<span class="kw">struct</span> <span class="ident">PathState</span><span class="op">&lt;</span><span class="lifetime">&#39;cfg</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Index of the next block to visit</span>
-    <span class="ident">next_block</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// Set of all blocks already visited on this path</span>
-    <span class="ident">visited</span>: <span class="ident">RoaringBitmap</span>,
-    <span class="doccomment">/// Current terminating instruction for the path, if one was</span>
-    <span class="doccomment">/// encountered</span>
-    <span class="ident">terminator</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathTerminator</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">exception_handlers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;cfg</span> [<span class="ident">ExceptionHandler</span>]<span class="op">&gt;</span>,
+<span class="doccomment">/// Individual entry in the traversal queue, holding the state for a
+/// single &quot;linearly independent path&quot; through the function as it gets
+/// created during the control flow traversal
+</span><span class="kw">struct </span>PathState&lt;<span class="lifetime">&#39;cfg</span>&gt; {
+    <span class="doccomment">/// Index of the next block to visit
+    </span>next_block: u32,
+    <span class="doccomment">/// Set of all blocks already visited on this path
+    </span>visited: RoaringBitmap,
+    <span class="doccomment">/// Current terminating instruction for the path, if one was
+    /// encountered
+    </span>terminator: <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Option</span>&lt;PathTerminator&gt;&gt;,
+    exception_handlers: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;cfg </span>[ExceptionHandler]&gt;,
 }
 
-<span class="doccomment">/// Perform a simple reachability analysis on the control flow graph by</span>
-<span class="doccomment">/// traversing the function starting at the entry points</span>
-<span class="kw">fn</span> <span class="ident">traverse_cfg</span>(
-    <span class="ident">cfg</span>: <span class="kw-2">&amp;</span><span class="ident">ControlFlowGraph</span>,
-    <span class="ident">signals</span>: <span class="kw-2">&amp;mut</span> <span class="ident">UnreachableRanges</span>,
-) -&gt; <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathTerminator</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">queue</span> <span class="op">=</span> <span class="ident">VecDeque::new</span>();
+<span class="doccomment">/// Perform a simple reachability analysis on the control flow graph by
+/// traversing the function starting at the entry points
+</span><span class="kw">fn </span>traverse_cfg(
+    cfg: <span class="kw-2">&amp;</span>ControlFlowGraph,
+    signals: <span class="kw-2">&amp;mut </span>UnreachableRanges,
+) -&gt; FxHashMap&lt;u32, Vec&lt;<span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Option</span>&lt;PathTerminator&gt;&gt;&gt;&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>queue = VecDeque::new();
 
-    <span class="ident">queue</span>.<span class="ident">push_back</span>(<span class="ident">PathState</span> {
-        <span class="ident">next_block</span>: <span class="number">0</span>,
-        <span class="ident">visited</span>: <span class="ident">RoaringBitmap::new</span>(),
-        <span class="ident">terminator</span>: <span class="prelude-val">None</span>,
-        <span class="ident">exception_handlers</span>: <span class="prelude-val">None</span>,
+    queue.push_back(PathState {
+        next_block: <span class="number">0</span>,
+        visited: RoaringBitmap::new(),
+        terminator: <span class="prelude-val">None</span>,
+        exception_handlers: <span class="prelude-val">None</span>,
     });
 
-    <span class="comment">// This maps holds a list of &quot;path state&quot;, the active terminator</span>
-    <span class="comment">// intruction for each path that can reach the block</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">block_paths</span> <span class="op">=</span> <span class="ident">FxHashMap::default</span>();
+    <span class="comment">// This maps holds a list of &quot;path state&quot;, the active terminator
+    // intruction for each path that can reach the block
+    </span><span class="kw">let </span><span class="kw-2">mut </span>block_paths = FxHashMap::default();
 
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">path</span>) <span class="op">=</span> <span class="ident">queue</span>.<span class="ident">pop_front</span>() {
-        <span class="comment">// Add the block to the visited set for the path, and the current</span>
-        <span class="comment">// state of the path to the global reachable blocks map</span>
-        <span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">insert</span>(<span class="ident">path</span>.<span class="ident">next_block</span>);
+    <span class="kw">while let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>path) = queue.pop_front() {
+        <span class="comment">// Add the block to the visited set for the path, and the current
+        // state of the path to the global reachable blocks map
+        </span>path.visited.insert(path.next_block);
 
-        <span class="ident">block_paths</span>
-            .<span class="ident">entry</span>(<span class="ident">path</span>.<span class="ident">next_block</span>)
-            .<span class="ident">or_insert_with</span>(<span class="ident">Vec::new</span>)
-            .<span class="ident">push</span>(<span class="ident">path</span>.<span class="ident">terminator</span>);
+        block_paths
+            .entry(path.next_block)
+            .or_insert_with(Vec::new)
+            .push(path.terminator);
 
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">next_block</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">cfg</span>.<span class="ident">blocks</span>[<span class="ident">index</span>];
+        <span class="kw">let </span>index = path.next_block <span class="kw">as </span>usize;
+        <span class="kw">let </span>block = <span class="kw-2">&amp;</span>cfg.blocks[index];
 
-        <span class="comment">// Lookup the existence of an exception edge for this block but</span>
-        <span class="comment">// defer its creation until an instruction that can throw is encountered</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">exception_handlers</span> <span class="op">=</span> <span class="ident">block</span>.<span class="ident">exception_handlers</span>.<span class="ident">split_first</span>();
+        <span class="comment">// Lookup the existence of an exception edge for this block but
+        // defer its creation until an instruction that can throw is encountered
+        </span><span class="kw">let </span><span class="kw-2">mut </span>exception_handlers = block.exception_handlers.split_first();
 
-        <span class="comment">// Set to true if the `terminator` is found inside of this block</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_direct_terminator</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        <span class="comment">// Set to true if the `terminator` is found inside of this block
+        </span><span class="kw">let </span><span class="kw-2">mut </span>has_direct_terminator = <span class="bool-val">false</span>;
 
-        <span class="kw">for</span> <span class="ident">inst</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">block</span>.<span class="ident">instructions</span> {
-            <span class="comment">// Do not create exception edges for instructions with no side effects</span>
-            <span class="kw">if</span> <span class="ident">has_side_effects</span>(<span class="ident">inst</span>) {
-                <span class="comment">// If this block has a pending exception edge, create an</span>
-                <span class="comment">// additional path diverging towards the corresponding</span>
-                <span class="comment">// catch or finally block</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">handler</span>, <span class="ident">handlers</span>)) <span class="op">=</span> <span class="ident">exception_handlers</span>.<span class="ident">take</span>() {
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">contains</span>(<span class="ident">handler</span>.<span class="ident">target</span>) {
-                        <span class="ident">queue</span>.<span class="ident">push_back</span>(<span class="ident">PathState</span> {
-                            <span class="ident">next_block</span>: <span class="ident">handler</span>.<span class="ident">target</span>,
-                            <span class="ident">visited</span>: <span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">clone</span>(),
-                            <span class="ident">terminator</span>: <span class="ident">path</span>.<span class="ident">terminator</span>,
-                            <span class="ident">exception_handlers</span>: <span class="prelude-val">Some</span>(<span class="ident">handlers</span>),
+        <span class="kw">for </span>inst <span class="kw">in </span><span class="kw-2">&amp;</span>block.instructions {
+            <span class="comment">// Do not create exception edges for instructions with no side effects
+            </span><span class="kw">if </span>has_side_effects(inst) {
+                <span class="comment">// If this block has a pending exception edge, create an
+                // additional path diverging towards the corresponding
+                // catch or finally block
+                </span><span class="kw">if let </span><span class="prelude-val">Some</span>((handler, handlers)) = exception_handlers.take() {
+                    <span class="kw">if </span>!path.visited.contains(handler.target) {
+                        queue.push_back(PathState {
+                            next_block: handler.target,
+                            visited: path.visited.clone(),
+                            terminator: path.terminator,
+                            exception_handlers: <span class="prelude-val">Some</span>(handlers),
                         });
                     }
                 }
             }
 
-            <span class="comment">// If this block has already ended, immediately mark this instruction as unreachable</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">terminator</span>) <span class="op">=</span> <span class="ident">path</span>.<span class="ident">terminator</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">has_direct_terminator</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">inst</span>.<span class="ident">node</span> {
-                    <span class="ident">signals</span>.<span class="ident">push</span>(<span class="ident">node</span>, <span class="ident">terminator</span>);
+            <span class="comment">// If this block has already ended, immediately mark this instruction as unreachable
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(terminator) = path.terminator.filter(|<span class="kw">_</span>| has_direct_terminator) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = <span class="kw-2">&amp;</span>inst.node {
+                    signals.push(node, terminator);
                 }
             }
 
-            <span class="kw">match</span> <span class="ident">inst</span>.<span class="ident">kind</span> {
-                <span class="ident">InstructionKind::Statement</span> =&gt; {}
-                <span class="ident">InstructionKind::Jump</span> {
-                    <span class="ident">conditional</span>,
-                    <span class="ident">block</span>,
-                    <span class="ident">finally_fallthrough</span>,
+            <span class="kw">match </span>inst.kind {
+                InstructionKind::Statement =&gt; {}
+                InstructionKind::Jump {
+                    conditional,
+                    block,
+                    finally_fallthrough,
                 } =&gt; {
-                    <span class="ident">handle_jump</span>(<span class="kw-2">&amp;mut</span> <span class="ident">queue</span>, <span class="kw-2">&amp;</span><span class="ident">path</span>, <span class="ident">block</span>, <span class="ident">finally_fallthrough</span>);
+                    handle_jump(<span class="kw-2">&amp;mut </span>queue, <span class="kw-2">&amp;</span>path, block, finally_fallthrough);
 
-                    <span class="comment">// Jump is a terminator instruction if it&#39;s unconditional</span>
-                    <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">terminator</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">conditional</span> {
-                        <span class="ident">path</span>.<span class="ident">terminator</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">inst</span>.<span class="ident">node</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">PathTerminator</span> {
-                            <span class="ident">kind</span>: <span class="ident">node</span>.<span class="ident">kind</span>(),
-                            <span class="ident">range</span>: <span class="ident">node</span>.<span class="ident">text_trimmed_range</span>(),
+                    <span class="comment">// Jump is a terminator instruction if it&#39;s unconditional
+                    </span><span class="kw">if </span>path.terminator.is_none() &amp;&amp; !conditional {
+                        path.terminator = <span class="prelude-val">Some</span>(inst.node.as_ref().map(|node| PathTerminator {
+                            kind: node.kind(),
+                            range: node.text_trimmed_range(),
                         }));
-                        <span class="ident">has_direct_terminator</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                        has_direct_terminator = <span class="bool-val">true</span>;
                     }
                 }
-                <span class="ident">InstructionKind::Return</span> =&gt; {
-                    <span class="ident">handle_return</span>(<span class="kw-2">&amp;mut</span> <span class="ident">queue</span>, <span class="kw-2">&amp;</span><span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">block</span>.<span class="ident">cleanup_handlers</span>);
+                InstructionKind::Return =&gt; {
+                    handle_return(<span class="kw-2">&amp;mut </span>queue, <span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>block.cleanup_handlers);
 
-                    <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">terminator</span>.<span class="ident">is_none</span>() {
-                        <span class="ident">path</span>.<span class="ident">terminator</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">inst</span>.<span class="ident">node</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">PathTerminator</span> {
-                            <span class="ident">kind</span>: <span class="ident">node</span>.<span class="ident">kind</span>(),
-                            <span class="ident">range</span>: <span class="ident">node</span>.<span class="ident">text_trimmed_range</span>(),
+                    <span class="kw">if </span>path.terminator.is_none() {
+                        path.terminator = <span class="prelude-val">Some</span>(inst.node.as_ref().map(|node| PathTerminator {
+                            kind: node.kind(),
+                            range: node.text_trimmed_range(),
                         }));
-                        <span class="ident">has_direct_terminator</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                        has_direct_terminator = <span class="bool-val">true</span>;
                     }
                 }
             }
         }
     }
 
-    <span class="ident">block_paths</span>
+    block_paths
 }
 
-<span class="doccomment">/// Returns `true` if `inst` can potentially have side effects. Due to the</span>
-<span class="doccomment">/// dynamic nature of JavaScript this is a conservative check, biased towards</span>
-<span class="doccomment">/// returning false positives</span>
-<span class="kw">fn</span> <span class="ident">has_side_effects</span>(<span class="ident">inst</span>: <span class="kw-2">&amp;</span><span class="ident">Instruction</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">inst</span>.<span class="ident">node</span>.<span class="ident">as_ref</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">element</span>) =&gt; <span class="ident">element</span>,
-        <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="bool-val">false</span>,
+<span class="doccomment">/// Returns `true` if `inst` can potentially have side effects. Due to the
+/// dynamic nature of JavaScript this is a conservative check, biased towards
+/// returning false positives
+</span><span class="kw">fn </span>has_side_effects(inst: <span class="kw-2">&amp;</span>Instruction&lt;JsLanguage&gt;) -&gt; bool {
+    <span class="kw">let </span>element = <span class="kw">match </span>inst.node.as_ref() {
+        <span class="prelude-val">Some</span>(element) =&gt; element,
+        <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="bool-val">false</span>,
     };
 
-    <span class="kw">match</span> <span class="ident">element</span>.<span class="ident">kind</span>() {
-        <span class="ident">JsSyntaxKind::JS_RETURN_STATEMENT</span> =&gt; {
-            <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">JsReturnStatement::unwrap_cast</span>(<span class="ident">element</span>.<span class="ident">as_node</span>().<span class="ident">unwrap</span>().<span class="ident">clone</span>());
-            <span class="ident">node</span>.<span class="ident">argument</span>().<span class="ident">is_some</span>()
+    <span class="kw">match </span>element.kind() {
+        JsSyntaxKind::JS_RETURN_STATEMENT =&gt; {
+            <span class="kw">let </span>node = JsReturnStatement::unwrap_cast(element.as_node().unwrap().clone());
+            node.argument().is_some()
         }
 
-        <span class="ident">JsSyntaxKind::JS_BREAK_STATEMENT</span> <span class="op">|</span> <span class="ident">JsSyntaxKind::JS_CONTINUE_STATEMENT</span> =&gt; <span class="bool-val">false</span>,
-        <span class="ident">kind</span> =&gt; <span class="ident">element</span>.<span class="ident">as_node</span>().<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">kind</span>.<span class="ident">is_literal</span>(),
+        JsSyntaxKind::JS_BREAK_STATEMENT | JsSyntaxKind::JS_CONTINUE_STATEMENT =&gt; <span class="bool-val">false</span>,
+        kind =&gt; element.as_node().is_some() &amp;&amp; !kind.is_literal(),
     }
 }
 
-<span class="doccomment">/// Create an additional visitor path from a jump instruction and push it to the queue</span>
-<span class="kw">fn</span> <span class="ident">handle_jump</span><span class="op">&lt;</span><span class="lifetime">&#39;cfg</span><span class="op">&gt;</span>(
-    <span class="ident">queue</span>: <span class="kw-2">&amp;mut</span> <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">PathState</span><span class="op">&lt;</span><span class="lifetime">&#39;cfg</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">PathState</span><span class="op">&lt;</span><span class="lifetime">&#39;cfg</span><span class="op">&gt;</span>,
-    <span class="ident">block</span>: <span class="ident">BlockId</span>,
-    <span class="ident">finally_fallthrough</span>: <span class="ident">bool</span>,
+<span class="doccomment">/// Create an additional visitor path from a jump instruction and push it to the queue
+</span><span class="kw">fn </span>handle_jump&lt;<span class="lifetime">&#39;cfg</span>&gt;(
+    queue: <span class="kw-2">&amp;mut </span>VecDeque&lt;PathState&lt;<span class="lifetime">&#39;cfg</span>&gt;&gt;,
+    path: <span class="kw-2">&amp;</span>PathState&lt;<span class="lifetime">&#39;cfg</span>&gt;,
+    block: BlockId,
+    finally_fallthrough: bool,
 ) {
-    <span class="comment">// If this jump is exiting a finally clause and and this path is visiting</span>
-    <span class="comment">// an exception handlers chain</span>
-    <span class="kw">if</span> <span class="ident">finally_fallthrough</span> <span class="op">&amp;&amp;</span> <span class="ident">path</span>.<span class="ident">exception_handlers</span>.<span class="ident">is_some</span>() {
-        <span class="comment">// Jump towards the corresponding block if there are pending exception</span>
-        <span class="comment">// handlers, otherwise return from the function</span>
-        <span class="kw">let</span> <span class="ident">handlers</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">exception_handlers</span>.<span class="ident">and_then</span>(<span class="op">&lt;</span>[<span class="kw">_</span>]<span class="op">&gt;</span><span class="ident">::split_first</span>);
+    <span class="comment">// If this jump is exiting a finally clause and and this path is visiting
+    // an exception handlers chain
+    </span><span class="kw">if </span>finally_fallthrough &amp;&amp; path.exception_handlers.is_some() {
+        <span class="comment">// Jump towards the corresponding block if there are pending exception
+        // handlers, otherwise return from the function
+        </span><span class="kw">let </span>handlers = path.exception_handlers.and_then(&lt;[<span class="kw">_</span>]&gt;::split_first);
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">handler</span>, <span class="ident">handlers</span>)) <span class="op">=</span> <span class="ident">handlers</span> {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">contains</span>(<span class="ident">handler</span>.<span class="ident">target</span>) {
-                <span class="ident">queue</span>.<span class="ident">push_back</span>(<span class="ident">PathState</span> {
-                    <span class="ident">next_block</span>: <span class="ident">handler</span>.<span class="ident">target</span>,
-                    <span class="ident">visited</span>: <span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">clone</span>(),
-                    <span class="ident">terminator</span>: <span class="ident">path</span>.<span class="ident">terminator</span>,
-                    <span class="ident">exception_handlers</span>: <span class="prelude-val">Some</span>(<span class="ident">handlers</span>),
+        <span class="kw">if let </span><span class="prelude-val">Some</span>((handler, handlers)) = handlers {
+            <span class="kw">if </span>!path.visited.contains(handler.target) {
+                queue.push_back(PathState {
+                    next_block: handler.target,
+                    visited: path.visited.clone(),
+                    terminator: path.terminator,
+                    exception_handlers: <span class="prelude-val">Some</span>(handlers),
                 });
             }
         }
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">contains</span>(<span class="ident">block</span>.<span class="ident">index</span>()) {
-        <span class="comment">// Push the jump target block to the queue if it hasn&#39;t</span>
-        <span class="comment">// been visited yet in this path</span>
-        <span class="ident">queue</span>.<span class="ident">push_back</span>(<span class="ident">PathState</span> {
-            <span class="ident">next_block</span>: <span class="ident">block</span>.<span class="ident">index</span>(),
-            <span class="ident">visited</span>: <span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">clone</span>(),
-            <span class="ident">terminator</span>: <span class="ident">path</span>.<span class="ident">terminator</span>,
-            <span class="ident">exception_handlers</span>: <span class="ident">path</span>.<span class="ident">exception_handlers</span>,
+    } <span class="kw">else if </span>!path.visited.contains(block.index()) {
+        <span class="comment">// Push the jump target block to the queue if it hasn&#39;t
+        // been visited yet in this path
+        </span>queue.push_back(PathState {
+            next_block: block.index(),
+            visited: path.visited.clone(),
+            terminator: path.terminator,
+            exception_handlers: path.exception_handlers,
         });
     }
 }
 
-<span class="doccomment">/// Create an additional visitor path from a return instruction and push it to</span>
-<span class="doccomment">/// the queue if necessary</span>
-<span class="kw">fn</span> <span class="ident">handle_return</span><span class="op">&lt;</span><span class="lifetime">&#39;cfg</span><span class="op">&gt;</span>(
-    <span class="ident">queue</span>: <span class="kw-2">&amp;mut</span> <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">PathState</span><span class="op">&lt;</span><span class="lifetime">&#39;cfg</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">PathState</span><span class="op">&lt;</span><span class="lifetime">&#39;cfg</span><span class="op">&gt;</span>,
-    <span class="ident">cleanup_handlers</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;cfg</span> [<span class="ident">ExceptionHandler</span>],
+<span class="doccomment">/// Create an additional visitor path from a return instruction and push it to
+/// the queue if necessary
+</span><span class="kw">fn </span>handle_return&lt;<span class="lifetime">&#39;cfg</span>&gt;(
+    queue: <span class="kw-2">&amp;mut </span>VecDeque&lt;PathState&lt;<span class="lifetime">&#39;cfg</span>&gt;&gt;,
+    path: <span class="kw-2">&amp;</span>PathState&lt;<span class="lifetime">&#39;cfg</span>&gt;,
+    cleanup_handlers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;cfg </span>[ExceptionHandler],
 ) {
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">handler</span>, <span class="ident">handlers</span>)) <span class="op">=</span> <span class="ident">cleanup_handlers</span>.<span class="ident">split_first</span>() {
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">contains</span>(<span class="ident">handler</span>.<span class="ident">target</span>) {
-            <span class="ident">queue</span>.<span class="ident">push_back</span>(<span class="ident">PathState</span> {
-                <span class="ident">next_block</span>: <span class="ident">handler</span>.<span class="ident">target</span>,
-                <span class="ident">visited</span>: <span class="ident">path</span>.<span class="ident">visited</span>.<span class="ident">clone</span>(),
-                <span class="ident">terminator</span>: <span class="ident">path</span>.<span class="ident">terminator</span>,
-                <span class="ident">exception_handlers</span>: <span class="prelude-val">Some</span>(<span class="ident">handlers</span>),
+    <span class="kw">if let </span><span class="prelude-val">Some</span>((handler, handlers)) = cleanup_handlers.split_first() {
+        <span class="kw">if </span>!path.visited.contains(handler.target) {
+            queue.push_back(PathState {
+                next_block: handler.target,
+                visited: path.visited.clone(),
+                terminator: path.terminator,
+                exception_handlers: <span class="prelude-val">Some</span>(handlers),
             });
         }
     }
 }
 
-<span class="doccomment">/// Stores a list of unreachable code ranges, sorted in ascending source order</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">UnreachableRanges</span> {
-    <span class="ident">ranges</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">UnreachableRange</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Stores a list of unreachable code ranges, sorted in ascending source order
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>UnreachableRanges {
+    ranges: Vec&lt;UnreachableRange&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">UnreachableRanges</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">UnreachableRanges</span> { <span class="ident">ranges</span>: <span class="ident">Vec::new</span>() }
+<span class="kw">impl </span>UnreachableRanges {
+    <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+        UnreachableRanges { ranges: Vec::new() }
     }
 
-    <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">JsSyntaxElement</span>, <span class="ident">terminator</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathTerminator</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">text_range</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">text_range</span>();
-        <span class="kw">let</span> <span class="ident">text_trimmed_range</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">text_trimmed_range</span>();
+    <span class="kw">fn </span>push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="kw-2">&amp;</span>JsSyntaxElement, terminator: <span class="prelude-ty">Option</span>&lt;PathTerminator&gt;) {
+        <span class="kw">let </span>text_range = node.text_range();
+        <span class="kw">let </span>text_trimmed_range = node.text_trimmed_range();
 
-        <span class="comment">// Perform a binary search on the ranges already in storage to find an</span>
-        <span class="comment">// appropriate position for either merging or inserting the incoming range</span>
-        <span class="kw">let</span> <span class="ident">insertion</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ranges</span>.<span class="ident">binary_search_by</span>(<span class="op">|</span><span class="ident">entry</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="ident">entry</span>.<span class="ident">text_range</span>.<span class="ident">end</span>() <span class="op">&lt;</span> <span class="ident">text_range</span>.<span class="ident">start</span>() {
-                <span class="ident">Ordering::Less</span>
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">text_range</span>.<span class="ident">end</span>() <span class="op">&lt;</span> <span class="ident">entry</span>.<span class="ident">text_range</span>.<span class="ident">start</span>() {
-                <span class="ident">Ordering::Greater</span>
-            } <span class="kw">else</span> {
-                <span class="ident">Ordering::Equal</span>
+        <span class="comment">// Perform a binary search on the ranges already in storage to find an
+        // appropriate position for either merging or inserting the incoming range
+        </span><span class="kw">let </span>insertion = <span class="self">self</span>.ranges.binary_search_by(|entry| {
+            <span class="kw">if </span>entry.text_range.end() &lt; text_range.start() {
+                Ordering::Less
+            } <span class="kw">else if </span>text_range.end() &lt; entry.text_range.start() {
+                Ordering::Greater
+            } <span class="kw">else </span>{
+                Ordering::Equal
             }
         });
 
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">insertion</span> {
-            <span class="comment">// The search returned an existing overlapping range, extend it to</span>
-            <span class="comment">// cover the incoming range</span>
-            <span class="prelude-val">Ok</span>(<span class="ident">index</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">ranges</span>[<span class="ident">index</span>];
-                <span class="ident">entry</span>.<span class="ident">text_range</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">text_range</span>.<span class="ident">cover</span>(<span class="ident">text_range</span>);
-                <span class="ident">entry</span>.<span class="ident">text_trimmed_range</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">text_trimmed_range</span>.<span class="ident">cover</span>(<span class="ident">text_trimmed_range</span>);
+        <span class="kw">let </span>index = <span class="kw">match </span>insertion {
+            <span class="comment">// The search returned an existing overlapping range, extend it to
+            // cover the incoming range
+            </span><span class="prelude-val">Ok</span>(index) =&gt; {
+                <span class="kw">let </span>entry = <span class="kw-2">&amp;mut </span><span class="self">self</span>.ranges[index];
+                entry.text_range = entry.text_range.cover(text_range);
+                entry.text_trimmed_range = entry.text_trimmed_range.cover(text_trimmed_range);
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">terminator</span>) <span class="op">=</span> <span class="ident">terminator</span> {
-                    <span class="comment">// Terminator labels are also stored in ascending order to</span>
-                    <span class="comment">// faciliate the generation of labels when the diagnostic</span>
-                    <span class="comment">// gets emitted</span>
-                    <span class="kw">let</span> <span class="ident">terminator_insertion</span> <span class="op">=</span> <span class="ident">entry</span>
-                        .<span class="ident">terminators</span>
-                        .<span class="ident">binary_search_by_key</span>(<span class="kw-2">&amp;</span><span class="ident">terminator</span>.<span class="ident">range</span>.<span class="ident">start</span>(), <span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">range</span>.<span class="ident">start</span>());
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(terminator) = terminator {
+                    <span class="comment">// Terminator labels are also stored in ascending order to
+                    // faciliate the generation of labels when the diagnostic
+                    // gets emitted
+                    </span><span class="kw">let </span>terminator_insertion = entry
+                        .terminators
+                        .binary_search_by_key(<span class="kw-2">&amp;</span>terminator.range.start(), |node| node.range.start());
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="ident">terminator_insertion</span> {
-                        <span class="ident">entry</span>.<span class="ident">terminators</span>.<span class="ident">insert</span>(<span class="ident">index</span>, <span class="ident">terminator</span>);
+                    <span class="kw">if let </span><span class="prelude-val">Err</span>(index) = terminator_insertion {
+                        entry.terminators.insert(index, terminator);
                     }
                 }
 
-                <span class="ident">index</span>
+                index
             }
-            <span class="comment">// No overlapping range was found, insert at the appropriate</span>
-            <span class="comment">// position to preserve the ordering instead</span>
-            <span class="prelude-val">Err</span>(<span class="ident">index</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">ranges</span>.<span class="ident">insert</span>(
-                    <span class="ident">index</span>,
-                    <span class="ident">UnreachableRange</span> {
-                        <span class="ident">text_range</span>,
-                        <span class="ident">text_trimmed_range</span>,
-                        <span class="ident">terminators</span>: <span class="ident">terminator</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>(),
+            <span class="comment">// No overlapping range was found, insert at the appropriate
+            // position to preserve the ordering instead
+            </span><span class="prelude-val">Err</span>(index) =&gt; {
+                <span class="self">self</span>.ranges.insert(
+                    index,
+                    UnreachableRange {
+                        text_range,
+                        text_trimmed_range,
+                        terminators: terminator.into_iter().collect(),
                     },
                 );
 
-                <span class="ident">index</span>
+                index
             }
         };
 
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">parent</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">parent</span>) =&gt; <span class="ident">parent</span>,
-            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
+        <span class="kw">let </span>node = <span class="kw">match </span>node.parent() {
+            <span class="prelude-val">Some</span>(parent) =&gt; parent,
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return</span>,
         };
 
-        <span class="self">self</span>.<span class="ident">propagate_ranges</span>(<span class="ident">node</span>, <span class="ident">index</span>);
+        <span class="self">self</span>.propagate_ranges(node, index);
     }
 
-    <span class="doccomment">/// Propagate unreachable ranges upward in the tree by detecting and</span>
-    <span class="doccomment">/// merging disjoint ranges that cover all the fields of a certain node</span>
-    <span class="doccomment">/// type. This requires specialized logic for each control flow node type,</span>
-    <span class="doccomment">/// for instance an if-statement is considered fully unreachable if its</span>
-    <span class="doccomment">/// test expression, consequent statement and optional else clause are all</span>
-    <span class="doccomment">/// fully unreachable.</span>
-    <span class="kw">fn</span> <span class="ident">propagate_ranges</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">node</span>: <span class="ident">JsSyntaxNode</span>, <span class="kw-2">mut</span> <span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">node</span>.<span class="ident">ancestors</span>().<span class="ident">find_map</span>(<span class="ident">JsControlFlowNode::cast</span>) {
-            <span class="comment">// Merge the adjacent and overlapping ranges</span>
-            <span class="self">self</span>.<span class="ident">merge_adjacent_ranges</span>();
+    <span class="doccomment">/// Propagate unreachable ranges upward in the tree by detecting and
+    /// merging disjoint ranges that cover all the fields of a certain node
+    /// type. This requires specialized logic for each control flow node type,
+    /// for instance an if-statement is considered fully unreachable if its
+    /// test expression, consequent statement and optional else clause are all
+    /// fully unreachable.
+    </span><span class="kw">fn </span>propagate_ranges(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>node: JsSyntaxNode, <span class="kw-2">mut </span>index: usize) -&gt; <span class="prelude-ty">Option</span>&lt;()&gt; {
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(parent) = node.ancestors().find_map(JsControlFlowNode::cast) {
+            <span class="comment">// Merge the adjacent and overlapping ranges
+            </span><span class="self">self</span>.merge_adjacent_ranges();
 
-            <span class="kw">let</span> <span class="ident">fields</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">parent</span> {
-                <span class="ident">JsControlFlowNode::JsFunctionBody</span>(<span class="kw">_</span>) =&gt; <span class="kw">break</span>,
+            <span class="kw">let </span>fields = <span class="kw">match </span><span class="kw-2">&amp;</span>parent {
+                JsControlFlowNode::JsFunctionBody(<span class="kw">_</span>) =&gt; <span class="kw">break</span>,
 
-                <span class="ident">JsControlFlowNode::JsBlockStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">statements</span> <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">statements</span>().<span class="ident">into_syntax</span>();
-                    <span class="kw">if</span> <span class="ident">statements</span>.<span class="ident">text_trimmed_range</span>().<span class="ident">is_empty</span>() {
+                JsControlFlowNode::JsBlockStatement(stmt) =&gt; {
+                    <span class="kw">let </span>statements = stmt.statements().into_syntax();
+                    <span class="kw">if </span>statements.text_trimmed_range().is_empty() {
                         <span class="macro">vec!</span>[]
-                    } <span class="kw">else</span> {
-                        <span class="macro">vec!</span>[<span class="ident">statements</span>.<span class="ident">text_range</span>()]
+                    } <span class="kw">else </span>{
+                        <span class="macro">vec!</span>[statements.text_range()]
                     }
                 }
 
-                <span class="ident">JsControlFlowNode::JsVariableStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">declaration</span> <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">declaration</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-                    <span class="ident">declaration</span>
-                        .<span class="ident">declarators</span>()
-                        .<span class="ident">into_iter</span>()
-                        .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">declarator</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">declarator</span> {
-                            <span class="prelude-val">Ok</span>(<span class="ident">declarator</span>) =&gt; <span class="kw">match</span> <span class="ident">declarator</span>.<span class="ident">initializer</span>()<span class="question-mark">?</span>.<span class="ident">expression</span>() {
-                                <span class="prelude-val">Ok</span>(<span class="ident">expression</span>) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">expression</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>())),
-                                <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)),
+                JsControlFlowNode::JsVariableStatement(stmt) =&gt; {
+                    <span class="kw">let </span>declaration = stmt.declaration().ok()<span class="question-mark">?</span>;
+                    declaration
+                        .declarators()
+                        .into_iter()
+                        .filter_map(|declarator| <span class="kw">match </span>declarator {
+                            <span class="prelude-val">Ok</span>(declarator) =&gt; <span class="kw">match </span>declarator.initializer()<span class="question-mark">?</span>.expression() {
+                                <span class="prelude-val">Ok</span>(expression) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(expression.syntax().text_range())),
+                                <span class="prelude-val">Err</span>(err) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(err)),
                             },
-                            <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)),
+                            <span class="prelude-val">Err</span>(err) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(err)),
                         })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                        .<span class="ident">ok</span>()<span class="question-mark">?</span>
+                        .collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;()
+                        .ok()<span class="question-mark">?
+                </span>}
+                JsControlFlowNode::JsLabeledStatement(stmt) =&gt; {
+                    <span class="macro">vec!</span>[stmt.body().ok()<span class="question-mark">?</span>.syntax().text_range()]
                 }
-                <span class="ident">JsControlFlowNode::JsLabeledStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="macro">vec!</span>[<span class="ident">stmt</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>()]
-                }
-                <span class="ident">JsControlFlowNode::JsDoWhileStatement</span>(<span class="ident">stmt</span>) =&gt; <span class="macro">vec!</span>[
-                    <span class="ident">stmt</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
-                    <span class="ident">stmt</span>.<span class="ident">test</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
+                JsControlFlowNode::JsDoWhileStatement(stmt) =&gt; <span class="macro">vec!</span>[
+                    stmt.body().ok()<span class="question-mark">?</span>.syntax().text_range(),
+                    stmt.test().ok()<span class="question-mark">?</span>.syntax().text_range(),
                 ],
-                <span class="ident">JsControlFlowNode::JsForInStatement</span>(<span class="ident">stmt</span>) =&gt; <span class="macro">vec!</span>[
-                    <span class="ident">stmt</span>.<span class="ident">initializer</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
-                    <span class="ident">stmt</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
+                JsControlFlowNode::JsForInStatement(stmt) =&gt; <span class="macro">vec!</span>[
+                    stmt.initializer().ok()<span class="question-mark">?</span>.syntax().text_range(),
+                    stmt.body().ok()<span class="question-mark">?</span>.syntax().text_range(),
                 ],
-                <span class="ident">JsControlFlowNode::JsForOfStatement</span>(<span class="ident">stmt</span>) =&gt; <span class="macro">vec!</span>[
-                    <span class="ident">stmt</span>.<span class="ident">initializer</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
-                    <span class="ident">stmt</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
+                JsControlFlowNode::JsForOfStatement(stmt) =&gt; <span class="macro">vec!</span>[
+                    stmt.initializer().ok()<span class="question-mark">?</span>.syntax().text_range(),
+                    stmt.body().ok()<span class="question-mark">?</span>.syntax().text_range(),
                 ],
-                <span class="ident">JsControlFlowNode::JsForStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+                JsControlFlowNode::JsForStatement(stmt) =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>res = Vec::new();
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">initializer</span>) <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">initializer</span>() {
-                        <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">initializer</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(initializer) = stmt.initializer() {
+                        res.push(initializer.syntax().text_range());
                     }
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">test</span>) <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">test</span>() {
-                        <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">test</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(test) = stmt.test() {
+                        res.push(test.syntax().text_range());
                     }
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">update</span>) <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">update</span>() {
-                        <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">update</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(update) = stmt.update() {
+                        res.push(update.syntax().text_range());
                     }
 
-                    <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">stmt</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>());
-                    <span class="ident">res</span>
+                    res.push(stmt.body().ok()<span class="question-mark">?</span>.syntax().text_range());
+                    res
                 }
-                <span class="ident">JsControlFlowNode::JsIfStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="macro">vec!</span>[
-                        <span class="ident">stmt</span>.<span class="ident">test</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
-                        <span class="ident">stmt</span>.<span class="ident">consequent</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
+                JsControlFlowNode::JsIfStatement(stmt) =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>res = <span class="macro">vec!</span>[
+                        stmt.test().ok()<span class="question-mark">?</span>.syntax().text_range(),
+                        stmt.consequent().ok()<span class="question-mark">?</span>.syntax().text_range(),
                     ];
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">else_clause</span>) <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">else_clause</span>() {
-                        <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">else_clause</span>.<span class="ident">alternate</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(else_clause) = stmt.else_clause() {
+                        res.push(else_clause.alternate().ok()<span class="question-mark">?</span>.syntax().text_range());
                     }
 
-                    <span class="ident">res</span>
+                    res
                 }
-                <span class="ident">JsControlFlowNode::JsSwitchStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">stmt</span>.<span class="ident">discriminant</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>()];
+                JsControlFlowNode::JsSwitchStatement(stmt) =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>res = <span class="macro">vec!</span>[stmt.discriminant().ok()<span class="question-mark">?</span>.syntax().text_range()];
 
-                    <span class="kw">let</span> <span class="ident">cases</span> <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">cases</span>().<span class="ident">into_syntax</span>();
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">cases</span>.<span class="ident">text_trimmed_range</span>().<span class="ident">is_empty</span>() {
-                        <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">cases</span>.<span class="ident">text_range</span>());
+                    <span class="kw">let </span>cases = stmt.cases().into_syntax();
+                    <span class="kw">if </span>!cases.text_trimmed_range().is_empty() {
+                        res.push(cases.text_range());
                     }
 
-                    <span class="ident">res</span>
+                    res
                 }
-                <span class="ident">JsControlFlowNode::JsTryStatement</span>(<span class="ident">stmt</span>) =&gt; <span class="macro">vec!</span>[
-                    <span class="ident">stmt</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
-                    <span class="ident">stmt</span>.<span class="ident">catch_clause</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
+                JsControlFlowNode::JsTryStatement(stmt) =&gt; <span class="macro">vec!</span>[
+                    stmt.body().ok()<span class="question-mark">?</span>.syntax().text_range(),
+                    stmt.catch_clause().ok()<span class="question-mark">?</span>.body().ok()<span class="question-mark">?</span>.syntax().text_range(),
                 ],
-                <span class="ident">JsControlFlowNode::JsTryFinallyStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">stmt</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>()];
+                JsControlFlowNode::JsTryFinallyStatement(stmt) =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>res = <span class="macro">vec!</span>[stmt.body().ok()<span class="question-mark">?</span>.syntax().text_range()];
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">catch_clause</span>) <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">catch_clause</span>() {
-                        <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">catch_clause</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(catch_clause) = stmt.catch_clause() {
+                        res.push(catch_clause.body().ok()<span class="question-mark">?</span>.syntax().text_range());
                     }
 
-                    <span class="ident">res</span>.<span class="ident">push</span>(
-                        <span class="ident">stmt</span>.<span class="ident">finally_clause</span>()
-                            .<span class="ident">ok</span>()<span class="question-mark">?</span>
-                            .<span class="ident">body</span>()
-                            .<span class="ident">ok</span>()<span class="question-mark">?</span>
-                            .<span class="ident">syntax</span>()
-                            .<span class="ident">text_range</span>(),
+                    res.push(
+                        stmt.finally_clause()
+                            .ok()<span class="question-mark">?
+                            </span>.body()
+                            .ok()<span class="question-mark">?
+                            </span>.syntax()
+                            .text_range(),
                     );
 
-                    <span class="ident">res</span>
+                    res
                 }
-                <span class="ident">JsControlFlowNode::JsWhileStatement</span>(<span class="ident">stmt</span>) =&gt; <span class="macro">vec!</span>[
-                    <span class="ident">stmt</span>.<span class="ident">test</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
-                    <span class="ident">stmt</span>.<span class="ident">body</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>(),
+                JsControlFlowNode::JsWhileStatement(stmt) =&gt; <span class="macro">vec!</span>[
+                    stmt.test().ok()<span class="question-mark">?</span>.syntax().text_range(),
+                    stmt.body().ok()<span class="question-mark">?</span>.syntax().text_range(),
                 ],
-                <span class="ident">JsControlFlowNode::JsCaseClause</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">stmt</span>.<span class="ident">test</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>()];
+                JsControlFlowNode::JsCaseClause(stmt) =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>res = <span class="macro">vec!</span>[stmt.test().ok()<span class="question-mark">?</span>.syntax().text_range()];
 
-                    <span class="kw">let</span> <span class="ident">consequent</span> <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">consequent</span>().<span class="ident">into_syntax</span>();
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">consequent</span>.<span class="ident">text_trimmed_range</span>().<span class="ident">is_empty</span>() {
-                        <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">consequent</span>.<span class="ident">text_range</span>());
+                    <span class="kw">let </span>consequent = stmt.consequent().into_syntax();
+                    <span class="kw">if </span>!consequent.text_trimmed_range().is_empty() {
+                        res.push(consequent.text_range());
                     }
 
-                    <span class="ident">res</span>
+                    res
                 }
-                <span class="ident">JsControlFlowNode::JsDefaultClause</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">stmt</span>.<span class="ident">default_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">text_range</span>()];
+                JsControlFlowNode::JsDefaultClause(stmt) =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>res = <span class="macro">vec!</span>[stmt.default_token().ok()<span class="question-mark">?</span>.text_range()];
 
-                    <span class="kw">let</span> <span class="ident">consequent</span> <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">consequent</span>().<span class="ident">into_syntax</span>();
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">consequent</span>.<span class="ident">text_trimmed_range</span>().<span class="ident">is_empty</span>() {
-                        <span class="ident">res</span>.<span class="ident">push</span>(<span class="ident">consequent</span>.<span class="ident">text_range</span>());
+                    <span class="kw">let </span>consequent = stmt.consequent().into_syntax();
+                    <span class="kw">if </span>!consequent.text_trimmed_range().is_empty() {
+                        res.push(consequent.text_range());
                     }
 
-                    <span class="ident">res</span>
+                    res
                 }
             };
 
-            <span class="kw">let</span> <span class="ident">next_index</span> <span class="op">=</span> <span class="ident">check_neighbors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ranges</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">fields</span>)<span class="question-mark">?</span>;
+            <span class="kw">let </span>next_index = check_neighbors(<span class="kw-2">&amp;</span><span class="self">self</span>.ranges, index, <span class="kw-2">&amp;</span>fields)<span class="question-mark">?</span>;
 
-            <span class="comment">// Extend the range at the specific index to cover the whole parent node</span>
-            <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">ranges</span>[<span class="ident">next_index</span>];
-            <span class="ident">entry</span>.<span class="ident">text_range</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">text_range</span>.<span class="ident">cover</span>(<span class="ident">parent</span>.<span class="ident">syntax</span>().<span class="ident">text_range</span>());
-            <span class="ident">entry</span>.<span class="ident">text_trimmed_range</span> <span class="op">=</span> <span class="ident">entry</span>
-                .<span class="ident">text_trimmed_range</span>
-                .<span class="ident">cover</span>(<span class="ident">parent</span>.<span class="ident">syntax</span>().<span class="ident">text_trimmed_range</span>());
+            <span class="comment">// Extend the range at the specific index to cover the whole parent node
+            </span><span class="kw">let </span>entry = <span class="kw-2">&amp;mut </span><span class="self">self</span>.ranges[next_index];
+            entry.text_range = entry.text_range.cover(parent.syntax().text_range());
+            entry.text_trimmed_range = entry
+                .text_trimmed_range
+                .cover(parent.syntax().text_trimmed_range());
 
-            <span class="ident">index</span> <span class="op">=</span> <span class="ident">next_index</span>;
-            <span class="ident">node</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">syntax</span>().<span class="ident">parent</span>()<span class="question-mark">?</span>;
+            index = next_index;
+            node = parent.syntax().parent()<span class="question-mark">?</span>;
         }
 
-        <span class="comment">// Merge the adjacent and overlapping ranges</span>
-        <span class="self">self</span>.<span class="ident">merge_adjacent_ranges</span>();
+        <span class="comment">// Merge the adjacent and overlapping ranges
+        </span><span class="self">self</span>.merge_adjacent_ranges();
 
         <span class="prelude-val">Some</span>(())
     }
 
-    <span class="doccomment">/// Merge adjacent unreachable ranges into a single entry</span>
-    <span class="kw">fn</span> <span class="ident">merge_adjacent_ranges</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">while</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">ranges</span>.<span class="ident">len</span>().<span class="ident">saturating_sub</span>(<span class="number">1</span>) {
-            <span class="kw">let</span> <span class="ident">text_range</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ranges</span>[<span class="ident">index</span>].<span class="ident">text_range</span>;
+    <span class="doccomment">/// Merge adjacent unreachable ranges into a single entry
+    </span><span class="kw">fn </span>merge_adjacent_ranges(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span><span class="kw-2">mut </span>index = <span class="number">0</span>;
+        <span class="kw">while </span>index &lt; <span class="self">self</span>.ranges.len().saturating_sub(<span class="number">1</span>) {
+            <span class="kw">let </span>text_range = <span class="self">self</span>.ranges[index].text_range;
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ranges</span>[<span class="ident">index</span> <span class="op">+</span> <span class="number">1</span>].<span class="ident">text_range</span>.<span class="ident">start</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">text_range</span>.<span class="ident">end</span>() {
-                <span class="kw">let</span> <span class="ident">prev_entry</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ranges</span>.<span class="ident">remove</span>(<span class="ident">index</span> <span class="op">+</span> <span class="number">1</span>);
+            <span class="kw">if </span><span class="self">self</span>.ranges[index + <span class="number">1</span>].text_range.start() &lt;= text_range.end() {
+                <span class="kw">let </span>prev_entry = <span class="self">self</span>.ranges.remove(index + <span class="number">1</span>);
 
-                <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">ranges</span>[<span class="ident">index</span>];
-                <span class="ident">entry</span>.<span class="ident">text_range</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">text_range</span>.<span class="ident">cover</span>(<span class="ident">prev_entry</span>.<span class="ident">text_range</span>);
-                <span class="ident">entry</span>.<span class="ident">text_trimmed_range</span> <span class="op">=</span> <span class="ident">entry</span>
-                    .<span class="ident">text_trimmed_range</span>
-                    .<span class="ident">cover</span>(<span class="ident">prev_entry</span>.<span class="ident">text_trimmed_range</span>);
+                <span class="kw">let </span>entry = <span class="kw-2">&amp;mut </span><span class="self">self</span>.ranges[index];
+                entry.text_range = entry.text_range.cover(prev_entry.text_range);
+                entry.text_trimmed_range = entry
+                    .text_trimmed_range
+                    .cover(prev_entry.text_trimmed_range);
 
                 <span class="kw">continue</span>;
             }
 
-            <span class="ident">index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+            index += <span class="number">1</span>;
         }
     }
 }
 
-<span class="macro">declare_node_union!</span> {
-    <span class="ident">JsControlFlowNode</span> <span class="op">=</span>
-        <span class="ident">JsFunctionBody</span> <span class="op">|</span>
-        <span class="ident">JsVariableStatement</span> <span class="op">|</span>
-        <span class="ident">JsLabeledStatement</span> <span class="op">|</span>
-        <span class="ident">JsBlockStatement</span> <span class="op">|</span>
-        <span class="ident">JsDoWhileStatement</span> <span class="op">|</span>
-        <span class="ident">JsForInStatement</span> <span class="op">|</span>
-        <span class="ident">JsForOfStatement</span> <span class="op">|</span>
-        <span class="ident">JsForStatement</span> <span class="op">|</span>
-        <span class="ident">JsIfStatement</span> <span class="op">|</span>
-        <span class="ident">JsSwitchStatement</span> <span class="op">|</span>
-        <span class="ident">JsTryStatement</span> <span class="op">|</span>
-        <span class="ident">JsTryFinallyStatement</span> <span class="op">|</span>
-        <span class="ident">JsWhileStatement</span> <span class="op">|</span>
-        <span class="ident">JsCaseClause</span> <span class="op">|</span>
-        <span class="ident">JsDefaultClause</span>
+<span class="macro">declare_node_union! </span>{
+    JsControlFlowNode =
+        JsFunctionBody |
+        JsVariableStatement |
+        JsLabeledStatement |
+        JsBlockStatement |
+        JsDoWhileStatement |
+        JsForInStatement |
+        JsForOfStatement |
+        JsForStatement |
+        JsIfStatement |
+        JsSwitchStatement |
+        JsTryStatement |
+        JsTryFinallyStatement |
+        JsWhileStatement |
+        JsCaseClause |
+        JsDefaultClause
 }
 
-<span class="doccomment">/// Try to find a section of `ranges` that matches `fields`, and returns an</span>
-<span class="doccomment">/// index `i` into `ranges` such that the ranges from `i` to `i + fields.len()`</span>
-<span class="doccomment">/// cover the corresponding entry in `fields`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// To avoid having to iterate over the whole length of `ranges`, the search is</span>
-<span class="doccomment">/// guided using `index` to only try ranges starting between</span>
-<span class="doccomment">/// `index - fields.len()` and `index`, clamped within the limits of `ranges`.</span>
-<span class="kw">fn</span> <span class="ident">check_neighbors</span>(
-    <span class="ident">ranges</span>: <span class="kw-2">&amp;</span>[<span class="ident">UnreachableRange</span>],
-    <span class="ident">index</span>: <span class="ident">usize</span>,
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">TextRange</span>],
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">fields</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">ranges</span>.<span class="ident">len</span>() {
-        <span class="kw">return</span> <span class="prelude-val">None</span>;
+<span class="doccomment">/// Try to find a section of `ranges` that matches `fields`, and returns an
+/// index `i` into `ranges` such that the ranges from `i` to `i + fields.len()`
+/// cover the corresponding entry in `fields`.
+///
+/// To avoid having to iterate over the whole length of `ranges`, the search is
+/// guided using `index` to only try ranges starting between
+/// `index - fields.len()` and `index`, clamped within the limits of `ranges`.
+</span><span class="kw">fn </span>check_neighbors(
+    ranges: <span class="kw-2">&amp;</span>[UnreachableRange],
+    index: usize,
+    fields: <span class="kw-2">&amp;</span>[TextRange],
+) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+    <span class="kw">if </span>fields.len() &gt; ranges.len() {
+        <span class="kw">return </span><span class="prelude-val">None</span>;
     }
 
-    <span class="kw">let</span> <span class="ident">fields_end</span> <span class="op">=</span> <span class="ident">fields</span>.<span class="ident">len</span>().<span class="ident">saturating_sub</span>(<span class="number">1</span>);
-    <span class="kw">let</span> <span class="ident">min_start</span> <span class="op">=</span> <span class="ident">index</span>.<span class="ident">saturating_sub</span>(<span class="ident">fields_end</span>);
-    <span class="kw">let</span> <span class="ident">max_start</span> <span class="op">=</span> (<span class="ident">min_start</span> <span class="op">+</span> <span class="ident">fields</span>.<span class="ident">len</span>()).<span class="ident">min</span>(<span class="ident">ranges</span>.<span class="ident">len</span>().<span class="ident">saturating_sub</span>(<span class="ident">fields_end</span>));
+    <span class="kw">let </span>fields_end = fields.len().saturating_sub(<span class="number">1</span>);
+    <span class="kw">let </span>min_start = index.saturating_sub(fields_end);
+    <span class="kw">let </span>max_start = (min_start + fields.len()).min(ranges.len().saturating_sub(fields_end));
 
-    <span class="kw">for</span> <span class="ident">start</span> <span class="kw">in</span> <span class="ident">min_start</span>..<span class="ident">max_start</span> {
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">start</span> <span class="op">+</span> <span class="ident">fields</span>.<span class="ident">len</span>();
-        <span class="kw">let</span> <span class="ident">slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">ranges</span>[<span class="ident">start</span>..<span class="ident">end</span>];
+    <span class="kw">for </span>start <span class="kw">in </span>min_start..max_start {
+        <span class="kw">let </span>end = start + fields.len();
+        <span class="kw">let </span>slice = <span class="kw-2">&amp;</span>ranges[start..end];
 
-        <span class="kw">let</span> <span class="ident">is_matching</span> <span class="op">=</span> <span class="ident">slice</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">zip</span>(<span class="ident">fields</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">field</span><span class="op">|</span> <span class="op">!</span><span class="ident">field</span>.<span class="ident">is_empty</span>()))
-            .<span class="ident">all</span>(<span class="op">|</span>(<span class="ident">range</span>, <span class="ident">field</span>)<span class="op">|</span> <span class="ident">range</span>.<span class="ident">text_range</span>.<span class="ident">contains_range</span>(<span class="kw-2">*</span><span class="ident">field</span>));
+        <span class="kw">let </span>is_matching = slice
+            .iter()
+            .zip(fields.iter().filter(|field| !field.is_empty()))
+            .all(|(range, field)| range.text_range.contains_range(<span class="kw-2">*</span>field));
 
-        <span class="kw">if</span> <span class="ident">is_matching</span> {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">start</span>);
+        <span class="kw">if </span>is_matching {
+            <span class="kw">return </span><span class="prelude-val">Some</span>(start);
         }
     }
 
-    <span class="prelude-val">None</span>
-}
+    <span class="prelude-val">None
+</span>}
 
-<span class="kw">impl</span> <span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="ident">UnreachableRanges</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">UnreachableRange</span>;
-    <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">IntoIter</span><span class="op">&lt;</span><span class="ident">UnreachableRange</span><span class="op">&gt;</span>;
+<span class="kw">impl </span>IntoIterator <span class="kw">for </span>UnreachableRanges {
+    <span class="kw">type </span>Item = UnreachableRange;
+    <span class="kw">type </span>IntoIter = IntoIter&lt;UnreachableRange&gt;;
 
-    <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::IntoIter</span> {
-        <span class="self">self</span>.<span class="ident">ranges</span>.<span class="ident">into_iter</span>()
+    <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
+        <span class="self">self</span>.ranges.into_iter()
     }
 }
 
-<span class="doccomment">/// Stores the trimmed and un-trimmed ranges for a block of unreachable source</span>
-<span class="doccomment">/// code, along with a list of secondary labels pointing to the dominating</span>
-<span class="doccomment">/// terminator instructions that cause it to be unreachable</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">UnreachableRange</span> {
-    <span class="ident">text_range</span>: <span class="ident">TextRange</span>,
-    <span class="ident">text_trimmed_range</span>: <span class="ident">TextRange</span>,
-    <span class="ident">terminators</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PathTerminator</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Stores the trimmed and un-trimmed ranges for a block of unreachable source
+/// code, along with a list of secondary labels pointing to the dominating
+/// terminator instructions that cause it to be unreachable
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>UnreachableRange {
+    text_range: TextRange,
+    text_trimmed_range: TextRange,
+    terminators: Vec&lt;PathTerminator&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">struct</span> <span class="ident">PathTerminator</span> {
-    <span class="ident">kind</span>: <span class="ident">JsSyntaxKind</span>,
-    <span class="ident">range</span>: <span class="ident">TextRange</span>,
+<span class="attribute">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">struct </span>PathTerminator {
+    kind: JsSyntaxKind,
+    range: TextRange,
 }
 
-<span class="kw">impl</span> <span class="ident">PathTerminator</span> {
-    <span class="doccomment">/// Returns a message explaining why this paths is unreachable</span>
-    <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">JsSyntaxKind::JS_BREAK_STATEMENT</span> =&gt; <span class="string">&quot;break the flow of the code&quot;</span>,
-            <span class="ident">JsSyntaxKind::JS_CONTINUE_STATEMENT</span> =&gt; <span class="string">&quot;continue the loop&quot;</span>,
-            <span class="ident">JsSyntaxKind::JS_RETURN_STATEMENT</span> =&gt; <span class="string">&quot;return from the function&quot;</span>,
-            <span class="ident">JsSyntaxKind::JS_THROW_STATEMENT</span> =&gt; <span class="string">&quot;throw an exception&quot;</span>,
-            <span class="kw">_</span> =&gt; <span class="string">&quot;stop the flow of the code&quot;</span>,
+<span class="kw">impl </span>PathTerminator {
+    <span class="doccomment">/// Returns a message explaining why this paths is unreachable
+    </span><span class="kw">fn </span>reason(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+        <span class="kw">match </span><span class="self">self</span>.kind {
+            JsSyntaxKind::JS_BREAK_STATEMENT =&gt; <span class="string">&quot;break the flow of the code&quot;</span>,
+            JsSyntaxKind::JS_CONTINUE_STATEMENT =&gt; <span class="string">&quot;continue the loop&quot;</span>,
+            JsSyntaxKind::JS_RETURN_STATEMENT =&gt; <span class="string">&quot;return from the function&quot;</span>,
+            JsSyntaxKind::JS_THROW_STATEMENT =&gt; <span class="string">&quot;throw an exception&quot;</span>,
+            <span class="kw">_ </span>=&gt; <span class="string">&quot;stop the flow of the code&quot;</span>,
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

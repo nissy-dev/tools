@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_cli/src/execute.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>execute.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_cli/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_cli/src/execute.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>execute.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_cli/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -171,178 +171,178 @@
 <span id="171">171</span>
 <span id="172">172</span>
 <span id="173">173</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::traversal::traverse</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CliSession</span>, <span class="ident">Termination</span>};
-<span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">markup</span>, <span class="ident">ConsoleExt</span>};
-<span class="kw">use</span> <span class="ident">rome_diagnostics::file::FileId</span>;
-<span class="kw">use</span> <span class="ident">rome_fs::RomePath</span>;
-<span class="kw">use</span> <span class="ident">rome_service::workspace</span>::{
-    <span class="ident">FeatureName</span>, <span class="ident">FixFileMode</span>, <span class="ident">FormatFileParams</span>, <span class="ident">Language</span>, <span class="ident">OpenFileParams</span>, <span class="ident">SupportsFeatureParams</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::traversal::traverse;
+<span class="kw">use crate</span>::{CliSession, Termination};
+<span class="kw">use </span>rome_console::{markup, ConsoleExt};
+<span class="kw">use </span>rome_diagnostics::file::FileId;
+<span class="kw">use </span>rome_fs::RomePath;
+<span class="kw">use </span>rome_service::workspace::{
+    FeatureName, FixFileMode, FormatFileParams, Language, OpenFileParams, SupportsFeatureParams,
 };
-<span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
+<span class="kw">use </span>std::path::PathBuf;
 
-<span class="doccomment">/// Useful information during the traversal of files and virtual content</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Execution</span> {
-    <span class="doccomment">/// How the information should be collected and reported</span>
-    <span class="ident">report_mode</span>: <span class="ident">ReportMode</span>,
+<span class="doccomment">/// Useful information during the traversal of files and virtual content
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Execution {
+    <span class="doccomment">/// How the information should be collected and reported
+    </span>report_mode: ReportMode,
 
-    <span class="doccomment">/// The modality of execution of the traversal</span>
-    <span class="ident">traversal_mode</span>: <span class="ident">TraversalMode</span>,
+    <span class="doccomment">/// The modality of execution of the traversal
+    </span>traversal_mode: TraversalMode,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">TraversalMode</span> {
-    <span class="doccomment">/// This mode is enabled when running the command `rome check`</span>
-    <span class="ident">Check</span> {
-        <span class="doccomment">/// The maximum number of diagnostics that can be printed in console</span>
-        <span class="ident">max_diagnostics</span>: <span class="ident">u16</span>,
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>TraversalMode {
+    <span class="doccomment">/// This mode is enabled when running the command `rome check`
+    </span>Check {
+        <span class="doccomment">/// The maximum number of diagnostics that can be printed in console
+        </span>max_diagnostics: u16,
 
-        <span class="doccomment">/// The type of fixes that should be applied when analyzing a file.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// It&#39;s [None] if the `check` command is called without `--apply` or `--apply-suggested`</span>
-        <span class="doccomment">/// arguments.</span>
-        <span class="ident">fix_file_mode</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FixFileMode</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// The type of fixes that should be applied when analyzing a file.
+        ///
+        /// It&#39;s [None] if the `check` command is called without `--apply` or `--apply-suggested`
+        /// arguments.
+        </span>fix_file_mode: <span class="prelude-ty">Option</span>&lt;FixFileMode&gt;,
     },
-    <span class="doccomment">/// This mode is enabled when running the command `rome ci`</span>
-    <span class="ident">CI</span>,
-    <span class="doccomment">/// This mode is enabled when running the command `rome format`</span>
-    <span class="ident">Format</span> {
-        <span class="doccomment">/// It ignores parse errors</span>
-        <span class="ident">ignore_errors</span>: <span class="ident">bool</span>,
-        <span class="doccomment">/// It writes the new content on file</span>
-        <span class="ident">write</span>: <span class="ident">bool</span>,
-        <span class="doccomment">/// An optional tuple.</span>
-        <span class="doccomment">/// 1. The virtual path to the file</span>
-        <span class="doccomment">/// 2. The content of the file</span>
-        <span class="ident">stdin</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">PathBuf</span>, <span class="ident">String</span>)<span class="op">&gt;</span>,
+    <span class="doccomment">/// This mode is enabled when running the command `rome ci`
+    </span>CI,
+    <span class="doccomment">/// This mode is enabled when running the command `rome format`
+    </span>Format {
+        <span class="doccomment">/// It ignores parse errors
+        </span>ignore_errors: bool,
+        <span class="doccomment">/// It writes the new content on file
+        </span>write: bool,
+        <span class="doccomment">/// An optional tuple.
+        /// 1. The virtual path to the file
+        /// 2. The content of the file
+        </span>stdin: <span class="prelude-ty">Option</span>&lt;(PathBuf, String)&gt;,
     },
 }
 
-<span class="doccomment">/// Tells to the execution of the traversal how the information should be reported</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">ReportMode</span> {
-    <span class="doccomment">/// Reports information straight to the console, it&#39;s the default mode</span>
-    <span class="attribute">#[<span class="ident">default</span>]</span>
-    <span class="ident">Terminal</span>,
-    <span class="doccomment">/// Reports information in JSON format</span>
-    <span class="ident">Json</span>,
+<span class="doccomment">/// Tells to the execution of the traversal how the information should be reported
+</span><span class="attribute">#[derive(Clone, Default)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>ReportMode {
+    <span class="doccomment">/// Reports information straight to the console, it&#39;s the default mode
+    </span><span class="attribute">#[default]
+    </span>Terminal,
+    <span class="doccomment">/// Reports information in JSON format
+    </span>Json,
 }
 
-<span class="kw">impl</span> <span class="ident">Execution</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">mode</span>: <span class="ident">TraversalMode</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">report_mode</span>: <span class="ident">ReportMode::default</span>(),
-            <span class="ident">traversal_mode</span>: <span class="ident">mode</span>,
+<span class="kw">impl </span>Execution {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(mode: TraversalMode) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            report_mode: ReportMode::default(),
+            traversal_mode: mode,
         }
     }
 
-    <span class="doccomment">/// Creates an instance of [Execution] by passing [traversal mode](TraversalMode) and [report mode](ReportMode)</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with_report</span>(<span class="ident">traversal_mode</span>: <span class="ident">TraversalMode</span>, <span class="ident">report_mode</span>: <span class="ident">ReportMode</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">traversal_mode</span>,
-            <span class="ident">report_mode</span>,
+    <span class="doccomment">/// Creates an instance of [Execution] by passing [traversal mode](TraversalMode) and [report mode](ReportMode)
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>with_report(traversal_mode: TraversalMode, report_mode: ReportMode) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            traversal_mode,
+            report_mode,
         }
     }
 
-    <span class="doccomment">/// Tells if the reporting is happening straight to terminal</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">should_report_to_terminal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">report_mode</span>, <span class="ident">ReportMode::Terminal</span>)
+    <span class="doccomment">/// Tells if the reporting is happening straight to terminal
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>should_report_to_terminal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>.report_mode, ReportMode::Terminal)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">traversal_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">TraversalMode</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">traversal_mode</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>traversal_mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>TraversalMode {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.traversal_mode
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_max_diagnostics</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">traversal_mode</span> {
-            <span class="ident">TraversalMode::Check</span> {
-                <span class="ident">max_diagnostics</span>, ..
-            } =&gt; <span class="prelude-val">Some</span>(<span class="ident">max_diagnostics</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_max_diagnostics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u16&gt; {
+        <span class="kw">match </span><span class="self">self</span>.traversal_mode {
+            TraversalMode::Check {
+                max_diagnostics, ..
+            } =&gt; <span class="prelude-val">Some</span>(max_diagnostics),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// `true` only when running the traversal in [TraversalMode::Check] and `should_fix` is `true`</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">as_fix_file_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">FixFileMode</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">TraversalMode::Check</span> { <span class="ident">fix_file_mode</span>, .. } <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">traversal_mode</span> {
-            <span class="ident">fix_file_mode</span>.<span class="ident">as_ref</span>()
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
+    <span class="doccomment">/// `true` only when running the traversal in [TraversalMode::Check] and `should_fix` is `true`
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>as_fix_file_mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>FixFileMode&gt; {
+        <span class="kw">if let </span>TraversalMode::Check { fix_file_mode, .. } = <span class="kw-2">&amp;</span><span class="self">self</span>.traversal_mode {
+            fix_file_mode.as_ref()
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_ci(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>.traversal_mode, TraversalMode::CI { .. })
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_check(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>.traversal_mode, TraversalMode::Check { .. })
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_format(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>.traversal_mode, TraversalMode::Format { .. })
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>as_stdin_file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(PathBuf, String)&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.traversal_mode {
+            TraversalMode::Format { stdin, .. } =&gt; stdin.as_ref(),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_ci</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">traversal_mode</span>, <span class="ident">TraversalMode::CI</span> { .. })
-    }
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">traversal_mode</span>, <span class="ident">TraversalMode::Check</span> { .. })
-    }
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">traversal_mode</span>, <span class="ident">TraversalMode::Format</span> { .. })
-    }
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">as_stdin_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="ident">PathBuf</span>, <span class="ident">String</span>)<span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">traversal_mode</span> {
-            <span class="ident">TraversalMode::Format</span> { <span class="ident">stdin</span>, .. } =&gt; <span class="ident">stdin</span>.<span class="ident">as_ref</span>(),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
-        }
-    }
-
-    <span class="doccomment">/// Returns the subcommand of the [traversal mode](TraversalMode) execution</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">traversal_mode_subcommand</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">traversal_mode</span> {
-            <span class="ident">TraversalMode::Check</span> { .. } =&gt; <span class="string">&quot;check&quot;</span>,
-            <span class="ident">TraversalMode::CI</span> { .. } =&gt; <span class="string">&quot;ci&quot;</span>,
-            <span class="ident">TraversalMode::Format</span> { .. } =&gt; <span class="string">&quot;format&quot;</span>,
+    <span class="doccomment">/// Returns the subcommand of the [traversal mode](TraversalMode) execution
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>traversal_mode_subcommand(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+        <span class="kw">match </span><span class="self">self</span>.traversal_mode {
+            TraversalMode::Check { .. } =&gt; <span class="string">&quot;check&quot;</span>,
+            TraversalMode::CI { .. } =&gt; <span class="string">&quot;ci&quot;</span>,
+            TraversalMode::Format { .. } =&gt; <span class="string">&quot;format&quot;</span>,
         }
     }
 }
 
-<span class="doccomment">/// Based on the [mode](ExecutionMode), the function might launch a traversal of the file system</span>
-<span class="doccomment">/// or handles the stdin file.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">execute_mode</span>(<span class="ident">mode</span>: <span class="ident">Execution</span>, <span class="kw-2">mut</span> <span class="ident">session</span>: <span class="ident">CliSession</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Termination</span><span class="op">&gt;</span> {
-    <span class="comment">// don&#39;t do any traversal if there&#39;s some content coming from stdin</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">path</span>, <span class="ident">content</span>)) <span class="op">=</span> <span class="ident">mode</span>.<span class="ident">as_stdin_file</span>() {
-        <span class="kw">let</span> <span class="ident">workspace</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">session</span>.<span class="ident">app</span>.<span class="ident">workspace</span>;
-        <span class="kw">let</span> <span class="ident">console</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">session</span>.<span class="ident">app</span>.<span class="ident">console</span>;
-        <span class="kw">let</span> <span class="ident">rome_path</span> <span class="op">=</span> <span class="ident">RomePath::new</span>(<span class="ident">path</span>, <span class="ident">FileId::zero</span>());
+<span class="doccomment">/// Based on the [mode](ExecutionMode), the function might launch a traversal of the file system
+/// or handles the stdin file.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>execute_mode(mode: Execution, <span class="kw-2">mut </span>session: CliSession) -&gt; <span class="prelude-ty">Result</span>&lt;(), Termination&gt; {
+    <span class="comment">// don&#39;t do any traversal if there&#39;s some content coming from stdin
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>((path, content)) = mode.as_stdin_file() {
+        <span class="kw">let </span>workspace = <span class="kw-2">&amp;*</span>session.app.workspace;
+        <span class="kw">let </span>console = <span class="kw-2">&amp;mut *</span>session.app.console;
+        <span class="kw">let </span>rome_path = RomePath::new(path, FileId::zero());
 
-        <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">is_format</span>() {
-            <span class="kw">let</span> <span class="ident">unsupported_format_reason</span> <span class="op">=</span> <span class="ident">workspace</span>
-                .<span class="ident">supports_feature</span>(<span class="ident">SupportsFeatureParams</span> {
-                    <span class="ident">path</span>: <span class="ident">rome_path</span>.<span class="ident">clone</span>(),
-                    <span class="ident">feature</span>: <span class="ident">FeatureName::Format</span>,
-                })<span class="question-mark">?</span>
-                .<span class="ident">reason</span>;
-            <span class="kw">if</span> <span class="ident">unsupported_format_reason</span>.<span class="ident">is_none</span>() {
-                <span class="ident">workspace</span>.<span class="ident">open_file</span>(<span class="ident">OpenFileParams</span> {
-                    <span class="ident">path</span>: <span class="ident">rome_path</span>.<span class="ident">clone</span>(),
-                    <span class="ident">version</span>: <span class="number">0</span>,
-                    <span class="ident">content</span>: <span class="ident">content</span>.<span class="ident">into</span>(),
-                    <span class="ident">language_hint</span>: <span class="ident">Language::default</span>(),
+        <span class="kw">if </span>mode.is_format() {
+            <span class="kw">let </span>unsupported_format_reason = workspace
+                .supports_feature(SupportsFeatureParams {
+                    path: rome_path.clone(),
+                    feature: FeatureName::Format,
+                })<span class="question-mark">?
+                </span>.reason;
+            <span class="kw">if </span>unsupported_format_reason.is_none() {
+                workspace.open_file(OpenFileParams {
+                    path: rome_path.clone(),
+                    version: <span class="number">0</span>,
+                    content: content.into(),
+                    language_hint: Language::default(),
                 })<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">printed</span> <span class="op">=</span> <span class="ident">workspace</span>.<span class="ident">format_file</span>(<span class="ident">FormatFileParams</span> { <span class="ident">path</span>: <span class="ident">rome_path</span> })<span class="question-mark">?</span>;
+                <span class="kw">let </span>printed = workspace.format_file(FormatFileParams { path: rome_path })<span class="question-mark">?</span>;
 
-                <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-                    {<span class="ident">printed</span>.<span class="ident">as_code</span>()}
+                console.log(<span class="macro">markup! </span>{
+                    {printed.as_code()}
                 });
-            } <span class="kw">else</span> {
-                <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-                    {<span class="ident">content</span>}
+            } <span class="kw">else </span>{
+                console.log(<span class="macro">markup! </span>{
+                    {content}
                 });
-                <span class="ident">console</span>.<span class="ident">error</span>(<span class="macro">markup!</span>{
-                    <span class="op">&lt;</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;The content was not formatted because the formatter is currently disabled.&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Warn</span><span class="op">&gt;</span>
+                console.error(<span class="macro">markup!</span>{
+                    &lt;Warn&gt;<span class="string">&quot;The content was not formatted because the formatter is currently disabled.&quot;</span>&lt;/Warn&gt;
                 })
             }
         }
 
         <span class="prelude-val">Ok</span>(())
-    } <span class="kw">else</span> {
-        <span class="ident">traverse</span>(<span class="ident">mode</span>, <span class="ident">session</span>)
+    } <span class="kw">else </span>{
+        traverse(mode, session)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

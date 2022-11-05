@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/raw_language.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>raw_language.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/raw_language.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>raw_language.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -262,269 +262,269 @@
 <span id="262">262</span>
 <span id="263">263</span>
 <span id="264">264</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::raw_language::RawLanguageKind</span>::{<span class="ident">COMMA_TOKEN</span>, <span class="ident">LITERAL_EXPRESSION</span>, <span class="ident">ROOT</span>};
-<span class="doccomment">///! Provides a sample language implementation that is useful in API explanation or tests</span>
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">AstNode</span>, <span class="ident">AstSeparatedList</span>, <span class="ident">Language</span>, <span class="ident">ParsedChildren</span>, <span class="ident">RawNodeSlots</span>, <span class="ident">RawSyntaxKind</span>,
-    <span class="ident">RawSyntaxNode</span>, <span class="ident">SyntaxFactory</span>, <span class="ident">SyntaxKind</span>, <span class="ident">SyntaxKindSet</span>, <span class="ident">SyntaxList</span>, <span class="ident">SyntaxNode</span>, <span class="ident">TreeBuilder</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::raw_language::RawLanguageKind::{COMMA_TOKEN, LITERAL_EXPRESSION, ROOT};
+<span class="doccomment">///! Provides a sample language implementation that is useful in API explanation or tests
+</span><span class="kw">use crate</span>::{
+    AstNode, AstSeparatedList, Language, ParsedChildren, RawNodeSlots, RawSyntaxKind,
+    RawSyntaxNode, SyntaxFactory, SyntaxKind, SyntaxKindSet, SyntaxList, SyntaxNode, TreeBuilder,
 };
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Hash</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">Ord</span>, <span class="ident">PartialEq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawLanguage</span>;
+<span class="attribute">#[doc(hidden)]
+#[derive(Debug, Default, Hash, Copy, Eq, Ord, PartialEq, PartialOrd, Clone)]
+</span><span class="kw">pub struct </span>RawLanguage;
 
-<span class="kw">impl</span> <span class="ident">Language</span> <span class="kw">for</span> <span class="ident">RawLanguage</span> {
-    <span class="kw">type</span> <span class="ident">Kind</span> <span class="op">=</span> <span class="ident">RawLanguageKind</span>;
-    <span class="kw">type</span> <span class="ident">Root</span> <span class="op">=</span> <span class="ident">RawLanguageRoot</span>;
+<span class="kw">impl </span>Language <span class="kw">for </span>RawLanguage {
+    <span class="kw">type </span>Kind = RawLanguageKind;
+    <span class="kw">type </span>Root = RawLanguageRoot;
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u16</span>)]</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">bad_style</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RawLanguageKind</span> {
-    <span class="ident">ROOT</span> <span class="op">=</span> <span class="number">0</span>,
-    <span class="ident">EXPRESSION_LIST</span> <span class="op">=</span> <span class="number">1</span>,
-    <span class="ident">SEPARATED_EXPRESSION_LIST</span> <span class="op">=</span> <span class="number">2</span>,
-    <span class="ident">COMMA_TOKEN</span> <span class="op">=</span> <span class="number">3</span>,
-    <span class="ident">STRING_TOKEN</span> <span class="op">=</span> <span class="number">4</span>,
-    <span class="ident">NUMBER_TOKEN</span> <span class="op">=</span> <span class="number">5</span>,
-    <span class="ident">LITERAL_EXPRESSION</span> <span class="op">=</span> <span class="number">6</span>,
-    <span class="ident">UNKNOWN</span> <span class="op">=</span> <span class="number">7</span>,
-    <span class="ident">FOR_KW</span> <span class="op">=</span> <span class="number">8</span>,
-    <span class="ident">L_PAREN_TOKEN</span> <span class="op">=</span> <span class="number">9</span>,
-    <span class="ident">SEMICOLON_TOKEN</span> <span class="op">=</span> <span class="number">10</span>,
-    <span class="ident">R_PAREN_TOKEN</span> <span class="op">=</span> <span class="number">11</span>,
-    <span class="ident">EQUAL_TOKEN</span> <span class="op">=</span> <span class="number">12</span>,
-    <span class="ident">LET_TOKEN</span> <span class="op">=</span> <span class="number">13</span>,
-    <span class="ident">CONDITION</span> <span class="op">=</span> <span class="number">14</span>,
-    <span class="ident">PLUS_TOKEN</span> <span class="op">=</span> <span class="number">15</span>,
-    <span class="ident">WHITESPACE</span> <span class="op">=</span> <span class="number">16</span>,
-    <span class="ident">__LAST</span>,
+<span class="attribute">#[doc(hidden)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[repr(u16)]
+#[allow(bad_style)]
+</span><span class="kw">pub enum </span>RawLanguageKind {
+    ROOT = <span class="number">0</span>,
+    EXPRESSION_LIST = <span class="number">1</span>,
+    SEPARATED_EXPRESSION_LIST = <span class="number">2</span>,
+    COMMA_TOKEN = <span class="number">3</span>,
+    STRING_TOKEN = <span class="number">4</span>,
+    NUMBER_TOKEN = <span class="number">5</span>,
+    LITERAL_EXPRESSION = <span class="number">6</span>,
+    UNKNOWN = <span class="number">7</span>,
+    FOR_KW = <span class="number">8</span>,
+    L_PAREN_TOKEN = <span class="number">9</span>,
+    SEMICOLON_TOKEN = <span class="number">10</span>,
+    R_PAREN_TOKEN = <span class="number">11</span>,
+    EQUAL_TOKEN = <span class="number">12</span>,
+    LET_TOKEN = <span class="number">13</span>,
+    CONDITION = <span class="number">14</span>,
+    PLUS_TOKEN = <span class="number">15</span>,
+    WHITESPACE = <span class="number">16</span>,
+    __LAST,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxKind</span> <span class="kw">for</span> <span class="ident">RawLanguageKind</span> {
-    <span class="kw">fn</span> <span class="ident">is_unknown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">RawLanguageKind::UNKNOWN</span>
+<span class="kw">impl </span>SyntaxKind <span class="kw">for </span>RawLanguageKind {
+    <span class="kw">fn </span>is_unknown(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self </span>== <span class="kw-2">&amp;</span>RawLanguageKind::UNKNOWN
     }
 
-    <span class="kw">fn</span> <span class="ident">to_unknown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">RawLanguageKind::UNKNOWN</span>
+    <span class="kw">fn </span>to_unknown(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        RawLanguageKind::UNKNOWN
     }
 
-    <span class="kw">fn</span> <span class="ident">to_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RawSyntaxKind</span> {
-        <span class="ident">RawSyntaxKind</span>(<span class="kw-2">*</span><span class="self">self</span> <span class="kw">as</span> <span class="ident">u16</span>)
+    <span class="kw">fn </span>to_raw(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RawSyntaxKind {
+        RawSyntaxKind(<span class="kw-2">*</span><span class="self">self </span><span class="kw">as </span>u16)
     }
 
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unsafe_code</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">raw</span>: <span class="ident">RawSyntaxKind</span>) -&gt; <span class="self">Self</span> {
-        <span class="macro">assert!</span>(<span class="ident">raw</span>.<span class="number">0</span> <span class="op">&lt;</span> <span class="ident">RawLanguageKind::__LAST</span> <span class="kw">as</span> <span class="ident">u16</span>);
+    <span class="attribute">#[allow(unsafe_code)]
+    </span><span class="kw">fn </span>from_raw(raw: RawSyntaxKind) -&gt; <span class="self">Self </span>{
+        <span class="macro">assert!</span>(raw.<span class="number">0 </span>&lt; RawLanguageKind::__LAST <span class="kw">as </span>u16);
 
-        <span class="kw">unsafe</span> { <span class="ident">std::mem::transmute</span>::<span class="op">&lt;</span><span class="ident">u16</span>, <span class="ident">RawLanguageKind</span><span class="op">&gt;</span>(<span class="ident">raw</span>.<span class="number">0</span>) }
+        <span class="kw">unsafe </span>{ std::mem::transmute::&lt;u16, RawLanguageKind&gt;(raw.<span class="number">0</span>) }
     }
 
-    <span class="kw">fn</span> <span class="ident">is_root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">RawLanguageKind::ROOT</span>
+    <span class="kw">fn </span>is_root(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self </span>== <span class="kw-2">&amp;</span>RawLanguageKind::ROOT
     }
 
-    <span class="kw">fn</span> <span class="ident">is_list</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">fn </span>is_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="macro">matches!</span>(
             <span class="self">self</span>,
-            <span class="ident">RawLanguageKind::EXPRESSION_LIST</span> <span class="op">|</span> <span class="ident">RawLanguageKind::SEPARATED_EXPRESSION_LIST</span>
+            RawLanguageKind::EXPRESSION_LIST | RawLanguageKind::SEPARATED_EXPRESSION_LIST
         )
     }
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawLanguageRoot</span> {
-    <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span>,
+<span class="attribute">#[doc(hidden)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>RawLanguageRoot {
+    node: SyntaxNode&lt;RawLanguage&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">AstNode</span> <span class="kw">for</span> <span class="ident">RawLanguageRoot</span> {
-    <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">RawLanguage</span>;
+<span class="kw">impl </span>AstNode <span class="kw">for </span>RawLanguageRoot {
+    <span class="kw">type </span>Language = RawLanguage;
 
-    <span class="kw">const</span> <span class="ident">KIND_SET</span>: <span class="ident">SyntaxKindSet</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> <span class="op">=</span>
-        <span class="ident">SyntaxKindSet::from_raw</span>(<span class="ident">RawSyntaxKind</span>(<span class="ident">ROOT</span> <span class="kw">as</span> <span class="ident">u16</span>));
+    <span class="kw">const </span>KIND_SET: SyntaxKindSet&lt;RawLanguage&gt; =
+        SyntaxKindSet::from_raw(RawSyntaxKind(ROOT <span class="kw">as </span>u16));
 
-    <span class="kw">fn</span> <span class="ident">can_cast</span>(<span class="ident">kind</span>: <span class="ident">RawLanguageKind</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">kind</span> <span class="op">==</span> <span class="ident">ROOT</span>
+    <span class="kw">fn </span>can_cast(kind: RawLanguageKind) -&gt; bool {
+        kind == ROOT
     }
 
-    <span class="kw">fn</span> <span class="ident">cast</span>(<span class="ident">syntax</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="kw">fn </span>cast(syntax: SyntaxNode&lt;RawLanguage&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="kw">if</span> <span class="ident">syntax</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">ROOT</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">RawLanguageRoot</span> { <span class="ident">node</span>: <span class="ident">syntax</span> })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+        <span class="kw">if </span>syntax.kind() == ROOT {
+            <span class="prelude-val">Some</span>(RawLanguageRoot { node: syntax })
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 
-    <span class="kw">fn</span> <span class="ident">syntax</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">node</span>
+    <span class="kw">fn </span>syntax(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxNode&lt;RawLanguage&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.node
     }
 
-    <span class="kw">fn</span> <span class="ident">into_syntax</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">node</span>
+    <span class="kw">fn </span>into_syntax(<span class="self">self</span>) -&gt; SyntaxNode&lt;RawLanguage&gt; {
+        <span class="self">self</span>.node
     }
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LiteralExpression</span> {
-    <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span>,
+<span class="attribute">#[doc(hidden)]
+#[derive(Clone, Eq, PartialEq, Debug)]
+</span><span class="kw">pub struct </span>LiteralExpression {
+    node: SyntaxNode&lt;RawLanguage&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">AstNode</span> <span class="kw">for</span> <span class="ident">LiteralExpression</span> {
-    <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">RawLanguage</span>;
+<span class="kw">impl </span>AstNode <span class="kw">for </span>LiteralExpression {
+    <span class="kw">type </span>Language = RawLanguage;
 
-    <span class="kw">const</span> <span class="ident">KIND_SET</span>: <span class="ident">SyntaxKindSet</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> <span class="op">=</span>
-        <span class="ident">SyntaxKindSet::from_raw</span>(<span class="ident">RawSyntaxKind</span>(<span class="ident">LITERAL_EXPRESSION</span> <span class="kw">as</span> <span class="ident">u16</span>));
+    <span class="kw">const </span>KIND_SET: SyntaxKindSet&lt;RawLanguage&gt; =
+        SyntaxKindSet::from_raw(RawSyntaxKind(LITERAL_EXPRESSION <span class="kw">as </span>u16));
 
-    <span class="kw">fn</span> <span class="ident">can_cast</span>(<span class="ident">kind</span>: <span class="ident">RawLanguageKind</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">kind</span> <span class="op">==</span> <span class="ident">LITERAL_EXPRESSION</span>
+    <span class="kw">fn </span>can_cast(kind: RawLanguageKind) -&gt; bool {
+        kind == LITERAL_EXPRESSION
     }
 
-    <span class="kw">fn</span> <span class="ident">cast</span>(<span class="ident">syntax</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+    <span class="kw">fn </span>cast(syntax: SyntaxNode&lt;RawLanguage&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="kw">if</span> <span class="ident">syntax</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">LITERAL_EXPRESSION</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">LiteralExpression</span> { <span class="ident">node</span>: <span class="ident">syntax</span> })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+        <span class="kw">if </span>syntax.kind() == LITERAL_EXPRESSION {
+            <span class="prelude-val">Some</span>(LiteralExpression { node: syntax })
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 
-    <span class="kw">fn</span> <span class="ident">syntax</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">node</span>
+    <span class="kw">fn </span>syntax(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxNode&lt;RawLanguage&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.node
     }
 
-    <span class="kw">fn</span> <span class="ident">into_syntax</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">node</span>
-    }
-}
-
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SeparatedExpressionList</span> {
-    <span class="ident">syntax_list</span>: <span class="ident">SyntaxList</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">SeparatedExpressionList</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">list</span>: <span class="ident">SyntaxList</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">syntax_list</span>: <span class="ident">list</span> }
+    <span class="kw">fn </span>into_syntax(<span class="self">self</span>) -&gt; SyntaxNode&lt;RawLanguage&gt; {
+        <span class="self">self</span>.node
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AstSeparatedList</span> <span class="kw">for</span> <span class="ident">SeparatedExpressionList</span> {
-    <span class="kw">type</span> <span class="ident">Language</span> <span class="op">=</span> <span class="ident">RawLanguage</span>;
-    <span class="kw">type</span> <span class="ident">Node</span> <span class="op">=</span> <span class="ident">LiteralExpression</span>;
+<span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub struct </span>SeparatedExpressionList {
+    syntax_list: SyntaxList&lt;RawLanguage&gt;,
+}
 
-    <span class="kw">fn</span> <span class="ident">syntax_list</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SyntaxList</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">syntax_list</span>
-    }
-
-    <span class="kw">fn</span> <span class="ident">into_syntax_list</span>(<span class="self">self</span>) -&gt; <span class="ident">SyntaxList</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">syntax_list</span>
+<span class="kw">impl </span>SeparatedExpressionList {
+    <span class="kw">pub fn </span>new(list: SyntaxList&lt;RawLanguage&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ syntax_list: list }
     }
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawLanguageSyntaxFactory</span>;
+<span class="kw">impl </span>AstSeparatedList <span class="kw">for </span>SeparatedExpressionList {
+    <span class="kw">type </span>Language = RawLanguage;
+    <span class="kw">type </span>Node = LiteralExpression;
 
-<span class="kw">impl</span> <span class="ident">SyntaxFactory</span> <span class="kw">for</span> <span class="ident">RawLanguageSyntaxFactory</span> {
-    <span class="kw">type</span> <span class="ident">Kind</span> <span class="op">=</span> <span class="ident">RawLanguageKind</span>;
+    <span class="kw">fn </span>syntax_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SyntaxList&lt;RawLanguage&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.syntax_list
+    }
 
-    <span class="kw">fn</span> <span class="ident">make_syntax</span>(
-        <span class="ident">kind</span>: <span class="ident"><span class="self">Self</span>::Kind</span>,
-        <span class="ident">children</span>: <span class="ident">ParsedChildren</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Kind</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">RawSyntaxNode</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Kind</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">kind</span> {
-            <span class="ident">RawLanguageKind::UNKNOWN</span> <span class="op">|</span> <span class="ident">RawLanguageKind::ROOT</span> =&gt; {
-                <span class="ident">RawSyntaxNode::new</span>(<span class="ident">kind</span>, <span class="ident">children</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="prelude-val">Some</span>))
+    <span class="kw">fn </span>into_syntax_list(<span class="self">self</span>) -&gt; SyntaxList&lt;RawLanguage&gt; {
+        <span class="self">self</span>.syntax_list
+    }
+}
+
+<span class="attribute">#[doc(hidden)]
+#[derive(Debug)]
+</span><span class="kw">pub struct </span>RawLanguageSyntaxFactory;
+
+<span class="kw">impl </span>SyntaxFactory <span class="kw">for </span>RawLanguageSyntaxFactory {
+    <span class="kw">type </span>Kind = RawLanguageKind;
+
+    <span class="kw">fn </span>make_syntax(
+        kind: <span class="self">Self</span>::Kind,
+        children: ParsedChildren&lt;<span class="self">Self</span>::Kind&gt;,
+    ) -&gt; RawSyntaxNode&lt;<span class="self">Self</span>::Kind&gt; {
+        <span class="kw">match </span>kind {
+            RawLanguageKind::UNKNOWN | RawLanguageKind::ROOT =&gt; {
+                RawSyntaxNode::new(kind, children.into_iter().map(<span class="prelude-val">Some</span>))
             }
-            <span class="ident">RawLanguageKind::EXPRESSION_LIST</span> =&gt; {
-                <span class="ident"><span class="self">Self</span>::make_node_list_syntax</span>(<span class="ident">kind</span>, <span class="ident">children</span>, <span class="op">|</span><span class="ident">kind</span><span class="op">|</span> <span class="ident">kind</span> <span class="op">==</span> <span class="ident">LITERAL_EXPRESSION</span>)
+            RawLanguageKind::EXPRESSION_LIST =&gt; {
+                <span class="self">Self</span>::make_node_list_syntax(kind, children, |kind| kind == LITERAL_EXPRESSION)
             }
-            <span class="ident">RawLanguageKind::SEPARATED_EXPRESSION_LIST</span> =&gt; <span class="ident"><span class="self">Self</span>::make_separated_list_syntax</span>(
-                <span class="ident">kind</span>,
-                <span class="ident">children</span>,
-                <span class="op">|</span><span class="ident">kind</span><span class="op">|</span> <span class="ident">kind</span> <span class="op">==</span> <span class="ident">LITERAL_EXPRESSION</span>,
-                <span class="ident">COMMA_TOKEN</span>,
+            RawLanguageKind::SEPARATED_EXPRESSION_LIST =&gt; <span class="self">Self</span>::make_separated_list_syntax(
+                kind,
+                children,
+                |kind| kind == LITERAL_EXPRESSION,
+                COMMA_TOKEN,
                 <span class="bool-val">true</span>,
             ),
-            <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">actual_len</span> <span class="op">=</span> <span class="ident">children</span>.<span class="ident">len</span>();
+            RawLanguageKind::LITERAL_EXPRESSION =&gt; {
+                <span class="kw">let </span>actual_len = children.len();
 
-                <span class="kw">if</span> <span class="ident">actual_len</span> <span class="op">&gt;</span> <span class="number">1</span> {
-                    <span class="kw">return</span> <span class="ident">RawSyntaxNode::new</span>(<span class="ident">kind</span>.<span class="ident">to_unknown</span>(), <span class="ident">children</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="prelude-val">Some</span>));
+                <span class="kw">if </span>actual_len &gt; <span class="number">1 </span>{
+                    <span class="kw">return </span>RawSyntaxNode::new(kind.to_unknown(), children.into_iter().map(<span class="prelude-val">Some</span>));
                 }
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">children</span>.<span class="ident">into_iter</span>();
-                <span class="kw">let</span> <span class="ident">current_element</span> <span class="op">=</span> <span class="ident">elements</span>.<span class="ident">next</span>();
+                <span class="kw">let </span><span class="kw-2">mut </span>elements = children.into_iter();
+                <span class="kw">let </span>current_element = elements.next();
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">current_element</span> {
-                    <span class="kw">if</span> <span class="op">!</span><span class="macro">matches!</span>(
-                        <span class="ident">element</span>.<span class="ident">kind</span>(),
-                        <span class="ident">RawLanguageKind::STRING_TOKEN</span> <span class="op">|</span> <span class="ident">RawLanguageKind::NUMBER_TOKEN</span>
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = <span class="kw-2">&amp;</span>current_element {
+                    <span class="kw">if </span>!<span class="macro">matches!</span>(
+                        element.kind(),
+                        RawLanguageKind::STRING_TOKEN | RawLanguageKind::NUMBER_TOKEN
                     ) {
-                        <span class="kw">return</span> <span class="ident">RawSyntaxNode::new</span>(
-                            <span class="ident">kind</span>.<span class="ident">to_unknown</span>(),
-                            <span class="ident">std::iter::once</span>(<span class="ident">current_element</span>),
+                        <span class="kw">return </span>RawSyntaxNode::new(
+                            kind.to_unknown(),
+                            std::iter::once(current_element),
                         );
                     }
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="ident">RawSyntaxNode::new</span>(<span class="ident">kind</span>, <span class="ident">std::iter::once</span>(<span class="prelude-val">None</span>));
+                } <span class="kw">else </span>{
+                    <span class="kw">return </span>RawSyntaxNode::new(kind, std::iter::once(<span class="prelude-val">None</span>));
                 }
 
-                <span class="ident">RawSyntaxNode::new</span>(<span class="ident">kind</span>, <span class="ident">std::iter::once</span>(<span class="ident">current_element</span>))
+                RawSyntaxNode::new(kind, std::iter::once(current_element))
             }
 
-            <span class="ident">RawLanguageKind::CONDITION</span> =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elements</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="ident">children</span>).<span class="ident">into_iter</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_element</span> <span class="op">=</span> <span class="ident">elements</span>.<span class="ident">next</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slots</span>: <span class="ident">RawNodeSlots</span><span class="op">&lt;</span><span class="number">3</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Default::default</span>();
+            RawLanguageKind::CONDITION =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>elements = (<span class="kw-2">&amp;</span>children).into_iter();
+                <span class="kw">let </span><span class="kw-2">mut </span>current_element = elements.next();
+                <span class="kw">let </span><span class="kw-2">mut </span>slots: RawNodeSlots&lt;<span class="number">3</span>&gt; = Default::default();
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">current_element</span> {
-                    <span class="kw">if</span> <span class="ident">element</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::L_PAREN_TOKEN</span> {
-                        <span class="ident">slots</span>.<span class="ident">mark_present</span>();
-                        <span class="ident">current_element</span> <span class="op">=</span> <span class="ident">elements</span>.<span class="ident">next</span>();
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = <span class="kw-2">&amp;</span>current_element {
+                    <span class="kw">if </span>element.kind() == RawLanguageKind::L_PAREN_TOKEN {
+                        slots.mark_present();
+                        current_element = elements.next();
                     }
                 }
 
-                <span class="ident">slots</span>.<span class="ident">next_slot</span>();
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">current_element</span> {
-                    <span class="kw">if</span> <span class="ident">element</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::LITERAL_EXPRESSION</span> {
-                        <span class="ident">slots</span>.<span class="ident">mark_present</span>();
-                        <span class="ident">current_element</span> <span class="op">=</span> <span class="ident">elements</span>.<span class="ident">next</span>();
+                slots.next_slot();
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = <span class="kw-2">&amp;</span>current_element {
+                    <span class="kw">if </span>element.kind() == RawLanguageKind::LITERAL_EXPRESSION {
+                        slots.mark_present();
+                        current_element = elements.next();
                     }
                 }
 
-                <span class="ident">slots</span>.<span class="ident">next_slot</span>();
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">current_element</span> {
-                    <span class="kw">if</span> <span class="ident">element</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">RawLanguageKind::R_PAREN_TOKEN</span> {
-                        <span class="ident">slots</span>.<span class="ident">mark_present</span>();
-                        <span class="ident">current_element</span> <span class="op">=</span> <span class="ident">elements</span>.<span class="ident">next</span>();
+                slots.next_slot();
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = <span class="kw-2">&amp;</span>current_element {
+                    <span class="kw">if </span>element.kind() == RawLanguageKind::R_PAREN_TOKEN {
+                        slots.mark_present();
+                        current_element = elements.next();
                     }
                 }
 
-                <span class="ident">slots</span>.<span class="ident">next_slot</span>();
+                slots.next_slot();
 
-                <span class="kw">if</span> <span class="ident">current_element</span>.<span class="ident">is_some</span>() {
-                    <span class="kw">return</span> <span class="ident">RawSyntaxNode::new</span>(<span class="ident">kind</span>.<span class="ident">to_unknown</span>(), <span class="ident">children</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="prelude-val">Some</span>));
+                <span class="kw">if </span>current_element.is_some() {
+                    <span class="kw">return </span>RawSyntaxNode::new(kind.to_unknown(), children.into_iter().map(<span class="prelude-val">Some</span>));
                 }
 
-                <span class="ident">slots</span>.<span class="ident">into_node</span>(<span class="ident">kind</span>, <span class="ident">children</span>)
+                slots.into_node(kind, children)
             }
-            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;{:?} is not a node kind&quot;</span>, <span class="ident">kind</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;{:?} is not a node kind&quot;</span>, kind),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RawSyntaxTreeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">TreeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">RawLanguage</span>, <span class="ident">RawLanguageSyntaxFactory</span><span class="op">&gt;</span>;
+<span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub type </span>RawSyntaxTreeBuilder&lt;<span class="lifetime">&#39;a</span>&gt; = TreeBuilder&lt;<span class="lifetime">&#39;a</span>, RawLanguage, RawLanguageSyntaxFactory&gt;;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

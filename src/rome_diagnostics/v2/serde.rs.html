@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/serde.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>serde.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_diagnostics/src/v2/serde.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>serde.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_diagnostics/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_diagnostics/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -492,426 +492,426 @@
 <span id="492">492</span>
 <span id="493">493</span>
 <span id="494">494</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::io</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::io;
 
-<span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">fmt</span>, <span class="ident">markup</span>, <span class="ident">MarkupBuf</span>};
-<span class="kw">use</span> <span class="ident">rome_text_edit::TextEdit</span>;
-<span class="kw">use</span> <span class="ident">rome_text_size::TextRange</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{
-    <span class="ident">de</span>::{<span class="self">self</span>, <span class="ident">SeqAccess</span>},
-    <span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>, <span class="ident">Serialize</span>, <span class="ident">Serializer</span>,
+<span class="kw">use </span>rome_console::{fmt, markup, MarkupBuf};
+<span class="kw">use </span>rome_text_edit::TextEdit;
+<span class="kw">use </span>rome_text_size::TextRange;
+<span class="kw">use </span>serde::{
+    de::{<span class="self">self</span>, SeqAccess},
+    Deserialize, Deserializer, Serialize, Serializer,
 };
 
-<span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">diagnostic::internal::AsDiagnostic</span>, <span class="ident">diagnostic::DiagnosticTag</span>, <span class="ident">Advices</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">Backtrace</span>,
-    <span class="ident">Category</span>, <span class="ident">DiagnosticTags</span>, <span class="ident">LogCategory</span>, <span class="ident">Resource</span>, <span class="ident">Severity</span>, <span class="ident">SourceCode</span>, <span class="ident">Visit</span>,
+<span class="kw">use super</span>::{
+    diagnostic::internal::AsDiagnostic, diagnostic::DiagnosticTag, Advices <span class="kw">as _</span>, Backtrace,
+    Category, DiagnosticTags, LogCategory, Resource, Severity, SourceCode, Visit,
 };
 
-<span class="doccomment">/// Serializable representation for a [Diagnostic](super::Diagnostic).</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Diagnostic</span> {
-    <span class="ident">category</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span><span class="op">&gt;</span>,
-    <span class="ident">severity</span>: <span class="ident">Severity</span>,
-    <span class="ident">description</span>: <span class="ident">String</span>,
-    <span class="ident">message</span>: <span class="ident">MarkupBuf</span>,
-    <span class="ident">advices</span>: <span class="ident">Advices</span>,
-    <span class="ident">verbose_advices</span>: <span class="ident">Advices</span>,
-    <span class="ident">location</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Location</span><span class="op">&gt;</span>,
-    <span class="ident">tags</span>: <span class="ident">DiagnosticTags</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Serializable representation for a [Diagnostic](super::Diagnostic).
+</span><span class="attribute">#[derive(Clone, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+#[cfg_attr(test, derive(Eq, PartialEq))]
+</span><span class="kw">pub struct </span>Diagnostic {
+    category: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category&gt;,
+    severity: Severity,
+    description: String,
+    message: MarkupBuf,
+    advices: Advices,
+    verbose_advices: Advices,
+    location: <span class="prelude-ty">Option</span>&lt;Location&gt;,
+    tags: DiagnosticTags,
+    source: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="self">Self</span>&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Diagnostic</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">AsDiagnostic</span><span class="op">&gt;</span>(<span class="ident">diag</span>: <span class="ident">D</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_impl</span>(<span class="ident">diag</span>.<span class="ident">as_diagnostic</span>())
+<span class="kw">impl </span>Diagnostic {
+    <span class="kw">pub fn </span>new&lt;D: AsDiagnostic&gt;(diag: D) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_impl(diag.as_diagnostic())
     }
 
-    <span class="kw">fn</span> <span class="ident">new_impl</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident"><span class="kw">super</span>::Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="ident">diag</span>: <span class="kw-2">&amp;</span><span class="ident">D</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">category</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">category</span>();
+    <span class="kw">fn </span>new_impl&lt;D: <span class="kw">super</span>::Diagnostic + <span class="question-mark">?</span>Sized&gt;(diag: <span class="kw-2">&amp;</span>D) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>category = diag.category();
 
-        <span class="kw">let</span> <span class="ident">severity</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">severity</span>();
+        <span class="kw">let </span>severity = diag.severity();
 
-        <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="ident">PrintDescription</span>(<span class="ident">diag</span>).<span class="ident">to_string</span>();
+        <span class="kw">let </span>description = PrintDescription(diag).to_string();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">MarkupBuf::default</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt</span> <span class="op">=</span> <span class="ident">fmt::Formatter::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">message</span>);
-        <span class="comment">// SAFETY: Writing to a MarkupBuf should never fail</span>
-        <span class="ident">diag</span>.<span class="ident">message</span>(<span class="kw-2">&amp;mut</span> <span class="ident">fmt</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>message = MarkupBuf::default();
+        <span class="kw">let </span><span class="kw-2">mut </span>fmt = fmt::Formatter::new(<span class="kw-2">&amp;mut </span>message);
+        <span class="comment">// SAFETY: Writing to a MarkupBuf should never fail
+        </span>diag.message(<span class="kw-2">&amp;mut </span>fmt).unwrap();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">advices</span> <span class="op">=</span> <span class="ident">Advices::new</span>();
-        <span class="comment">// SAFETY: The Advices visitor never returns an error</span>
-        <span class="ident">diag</span>.<span class="ident">advices</span>(<span class="kw-2">&amp;mut</span> <span class="ident">advices</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>advices = Advices::new();
+        <span class="comment">// SAFETY: The Advices visitor never returns an error
+        </span>diag.advices(<span class="kw-2">&amp;mut </span>advices).unwrap();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">verbose_advices</span> <span class="op">=</span> <span class="ident">Advices::new</span>();
-        <span class="comment">// SAFETY: The Advices visitor never returns an error</span>
-        <span class="ident">diag</span>.<span class="ident">verbose_advices</span>(<span class="kw-2">&amp;mut</span> <span class="ident">verbose_advices</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>verbose_advices = Advices::new();
+        <span class="comment">// SAFETY: The Advices visitor never returns an error
+        </span>diag.verbose_advices(<span class="kw-2">&amp;mut </span>verbose_advices).unwrap();
 
-        <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">location</span>().<span class="ident">map</span>(<span class="ident">Location::from</span>);
+        <span class="kw">let </span>location = diag.location().map(Location::from);
 
-        <span class="kw">let</span> <span class="ident">tags</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">tags</span>();
+        <span class="kw">let </span>tags = diag.tags();
 
-        <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">source</span>().<span class="ident">map</span>(<span class="ident"><span class="self">Self</span>::new_impl</span>).<span class="ident">map</span>(<span class="ident">Box::new</span>);
+        <span class="kw">let </span>source = diag.source().map(<span class="self">Self</span>::new_impl).map(Box::new);
 
-        <span class="self">Self</span> {
-            <span class="ident">category</span>,
-            <span class="ident">severity</span>,
-            <span class="ident">description</span>,
-            <span class="ident">message</span>,
-            <span class="ident">advices</span>,
-            <span class="ident">verbose_advices</span>,
-            <span class="ident">location</span>,
-            <span class="ident">tags</span>,
-            <span class="ident">source</span>,
+        <span class="self">Self </span>{
+            category,
+            severity,
+            description,
+            message,
+            advices,
+            verbose_advices,
+            location,
+            tags,
+            source,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident"><span class="kw">super</span>::Diagnostic</span> <span class="kw">for</span> <span class="ident">Diagnostic</span> {
-    <span class="kw">fn</span> <span class="ident">category</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">category</span>
+<span class="kw">impl </span><span class="kw">super</span>::Diagnostic <span class="kw">for </span>Diagnostic {
+    <span class="kw">fn </span>category(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category&gt; {
+        <span class="self">self</span>.category
     }
 
-    <span class="kw">fn</span> <span class="ident">severity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Severity</span> {
-        <span class="self">self</span>.<span class="ident">severity</span>
+    <span class="kw">fn </span>severity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Severity {
+        <span class="self">self</span>.severity
     }
 
-    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">description</span>)
+    <span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        fmt.write_str(<span class="kw-2">&amp;</span><span class="self">self</span>.description)
     }
 
-    <span class="kw">fn</span> <span class="ident">message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">fmt</span>.<span class="ident">write_markup</span>(<span class="macro">markup!</span> { {<span class="self">self</span>.<span class="ident">message</span>} })
+    <span class="kw">fn </span>message(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        fmt.write_markup(<span class="macro">markup! </span>{ {<span class="self">self</span>.message} })
     }
 
-    <span class="kw">fn</span> <span class="ident">advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">advices</span>.<span class="ident">record</span>(<span class="ident">visitor</span>)
+    <span class="kw">fn </span>advices(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.advices.record(visitor)
     }
 
-    <span class="kw">fn</span> <span class="ident">verbose_advices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">verbose_advices</span>.<span class="ident">record</span>(<span class="ident">visitor</span>)
+    <span class="kw">fn </span>verbose_advices(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.verbose_advices.record(visitor)
     }
 
-    <span class="kw">fn</span> <span class="ident">location</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">location</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">location</span><span class="op">|</span> {
-            <span class="ident"><span class="kw">super</span>::Location::builder</span>()
-                .<span class="ident">resource</span>(<span class="kw-2">&amp;</span><span class="ident">location</span>.<span class="ident">path</span>)
-                .<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">location</span>.<span class="ident">span</span>)
-                .<span class="ident">source_code</span>(<span class="kw-2">&amp;</span><span class="ident">location</span>.<span class="ident">source_code</span>)
-                .<span class="ident">build</span>()
+    <span class="kw">fn </span>location(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw">super</span>::Location&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+        <span class="self">self</span>.location.as_ref().and_then(|location| {
+            <span class="kw">super</span>::Location::builder()
+                .resource(<span class="kw-2">&amp;</span>location.path)
+                .span(<span class="kw-2">&amp;</span>location.span)
+                .source_code(<span class="kw-2">&amp;</span>location.source_code)
+                .build()
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">tags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">DiagnosticTags</span> {
-        <span class="self">self</span>.<span class="ident">tags</span>
+    <span class="kw">fn </span>tags(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DiagnosticTags {
+        <span class="self">self</span>.tags
     }
 
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident"><span class="kw">super</span>::Diagnostic</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">source</span>
-            .<span class="ident">as_deref</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident"><span class="kw">super</span>::Diagnostic</span>)
-    }
-}
-
-<span class="doccomment">/// Wrapper type implementing [std::fmt::Display] for types implementing [Diagnostic](super::Diagnostic),</span>
-<span class="doccomment">/// prints the description of the diagnostic as a string.</span>
-<span class="kw">struct</span> <span class="ident">PrintDescription</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt</span> <span class="ident">D</span>);
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span>: <span class="ident"><span class="kw">super</span>::Diagnostic</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">PrintDescription</span><span class="op">&lt;</span><span class="lifetime">&#39;fmt</span>, <span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">description</span>(<span class="ident">fmt</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">std::fmt::Error</span>)
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">dyn </span><span class="kw">super</span>::Diagnostic&gt; {
+        <span class="self">self</span>.source
+            .as_deref()
+            .map(|source| source <span class="kw">as </span><span class="kw-2">&amp;</span><span class="kw">dyn </span><span class="kw">super</span>::Diagnostic)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>))]</span>
-<span class="kw">struct</span> <span class="ident">Location</span> {
-    <span class="ident">path</span>: <span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">span</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
-    <span class="ident">source_code</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Wrapper type implementing [std::fmt::Display] for types implementing [Diagnostic](super::Diagnostic),
+/// prints the description of the diagnostic as a string.
+</span><span class="kw">struct </span>PrintDescription&lt;<span class="lifetime">&#39;fmt</span>, D: <span class="question-mark">?</span>Sized&gt;(<span class="kw">pub </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;fmt </span>D);
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;fmt</span>, D: <span class="kw">super</span>::Diagnostic + <span class="question-mark">?</span>Sized&gt; std::fmt::Display <span class="kw">for </span>PrintDescription&lt;<span class="lifetime">&#39;fmt</span>, D&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="self">self</span>.<span class="number">0</span>.description(fmt).map_err(|<span class="kw">_</span>| std::fmt::Error)
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Location</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">loc</span>: <span class="ident"><span class="kw">super</span>::Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">path</span>: <span class="ident">loc</span>.<span class="ident">resource</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">span</span>: <span class="ident">loc</span>.<span class="ident">span</span>,
-            <span class="ident">source_code</span>: <span class="ident">loc</span>
-                .<span class="ident">source_code</span>
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source_code</span><span class="op">|</span> <span class="ident">source_code</span>.<span class="ident">text</span>.<span class="ident">to_string</span>()),
+<span class="attribute">#[derive(Clone, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+#[cfg_attr(test, derive(Eq, PartialEq))]
+</span><span class="kw">struct </span>Location {
+    path: Resource&lt;String&gt;,
+    span: <span class="prelude-ty">Option</span>&lt;TextRange&gt;,
+    source_code: <span class="prelude-ty">Option</span>&lt;String&gt;,
+}
+
+<span class="kw">impl </span>From&lt;<span class="kw">super</span>::Location&lt;<span class="lifetime">&#39;_</span>&gt;&gt; <span class="kw">for </span>Location {
+    <span class="kw">fn </span>from(loc: <span class="kw">super</span>::Location&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            path: loc.resource.to_owned(),
+            span: loc.span,
+            source_code: loc
+                .source_code
+                .map(|source_code| source_code.text.to_string()),
         }
     }
 }
 
-<span class="doccomment">/// Implementation of [Visitor] collecting serializable [Advice] into a vector.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>))]</span>
-<span class="kw">struct</span> <span class="ident">Advices</span> {
-    <span class="ident">advices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Advice</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Implementation of [Visitor] collecting serializable [Advice] into a vector.
+</span><span class="attribute">#[derive(Clone, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+#[cfg_attr(test, derive(Eq, PartialEq))]
+</span><span class="kw">struct </span>Advices {
+    advices: Vec&lt;Advice&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Advices</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">advices</span>: <span class="ident">Vec::new</span>(),
+<span class="kw">impl </span>Advices {
+    <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            advices: Vec::new(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Visit</span> <span class="kw">for</span> <span class="ident">Advices</span> {
-    <span class="kw">fn</span> <span class="ident">record_log</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">category</span>: <span class="ident">LogCategory</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">advices</span>
-            .<span class="ident">push</span>(<span class="ident">Advice::Log</span>(<span class="ident">category</span>, <span class="macro">markup!</span>({ <span class="ident">text</span> }).<span class="ident">to_owned</span>()));
+<span class="kw">impl </span>Visit <span class="kw">for </span>Advices {
+    <span class="kw">fn </span>record_log(<span class="kw-2">&amp;mut </span><span class="self">self</span>, category: LogCategory, text: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.advices
+            .push(Advice::Log(category, <span class="macro">markup!</span>({ text }).to_owned()));
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">record_list</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">list</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">advices</span>.<span class="ident">push</span>(<span class="ident">Advice::List</span>(
-            <span class="ident">list</span>.<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="macro">markup!</span>({ <span class="ident">item</span> }).<span class="ident">to_owned</span>())
-                .<span class="ident">collect</span>(),
+    <span class="kw">fn </span>record_list(<span class="kw-2">&amp;mut </span><span class="self">self</span>, list: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display]) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.advices.push(Advice::List(
+            list.iter()
+                .map(|item| <span class="macro">markup!</span>({ item }).to_owned())
+                .collect(),
         ));
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">record_frame</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">location</span>: <span class="ident"><span class="kw">super</span>::Location</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">advices</span>.<span class="ident">push</span>(<span class="ident">Advice::Frame</span>(<span class="ident">location</span>.<span class="ident">into</span>()));
+    <span class="kw">fn </span>record_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>, location: <span class="kw">super</span>::Location&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.advices.push(Advice::Frame(location.into()));
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">record_diff</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">diff</span>: <span class="kw-2">&amp;</span><span class="ident">TextEdit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">advices</span>.<span class="ident">push</span>(<span class="ident">Advice::Diff</span>(<span class="ident">diff</span>.<span class="ident">clone</span>()));
+    <span class="kw">fn </span>record_diff(<span class="kw-2">&amp;mut </span><span class="self">self</span>, diff: <span class="kw-2">&amp;</span>TextEdit) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.advices.push(Advice::Diff(diff.clone()));
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">record_backtrace</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>,
-        <span class="ident">backtrace</span>: <span class="kw-2">&amp;</span><span class="ident">Backtrace</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">advices</span>.<span class="ident">push</span>(<span class="ident">Advice::Backtrace</span>(
-            <span class="macro">markup!</span>({ <span class="ident">title</span> }).<span class="ident">to_owned</span>(),
-            <span class="ident">backtrace</span>.<span class="ident">clone</span>(),
+    <span class="kw">fn </span>record_backtrace(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        title: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display,
+        backtrace: <span class="kw-2">&amp;</span>Backtrace,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.advices.push(Advice::Backtrace(
+            <span class="macro">markup!</span>({ title }).to_owned(),
+            backtrace.clone(),
         ));
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">record_command</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">command</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">advices</span>.<span class="ident">push</span>(<span class="ident">Advice::Command</span>(<span class="ident">command</span>.<span class="ident">into</span>()));
+    <span class="kw">fn </span>record_command(<span class="kw-2">&amp;mut </span><span class="self">self</span>, command: <span class="kw-2">&amp;</span>str) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.advices.push(Advice::Command(command.into()));
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">record_group</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>,
-        <span class="ident">advice</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident"><span class="kw">super</span>::Advices</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">advices</span> <span class="op">=</span> <span class="ident">Advices::new</span>();
-        <span class="ident">advice</span>.<span class="ident">record</span>(<span class="kw-2">&amp;mut</span> <span class="ident">advices</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn </span>record_group(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        title: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display,
+        advice: <span class="kw-2">&amp;</span><span class="kw">dyn </span><span class="kw">super</span>::Advices,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>advices = Advices::new();
+        advice.record(<span class="kw-2">&amp;mut </span>advices)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">advices</span>
-            .<span class="ident">push</span>(<span class="ident">Advice::Group</span>(<span class="macro">markup!</span>({ <span class="ident">title</span> }).<span class="ident">to_owned</span>(), <span class="ident">advices</span>));
+        <span class="self">self</span>.advices
+            .push(Advice::Group(<span class="macro">markup!</span>({ title }).to_owned(), advices));
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span> <span class="ident"><span class="kw">super</span>::Advices</span> <span class="kw">for</span> <span class="ident">Advices</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">for</span> <span class="ident">advice</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">advices</span> {
-            <span class="ident">advice</span>.<span class="ident">record</span>(<span class="ident">visitor</span>)<span class="question-mark">?</span>;
+<span class="kw">impl </span><span class="kw">super</span>::Advices <span class="kw">for </span>Advices {
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">for </span>advice <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.advices {
+            advice.record(visitor)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="doccomment">/// Serializable representation of a [Diagnostic](super::Diagnostic) advice</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// See the [Visitor] trait for additional documentation on all the supported</span>
-<span class="doccomment">/// advice types.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>))]</span>
-<span class="kw">enum</span> <span class="ident">Advice</span> {
-    <span class="ident">Log</span>(<span class="ident">LogCategory</span>, <span class="ident">MarkupBuf</span>),
-    <span class="ident">List</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MarkupBuf</span><span class="op">&gt;</span>),
-    <span class="ident">Frame</span>(<span class="ident">Location</span>),
-    <span class="ident">Diff</span>(<span class="ident">TextEdit</span>),
-    <span class="ident">Backtrace</span>(<span class="ident">MarkupBuf</span>, <span class="ident">Backtrace</span>),
-    <span class="ident">Command</span>(<span class="ident">String</span>),
-    <span class="ident">Group</span>(<span class="ident">MarkupBuf</span>, <span class="ident">Advices</span>),
+<span class="doccomment">/// Serializable representation of a [Diagnostic](super::Diagnostic) advice
+///
+/// See the [Visitor] trait for additional documentation on all the supported
+/// advice types.
+</span><span class="attribute">#[derive(Clone, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schema&quot;</span>, derive(schemars::JsonSchema))]
+#[cfg_attr(test, derive(Eq, PartialEq))]
+</span><span class="kw">enum </span>Advice {
+    Log(LogCategory, MarkupBuf),
+    List(Vec&lt;MarkupBuf&gt;),
+    Frame(Location),
+    Diff(TextEdit),
+    Backtrace(MarkupBuf, Backtrace),
+    Command(String),
+    Group(MarkupBuf, Advices),
 }
 
-<span class="kw">impl</span> <span class="ident"><span class="kw">super</span>::Advices</span> <span class="kw">for</span> <span class="ident">Advice</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Advice::Log</span>(<span class="ident">category</span>, <span class="ident">text</span>) =&gt; <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="kw-2">*</span><span class="ident">category</span>, <span class="ident">text</span>),
-            <span class="ident">Advice::List</span>(<span class="ident">list</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">as_display</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span><span class="op">&gt;</span> <span class="op">=</span>
-                    <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="ident">item</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt::Display</span>).<span class="ident">collect</span>();
-                <span class="ident">visitor</span>.<span class="ident">record_list</span>(<span class="kw-2">&amp;</span><span class="ident">as_display</span>)
+<span class="kw">impl </span><span class="kw">super</span>::Advices <span class="kw">for </span>Advice {
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Advice::Log(category, text) =&gt; visitor.record_log(<span class="kw-2">*</span>category, text),
+            Advice::List(list) =&gt; {
+                <span class="kw">let </span>as_display: Vec&lt;<span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display&gt; =
+                    list.iter().map(|item| item <span class="kw">as </span><span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Display).collect();
+                visitor.record_list(<span class="kw-2">&amp;</span>as_display)
             }
-            <span class="ident">Advice::Frame</span>(<span class="ident">location</span>) =&gt; <span class="ident">visitor</span>.<span class="ident">record_frame</span>(<span class="ident"><span class="kw">super</span>::Location</span> {
-                <span class="ident">resource</span>: <span class="ident">location</span>.<span class="ident">path</span>.<span class="ident">as_deref</span>(),
-                <span class="ident">span</span>: <span class="ident">location</span>.<span class="ident">span</span>,
-                <span class="ident">source_code</span>: <span class="ident">location</span>.<span class="ident">source_code</span>.<span class="ident">as_deref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">text</span><span class="op">|</span> <span class="ident">SourceCode</span> {
-                    <span class="ident">text</span>,
-                    <span class="ident">line_starts</span>: <span class="prelude-val">None</span>,
+            Advice::Frame(location) =&gt; visitor.record_frame(<span class="kw">super</span>::Location {
+                resource: location.path.as_deref(),
+                span: location.span,
+                source_code: location.source_code.as_deref().map(|text| SourceCode {
+                    text,
+                    line_starts: <span class="prelude-val">None</span>,
                 }),
             }),
-            <span class="ident">Advice::Diff</span>(<span class="ident">diff</span>) =&gt; <span class="ident">visitor</span>.<span class="ident">record_diff</span>(<span class="ident">diff</span>),
-            <span class="ident">Advice::Backtrace</span>(<span class="ident">title</span>, <span class="ident">backtrace</span>) =&gt; <span class="ident">visitor</span>.<span class="ident">record_backtrace</span>(<span class="ident">title</span>, <span class="ident">backtrace</span>),
-            <span class="ident">Advice::Command</span>(<span class="ident">command</span>) =&gt; <span class="ident">visitor</span>.<span class="ident">record_command</span>(<span class="ident">command</span>),
-            <span class="ident">Advice::Group</span>(<span class="ident">title</span>, <span class="ident">advice</span>) =&gt; <span class="ident">visitor</span>.<span class="ident">record_group</span>(<span class="ident">title</span>, <span class="ident">advice</span>),
+            Advice::Diff(diff) =&gt; visitor.record_diff(diff),
+            Advice::Backtrace(title, backtrace) =&gt; visitor.record_backtrace(title, backtrace),
+            Advice::Command(command) =&gt; visitor.record_command(command),
+            Advice::Group(title, advice) =&gt; visitor.record_group(title, advice),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DiagnosticTag</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DiagnosticTags</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">tag</span>: <span class="ident">DiagnosticTag</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">tag</span> {
-            <span class="ident">DiagnosticTag::Fixable</span> =&gt; <span class="ident">DiagnosticTags::FIXABLE</span>,
-            <span class="ident">DiagnosticTag::Internal</span> =&gt; <span class="ident">DiagnosticTags::INTERNAL</span>,
-            <span class="ident">DiagnosticTag::UnnecessaryCode</span> =&gt; <span class="ident">DiagnosticTags::UNNECESSARY_CODE</span>,
-            <span class="ident">DiagnosticTag::DeprecatedCode</span> =&gt; <span class="ident">DiagnosticTags::DEPRECATED_CODE</span>,
+<span class="kw">impl </span>From&lt;DiagnosticTag&gt; <span class="kw">for </span>DiagnosticTags {
+    <span class="kw">fn </span>from(tag: DiagnosticTag) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>tag {
+            DiagnosticTag::Fixable =&gt; DiagnosticTags::FIXABLE,
+            DiagnosticTag::Internal =&gt; DiagnosticTags::INTERNAL,
+            DiagnosticTag::UnnecessaryCode =&gt; DiagnosticTags::UNNECESSARY_CODE,
+            DiagnosticTag::DeprecatedCode =&gt; DiagnosticTags::DEPRECATED_CODE,
         }
     }
 }
 
-<span class="comment">// Custom `serde` implementation for `DiagnosticTags` as a list of `DiagnosticTag` enum</span>
-<span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">DiagnosticTags</span> {
-    <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">S</span>: <span class="ident">Serializer</span>,
+<span class="comment">// Custom `serde` implementation for `DiagnosticTags` as a list of `DiagnosticTag` enum
+</span><span class="kw">impl </span>Serialize <span class="kw">for </span>DiagnosticTags {
+    <span class="kw">fn </span>serialize&lt;S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, serializer: S) -&gt; <span class="prelude-ty">Result</span>&lt;S::Ok, S::Error&gt;
+    <span class="kw">where
+        </span>S: Serializer,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>flags = Vec::new();
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::FIXABLE</span>) {
-            <span class="ident">flags</span>.<span class="ident">push</span>(<span class="ident">DiagnosticTag::Fixable</span>);
+        <span class="kw">if </span><span class="self">self</span>.contains(<span class="self">Self</span>::FIXABLE) {
+            flags.push(DiagnosticTag::Fixable);
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::INTERNAL</span>) {
-            <span class="ident">flags</span>.<span class="ident">push</span>(<span class="ident">DiagnosticTag::Internal</span>);
+        <span class="kw">if </span><span class="self">self</span>.contains(<span class="self">Self</span>::INTERNAL) {
+            flags.push(DiagnosticTag::Internal);
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::UNNECESSARY_CODE</span>) {
-            <span class="ident">flags</span>.<span class="ident">push</span>(<span class="ident">DiagnosticTag::UnnecessaryCode</span>);
+        <span class="kw">if </span><span class="self">self</span>.contains(<span class="self">Self</span>::UNNECESSARY_CODE) {
+            flags.push(DiagnosticTag::UnnecessaryCode);
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::DEPRECATED_CODE</span>) {
-            <span class="ident">flags</span>.<span class="ident">push</span>(<span class="ident">DiagnosticTag::DeprecatedCode</span>);
+        <span class="kw">if </span><span class="self">self</span>.contains(<span class="self">Self</span>::DEPRECATED_CODE) {
+            flags.push(DiagnosticTag::DeprecatedCode);
         }
 
-        <span class="ident">serializer</span>.<span class="ident">collect_seq</span>(<span class="ident">flags</span>)
+        serializer.collect_seq(flags)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DiagnosticTags</span> {
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; Deserialize&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>DiagnosticTags {
+    <span class="kw">fn </span>deserialize&lt;D&gt;(deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, D::Error&gt;
+    <span class="kw">where
+        </span>D: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
     {
-        <span class="kw">struct</span> <span class="ident">Visitor</span>;
+        <span class="kw">struct </span>Visitor;
 
-        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de::Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Visitor</span> {
-            <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">DiagnosticTags</span>;
+        <span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; de::Visitor&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>Visitor {
+            <span class="kw">type </span>Value = DiagnosticTags;
 
-            <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-                <span class="macro">write!</span>(<span class="ident">formatter</span>, <span class="string">&quot;DiagnosticTags&quot;</span>)
+            <span class="kw">fn </span>expecting(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+                <span class="macro">write!</span>(formatter, <span class="string">&quot;DiagnosticTags&quot;</span>)
             }
 
-            <span class="kw">fn</span> <span class="ident">visit_seq</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">seq</span>: <span class="ident">A</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">A::Error</span><span class="op">&gt;</span>
-            <span class="kw">where</span>
-                <span class="ident">A</span>: <span class="ident">SeqAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+            <span class="kw">fn </span>visit_seq&lt;A&gt;(<span class="self">self</span>, <span class="kw-2">mut </span>seq: A) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Value, A::Error&gt;
+            <span class="kw">where
+                </span>A: SeqAccess&lt;<span class="lifetime">&#39;de</span>&gt;,
             {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">DiagnosticTags::empty</span>();
+                <span class="kw">let </span><span class="kw-2">mut </span>result = DiagnosticTags::empty();
 
-                <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">item</span>) <span class="op">=</span> <span class="ident">seq</span>.<span class="ident">next_element</span>::<span class="op">&lt;</span><span class="ident">DiagnosticTag</span><span class="op">&gt;</span>()<span class="question-mark">?</span> {
-                    <span class="ident">result</span> <span class="op">|</span><span class="op">=</span> <span class="ident">DiagnosticTags::from</span>(<span class="ident">item</span>);
+                <span class="kw">while let </span><span class="prelude-val">Some</span>(item) = seq.next_element::&lt;DiagnosticTag&gt;()<span class="question-mark">? </span>{
+                    result |= DiagnosticTags::from(item);
                 }
 
-                <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+                <span class="prelude-val">Ok</span>(result)
             }
         }
 
-        <span class="ident">deserializer</span>.<span class="ident">deserialize_seq</span>(<span class="ident">Visitor</span>)
+        deserializer.deserialize_seq(Visitor)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schema&quot;</span>)]</span>
-<span class="kw">impl</span> <span class="ident">schemars::JsonSchema</span> <span class="kw">for</span> <span class="ident">DiagnosticTags</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
-        <span class="ident">String::from</span>(<span class="string">&quot;DiagnosticTags&quot;</span>)
+<span class="attribute">#[cfg(feature = <span class="string">&quot;schema&quot;</span>)]
+</span><span class="kw">impl </span>schemars::JsonSchema <span class="kw">for </span>DiagnosticTags {
+    <span class="kw">fn </span>schema_name() -&gt; String {
+        String::from(<span class="string">&quot;DiagnosticTags&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
-        <span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DiagnosticTag</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::json_schema</span>(<span class="ident">gen</span>)
+    <span class="kw">fn </span>json_schema(gen: <span class="kw-2">&amp;mut </span>schemars::gen::SchemaGenerator) -&gt; schemars::schema::Schema {
+        &lt;Vec&lt;DiagnosticTag&gt;&gt;::json_schema(gen)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">std::io</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>std::io;
 
-    <span class="kw">use</span> <span class="ident">rome_text_size</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-    <span class="kw">use</span> <span class="ident">serde_json</span>::{<span class="ident">from_value</span>, <span class="ident">json</span>, <span class="ident">to_value</span>, <span class="ident">Value</span>};
+    <span class="kw">use </span>rome_text_size::{TextRange, TextSize};
+    <span class="kw">use </span>serde_json::{from_value, json, to_value, Value};
 
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="self">self</span> <span class="kw">as</span> <span class="ident">rome_diagnostics</span>,
-        <span class="ident">v2</span>::{<span class="ident">Advices</span>, <span class="ident">LogCategory</span>, <span class="ident">Visit</span>},
+    <span class="kw">use crate</span>::{
+        <span class="self">self </span><span class="kw">as </span>rome_diagnostics,
+        v2::{Advices, LogCategory, Visit},
     };
-    <span class="kw">use</span> <span class="ident">rome_diagnostics_macros::Diagnostic</span>;
+    <span class="kw">use </span>rome_diagnostics_macros::Diagnostic;
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Diagnostic</span>)]</span>
-    <span class="attribute">#[<span class="ident">diagnostic</span>(
-        <span class="ident">severity</span> <span class="op">=</span> <span class="ident">Warning</span>,
-        <span class="ident">category</span> <span class="op">=</span> <span class="string">&quot;internalError/io&quot;</span>,
-        <span class="ident">message</span>(
-            <span class="ident">description</span> <span class="op">=</span> <span class="string">&quot;text description&quot;</span>,
-            <span class="ident">message</span>(<span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;markup message&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span>),
+    <span class="attribute">#[derive(Debug, Diagnostic)]
+    #[diagnostic(
+        severity = Warning,
+        category = <span class="string">&quot;internalError/io&quot;</span>,
+        message(
+            description = <span class="string">&quot;text description&quot;</span>,
+            message(&lt;Emphasis&gt;<span class="string">&quot;markup message&quot;</span>&lt;/Emphasis&gt;),
         ),
-        <span class="ident">tags</span>(<span class="ident">INTERNAL</span>)
-    )]</span>
-    <span class="kw">struct</span> <span class="ident">TestDiagnostic</span> {
-        <span class="attribute">#[<span class="ident">location</span>(<span class="ident">resource</span>)]</span>
-        <span class="ident">path</span>: <span class="ident">String</span>,
-        <span class="attribute">#[<span class="ident">location</span>(<span class="ident">span</span>)]</span>
-        <span class="ident">span</span>: <span class="ident">TextRange</span>,
-        <span class="attribute">#[<span class="ident">location</span>(<span class="ident">source_code</span>)]</span>
-        <span class="ident">source_code</span>: <span class="ident">String</span>,
-        <span class="attribute">#[<span class="ident">advice</span>]</span>
-        <span class="ident">advices</span>: <span class="ident">TestAdvices</span>,
-        <span class="attribute">#[<span class="ident">verbose_advice</span>]</span>
-        <span class="ident">verbose_advices</span>: <span class="ident">TestAdvices</span>,
+        tags(INTERNAL)
+    )]
+    </span><span class="kw">struct </span>TestDiagnostic {
+        <span class="attribute">#[location(resource)]
+        </span>path: String,
+        <span class="attribute">#[location(span)]
+        </span>span: TextRange,
+        <span class="attribute">#[location(source_code)]
+        </span>source_code: String,
+        <span class="attribute">#[advice]
+        </span>advices: TestAdvices,
+        <span class="attribute">#[verbose_advice]
+        </span>verbose_advices: TestAdvices,
     }
 
-    <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">TestDiagnostic</span> {
-        <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-            <span class="ident">TestDiagnostic</span> {
-                <span class="ident">path</span>: <span class="ident">String::from</span>(<span class="string">&quot;path&quot;</span>),
-                <span class="ident">span</span>: <span class="ident">TextRange::new</span>(<span class="ident">TextSize::from</span>(<span class="number">0</span>), <span class="ident">TextSize::from</span>(<span class="number">6</span>)),
-                <span class="ident">source_code</span>: <span class="ident">String::from</span>(<span class="string">&quot;source_code&quot;</span>),
-                <span class="ident">advices</span>: <span class="ident">TestAdvices</span>,
-                <span class="ident">verbose_advices</span>: <span class="ident">TestAdvices</span>,
+    <span class="kw">impl </span>Default <span class="kw">for </span>TestDiagnostic {
+        <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+            TestDiagnostic {
+                path: String::from(<span class="string">&quot;path&quot;</span>),
+                span: TextRange::new(TextSize::from(<span class="number">0</span>), TextSize::from(<span class="number">6</span>)),
+                source_code: String::from(<span class="string">&quot;source_code&quot;</span>),
+                advices: TestAdvices,
+                verbose_advices: TestAdvices,
             }
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">TestAdvices</span>;
+    <span class="attribute">#[derive(Debug)]
+    </span><span class="kw">struct </span>TestAdvices;
 
-    <span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">TestAdvices</span> {
-        <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="ident">visitor</span>.<span class="ident">record_log</span>(<span class="ident">LogCategory::Warn</span>, <span class="kw-2">&amp;</span><span class="string">&quot;log&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">impl </span>Advices <span class="kw">for </span>TestAdvices {
+        <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+            visitor.record_log(LogCategory::Warn, <span class="kw-2">&amp;</span><span class="string">&quot;log&quot;</span>)<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(())
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">serialized</span>() -&gt; <span class="ident">Value</span> {
-        <span class="kw">let</span> <span class="ident">advices</span> <span class="op">=</span> <span class="macro">json!</span>([
+    <span class="kw">fn </span>serialized() -&gt; Value {
+        <span class="kw">let </span>advices = <span class="macro">json!</span>([
             {
                 <span class="string">&quot;Log&quot;</span>: [
                     <span class="string">&quot;Warn&quot;</span>,
@@ -933,58 +933,58 @@
                 {
                     <span class="string">&quot;content&quot;</span>: <span class="string">&quot;markup message&quot;</span>,
                     <span class="string">&quot;elements&quot;</span>: [
-                        <span class="string">&quot;Emphasis&quot;</span>
-                    ]
+                        <span class="string">&quot;Emphasis&quot;
+                    </span>]
                 }
             ],
             <span class="string">&quot;advices&quot;</span>: {
-                <span class="string">&quot;advices&quot;</span>: <span class="ident">advices</span>
+                <span class="string">&quot;advices&quot;</span>: advices
             },
             <span class="string">&quot;verbose_advices&quot;</span>: {
-                <span class="string">&quot;advices&quot;</span>: <span class="ident">advices</span>
+                <span class="string">&quot;advices&quot;</span>: advices
             },
             <span class="string">&quot;location&quot;</span>: {
                 <span class="string">&quot;path&quot;</span>: {
                     <span class="string">&quot;File&quot;</span>: {
-                        <span class="string">&quot;Path&quot;</span>: <span class="string">&quot;path&quot;</span>
-                    }
+                        <span class="string">&quot;Path&quot;</span>: <span class="string">&quot;path&quot;
+                    </span>}
                 },
                 <span class="string">&quot;source_code&quot;</span>: <span class="string">&quot;source_code&quot;</span>,
                 <span class="string">&quot;span&quot;</span>: [
                     <span class="number">0</span>,
-                    <span class="number">6</span>
-                ]
+                    <span class="number">6
+                </span>]
             },
             <span class="string">&quot;tags&quot;</span>: [
-                <span class="string">&quot;Internal&quot;</span>
-            ],
-            <span class="string">&quot;source&quot;</span>: <span class="ident">null</span>
+                <span class="string">&quot;Internal&quot;
+            </span>],
+            <span class="string">&quot;source&quot;</span>: null
         })
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_serialize</span>() {
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">TestDiagnostic::default</span>();
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::Diagnostic::new</span>(<span class="ident">diag</span>);
-        <span class="kw">let</span> <span class="ident">json</span> <span class="op">=</span> <span class="ident">to_value</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>).<span class="ident">unwrap</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_serialize() {
+        <span class="kw">let </span>diag = TestDiagnostic::default();
+        <span class="kw">let </span>diag = <span class="kw">super</span>::Diagnostic::new(diag);
+        <span class="kw">let </span>json = to_value(<span class="kw-2">&amp;</span>diag).unwrap();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">serialized</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">json</span>, <span class="ident">expected</span>, <span class="string">&quot;actual:\n{json:#}\nexpected:\n{expected:#}&quot;</span>);
+        <span class="kw">let </span>expected = serialized();
+        <span class="macro">assert_eq!</span>(json, expected, <span class="string">&quot;actual:\n{json:#}\nexpected:\n{expected:#}&quot;</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_deserialize</span>() {
-        <span class="kw">let</span> <span class="ident">json</span> <span class="op">=</span> <span class="ident">serialized</span>();
-        <span class="kw">let</span> <span class="ident">diag</span>: <span class="ident"><span class="kw">super</span>::Diagnostic</span> <span class="op">=</span> <span class="ident">from_value</span>(<span class="ident">json</span>).<span class="ident">unwrap</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_deserialize() {
+        <span class="kw">let </span>json = serialized();
+        <span class="kw">let </span>diag: <span class="kw">super</span>::Diagnostic = from_value(json).unwrap();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TestDiagnostic::default</span>();
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::Diagnostic::new</span>(<span class="ident">expected</span>);
+        <span class="kw">let </span>expected = TestDiagnostic::default();
+        <span class="kw">let </span>expected = <span class="kw">super</span>::Diagnostic::new(expected);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">diag</span>, <span class="ident">expected</span>,
-            <span class="string">&quot;actual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;</span>
-        );
+            diag, expected,
+            <span class="string">&quot;actual:\n{diag:#?}\nexpected:\n{expected:#?}&quot;
+        </span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_diagnostics" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

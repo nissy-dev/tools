@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/file_handlers/javascript.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>javascript.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/file_handlers/javascript.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>javascript.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -548,555 +548,555 @@
 <span id="548">548</span>
 <span id="549">549</span>
 <span id="550">550</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">settings</span>::{<span class="ident">FormatSettings</span>, <span class="ident">Language</span>, <span class="ident">LanguageSettings</span>, <span class="ident">LanguagesSettings</span>, <span class="ident">SettingsHandle</span>},
-    <span class="ident">workspace</span>::{
-        <span class="ident">server::AnyParse</span>, <span class="ident">CodeAction</span>, <span class="ident">FixAction</span>, <span class="ident">FixFileMode</span>, <span class="ident">FixFileResult</span>, <span class="ident">GetSyntaxTreeResult</span>,
-        <span class="ident">PullActionsResult</span>, <span class="ident">RenameResult</span>,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    settings::{FormatSettings, Language, LanguageSettings, LanguagesSettings, SettingsHandle},
+    workspace::{
+        server::AnyParse, CodeAction, FixAction, FixFileMode, FixFileResult, GetSyntaxTreeResult,
+        PullActionsResult, RenameResult,
     },
-    <span class="ident">RomeError</span>, <span class="ident">Rules</span>,
+    RomeError, Rules,
 };
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{
-    <span class="ident">AnalysisFilter</span>, <span class="ident">AnalyzerOptions</span>, <span class="ident">ControlFlow</span>, <span class="ident">GroupCategory</span>, <span class="ident">Never</span>, <span class="ident">QueryMatch</span>,
-    <span class="ident">RegistryVisitor</span>, <span class="ident">RuleCategories</span>, <span class="ident">RuleCategory</span>, <span class="ident">RuleFilter</span>, <span class="ident">RuleGroup</span>,
+<span class="kw">use </span>rome_analyze::{
+    AnalysisFilter, AnalyzerOptions, ControlFlow, GroupCategory, Never, QueryMatch,
+    RegistryVisitor, RuleCategories, RuleCategory, RuleFilter, RuleGroup,
 };
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">Applicability</span>, <span class="ident">CodeSuggestion</span>};
-<span class="kw">use</span> <span class="ident">rome_formatter</span>::{<span class="ident">FormatError</span>, <span class="ident">Printed</span>};
-<span class="kw">use</span> <span class="ident">rome_fs::RomePath</span>;
-<span class="kw">use</span> <span class="ident">rome_js_analyze</span>::{<span class="ident">analyze</span>, <span class="ident">analyze_with_inspect_matcher</span>, <span class="ident">visit_registry</span>, <span class="ident">RuleError</span>};
-<span class="kw">use</span> <span class="ident">rome_js_formatter::context</span>::{<span class="ident">trailing_comma::TrailingComma</span>, <span class="ident">QuoteProperties</span>, <span class="ident">QuoteStyle</span>};
-<span class="kw">use</span> <span class="ident">rome_js_formatter</span>::{<span class="ident">context::JsFormatOptions</span>, <span class="ident">format_node</span>};
-<span class="kw">use</span> <span class="ident">rome_js_parser::Parse</span>;
-<span class="kw">use</span> <span class="ident">rome_js_semantic</span>::{<span class="ident">semantic_model</span>, <span class="ident">SemanticModelOptions</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsAnyRoot</span>, <span class="ident">JsLanguage</span>, <span class="ident">JsSyntaxNode</span>, <span class="ident">SourceType</span>, <span class="ident">TextRange</span>, <span class="ident">TextSize</span>, <span class="ident">TokenAtOffset</span>,
+<span class="kw">use </span>rome_diagnostics::{Applicability, CodeSuggestion};
+<span class="kw">use </span>rome_formatter::{FormatError, Printed};
+<span class="kw">use </span>rome_fs::RomePath;
+<span class="kw">use </span>rome_js_analyze::{analyze, analyze_with_inspect_matcher, visit_registry, RuleError};
+<span class="kw">use </span>rome_js_formatter::context::{trailing_comma::TrailingComma, QuoteProperties, QuoteStyle};
+<span class="kw">use </span>rome_js_formatter::{context::JsFormatOptions, format_node};
+<span class="kw">use </span>rome_js_parser::Parse;
+<span class="kw">use </span>rome_js_semantic::{semantic_model, SemanticModelOptions};
+<span class="kw">use </span>rome_js_syntax::{
+    JsAnyRoot, JsLanguage, JsSyntaxNode, SourceType, TextRange, TextSize, TokenAtOffset,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">BatchMutationExt</span>, <span class="ident">Direction</span>};
+<span class="kw">use </span>rome_rowan::{AstNode, BatchMutationExt, Direction};
 
-<span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">AnalyzerCapabilities</span>, <span class="ident">DebugCapabilities</span>, <span class="ident">ExtensionHandler</span>, <span class="ident">FormatterCapabilities</span>, <span class="ident">LintParams</span>,
-    <span class="ident">LintResults</span>, <span class="ident">Mime</span>, <span class="ident">ParserCapabilities</span>,
+<span class="kw">use super</span>::{
+    AnalyzerCapabilities, DebugCapabilities, ExtensionHandler, FormatterCapabilities, LintParams,
+    LintResults, Mime, ParserCapabilities,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::configuration::to_analyzer_configuration</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::file_handlers</span>::{<span class="ident">FixAllParams</span>, <span class="ident">Language</span> <span class="kw">as</span> <span class="ident">LanguageId</span>};
-<span class="kw">use</span> <span class="ident">indexmap::IndexSet</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{<span class="ident">v2</span>, <span class="ident">v2::Diagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_js_analyze::utils::rename</span>::{<span class="ident">RenameError</span>, <span class="ident">RenameSymbolExtensions</span>};
-<span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">tracing::debug</span>;
+<span class="kw">use </span><span class="kw">crate</span>::configuration::to_analyzer_configuration;
+<span class="kw">use </span><span class="kw">crate</span>::file_handlers::{FixAllParams, Language <span class="kw">as </span>LanguageId};
+<span class="kw">use </span>indexmap::IndexSet;
+<span class="kw">use </span>rome_diagnostics::{v2, v2::Diagnostic};
+<span class="kw">use </span>rome_js_analyze::utils::rename::{RenameError, RenameSymbolExtensions};
+<span class="kw">use </span>std::borrow::Cow;
+<span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>tracing::debug;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JsFormatSettings</span> {
-    <span class="kw">pub</span> <span class="ident">quote_style</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QuoteStyle</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">quote_properties</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QuoteProperties</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">trailing_comma</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TrailingComma</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>JsFormatSettings {
+    <span class="kw">pub </span>quote_style: <span class="prelude-ty">Option</span>&lt;QuoteStyle&gt;,
+    <span class="kw">pub </span>quote_properties: <span class="prelude-ty">Option</span>&lt;QuoteProperties&gt;,
+    <span class="kw">pub </span>trailing_comma: <span class="prelude-ty">Option</span>&lt;TrailingComma&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;schemars&quot;</span>, <span class="ident">derive</span>(<span class="ident">schemars::JsonSchema</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JsLinterSettings</span> {
-    <span class="kw">pub</span> <span class="ident">globals</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = <span class="string">&quot;schemars&quot;</span>, derive(schemars::JsonSchema))]
+</span><span class="kw">pub struct </span>JsLinterSettings {
+    <span class="kw">pub </span>globals: Vec&lt;String&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Language</span> <span class="kw">for</span> <span class="ident">JsLanguage</span> {
-    <span class="kw">type</span> <span class="ident">FormatSettings</span> <span class="op">=</span> <span class="ident">JsFormatSettings</span>;
-    <span class="kw">type</span> <span class="ident">FormatOptions</span> <span class="op">=</span> <span class="ident">JsFormatOptions</span>;
-    <span class="kw">type</span> <span class="ident">LinterSettings</span> <span class="op">=</span> <span class="ident">JsLinterSettings</span>;
+<span class="kw">impl </span>Language <span class="kw">for </span>JsLanguage {
+    <span class="kw">type </span>FormatSettings = JsFormatSettings;
+    <span class="kw">type </span>FormatOptions = JsFormatOptions;
+    <span class="kw">type </span>LinterSettings = JsLinterSettings;
 
-    <span class="kw">fn</span> <span class="ident">lookup_settings</span>(<span class="ident">languages</span>: <span class="kw-2">&amp;</span><span class="ident">LanguagesSettings</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">LanguageSettings</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="ident">languages</span>.<span class="ident">javascript</span>
+    <span class="kw">fn </span>lookup_settings(languages: <span class="kw-2">&amp;</span>LanguagesSettings) -&gt; <span class="kw-2">&amp;</span>LanguageSettings&lt;<span class="self">Self</span>&gt; {
+        <span class="kw-2">&amp;</span>languages.javascript
     }
 
-    <span class="kw">fn</span> <span class="ident">resolve_format_options</span>(
-        <span class="ident">global</span>: <span class="kw-2">&amp;</span><span class="ident">FormatSettings</span>,
-        <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">JsFormatSettings</span>,
-        <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>,
-    ) -&gt; <span class="ident">JsFormatOptions</span> {
-        <span class="ident">JsFormatOptions::new</span>(<span class="ident">path</span>.<span class="ident">as_path</span>().<span class="ident">try_into</span>().<span class="ident">unwrap_or_default</span>())
-            .<span class="ident">with_indent_style</span>(<span class="ident">global</span>.<span class="ident">indent_style</span>.<span class="ident">unwrap_or_default</span>())
-            .<span class="ident">with_line_width</span>(<span class="ident">global</span>.<span class="ident">line_width</span>.<span class="ident">unwrap_or_default</span>())
-            .<span class="ident">with_quote_style</span>(<span class="ident">language</span>.<span class="ident">quote_style</span>.<span class="ident">unwrap_or_default</span>())
-            .<span class="ident">with_quote_properties</span>(<span class="ident">language</span>.<span class="ident">quote_properties</span>.<span class="ident">unwrap_or_default</span>())
-            .<span class="ident">with_trailing_comma</span>(<span class="ident">language</span>.<span class="ident">trailing_comma</span>.<span class="ident">unwrap_or_default</span>())
+    <span class="kw">fn </span>resolve_format_options(
+        global: <span class="kw-2">&amp;</span>FormatSettings,
+        language: <span class="kw-2">&amp;</span>JsFormatSettings,
+        path: <span class="kw-2">&amp;</span>RomePath,
+    ) -&gt; JsFormatOptions {
+        JsFormatOptions::new(path.as_path().try_into().unwrap_or_default())
+            .with_indent_style(global.indent_style.unwrap_or_default())
+            .with_line_width(global.line_width.unwrap_or_default())
+            .with_quote_style(language.quote_style.unwrap_or_default())
+            .with_quote_properties(language.quote_properties.unwrap_or_default())
+            .with_trailing_comma(language.trailing_comma.unwrap_or_default())
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">JsFileHandler</span>;
+<span class="attribute">#[derive(Debug, PartialEq, Eq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>JsFileHandler;
 
-<span class="kw">impl</span> <span class="ident">ExtensionHandler</span> <span class="kw">for</span> <span class="ident">JsFileHandler</span> {
-    <span class="kw">fn</span> <span class="ident">capabilities</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="kw">super</span>::Capabilities</span> {
-        <span class="ident"><span class="kw">super</span>::Capabilities</span> {
-            <span class="ident">parser</span>: <span class="ident">ParserCapabilities</span> { <span class="ident">parse</span>: <span class="prelude-val">Some</span>(<span class="ident">parse</span>) },
-            <span class="ident">debug</span>: <span class="ident">DebugCapabilities</span> {
-                <span class="ident">debug_syntax_tree</span>: <span class="prelude-val">Some</span>(<span class="ident">debug_syntax_tree</span>),
-                <span class="ident">debug_control_flow</span>: <span class="prelude-val">Some</span>(<span class="ident">debug_control_flow</span>),
-                <span class="ident">debug_formatter_ir</span>: <span class="prelude-val">Some</span>(<span class="ident">debug_formatter_ir</span>),
+<span class="kw">impl </span>ExtensionHandler <span class="kw">for </span>JsFileHandler {
+    <span class="kw">fn </span>capabilities(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">super</span>::Capabilities {
+        <span class="kw">super</span>::Capabilities {
+            parser: ParserCapabilities { parse: <span class="prelude-val">Some</span>(parse) },
+            debug: DebugCapabilities {
+                debug_syntax_tree: <span class="prelude-val">Some</span>(debug_syntax_tree),
+                debug_control_flow: <span class="prelude-val">Some</span>(debug_control_flow),
+                debug_formatter_ir: <span class="prelude-val">Some</span>(debug_formatter_ir),
             },
-            <span class="ident">analyzer</span>: <span class="ident">AnalyzerCapabilities</span> {
-                <span class="ident">lint</span>: <span class="prelude-val">Some</span>(<span class="ident">lint</span>),
-                <span class="ident">code_actions</span>: <span class="prelude-val">Some</span>(<span class="ident">code_actions</span>),
-                <span class="ident">fix_all</span>: <span class="prelude-val">Some</span>(<span class="ident">fix_all</span>),
-                <span class="ident">rename</span>: <span class="prelude-val">Some</span>(<span class="ident">rename</span>),
+            analyzer: AnalyzerCapabilities {
+                lint: <span class="prelude-val">Some</span>(lint),
+                code_actions: <span class="prelude-val">Some</span>(code_actions),
+                fix_all: <span class="prelude-val">Some</span>(fix_all),
+                rename: <span class="prelude-val">Some</span>(rename),
             },
-            <span class="ident">formatter</span>: <span class="ident">FormatterCapabilities</span> {
-                <span class="ident">format</span>: <span class="prelude-val">Some</span>(<span class="ident">format</span>),
-                <span class="ident">format_range</span>: <span class="prelude-val">Some</span>(<span class="ident">format_range</span>),
-                <span class="ident">format_on_type</span>: <span class="prelude-val">Some</span>(<span class="ident">format_on_type</span>),
+            formatter: FormatterCapabilities {
+                format: <span class="prelude-val">Some</span>(format),
+                format_range: <span class="prelude-val">Some</span>(format_range),
+                format_on_type: <span class="prelude-val">Some</span>(format_on_type),
             },
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">language</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="kw">super</span>::Language</span> {
-        <span class="ident"><span class="kw">super</span>::Language::JavaScript</span>
+    <span class="kw">fn </span>language(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">super</span>::Language {
+        <span class="kw">super</span>::Language::JavaScript
     }
 
-    <span class="kw">fn</span> <span class="ident">mime</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="kw">super</span>::Mime</span> {
-        <span class="ident">Mime::Javascript</span>
+    <span class="kw">fn </span>mime(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">super</span>::Mime {
+        Mime::Javascript
     }
 
-    <span class="kw">fn</span> <span class="ident">may_use_tabs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="bool-val">true</span>
-    }
+    <span class="kw">fn </span>may_use_tabs(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="bool-val">true
+    </span>}
 }
 
-<span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>, <span class="ident">language_hint</span>: <span class="ident">LanguageId</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">AnyParse</span> {
-    <span class="kw">let</span> <span class="ident">file_id</span> <span class="op">=</span> <span class="ident">rome_path</span>.<span class="ident">file_id</span>();
+<span class="kw">fn </span>parse(rome_path: <span class="kw-2">&amp;</span>RomePath, language_hint: LanguageId, text: <span class="kw-2">&amp;</span>str) -&gt; AnyParse {
+    <span class="kw">let </span>file_id = rome_path.file_id();
 
-    <span class="kw">let</span> <span class="ident">source_type</span> <span class="op">=</span>
-        <span class="ident">SourceType::try_from</span>(<span class="ident">rome_path</span>.<span class="ident">as_path</span>()).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">language_hint</span> {
-            <span class="ident">LanguageId::JavaScriptReact</span> =&gt; <span class="ident">SourceType::jsx</span>(),
-            <span class="ident">LanguageId::TypeScript</span> =&gt; <span class="ident">SourceType::ts</span>(),
-            <span class="ident">LanguageId::TypeScriptReact</span> =&gt; <span class="ident">SourceType::tsx</span>(),
-            <span class="kw">_</span> =&gt; <span class="ident">SourceType::js_module</span>(),
+    <span class="kw">let </span>source_type =
+        SourceType::try_from(rome_path.as_path()).unwrap_or_else(|<span class="kw">_</span>| <span class="kw">match </span>language_hint {
+            LanguageId::JavaScriptReact =&gt; SourceType::jsx(),
+            LanguageId::TypeScript =&gt; SourceType::ts(),
+            LanguageId::TypeScriptReact =&gt; SourceType::tsx(),
+            <span class="kw">_ </span>=&gt; SourceType::js_module(),
         });
 
-    <span class="kw">let</span> <span class="ident">parse</span> <span class="op">=</span> <span class="ident">rome_js_parser::parse</span>(<span class="ident">text</span>, <span class="ident">file_id</span>, <span class="ident">source_type</span>);
-    <span class="ident">AnyParse::from</span>(<span class="ident">parse</span>)
+    <span class="kw">let </span>parse = rome_js_parser::parse(text, file_id, source_type);
+    AnyParse::from(parse)
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Parse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AnyParse</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">AstNode</span>,
-    <span class="ident">T::Language</span>: <span class="lifetime">&#39;static</span>,
+<span class="kw">impl</span>&lt;T&gt; From&lt;Parse&lt;T&gt;&gt; <span class="kw">for </span>AnyParse
+<span class="kw">where
+    </span>T: AstNode,
+    T::Language: <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">parse</span>: <span class="ident">Parse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">syntax</span>();
-        <span class="kw">let</span> <span class="ident">diagnostics</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">into_diagnostics</span>();
+    <span class="kw">fn </span>from(parse: Parse&lt;T&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>root = parse.syntax();
+        <span class="kw">let </span>diagnostics = parse.into_diagnostics();
 
-        <span class="self">Self</span> {
-            <span class="comment">// SAFETY: the parser should always return a root node</span>
-            <span class="ident">root</span>: <span class="ident">root</span>.<span class="ident">as_send</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">diagnostics</span>,
+        <span class="self">Self </span>{
+            <span class="comment">// SAFETY: the parser should always return a root node
+            </span>root: root.as_send().unwrap(),
+            diagnostics,
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">debug_syntax_tree</span>(<span class="ident">_rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>, <span class="ident">parse</span>: <span class="ident">AnyParse</span>) -&gt; <span class="ident">GetSyntaxTreeResult</span> {
-    <span class="kw">let</span> <span class="ident">syntax</span>: <span class="ident">JsSyntaxNode</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">syntax</span>();
-    <span class="kw">let</span> <span class="ident">tree</span>: <span class="ident">JsAnyRoot</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">tree</span>();
-    <span class="ident">GetSyntaxTreeResult</span> {
-        <span class="ident">cst</span>: <span class="macro">format!</span>(<span class="string">&quot;{syntax:#?}&quot;</span>),
-        <span class="ident">ast</span>: <span class="macro">format!</span>(<span class="string">&quot;{tree:#?}&quot;</span>),
+<span class="kw">fn </span>debug_syntax_tree(_rome_path: <span class="kw-2">&amp;</span>RomePath, parse: AnyParse) -&gt; GetSyntaxTreeResult {
+    <span class="kw">let </span>syntax: JsSyntaxNode = parse.syntax();
+    <span class="kw">let </span>tree: JsAnyRoot = parse.tree();
+    GetSyntaxTreeResult {
+        cst: <span class="macro">format!</span>(<span class="string">&quot;{syntax:#?}&quot;</span>),
+        ast: <span class="macro">format!</span>(<span class="string">&quot;{tree:#?}&quot;</span>),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">debug_control_flow</span>(<span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>, <span class="ident">parse</span>: <span class="ident">AnyParse</span>, <span class="ident">cursor</span>: <span class="ident">TextSize</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">control_flow_graph</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+<span class="kw">fn </span>debug_control_flow(rome_path: <span class="kw-2">&amp;</span>RomePath, parse: AnyParse, cursor: TextSize) -&gt; String {
+    <span class="kw">let </span><span class="kw-2">mut </span>control_flow_graph = <span class="prelude-val">None</span>;
 
-    <span class="kw">let</span> <span class="ident">filter</span> <span class="op">=</span> <span class="ident">AnalysisFilter</span> {
-        <span class="ident">categories</span>: <span class="ident">RuleCategories::LINT</span>,
-        <span class="ident">enabled_rules</span>: <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="ident">RuleFilter::Rule</span>(<span class="string">&quot;js&quot;</span>, <span class="string">&quot;noDeadCode&quot;</span>)]),
-        ..<span class="ident">AnalysisFilter::default</span>()
+    <span class="kw">let </span>filter = AnalysisFilter {
+        categories: RuleCategories::LINT,
+        enabled_rules: <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[RuleFilter::Rule(<span class="string">&quot;js&quot;</span>, <span class="string">&quot;noDeadCode&quot;</span>)]),
+        ..AnalysisFilter::default()
     };
-    <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">AnalyzerOptions::default</span>();
+    <span class="kw">let </span>options = AnalyzerOptions::default();
 
-    <span class="ident">analyze_with_inspect_matcher</span>(
-        <span class="ident">rome_path</span>.<span class="ident">file_id</span>(),
-        <span class="kw-2">&amp;</span><span class="ident">parse</span>.<span class="ident">tree</span>(),
-        <span class="ident">filter</span>,
-        <span class="op">|</span><span class="ident">match_params</span><span class="op">|</span> {
-            <span class="kw">let</span> (<span class="ident">cfg</span>, <span class="ident">range</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">match_params</span>.<span class="ident">query</span> {
-                <span class="ident">QueryMatch::ControlFlowGraph</span>(<span class="ident">cfg</span>, <span class="ident">node</span>) =&gt; (<span class="ident">cfg</span>, <span class="ident">node</span>),
-                <span class="kw">_</span> =&gt; <span class="kw">return</span>,
+    analyze_with_inspect_matcher(
+        rome_path.file_id(),
+        <span class="kw-2">&amp;</span>parse.tree(),
+        filter,
+        |match_params| {
+            <span class="kw">let </span>(cfg, range) = <span class="kw">match </span><span class="kw-2">&amp;</span>match_params.query {
+                QueryMatch::ControlFlowGraph(cfg, node) =&gt; (cfg, node),
+                <span class="kw">_ </span>=&gt; <span class="kw">return</span>,
             };
 
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">range</span>.<span class="ident">contains</span>(<span class="ident">cursor</span>) {
+            <span class="kw">if </span>!range.contains(cursor) {
                 <span class="kw">return</span>;
             }
 
-            <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">control_flow_graph</span> {
-                <span class="prelude-val">None</span> =&gt; {
-                    <span class="ident">control_flow_graph</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">cfg</span>.<span class="ident">to_string</span>(), <span class="kw-2">*</span><span class="ident">range</span>));
+            <span class="kw">match </span><span class="kw-2">&amp;</span>control_flow_graph {
+                <span class="prelude-val">None </span>=&gt; {
+                    control_flow_graph = <span class="prelude-val">Some</span>((cfg.to_string(), <span class="kw-2">*</span>range));
                 }
-                <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="ident">prev_range</span>)) =&gt; {
-                    <span class="kw">if</span> <span class="ident">range</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">prev_range</span>.<span class="ident">len</span>() {
-                        <span class="ident">control_flow_graph</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">cfg</span>.<span class="ident">to_string</span>(), <span class="kw-2">*</span><span class="ident">range</span>));
+                <span class="prelude-val">Some</span>((<span class="kw">_</span>, prev_range)) =&gt; {
+                    <span class="kw">if </span>range.len() &lt; prev_range.len() {
+                        control_flow_graph = <span class="prelude-val">Some</span>((cfg.to_string(), <span class="kw-2">*</span>range));
                     }
                 }
             }
         },
-        <span class="kw-2">&amp;</span><span class="ident">options</span>,
-        <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ControlFlow</span>::<span class="op">&lt;</span><span class="ident">Never</span><span class="op">&gt;</span><span class="ident">::Continue</span>(()),
+        <span class="kw-2">&amp;</span>options,
+        |<span class="kw">_</span>| ControlFlow::&lt;Never&gt;::Continue(()),
     );
 
-    <span class="ident">control_flow_graph</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">cfg</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">cfg</span>).<span class="ident">unwrap_or_default</span>()
+    control_flow_graph.map(|(cfg, <span class="kw">_</span>)| cfg).unwrap_or_default()
 }
 
-<span class="kw">fn</span> <span class="ident">debug_formatter_ir</span>(
-    <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>,
-    <span class="ident">parse</span>: <span class="ident">AnyParse</span>,
-    <span class="ident">settings</span>: <span class="ident">SettingsHandle</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">format_options</span>::<span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>(<span class="ident">rome_path</span>);
+<span class="kw">fn </span>debug_formatter_ir(
+    rome_path: <span class="kw-2">&amp;</span>RomePath,
+    parse: AnyParse,
+    settings: SettingsHandle,
+) -&gt; <span class="prelude-ty">Result</span>&lt;String, RomeError&gt; {
+    <span class="kw">let </span>options = settings.format_options::&lt;JsLanguage&gt;(rome_path);
 
-    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">syntax</span>();
-    <span class="kw">let</span> <span class="ident">formatted</span> <span class="op">=</span> <span class="ident">format_node</span>(<span class="ident">options</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>tree = parse.syntax();
+    <span class="kw">let </span>formatted = format_node(options, <span class="kw-2">&amp;</span>tree)<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">root_element</span> <span class="op">=</span> <span class="ident">formatted</span>.<span class="ident">into_document</span>();
-    <span class="prelude-val">Ok</span>(<span class="ident">root_element</span>.<span class="ident">to_string</span>())
+    <span class="kw">let </span>root_element = formatted.into_document();
+    <span class="prelude-val">Ok</span>(root_element.to_string())
 }
 
-<span class="kw">fn</span> <span class="ident">lint</span>(<span class="ident">params</span>: <span class="ident">LintParams</span>) -&gt; <span class="ident">LintResults</span> {
-    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">parse</span>.<span class="ident">tree</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostics</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">parse</span>.<span class="ident">into_diagnostics</span>();
+<span class="kw">fn </span>lint(params: LintParams) -&gt; LintResults {
+    <span class="kw">let </span>tree = params.parse.tree();
+    <span class="kw">let </span><span class="kw-2">mut </span>diagnostics = params.parse.into_diagnostics();
 
-    <span class="kw">let</span> <span class="ident">file_id</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">rome_path</span>.<span class="ident">file_id</span>();
-    <span class="kw">let</span> <span class="ident">analyzer_options</span> <span class="op">=</span> <span class="ident">compute_analyzer_options</span>(<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">settings</span>);
+    <span class="kw">let </span>file_id = params.rome_path.file_id();
+    <span class="kw">let </span>analyzer_options = compute_analyzer_options(<span class="kw-2">&amp;</span>params.settings);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diagnostic_count</span> <span class="op">=</span> <span class="ident">diagnostics</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="ident">diagnostics</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">any</span>(<span class="op">|</span><span class="ident">diag</span><span class="op">|</span> <span class="ident">diag</span>.<span class="ident">severity</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">v2::Severity::Error</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>diagnostic_count = diagnostics.len() <span class="kw">as </span>u64;
+    <span class="kw">let </span><span class="kw-2">mut </span>has_errors = diagnostics
+        .iter()
+        .any(|diag| diag.severity() &lt;= v2::Severity::Error);
 
-    <span class="ident">analyze</span>(<span class="ident">file_id</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>, <span class="ident">params</span>.<span class="ident">filter</span>, <span class="kw-2">&amp;</span><span class="ident">analyzer_options</span>, <span class="op">|</span><span class="ident">signal</span><span class="op">|</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">diagnostic</span>) <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">diagnostic</span>() {
-            <span class="ident">diagnostic_count</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    analyze(file_id, <span class="kw-2">&amp;</span>tree, params.filter, <span class="kw-2">&amp;</span>analyzer_options, |signal| {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>diagnostic) = signal.diagnostic() {
+            diagnostic_count += <span class="number">1</span>;
 
-            <span class="comment">// We do now check if the severity of the diagnostics should be changed.</span>
-            <span class="comment">// The configuration allows to change the severity of the diagnostics emitted by rules.</span>
-            <span class="kw">let</span> <span class="ident">severity</span> <span class="op">=</span> <span class="ident">diagnostic</span>
-                .<span class="ident">category</span>()
-                .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">category</span><span class="op">|</span> <span class="ident">category</span>.<span class="ident">name</span>().<span class="ident">starts_with</span>(<span class="string">&quot;lint/&quot;</span>))
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">category</span><span class="op">|</span> <span class="ident">params</span>.<span class="ident">rules</span>.<span class="ident">as_ref</span>()<span class="question-mark">?</span>.<span class="ident">get_severity_from_code</span>(<span class="ident">category</span>))
-                .<span class="ident">unwrap_or</span>(<span class="ident">v2::Severity::Error</span>);
+            <span class="comment">// We do now check if the severity of the diagnostics should be changed.
+            // The configuration allows to change the severity of the diagnostics emitted by rules.
+            </span><span class="kw">let </span>severity = diagnostic
+                .category()
+                .filter(|category| category.name().starts_with(<span class="string">&quot;lint/&quot;</span>))
+                .and_then(|category| params.rules.as_ref()<span class="question-mark">?</span>.get_severity_from_code(category))
+                .unwrap_or(v2::Severity::Error);
 
-            <span class="kw">if</span> <span class="ident">severity</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">v2::Severity::Error</span> {
-                <span class="ident">has_errors</span> <span class="op">=</span> <span class="bool-val">true</span>;
+            <span class="kw">if </span>severity &lt;= v2::Severity::Error {
+                has_errors = <span class="bool-val">true</span>;
             }
 
-            <span class="kw">if</span> <span class="ident">diagnostic_count</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">params</span>.<span class="ident">max_diagnostics</span> {
-                <span class="ident">diagnostic</span>.<span class="ident">set_severity</span>(<span class="ident">severity</span>);
+            <span class="kw">if </span>diagnostic_count &lt;= params.max_diagnostics {
+                diagnostic.set_severity(severity);
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">action</span>) <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">action</span>() {
-                    <span class="ident">diagnostic</span>.<span class="ident">add_code_suggestion</span>(<span class="ident">action</span>.<span class="ident">into</span>());
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = signal.action() {
+                    diagnostic.add_code_suggestion(action.into());
                 }
 
-                <span class="ident">diagnostics</span>.<span class="ident">push</span>(<span class="ident">v2::serde::Diagnostic::new</span>(<span class="ident">diagnostic</span>));
+                diagnostics.push(v2::serde::Diagnostic::new(diagnostic));
             }
         }
 
-        <span class="ident">ControlFlow</span>::<span class="op">&lt;</span><span class="ident">Never</span><span class="op">&gt;</span><span class="ident">::Continue</span>(())
+        ControlFlow::&lt;Never&gt;::Continue(())
     });
 
-    <span class="kw">let</span> <span class="ident">skipped_diagnostics</span> <span class="op">=</span> <span class="ident">diagnostic_count</span> <span class="op">-</span> <span class="ident">diagnostics</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+    <span class="kw">let </span>skipped_diagnostics = diagnostic_count - diagnostics.len() <span class="kw">as </span>u64;
 
-    <span class="ident">LintResults</span> {
-        <span class="ident">diagnostics</span>,
-        <span class="ident">has_errors</span>,
-        <span class="ident">skipped_diagnostics</span>,
+    LintResults {
+        diagnostics,
+        has_errors,
+        skipped_diagnostics,
     }
 }
 
-<span class="kw">struct</span> <span class="ident">ActionsVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">enabled_rules</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RuleFilter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>ActionsVisitor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    enabled_rules: Vec&lt;RuleFilter&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">RegistryVisitor</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ActionsVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record_category</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">GroupCategory</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">C::CATEGORY</span>, <span class="ident">RuleCategory::Action</span>) {
-            <span class="ident">C::record_groups</span>(<span class="self">self</span>);
+<span class="kw">impl </span>RegistryVisitor&lt;JsLanguage&gt; <span class="kw">for </span>ActionsVisitor&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>record_category&lt;C: GroupCategory&lt;Language = JsLanguage&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if </span><span class="macro">matches!</span>(C::CATEGORY, RuleCategory::Action) {
+            C::record_groups(<span class="self">self</span>);
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">record_group</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">RuleGroup</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="ident">G::record_rules</span>(<span class="self">self</span>)
+    <span class="kw">fn </span>record_group&lt;G: RuleGroup&lt;Language = JsLanguage&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        G::record_rules(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">record_rule</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">rome_analyze::Rule</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">R::Query</span>: <span class="ident">rome_analyze::Queryable</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">JsLanguage</span><span class="op">&gt;</span>,
-        <span class="op">&lt;</span><span class="ident">R::Query</span> <span class="kw">as</span> <span class="ident">rome_analyze::Queryable</span><span class="op">&gt;</span><span class="ident">::Output</span>: <span class="ident">Clone</span>,
+    <span class="kw">fn </span>record_rule&lt;R&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>)
+    <span class="kw">where
+        </span>R: rome_analyze::Rule + <span class="lifetime">&#39;static</span>,
+        R::Query: rome_analyze::Queryable&lt;Language = JsLanguage&gt;,
+        &lt;R::Query <span class="kw">as </span>rome_analyze::Queryable&gt;::Output: Clone,
     {
-        <span class="self">self</span>.<span class="ident">enabled_rules</span>.<span class="ident">push</span>(<span class="ident">RuleFilter::Rule</span>(
-            <span class="op">&lt;</span><span class="ident">R::Group</span> <span class="kw">as</span> <span class="ident">RuleGroup</span><span class="op">&gt;</span><span class="ident">::NAME</span>,
-            <span class="ident">R::METADATA</span>.<span class="ident">name</span>,
+        <span class="self">self</span>.enabled_rules.push(RuleFilter::Rule(
+            &lt;R::Group <span class="kw">as </span>RuleGroup&gt;::NAME,
+            R::METADATA.name,
         ));
     }
 }
 
-<span class="kw">fn</span> <span class="ident">code_actions</span>(
-    <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>,
-    <span class="ident">parse</span>: <span class="ident">AnyParse</span>,
-    <span class="ident">range</span>: <span class="ident">TextRange</span>,
-    <span class="ident">rules</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Rules</span><span class="op">&gt;</span>,
-    <span class="ident">settings</span>: <span class="ident">SettingsHandle</span>,
-) -&gt; <span class="ident">PullActionsResult</span> {
-    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">tree</span>();
+<span class="kw">fn </span>code_actions(
+    rome_path: <span class="kw-2">&amp;</span>RomePath,
+    parse: AnyParse,
+    range: TextRange,
+    rules: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Rules&gt;,
+    settings: SettingsHandle,
+) -&gt; PullActionsResult {
+    <span class="kw">let </span>tree = parse.tree();
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actions</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+    <span class="kw">let </span><span class="kw-2">mut </span>actions = Vec::new();
 
-    <span class="kw">let</span> <span class="ident">enabled_rules</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RuleFilter</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">rules</span>) <span class="op">=</span> <span class="ident">rules</span> {
-        <span class="kw">let</span> <span class="ident">enabled_rules</span> <span class="op">=</span> <span class="ident">rules</span>.<span class="ident">as_enabled_rules</span>().<span class="ident">into_iter</span>().<span class="ident">collect</span>();
+    <span class="kw">let </span>enabled_rules: <span class="prelude-ty">Option</span>&lt;Vec&lt;RuleFilter&gt;&gt; = <span class="kw">if let </span><span class="prelude-val">Some</span>(rules) = rules {
+        <span class="kw">let </span>enabled_rules = rules.as_enabled_rules().into_iter().collect();
 
-        <span class="comment">// The rules in the assist category do not have configuration entries,</span>
-        <span class="comment">// always add them all to the enabled rules list</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">visitor</span> <span class="op">=</span> <span class="ident">ActionsVisitor</span> { <span class="ident">enabled_rules</span> };
-        <span class="ident">visit_registry</span>(<span class="kw-2">&amp;mut</span> <span class="ident">visitor</span>);
+        <span class="comment">// The rules in the assist category do not have configuration entries,
+        // always add them all to the enabled rules list
+        </span><span class="kw">let </span><span class="kw-2">mut </span>visitor = ActionsVisitor { enabled_rules };
+        visit_registry(<span class="kw-2">&amp;mut </span>visitor);
 
-        <span class="prelude-val">Some</span>(<span class="ident">visitor</span>.<span class="ident">enabled_rules</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
+        <span class="prelude-val">Some</span>(visitor.enabled_rules)
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>};
+
+    <span class="kw">let </span><span class="kw-2">mut </span>filter = <span class="kw">match </span><span class="kw-2">&amp;</span>enabled_rules {
+        <span class="prelude-val">Some</span>(rules) =&gt; AnalysisFilter::from_enabled_rules(<span class="prelude-val">Some</span>(rules.as_slice())),
+        <span class="kw">_ </span>=&gt; AnalysisFilter::default(),
     };
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">filter</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">enabled_rules</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">rules</span>) =&gt; <span class="ident">AnalysisFilter::from_enabled_rules</span>(<span class="prelude-val">Some</span>(<span class="ident">rules</span>.<span class="ident">as_slice</span>())),
-        <span class="kw">_</span> =&gt; <span class="ident">AnalysisFilter::default</span>(),
-    };
+    filter.categories = RuleCategories::default();
+    filter.range = <span class="prelude-val">Some</span>(range);
 
-    <span class="ident">filter</span>.<span class="ident">categories</span> <span class="op">=</span> <span class="ident">RuleCategories::default</span>();
-    <span class="ident">filter</span>.<span class="ident">range</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">range</span>);
+    <span class="kw">let </span>file_id = rome_path.file_id();
 
-    <span class="kw">let</span> <span class="ident">file_id</span> <span class="op">=</span> <span class="ident">rome_path</span>.<span class="ident">file_id</span>();
+    <span class="kw">let </span>analyzer_options = compute_analyzer_options(<span class="kw-2">&amp;</span>settings);
 
-    <span class="kw">let</span> <span class="ident">analyzer_options</span> <span class="op">=</span> <span class="ident">compute_analyzer_options</span>(<span class="kw-2">&amp;</span><span class="ident">settings</span>);
-
-    <span class="ident">analyze</span>(<span class="ident">file_id</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>, <span class="ident">filter</span>, <span class="kw-2">&amp;</span><span class="ident">analyzer_options</span>, <span class="op">|</span><span class="ident">signal</span><span class="op">|</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">action</span>) <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">action</span>() {
-            <span class="ident">actions</span>.<span class="ident">push</span>(<span class="ident">CodeAction</span> {
-                <span class="ident">category</span>: <span class="ident">action</span>.<span class="ident">category</span>,
-                <span class="ident">rule_name</span>: <span class="ident">Cow::Borrowed</span>(<span class="ident">action</span>.<span class="ident">rule_name</span>),
-                <span class="ident">suggestion</span>: <span class="ident">CodeSuggestion::from</span>(<span class="ident">action</span>),
+    analyze(file_id, <span class="kw-2">&amp;</span>tree, filter, <span class="kw-2">&amp;</span>analyzer_options, |signal| {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = signal.action() {
+            actions.push(CodeAction {
+                category: action.category,
+                rule_name: Cow::Borrowed(action.rule_name),
+                suggestion: CodeSuggestion::from(action),
             });
         }
 
-        <span class="ident">ControlFlow</span>::<span class="op">&lt;</span><span class="ident">Never</span><span class="op">&gt;</span><span class="ident">::Continue</span>(())
+        ControlFlow::&lt;Never&gt;::Continue(())
     });
 
-    <span class="ident">PullActionsResult</span> { <span class="ident">actions</span> }
+    PullActionsResult { actions }
 }
 
-<span class="doccomment">/// If applies all the safe fixes to the given syntax tree.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// If `indent_style` is [Some], it means that the formatting should be applied at the end</span>
-<span class="kw">fn</span> <span class="ident">fix_all</span>(<span class="ident">params</span>: <span class="ident">FixAllParams</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FixFileResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">FixAllParams</span> {
-        <span class="ident">rome_path</span>,
-        <span class="ident">parse</span>,
-        <span class="ident">rules</span>,
-        <span class="ident">fix_file_mode</span>,
-        <span class="ident">settings</span>,
-    } <span class="op">=</span> <span class="ident">params</span>;
+<span class="doccomment">/// If applies all the safe fixes to the given syntax tree.
+///
+/// If `indent_style` is [Some], it means that the formatting should be applied at the end
+</span><span class="kw">fn </span>fix_all(params: FixAllParams) -&gt; <span class="prelude-ty">Result</span>&lt;FixFileResult, RomeError&gt; {
+    <span class="kw">let </span>FixAllParams {
+        rome_path,
+        parse,
+        rules,
+        fix_file_mode,
+        settings,
+    } = params;
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tree</span>: <span class="ident">JsAnyRoot</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">tree</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actions</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+    <span class="kw">let </span><span class="kw-2">mut </span>tree: JsAnyRoot = parse.tree();
+    <span class="kw">let </span><span class="kw-2">mut </span>actions = Vec::new();
 
-    <span class="kw">let</span> <span class="ident">enabled_rules</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RuleFilter</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">rules</span>) <span class="op">=</span> <span class="ident">rules</span> {
-        <span class="kw">let</span> <span class="ident">enabled</span>: <span class="ident">IndexSet</span><span class="op">&lt;</span><span class="ident">RuleFilter</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">rules</span>.<span class="ident">as_enabled_rules</span>();
-        <span class="prelude-val">Some</span>(<span class="ident">enabled</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>())
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
+    <span class="kw">let </span>enabled_rules: <span class="prelude-ty">Option</span>&lt;Vec&lt;RuleFilter&gt;&gt; = <span class="kw">if let </span><span class="prelude-val">Some</span>(rules) = rules {
+        <span class="kw">let </span>enabled: IndexSet&lt;RuleFilter&gt; = rules.as_enabled_rules();
+        <span class="prelude-val">Some</span>(enabled.into_iter().collect())
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>};
+
+    <span class="kw">let </span><span class="kw-2">mut </span>filter = <span class="kw">match </span><span class="kw-2">&amp;</span>enabled_rules {
+        <span class="prelude-val">Some</span>(rules) =&gt; AnalysisFilter::from_enabled_rules(<span class="prelude-val">Some</span>(rules.as_slice())),
+        <span class="kw">_ </span>=&gt; AnalysisFilter::default(),
     };
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">filter</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">enabled_rules</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">rules</span>) =&gt; <span class="ident">AnalysisFilter::from_enabled_rules</span>(<span class="prelude-val">Some</span>(<span class="ident">rules</span>.<span class="ident">as_slice</span>())),
-        <span class="kw">_</span> =&gt; <span class="ident">AnalysisFilter::default</span>(),
-    };
-
-    <span class="ident">filter</span>.<span class="ident">categories</span> <span class="op">=</span> <span class="ident">RuleCategories::SYNTAX</span> <span class="op">|</span> <span class="ident">RuleCategories::LINT</span>;
-    <span class="kw">let</span> <span class="ident">file_id</span> <span class="op">=</span> <span class="ident">rome_path</span>.<span class="ident">file_id</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">skipped_suggested_fixes</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="ident">analyzer_options</span> <span class="op">=</span> <span class="ident">compute_analyzer_options</span>(<span class="kw-2">&amp;</span><span class="ident">settings</span>);
-    <span class="kw">loop</span> {
-        <span class="kw">let</span> <span class="ident">action</span> <span class="op">=</span> <span class="ident">analyze</span>(<span class="ident">file_id</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>, <span class="ident">filter</span>, <span class="kw-2">&amp;</span><span class="ident">analyzer_options</span>, <span class="op">|</span><span class="ident">signal</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">action</span>) <span class="op">=</span> <span class="ident">signal</span>.<span class="ident">action</span>() {
-                <span class="kw">match</span> <span class="ident">fix_file_mode</span> {
-                    <span class="ident">FixFileMode::SafeFixes</span> =&gt; {
-                        <span class="kw">if</span> <span class="ident">action</span>.<span class="ident">applicability</span> <span class="op">==</span> <span class="ident">Applicability::MaybeIncorrect</span> {
-                            <span class="ident">skipped_suggested_fixes</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    filter.categories = RuleCategories::SYNTAX | RuleCategories::LINT;
+    <span class="kw">let </span>file_id = rome_path.file_id();
+    <span class="kw">let </span><span class="kw-2">mut </span>skipped_suggested_fixes = <span class="number">0</span>;
+    <span class="kw">let </span>analyzer_options = compute_analyzer_options(<span class="kw-2">&amp;</span>settings);
+    <span class="kw">loop </span>{
+        <span class="kw">let </span>action = analyze(file_id, <span class="kw-2">&amp;</span>tree, filter, <span class="kw-2">&amp;</span>analyzer_options, |signal| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = signal.action() {
+                <span class="kw">match </span>fix_file_mode {
+                    FixFileMode::SafeFixes =&gt; {
+                        <span class="kw">if </span>action.applicability == Applicability::MaybeIncorrect {
+                            skipped_suggested_fixes += <span class="number">1</span>;
                         }
-                        <span class="kw">if</span> <span class="ident">action</span>.<span class="ident">applicability</span> <span class="op">==</span> <span class="ident">Applicability::Always</span> {
-                            <span class="kw">return</span> <span class="ident">ControlFlow::Break</span>(<span class="ident">action</span>);
+                        <span class="kw">if </span>action.applicability == Applicability::Always {
+                            <span class="kw">return </span>ControlFlow::Break(action);
                         }
                     }
-                    <span class="ident">FixFileMode::SafeAndSuggestedFixes</span> =&gt; {
-                        <span class="kw">if</span> <span class="macro">matches!</span>(
-                            <span class="ident">action</span>.<span class="ident">applicability</span>,
-                            <span class="ident">Applicability::Always</span> <span class="op">|</span> <span class="ident">Applicability::MaybeIncorrect</span>
+                    FixFileMode::SafeAndSuggestedFixes =&gt; {
+                        <span class="kw">if </span><span class="macro">matches!</span>(
+                            action.applicability,
+                            Applicability::Always | Applicability::MaybeIncorrect
                         ) {
-                            <span class="kw">return</span> <span class="ident">ControlFlow::Break</span>(<span class="ident">action</span>);
+                            <span class="kw">return </span>ControlFlow::Break(action);
                         }
                     }
                 }
             }
 
-            <span class="ident">ControlFlow::Continue</span>(())
+            ControlFlow::Continue(())
         });
 
-        <span class="kw">match</span> <span class="ident">action</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">action</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">range</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">action</span>.<span class="ident">mutation</span>.<span class="ident">as_text_edits</span>() {
-                    <span class="ident">tree</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">JsAnyRoot::cast</span>(<span class="ident">action</span>.<span class="ident">mutation</span>.<span class="ident">commit</span>()) {
-                        <span class="prelude-val">Some</span>(<span class="ident">tree</span>) =&gt; <span class="ident">tree</span>,
-                        <span class="prelude-val">None</span> =&gt; {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RomeError::RuleError</span>(
-                                <span class="ident">RuleError::ReplacedRootWithNonRootError</span> {
-                                    <span class="ident">rule_name</span>: <span class="ident">Cow::Borrowed</span>(<span class="ident">action</span>.<span class="ident">rule_name</span>),
+        <span class="kw">match </span>action {
+            <span class="prelude-val">Some</span>(action) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>((range, <span class="kw">_</span>)) = action.mutation.as_text_edits() {
+                    tree = <span class="kw">match </span>JsAnyRoot::cast(action.mutation.commit()) {
+                        <span class="prelude-val">Some</span>(tree) =&gt; tree,
+                        <span class="prelude-val">None </span>=&gt; {
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(RomeError::RuleError(
+                                RuleError::ReplacedRootWithNonRootError {
+                                    rule_name: Cow::Borrowed(action.rule_name),
                                 },
                             ))
                         }
                     };
-                    <span class="ident">actions</span>.<span class="ident">push</span>(<span class="ident">FixAction</span> {
-                        <span class="ident">rule_name</span>: <span class="ident">Cow::Borrowed</span>(<span class="ident">action</span>.<span class="ident">rule_name</span>),
-                        <span class="ident">range</span>,
+                    actions.push(FixAction {
+                        rule_name: Cow::Borrowed(action.rule_name),
+                        range,
                     });
                 }
             }
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">FixFileResult</span> {
-                    <span class="ident">code</span>: <span class="ident">tree</span>.<span class="ident">syntax</span>().<span class="ident">to_string</span>(),
-                    <span class="ident">skipped_suggested_fixes</span>,
-                    <span class="ident">actions</span>,
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(FixFileResult {
+                    code: tree.syntax().to_string(),
+                    skipped_suggested_fixes,
+                    actions,
                 });
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>, <span class="ident">skip</span>(<span class="ident">parse</span>))]</span>
-<span class="kw">fn</span> <span class="ident">format</span>(
-    <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>,
-    <span class="ident">parse</span>: <span class="ident">AnyParse</span>,
-    <span class="ident">settings</span>: <span class="ident">SettingsHandle</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">format_options</span>::<span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>(<span class="ident">rome_path</span>);
+<span class="attribute">#[tracing::instrument(level = <span class="string">&quot;debug&quot;</span>, skip(parse))]
+</span><span class="kw">fn </span>format(
+    rome_path: <span class="kw-2">&amp;</span>RomePath,
+    parse: AnyParse,
+    settings: SettingsHandle,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+    <span class="kw">let </span>options = settings.format_options::&lt;JsLanguage&gt;(rome_path);
 
-    <span class="macro">debug!</span>(<span class="string">&quot;Format with the following options: \n{}&quot;</span>, <span class="ident">options</span>);
+    <span class="macro">debug!</span>(<span class="string">&quot;Format with the following options: \n{}&quot;</span>, options);
 
-    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">syntax</span>();
-    <span class="kw">let</span> <span class="ident">formatted</span> <span class="op">=</span> <span class="ident">format_node</span>(<span class="ident">options</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>tree = parse.syntax();
+    <span class="kw">let </span>formatted = format_node(options, <span class="kw-2">&amp;</span>tree)<span class="question-mark">?</span>;
 
-    <span class="kw">match</span> <span class="ident">formatted</span>.<span class="ident">print</span>() {
-        <span class="prelude-val">Ok</span>(<span class="ident">printed</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">printed</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">RomeError::FormatError</span>(<span class="ident">error</span>.<span class="ident">into</span>())),
+    <span class="kw">match </span>formatted.print() {
+        <span class="prelude-val">Ok</span>(printed) =&gt; <span class="prelude-val">Ok</span>(printed),
+        <span class="prelude-val">Err</span>(error) =&gt; <span class="prelude-val">Err</span>(RomeError::FormatError(error.into())),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">format_range</span>(
-    <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>,
-    <span class="ident">parse</span>: <span class="ident">AnyParse</span>,
-    <span class="ident">settings</span>: <span class="ident">SettingsHandle</span>,
-    <span class="ident">range</span>: <span class="ident">TextRange</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">format_options</span>::<span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>(<span class="ident">rome_path</span>);
+<span class="kw">fn </span>format_range(
+    rome_path: <span class="kw-2">&amp;</span>RomePath,
+    parse: AnyParse,
+    settings: SettingsHandle,
+    range: TextRange,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+    <span class="kw">let </span>options = settings.format_options::&lt;JsLanguage&gt;(rome_path);
 
-    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">syntax</span>();
-    <span class="kw">let</span> <span class="ident">printed</span> <span class="op">=</span> <span class="ident">rome_js_formatter::format_range</span>(<span class="ident">options</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>, <span class="ident">range</span>)<span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(<span class="ident">printed</span>)
+    <span class="kw">let </span>tree = parse.syntax();
+    <span class="kw">let </span>printed = rome_js_formatter::format_range(options, <span class="kw-2">&amp;</span>tree, range)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(printed)
 }
 
-<span class="kw">fn</span> <span class="ident">format_on_type</span>(
-    <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>,
-    <span class="ident">parse</span>: <span class="ident">AnyParse</span>,
-    <span class="ident">settings</span>: <span class="ident">SettingsHandle</span>,
-    <span class="ident">offset</span>: <span class="ident">TextSize</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Printed</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">format_options</span>::<span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span>(<span class="ident">rome_path</span>);
+<span class="kw">fn </span>format_on_type(
+    rome_path: <span class="kw-2">&amp;</span>RomePath,
+    parse: AnyParse,
+    settings: SettingsHandle,
+    offset: TextSize,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Printed, RomeError&gt; {
+    <span class="kw">let </span>options = settings.format_options::&lt;JsLanguage&gt;(rome_path);
 
-    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">syntax</span>();
+    <span class="kw">let </span>tree = parse.syntax();
 
-    <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">text_range</span>();
-    <span class="kw">if</span> <span class="ident">offset</span> <span class="op">&lt;</span> <span class="ident">range</span>.<span class="ident">start</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">offset</span> <span class="op">&gt;</span> <span class="ident">range</span>.<span class="ident">end</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RomeError::FormatError</span>(<span class="ident">FormatError::RangeError</span> {
-            <span class="ident">input</span>: <span class="ident">TextRange::at</span>(<span class="ident">offset</span>, <span class="ident">TextSize::from</span>(<span class="number">0</span>)),
-            <span class="ident">tree</span>: <span class="ident">range</span>,
+    <span class="kw">let </span>range = tree.text_range();
+    <span class="kw">if </span>offset &lt; range.start() || offset &gt; range.end() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(RomeError::FormatError(FormatError::RangeError {
+            input: TextRange::at(offset, TextSize::from(<span class="number">0</span>)),
+            tree: range,
         }));
     }
 
-    <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">tree</span>.<span class="ident">token_at_offset</span>(<span class="ident">offset</span>) {
-        <span class="comment">// File is empty, do nothing</span>
-        <span class="ident">TokenAtOffset::None</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;empty file&quot;</span>),
-        <span class="ident">TokenAtOffset::Single</span>(<span class="ident">token</span>) =&gt; <span class="ident">token</span>,
-        <span class="comment">// The cursor should be right after the closing character that was just typed,</span>
-        <span class="comment">// select the previous token as the correct one</span>
-        <span class="ident">TokenAtOffset::Between</span>(<span class="ident">token</span>, <span class="kw">_</span>) =&gt; <span class="ident">token</span>,
+    <span class="kw">let </span>token = <span class="kw">match </span>tree.token_at_offset(offset) {
+        <span class="comment">// File is empty, do nothing
+        </span>TokenAtOffset::None =&gt; <span class="macro">panic!</span>(<span class="string">&quot;empty file&quot;</span>),
+        TokenAtOffset::Single(token) =&gt; token,
+        <span class="comment">// The cursor should be right after the closing character that was just typed,
+        // select the previous token as the correct one
+        </span>TokenAtOffset::Between(token, <span class="kw">_</span>) =&gt; token,
     };
 
-    <span class="kw">let</span> <span class="ident">root_node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">token</span>.<span class="ident">parent</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">node</span>) =&gt; <span class="ident">node</span>,
-        <span class="prelude-val">None</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;found a token with no parent&quot;</span>),
+    <span class="kw">let </span>root_node = <span class="kw">match </span>token.parent() {
+        <span class="prelude-val">Some</span>(node) =&gt; node,
+        <span class="prelude-val">None </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;found a token with no parent&quot;</span>),
     };
 
-    <span class="kw">let</span> <span class="ident">printed</span> <span class="op">=</span> <span class="ident">rome_js_formatter::format_sub_tree</span>(<span class="ident">options</span>, <span class="kw-2">&amp;</span><span class="ident">root_node</span>)<span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(<span class="ident">printed</span>)
+    <span class="kw">let </span>printed = rome_js_formatter::format_sub_tree(options, <span class="kw-2">&amp;</span>root_node)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(printed)
 }
 
-<span class="kw">fn</span> <span class="ident">rename</span>(
-    <span class="ident">_rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>,
-    <span class="ident">parse</span>: <span class="ident">AnyParse</span>,
-    <span class="ident">symbol_at</span>: <span class="ident">TextSize</span>,
-    <span class="ident">new_name</span>: <span class="ident">String</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RenameResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">parse</span>.<span class="ident">tree</span>();
-    <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">semantic_model</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>, <span class="ident">SemanticModelOptions::default</span>());
+<span class="kw">fn </span>rename(
+    _rome_path: <span class="kw-2">&amp;</span>RomePath,
+    parse: AnyParse,
+    symbol_at: TextSize,
+    new_name: String,
+) -&gt; <span class="prelude-ty">Result</span>&lt;RenameResult, RomeError&gt; {
+    <span class="kw">let </span>root = parse.tree();
+    <span class="kw">let </span>model = semantic_model(<span class="kw-2">&amp;</span>root, SemanticModelOptions::default());
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="ident">parse</span>
-        .<span class="ident">syntax</span>()
-        .<span class="ident">descendants_tokens</span>(<span class="ident">Direction::Next</span>)
-        .<span class="ident">find</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident">token</span>.<span class="ident">text_range</span>().<span class="ident">contains</span>(<span class="ident">symbol_at</span>))
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident">token</span>.<span class="ident">parent</span>())
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = parse
+        .syntax()
+        .descendants_tokens(Direction::Next)
+        .find(|token| token.text_range().contains(symbol_at))
+        .and_then(|token| token.parent())
     {
-        <span class="kw">let</span> <span class="ident">original_name</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">text_trimmed</span>();
-        <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">try_into</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">node</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">batch</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">begin</span>();
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">batch</span>.<span class="ident">rename_any_renamable_node</span>(<span class="kw-2">&amp;</span><span class="ident">model</span>, <span class="ident">node</span>, <span class="kw-2">&amp;</span><span class="ident">new_name</span>);
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">result</span> {
-                    <span class="prelude-val">Err</span>(<span class="ident">RomeError::RenameError</span>(<span class="ident">RenameError::CannotBeRenamed</span> {
-                        <span class="ident">original_name</span>: <span class="ident">original_name</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">new_name</span>,
+        <span class="kw">let </span>original_name = node.text_trimmed();
+        <span class="kw">match </span>node.try_into() {
+            <span class="prelude-val">Ok</span>(node) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>batch = root.begin();
+                <span class="kw">let </span>result = batch.rename_any_renamable_node(<span class="kw-2">&amp;</span>model, node, <span class="kw-2">&amp;</span>new_name);
+                <span class="kw">if </span>!result {
+                    <span class="prelude-val">Err</span>(RomeError::RenameError(RenameError::CannotBeRenamed {
+                        original_name: original_name.to_string(),
+                        new_name,
                     }))
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> (<span class="ident">range</span>, <span class="ident">indels</span>) <span class="op">=</span> <span class="ident">batch</span>.<span class="ident">as_text_edits</span>().<span class="ident">unwrap_or_default</span>();
-                    <span class="prelude-val">Ok</span>(<span class="ident">RenameResult</span> { <span class="ident">range</span>, <span class="ident">indels</span> })
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span>(range, indels) = batch.as_text_edits().unwrap_or_default();
+                    <span class="prelude-val">Ok</span>(RenameResult { range, indels })
                 }
             }
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">RomeError::RenameError</span>(<span class="ident">err</span>)),
+            <span class="prelude-val">Err</span>(err) =&gt; <span class="prelude-val">Err</span>(RomeError::RenameError(err)),
         }
-    } <span class="kw">else</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">RomeError::RenameError</span>(<span class="ident">RenameError::CannotFindDeclaration</span>))
+    } <span class="kw">else </span>{
+        <span class="prelude-val">Err</span>(RomeError::RenameError(RenameError::CannotFindDeclaration))
     }
 }
 
-<span class="kw">fn</span> <span class="ident">compute_analyzer_options</span>(<span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident">SettingsHandle</span>) -&gt; <span class="ident">AnalyzerOptions</span> {
-    <span class="kw">let</span> <span class="ident">configuration</span> <span class="op">=</span> <span class="ident">to_analyzer_configuration</span>(
-        <span class="ident">settings</span>.<span class="ident">as_ref</span>().<span class="ident">linter</span>(),
-        <span class="kw-2">&amp;</span><span class="ident">settings</span>.<span class="ident">as_ref</span>().<span class="ident">languages</span>,
-        <span class="op">|</span><span class="ident">settings</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">globals</span>) <span class="op">=</span> <span class="ident">settings</span>.<span class="ident">javascript</span>.<span class="ident">globals</span>.<span class="ident">as_ref</span>() {
-                <span class="ident">globals</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">global</span><span class="op">|</span> <span class="ident">global</span>.<span class="ident">to_string</span>())
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-            } <span class="kw">else</span> {
+<span class="kw">fn </span>compute_analyzer_options(settings: <span class="kw-2">&amp;</span>SettingsHandle) -&gt; AnalyzerOptions {
+    <span class="kw">let </span>configuration = to_analyzer_configuration(
+        settings.as_ref().linter(),
+        <span class="kw-2">&amp;</span>settings.as_ref().languages,
+        |settings| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(globals) = settings.javascript.globals.as_ref() {
+                globals
+                    .iter()
+                    .map(|global| global.to_string())
+                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+            } <span class="kw">else </span>{
                 <span class="macro">vec!</span>[]
             }
         },
     );
-    <span class="ident">AnalyzerOptions</span> { <span class="ident">configuration</span> }
+    AnalyzerOptions { configuration }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

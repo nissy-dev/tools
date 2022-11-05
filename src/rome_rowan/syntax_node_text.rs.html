@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax_node_text.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>syntax_node_text.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/syntax_node_text.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>syntax_node_text.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -442,449 +442,449 @@
 <span id="442">442</span>
 <span id="443">443</span>
 <span id="444">444</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">cursor</span>::{<span class="ident">SyntaxNode</span>, <span class="ident">SyntaxToken</span>},
-    <span class="ident">TextRange</span>, <span class="ident">TextSize</span>, <span class="ident">TokenAtOffset</span>,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    cursor::{SyntaxNode, SyntaxToken},
+    TextRange, TextSize, TokenAtOffset,
 };
-<span class="kw">use</span> <span class="ident">rome_text_size::TextLen</span>;
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::iter::FusedIterator</span>;
+<span class="kw">use </span>rome_text_size::TextLen;
+<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>std::iter::FusedIterator;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxNodeText</span> {
-    <span class="ident">node</span>: <span class="ident">SyntaxNode</span>,
-    <span class="ident">range</span>: <span class="ident">TextRange</span>,
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>SyntaxNodeText {
+    node: SyntaxNode,
+    range: TextRange,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxNodeText</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">node</span>: <span class="ident">SyntaxNode</span>) -&gt; <span class="ident">SyntaxNodeText</span> {
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">text_range</span>();
-        <span class="ident">SyntaxNodeText</span> { <span class="ident">node</span>, <span class="ident">range</span> }
+<span class="kw">impl </span>SyntaxNodeText {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(node: SyntaxNode) -&gt; SyntaxNodeText {
+        <span class="kw">let </span>range = node.text_range();
+        SyntaxNodeText { node, range }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with_range</span>(<span class="ident">node</span>: <span class="ident">SyntaxNode</span>, <span class="ident">range</span>: <span class="ident">TextRange</span>) -&gt; <span class="ident">SyntaxNodeText</span> {
-        <span class="ident">SyntaxNodeText</span> { <span class="ident">node</span>, <span class="ident">range</span> }
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>with_range(node: SyntaxNode, range: TextRange) -&gt; SyntaxNodeText {
+        SyntaxNodeText { node, range }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">range</span>.<span class="ident">len</span>()
+    <span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.range.len()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">range</span>.<span class="ident">is_empty</span>()
+    <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.range.is_empty()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_char</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">try_for_each_chunk</span>(<span class="op">|</span><span class="ident">chunk</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">chunk</span>.<span class="ident">contains</span>(<span class="ident">c</span>) { <span class="prelude-val">Err</span>(()) } <span class="kw">else</span> { <span class="prelude-val">Ok</span>(()) })
-            .<span class="ident">is_err</span>()
+    <span class="kw">pub fn </span>contains_char(<span class="kw-2">&amp;</span><span class="self">self</span>, c: char) -&gt; bool {
+        <span class="self">self</span>.try_for_each_chunk(|chunk| <span class="kw">if </span>chunk.contains(c) { <span class="prelude-val">Err</span>(()) } <span class="kw">else </span>{ <span class="prelude-val">Ok</span>(()) })
+            .is_err()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_char</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">acc</span>: <span class="ident">TextSize</span> <span class="op">=</span> <span class="number">0</span>.<span class="ident">into</span>();
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">try_for_each_chunk</span>(<span class="op">|</span><span class="ident">chunk</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pos</span>) <span class="op">=</span> <span class="ident">chunk</span>.<span class="ident">find</span>(<span class="ident">c</span>) {
-                <span class="kw">let</span> <span class="ident">pos</span>: <span class="ident">TextSize</span> <span class="op">=</span> (<span class="ident">pos</span> <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">into</span>();
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">acc</span> <span class="op">+</span> <span class="ident">pos</span>);
+    <span class="kw">pub fn </span>find_char(<span class="kw-2">&amp;</span><span class="self">self</span>, c: char) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>acc: TextSize = <span class="number">0</span>.into();
+        <span class="kw">let </span>res = <span class="self">self</span>.try_for_each_chunk(|chunk| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = chunk.find(c) {
+                <span class="kw">let </span>pos: TextSize = (pos <span class="kw">as </span>u32).into();
+                <span class="kw">return </span><span class="prelude-val">Err</span>(acc + pos);
             }
-            <span class="ident">acc</span> <span class="op">+</span><span class="op">=</span> <span class="ident">TextSize::of</span>(<span class="ident">chunk</span>);
+            acc += TextSize::of(chunk);
             <span class="prelude-val">Ok</span>(())
         });
-        <span class="ident">found</span>(<span class="ident">res</span>)
+        found(res)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">char_at</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">offset</span>: <span class="ident">TextSize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span>: <span class="ident">TextSize</span> <span class="op">=</span> <span class="number">0</span>.<span class="ident">into</span>();
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">try_for_each_chunk</span>(<span class="op">|</span><span class="ident">chunk</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">start</span> <span class="op">+</span> <span class="ident">TextSize::of</span>(<span class="ident">chunk</span>);
-            <span class="kw">if</span> <span class="ident">start</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">offset</span> <span class="op">&amp;&amp;</span> <span class="ident">offset</span> <span class="op">&lt;</span> <span class="ident">end</span> {
-                <span class="kw">let</span> <span class="ident">off</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">u32::from</span>(<span class="ident">offset</span> <span class="op">-</span> <span class="ident">start</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">chunk</span>[<span class="ident">off</span>..].<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>());
+    <span class="kw">pub fn </span>char_at(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TextSize) -&gt; <span class="prelude-ty">Option</span>&lt;char&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>start: TextSize = <span class="number">0</span>.into();
+        <span class="kw">let </span>res = <span class="self">self</span>.try_for_each_chunk(|chunk| {
+            <span class="kw">let </span>end = start + TextSize::of(chunk);
+            <span class="kw">if </span>start &lt;= offset &amp;&amp; offset &lt; end {
+                <span class="kw">let </span>off: usize = u32::from(offset - start) <span class="kw">as </span>usize;
+                <span class="kw">return </span><span class="prelude-val">Err</span>(chunk[off..].chars().next().unwrap());
             }
-            <span class="ident">start</span> <span class="op">=</span> <span class="ident">end</span>;
+            start = end;
             <span class="prelude-val">Ok</span>(())
         });
-        <span class="ident">found</span>(<span class="ident">res</span>)
+        found(res)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">slice</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">private::SyntaxTextRange</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">range</span>: <span class="ident">R</span>) -&gt; <span class="ident">SyntaxNodeText</span> {
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">range</span>.<span class="ident">start</span>().<span class="ident">unwrap_or_default</span>();
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">range</span>.<span class="ident">end</span>().<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">len</span>());
-        <span class="macro">assert!</span>(<span class="ident">start</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end</span>);
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">end</span> <span class="op">-</span> <span class="ident">start</span>;
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">range</span>.<span class="ident">start</span>() <span class="op">+</span> <span class="ident">start</span>;
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">start</span> <span class="op">+</span> <span class="ident">len</span>;
+    <span class="kw">pub fn </span>slice&lt;R: private::SyntaxTextRange&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, range: R) -&gt; SyntaxNodeText {
+        <span class="kw">let </span>start = range.start().unwrap_or_default();
+        <span class="kw">let </span>end = range.end().unwrap_or_else(|| <span class="self">self</span>.len());
+        <span class="macro">assert!</span>(start &lt;= end);
+        <span class="kw">let </span>len = end - start;
+        <span class="kw">let </span>start = <span class="self">self</span>.range.start() + start;
+        <span class="kw">let </span>end = start + len;
         <span class="macro">assert!</span>(
-            <span class="ident">start</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end</span>,
+            start &lt;= end,
             <span class="string">&quot;invalid slice, range: {:?}, slice: {:?}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">range</span>,
-            (<span class="ident">range</span>.<span class="ident">start</span>(), <span class="ident">range</span>.<span class="ident">end</span>()),
+            <span class="self">self</span>.range,
+            (range.start(), range.end()),
         );
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">start</span>, <span class="ident">end</span>);
+        <span class="kw">let </span>range = TextRange::new(start, end);
         <span class="macro">assert!</span>(
-            <span class="self">self</span>.<span class="ident">range</span>.<span class="ident">contains_range</span>(<span class="ident">range</span>),
+            <span class="self">self</span>.range.contains_range(range),
             <span class="string">&quot;invalid slice, range: {:?}, slice: {:?}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">range</span>,
-            <span class="ident">range</span>,
+            <span class="self">self</span>.range,
+            range,
         );
-        <span class="ident">SyntaxNodeText</span> {
-            <span class="ident">node</span>: <span class="self">self</span>.<span class="ident">node</span>.<span class="ident">clone</span>(),
-            <span class="ident">range</span>,
+        SyntaxNodeText {
+            node: <span class="self">self</span>.node.clone(),
+            range,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_fold_chunks</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">init</span>: <span class="ident">T</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>,
+    <span class="kw">pub fn </span>try_fold_chunks&lt;T, F, E&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, init: T, <span class="kw-2">mut </span>f: F) -&gt; <span class="prelude-ty">Result</span>&lt;T, E&gt;
+    <span class="kw">where
+        </span>F: FnMut(T, <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;T, E&gt;,
     {
-        <span class="self">self</span>.<span class="ident">tokens_with_ranges</span>()
-            .<span class="ident">try_fold</span>(<span class="ident">init</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">acc</span>, (<span class="ident">token</span>, <span class="ident">range</span>)<span class="op">|</span> {
-                <span class="ident">f</span>(<span class="ident">acc</span>, <span class="kw-2">&amp;</span><span class="ident">token</span>.<span class="ident">text</span>()[<span class="ident">range</span>])
+        <span class="self">self</span>.tokens_with_ranges()
+            .try_fold(init, <span class="kw">move </span>|acc, (token, range)| {
+                f(acc, <span class="kw-2">&amp;</span>token.text()[range])
             })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_for_each_chunk</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">E</span><span class="op">&gt;</span>(
+    <span class="kw">pub fn </span>try_for_each_chunk&lt;F: FnMut(<span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(), E&gt;, E&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">E</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">try_fold_chunks</span>((), <span class="kw">move</span> <span class="op">|</span>(), <span class="ident">chunk</span><span class="op">|</span> <span class="ident">f</span>(<span class="ident">chunk</span>))
+        <span class="kw-2">mut </span>f: F,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), E&gt; {
+        <span class="self">self</span>.try_fold_chunks((), <span class="kw">move </span>|(), chunk| f(chunk))
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">for_each_chunk</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) {
-        <span class="kw">enum</span> <span class="ident">Void</span> {}
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">try_for_each_chunk</span>(<span class="op">|</span><span class="ident">chunk</span><span class="op">|</span> {
-            <span class="ident">f</span>(<span class="ident">chunk</span>);
-            <span class="prelude-val">Ok</span>::<span class="op">&lt;</span>(), <span class="ident">Void</span><span class="op">&gt;</span>(())
+    <span class="kw">pub fn </span>for_each_chunk&lt;F: FnMut(<span class="kw-2">&amp;</span>str)&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>f: F) {
+        <span class="kw">enum </span>Void {}
+        <span class="kw">match </span><span class="self">self</span>.try_for_each_chunk(|chunk| {
+            f(chunk);
+            <span class="prelude-val">Ok</span>::&lt;(), Void&gt;(())
         }) {
             <span class="prelude-val">Ok</span>(()) =&gt; (),
-            <span class="prelude-val">Err</span>(<span class="ident">void</span>) =&gt; <span class="kw">match</span> <span class="ident">void</span> {},
+            <span class="prelude-val">Err</span>(void) =&gt; <span class="kw">match </span>void {},
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">tokens_with_ranges</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">SyntaxToken</span>, <span class="ident">TextRange</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FusedIterator</span> {
-        <span class="ident">SyntaxNodeTokenWithRanges::new</span>(<span class="self">self</span>)
+    <span class="kw">fn </span>tokens_with_ranges(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = (SyntaxToken, TextRange)&gt; + FusedIterator {
+        SyntaxNodeTokenWithRanges::new(<span class="self">self</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chars</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">char</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FusedIterator</span> {
-        <span class="ident">SyntaxNodeTextChars::new</span>(<span class="self">self</span>)
+    <span class="kw">pub fn </span>chars(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = char&gt; + FusedIterator {
+        SyntaxNodeTextChars::new(<span class="self">self</span>)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">SyntaxNodeTokenWithRanges</span> {
-    <span class="ident">text_range</span>: <span class="ident">TextRange</span>,
-    <span class="ident">next_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">SyntaxToken</span>, <span class="ident">TextRange</span>)<span class="op">&gt;</span>,
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">struct </span>SyntaxNodeTokenWithRanges {
+    text_range: TextRange,
+    next_token: <span class="prelude-ty">Option</span>&lt;(SyntaxToken, TextRange)&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxNodeTokenWithRanges</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNodeText</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">text_range</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">range</span>;
+<span class="kw">impl </span>SyntaxNodeTokenWithRanges {
+    <span class="kw">fn </span>new(text: <span class="kw-2">&amp;</span>SyntaxNodeText) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>text_range = text.range;
 
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">text</span>.<span class="ident">node</span>.<span class="ident">token_at_offset</span>(<span class="ident">text_range</span>.<span class="ident">start</span>()) {
-            <span class="ident">TokenAtOffset::None</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">TokenAtOffset::Single</span>(<span class="ident">token</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">token</span>),
-            <span class="ident">TokenAtOffset::Between</span>(<span class="kw">_</span>, <span class="ident">next</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">next</span>),
+        <span class="kw">let </span>token = <span class="kw">match </span>text.node.token_at_offset(text_range.start()) {
+            TokenAtOffset::None =&gt; <span class="prelude-val">None</span>,
+            TokenAtOffset::Single(token) =&gt; <span class="prelude-val">Some</span>(token),
+            TokenAtOffset::Between(<span class="kw">_</span>, next) =&gt; <span class="prelude-val">Some</span>(next),
         };
 
-        <span class="self">Self</span> {
-            <span class="ident">next_token</span>: <span class="ident">token</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident"><span class="self">Self</span>::with_intersecting_range</span>(<span class="ident">token</span>, <span class="ident">text_range</span>)),
-            <span class="ident">text_range</span>,
+        <span class="self">Self </span>{
+            next_token: token.and_then(|token| <span class="self">Self</span>::with_intersecting_range(token, text_range)),
+            text_range,
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">with_intersecting_range</span>(
-        <span class="ident">token</span>: <span class="ident">SyntaxToken</span>,
-        <span class="ident">text_range</span>: <span class="ident">TextRange</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">SyntaxToken</span>, <span class="ident">TextRange</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">token_range</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">text_range</span>();
+    <span class="kw">fn </span>with_intersecting_range(
+        token: SyntaxToken,
+        text_range: TextRange,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;(SyntaxToken, TextRange)&gt; {
+        <span class="kw">let </span>token_range = token.text_range();
 
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">text_range</span>.<span class="ident">intersect</span>(<span class="ident">token_range</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Some</span>((<span class="ident">token</span>, <span class="ident">range</span> <span class="op">-</span> <span class="ident">token_range</span>.<span class="ident">start</span>()))
+        <span class="kw">let </span>range = text_range.intersect(token_range)<span class="question-mark">?</span>;
+        <span class="prelude-val">Some</span>((token, range - token_range.start()))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SyntaxNodeTokenWithRanges</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> (<span class="ident">SyntaxToken</span>, <span class="ident">TextRange</span>);
+<span class="kw">impl </span>Iterator <span class="kw">for </span>SyntaxNodeTokenWithRanges {
+    <span class="kw">type </span>Item = (SyntaxToken, TextRange);
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">token</span>, <span class="ident">range</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_token</span>.<span class="ident">take</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">let </span>(token, range) = <span class="self">self</span>.next_token.take()<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">next_token</span> <span class="op">=</span> <span class="ident">token</span>
-            .<span class="ident">next_token</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident"><span class="self">Self</span>::with_intersecting_range</span>(<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">text_range</span>));
+        <span class="self">self</span>.next_token = token
+            .next_token()
+            .and_then(|token| <span class="self">Self</span>::with_intersecting_range(token, <span class="self">self</span>.text_range));
 
-        <span class="prelude-val">Some</span>((<span class="ident">token</span>, <span class="ident">range</span>))
+        <span class="prelude-val">Some</span>((token, range))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxNodeTokenWithRanges</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>SyntaxNodeTokenWithRanges {}
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">SyntaxNodeTextChars</span> {
-    <span class="ident">head</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">SyntaxToken</span>, <span class="ident">TextRange</span>)<span class="op">&gt;</span>,
-    <span class="ident">tail</span>: <span class="ident">SyntaxNodeTokenWithRanges</span>,
-    <span class="ident">index</span>: <span class="ident">TextSize</span>,
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">struct </span>SyntaxNodeTextChars {
+    head: <span class="prelude-ty">Option</span>&lt;(SyntaxToken, TextRange)&gt;,
+    tail: SyntaxNodeTokenWithRanges,
+    index: TextSize,
 }
 
-<span class="kw">impl</span> <span class="ident">SyntaxNodeTextChars</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNodeText</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chunks</span> <span class="op">=</span> <span class="ident">SyntaxNodeTokenWithRanges::new</span>(<span class="ident">text</span>);
+<span class="kw">impl </span>SyntaxNodeTextChars {
+    <span class="kw">fn </span>new(text: <span class="kw-2">&amp;</span>SyntaxNodeText) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>chunks = SyntaxNodeTokenWithRanges::new(text);
 
-        <span class="self">Self</span> {
-            <span class="ident">head</span>: <span class="ident">chunks</span>.<span class="ident">next</span>(),
-            <span class="ident">tail</span>: <span class="ident">chunks</span>,
-            <span class="ident">index</span>: <span class="ident">TextSize::default</span>(),
+        <span class="self">Self </span>{
+            head: chunks.next(),
+            tail: chunks,
+            index: TextSize::default(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SyntaxNodeTextChars</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">char</span>;
+<span class="kw">impl </span>Iterator <span class="kw">for </span>SyntaxNodeTextChars {
+    <span class="kw">type </span>Item = char;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> (<span class="ident">token</span>, <span class="ident">range</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">head</span>.<span class="ident">as_ref</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">loop </span>{
+            <span class="kw">let </span>(token, range) = <span class="self">self</span>.head.as_ref()<span class="question-mark">?</span>;
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">index</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">range</span>.<span class="ident">end</span>() {
-                <span class="self">self</span>.<span class="ident">head</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tail</span>.<span class="ident">next</span>();
-                <span class="self">self</span>.<span class="ident">index</span> <span class="op">=</span> <span class="ident">TextSize::default</span>();
+            <span class="kw">if </span><span class="self">self</span>.index &gt;= range.end() {
+                <span class="self">self</span>.head = <span class="self">self</span>.tail.next();
+                <span class="self">self</span>.index = TextSize::default();
                 <span class="kw">continue</span>;
             }
 
-            <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">text</span>();
+            <span class="kw">let </span>text = token.text();
 
-            <span class="comment">// SAFETY: Index check above guarantees that there&#39;s at least some text left</span>
-            <span class="kw">let</span> <span class="ident">next_char</span> <span class="op">=</span> <span class="ident">text</span>[<span class="ident">TextRange::new</span>(<span class="self">self</span>.<span class="ident">index</span>, <span class="ident">range</span>.<span class="ident">end</span>())]
-                .<span class="ident">chars</span>()
-                .<span class="ident">next</span>()
-                .<span class="ident">unwrap</span>();
+            <span class="comment">// SAFETY: Index check above guarantees that there&#39;s at least some text left
+            </span><span class="kw">let </span>next_char = text[TextRange::new(<span class="self">self</span>.index, range.end())]
+                .chars()
+                .next()
+                .unwrap();
 
-            <span class="self">self</span>.<span class="ident">index</span> <span class="op">+</span><span class="op">=</span> <span class="ident">next_char</span>.<span class="ident">text_len</span>();
-            <span class="kw">break</span> <span class="prelude-val">Some</span>(<span class="ident">next_char</span>);
+            <span class="self">self</span>.index += next_char.text_len();
+            <span class="kw">break </span><span class="prelude-val">Some</span>(next_char);
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">SyntaxNodeTextChars</span> {}
+<span class="kw">impl </span>FusedIterator <span class="kw">for </span>SyntaxNodeTextChars {}
 
-<span class="kw">fn</span> <span class="ident">found</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">res</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">match</span> <span class="ident">res</span> {
+<span class="kw">fn </span>found&lt;T&gt;(res: <span class="prelude-ty">Result</span>&lt;(), T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">match </span>res {
         <span class="prelude-val">Ok</span>(()) =&gt; <span class="prelude-val">None</span>,
-        <span class="prelude-val">Err</span>(<span class="ident">it</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">it</span>),
+        <span class="prelude-val">Err</span>(it) =&gt; <span class="prelude-val">Some</span>(it),
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">SyntaxNodeText</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">fmt::Debug::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to_string</span>(), <span class="ident">f</span>)
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>SyntaxNodeText {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        fmt::Debug::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.to_string(), f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">SyntaxNodeText</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="self">self</span>.<span class="ident">try_for_each_chunk</span>(<span class="op">|</span><span class="ident">chunk</span><span class="op">|</span> <span class="ident">fmt::Display::fmt</span>(<span class="ident">chunk</span>, <span class="ident">f</span>))
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>SyntaxNodeText {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        <span class="self">self</span>.try_for_each_chunk(|chunk| fmt::Display::fmt(chunk, f))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">SyntaxNodeText</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">text</span>: <span class="ident">SyntaxNodeText</span>) -&gt; <span class="ident">String</span> {
-        <span class="ident">text</span>.<span class="ident">to_string</span>()
+<span class="kw">impl </span>From&lt;SyntaxNodeText&gt; <span class="kw">for </span>String {
+    <span class="kw">fn </span>from(text: SyntaxNodeText) -&gt; String {
+        text.to_string()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SyntaxNodeText</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">rhs</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">try_for_each_chunk</span>(<span class="op">|</span><span class="ident">chunk</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">rhs</span>.<span class="ident">starts_with</span>(<span class="ident">chunk</span>) {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(());
+<span class="kw">impl </span>PartialEq&lt;str&gt; <span class="kw">for </span>SyntaxNodeText {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>rhs: <span class="kw-2">&amp;</span>str) -&gt; bool {
+        <span class="self">self</span>.try_for_each_chunk(|chunk| {
+            <span class="kw">if </span>!rhs.starts_with(chunk) {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(());
             }
-            <span class="ident">rhs</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">rhs</span>[<span class="ident">chunk</span>.<span class="ident">len</span>()..];
+            rhs = <span class="kw-2">&amp;</span>rhs[chunk.len()..];
             <span class="prelude-val">Ok</span>(())
         })
-        .<span class="ident">is_ok</span>()
-            <span class="op">&amp;&amp;</span> <span class="ident">rhs</span>.<span class="ident">is_empty</span>()
+        .is_ok()
+            &amp;&amp; rhs.is_empty()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">SyntaxNodeText</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">str</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rhs</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNodeText</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">rhs</span> <span class="op">==</span> <span class="self">self</span>
+<span class="kw">impl </span>PartialEq&lt;SyntaxNodeText&gt; <span class="kw">for </span>str {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, rhs: <span class="kw-2">&amp;</span>SyntaxNodeText) -&gt; bool {
+        rhs == <span class="self">self
+    </span>}
+}
+
+<span class="kw">impl </span>PartialEq&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str&gt; <span class="kw">for </span>SyntaxNodeText {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, rhs: &amp;&amp;str) -&gt; bool {
+        <span class="self">self </span>== <span class="kw-2">*</span>rhs
     }
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SyntaxNodeText</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rhs</span>: <span class="op">&amp;&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">rhs</span>
+<span class="kw">impl </span>PartialEq&lt;SyntaxNodeText&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>str {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, rhs: <span class="kw-2">&amp;</span>SyntaxNodeText) -&gt; bool {
+        rhs == <span class="self">self
+    </span>}
+}
+
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>SyntaxNodeText {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>SyntaxNodeText) -&gt; bool {
+        <span class="kw">if </span><span class="self">self</span>.range.len() != other.range.len() {
+            <span class="kw">return </span><span class="bool-val">false</span>;
+        }
+        <span class="kw">let </span><span class="kw-2">mut </span>lhs = <span class="self">self</span>.tokens_with_ranges();
+        <span class="kw">let </span><span class="kw-2">mut </span>rhs = other.tokens_with_ranges();
+        zip_texts(<span class="kw-2">&amp;mut </span>lhs, <span class="kw-2">&amp;mut </span>rhs).is_none()
+            &amp;&amp; lhs.all(|it| it.<span class="number">1</span>.is_empty())
+            &amp;&amp; rhs.all(|it| it.<span class="number">1</span>.is_empty())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">SyntaxNodeText</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rhs</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNodeText</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">rhs</span> <span class="op">==</span> <span class="self">self</span>
+<span class="kw">fn </span>zip_texts&lt;I: Iterator&lt;Item = (SyntaxToken, TextRange)&gt;&gt;(xs: <span class="kw-2">&amp;mut </span>I, ys: <span class="kw-2">&amp;mut </span>I) -&gt; <span class="prelude-ty">Option</span>&lt;()&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>x = xs.next()<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>y = ys.next()<span class="question-mark">?</span>;
+    <span class="kw">loop </span>{
+        <span class="kw">while </span>x.<span class="number">1</span>.is_empty() {
+            x = xs.next()<span class="question-mark">?</span>;
+        }
+        <span class="kw">while </span>y.<span class="number">1</span>.is_empty() {
+            y = ys.next()<span class="question-mark">?</span>;
+        }
+        <span class="kw">let </span>x_text = <span class="kw-2">&amp;</span>x.<span class="number">0</span>.text()[x.<span class="number">1</span>];
+        <span class="kw">let </span>y_text = <span class="kw-2">&amp;</span>y.<span class="number">0</span>.text()[y.<span class="number">1</span>];
+        <span class="kw">if </span>!(x_text.starts_with(y_text) || y_text.starts_with(x_text)) {
+            <span class="kw">return </span><span class="prelude-val">Some</span>(());
+        }
+        <span class="kw">let </span>advance = std::cmp::min(x.<span class="number">1</span>.len(), y.<span class="number">1</span>.len());
+        x.<span class="number">1 </span>= TextRange::new(x.<span class="number">1</span>.start() + advance, x.<span class="number">1</span>.end());
+        y.<span class="number">1 </span>= TextRange::new(y.<span class="number">1</span>.start() + advance, y.<span class="number">1</span>.end());
     }
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">SyntaxNodeText</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNodeText</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">range</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">range</span>.<span class="ident">len</span>() {
-            <span class="kw">return</span> <span class="bool-val">false</span>;
+<span class="kw">impl </span>Eq <span class="kw">for </span>SyntaxNodeText {}
+
+<span class="kw">mod </span>private {
+    <span class="kw">use </span>std::ops;
+
+    <span class="kw">use crate</span>::{TextRange, TextSize};
+
+    <span class="kw">pub trait </span>SyntaxTextRange {
+        <span class="kw">fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt;;
+        <span class="kw">fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt;;
+    }
+
+    <span class="kw">impl </span>SyntaxTextRange <span class="kw">for </span>TextRange {
+        <span class="kw">fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">Some</span>(TextRange::start(<span class="kw-2">*</span><span class="self">self</span>))
         }
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tokens_with_ranges</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">other</span>.<span class="ident">tokens_with_ranges</span>();
-        <span class="ident">zip_texts</span>(<span class="kw-2">&amp;mut</span> <span class="ident">lhs</span>, <span class="kw-2">&amp;mut</span> <span class="ident">rhs</span>).<span class="ident">is_none</span>()
-            <span class="op">&amp;&amp;</span> <span class="ident">lhs</span>.<span class="ident">all</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="number">1</span>.<span class="ident">is_empty</span>())
-            <span class="op">&amp;&amp;</span> <span class="ident">rhs</span>.<span class="ident">all</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="number">1</span>.<span class="ident">is_empty</span>())
+        <span class="kw">fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">Some</span>(TextRange::end(<span class="kw-2">*</span><span class="self">self</span>))
+        }
+    }
+
+    <span class="kw">impl </span>SyntaxTextRange <span class="kw">for </span>ops::Range&lt;TextSize&gt; {
+        <span class="kw">fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">Some</span>(<span class="self">self</span>.start)
+        }
+        <span class="kw">fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">Some</span>(<span class="self">self</span>.end)
+        }
+    }
+
+    <span class="kw">impl </span>SyntaxTextRange <span class="kw">for </span>ops::RangeFrom&lt;TextSize&gt; {
+        <span class="kw">fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">Some</span>(<span class="self">self</span>.start)
+        }
+        <span class="kw">fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">None
+        </span>}
+    }
+
+    <span class="kw">impl </span>SyntaxTextRange <span class="kw">for </span>ops::RangeTo&lt;TextSize&gt; {
+        <span class="kw">fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">None
+        </span>}
+        <span class="kw">fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">Some</span>(<span class="self">self</span>.end)
+        }
+    }
+
+    <span class="kw">impl </span>SyntaxTextRange <span class="kw">for </span>ops::RangeFull {
+        <span class="kw">fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">None
+        </span>}
+        <span class="kw">fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextSize&gt; {
+            <span class="prelude-val">None
+        </span>}
     }
 }
 
-<span class="kw">fn</span> <span class="ident">zip_texts</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">SyntaxToken</span>, <span class="ident">TextRange</span>)<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">xs</span>: <span class="kw-2">&amp;mut</span> <span class="ident">I</span>, <span class="ident">ys</span>: <span class="kw-2">&amp;mut</span> <span class="ident">I</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">xs</span>.<span class="ident">next</span>()<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">ys</span>.<span class="ident">next</span>()<span class="question-mark">?</span>;
-    <span class="kw">loop</span> {
-        <span class="kw">while</span> <span class="ident">x</span>.<span class="number">1</span>.<span class="ident">is_empty</span>() {
-            <span class="ident">x</span> <span class="op">=</span> <span class="ident">xs</span>.<span class="ident">next</span>()<span class="question-mark">?</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::raw_language::{RawLanguage, RawLanguageKind, RawSyntaxTreeBuilder};
+    <span class="kw">use </span><span class="kw">crate</span>::SyntaxNode;
+
+    <span class="kw">fn </span>build_tree(chunks: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str]) -&gt; SyntaxNode&lt;RawLanguage&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = RawSyntaxTreeBuilder::new();
+        builder.start_node(RawLanguageKind::ROOT);
+        <span class="kw">for </span><span class="kw-2">&amp;</span>chunk <span class="kw">in </span>chunks.iter() {
+            builder.token(RawLanguageKind::STRING_TOKEN, chunk);
         }
-        <span class="kw">while</span> <span class="ident">y</span>.<span class="number">1</span>.<span class="ident">is_empty</span>() {
-            <span class="ident">y</span> <span class="op">=</span> <span class="ident">ys</span>.<span class="ident">next</span>()<span class="question-mark">?</span>;
-        }
-        <span class="kw">let</span> <span class="ident">x_text</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="number">0</span>.<span class="ident">text</span>()[<span class="ident">x</span>.<span class="number">1</span>];
-        <span class="kw">let</span> <span class="ident">y_text</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">y</span>.<span class="number">0</span>.<span class="ident">text</span>()[<span class="ident">y</span>.<span class="number">1</span>];
-        <span class="kw">if</span> <span class="op">!</span>(<span class="ident">x_text</span>.<span class="ident">starts_with</span>(<span class="ident">y_text</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">y_text</span>.<span class="ident">starts_with</span>(<span class="ident">x_text</span>)) {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(());
-        }
-        <span class="kw">let</span> <span class="ident">advance</span> <span class="op">=</span> <span class="ident">std::cmp::min</span>(<span class="ident">x</span>.<span class="number">1</span>.<span class="ident">len</span>(), <span class="ident">y</span>.<span class="number">1</span>.<span class="ident">len</span>());
-        <span class="ident">x</span>.<span class="number">1</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">x</span>.<span class="number">1</span>.<span class="ident">start</span>() <span class="op">+</span> <span class="ident">advance</span>, <span class="ident">x</span>.<span class="number">1</span>.<span class="ident">end</span>());
-        <span class="ident">y</span>.<span class="number">1</span> <span class="op">=</span> <span class="ident">TextRange::new</span>(<span class="ident">y</span>.<span class="number">1</span>.<span class="ident">start</span>() <span class="op">+</span> <span class="ident">advance</span>, <span class="ident">y</span>.<span class="number">1</span>.<span class="ident">end</span>());
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">SyntaxNodeText</span> {}
-
-<span class="kw">mod</span> <span class="ident">private</span> {
-    <span class="kw">use</span> <span class="ident">std::ops</span>;
-
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">TextRange</span>, <span class="ident">TextSize</span>};
-
-    <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SyntaxTextRange</span> {
-        <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span>;
-        <span class="kw">fn</span> <span class="ident">end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span>;
+        builder.finish_node();
+        builder.finish()
     }
 
-    <span class="kw">impl</span> <span class="ident">SyntaxTextRange</span> <span class="kw">for</span> <span class="ident">TextRange</span> {
-        <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">TextRange::start</span>(<span class="kw-2">*</span><span class="self">self</span>))
-        }
-        <span class="kw">fn</span> <span class="ident">end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">TextRange::end</span>(<span class="kw-2">*</span><span class="self">self</span>))
-        }
-    }
-
-    <span class="kw">impl</span> <span class="ident">SyntaxTextRange</span> <span class="kw">for</span> <span class="ident">ops::Range</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">start</span>)
-        }
-        <span class="kw">fn</span> <span class="ident">end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">end</span>)
-        }
-    }
-
-    <span class="kw">impl</span> <span class="ident">SyntaxTextRange</span> <span class="kw">for</span> <span class="ident">ops::RangeFrom</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">start</span>)
-        }
-        <span class="kw">fn</span> <span class="ident">end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">None</span>
-        }
-    }
-
-    <span class="kw">impl</span> <span class="ident">SyntaxTextRange</span> <span class="kw">for</span> <span class="ident">ops::RangeTo</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">None</span>
-        }
-        <span class="kw">fn</span> <span class="ident">end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">end</span>)
-        }
-    }
-
-    <span class="kw">impl</span> <span class="ident">SyntaxTextRange</span> <span class="kw">for</span> <span class="ident">ops::RangeFull</span> {
-        <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">None</span>
-        }
-        <span class="kw">fn</span> <span class="ident">end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSize</span><span class="op">&gt;</span> {
-            <span class="prelude-val">None</span>
-        }
-    }
-}
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::raw_language</span>::{<span class="ident">RawLanguage</span>, <span class="ident">RawLanguageKind</span>, <span class="ident">RawSyntaxTreeBuilder</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::SyntaxNode</span>;
-
-    <span class="kw">fn</span> <span class="ident">build_tree</span>(<span class="ident">chunks</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>]) -&gt; <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">RawLanguage</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">RawSyntaxTreeBuilder::new</span>();
-        <span class="ident">builder</span>.<span class="ident">start_node</span>(<span class="ident">RawLanguageKind::ROOT</span>);
-        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">chunk</span> <span class="kw">in</span> <span class="ident">chunks</span>.<span class="ident">iter</span>() {
-            <span class="ident">builder</span>.<span class="ident">token</span>(<span class="ident">RawLanguageKind::STRING_TOKEN</span>, <span class="ident">chunk</span>);
-        }
-        <span class="ident">builder</span>.<span class="ident">finish_node</span>();
-        <span class="ident">builder</span>.<span class="ident">finish</span>()
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_text_equality</span>() {
-        <span class="kw">fn</span> <span class="ident">do_check</span>(<span class="ident">t1</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>], <span class="ident">t2</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>]) {
-            <span class="kw">let</span> <span class="ident">t1</span> <span class="op">=</span> <span class="ident">build_tree</span>(<span class="ident">t1</span>).<span class="ident">text</span>();
-            <span class="kw">let</span> <span class="ident">t2</span> <span class="op">=</span> <span class="ident">build_tree</span>(<span class="ident">t2</span>).<span class="ident">text</span>();
-            <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">t1</span>.<span class="ident">to_string</span>() <span class="op">==</span> <span class="ident">t2</span>.<span class="ident">to_string</span>();
-            <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">t1</span> <span class="op">==</span> <span class="ident">t2</span>;
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_text_equality() {
+        <span class="kw">fn </span>do_check(t1: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str], t2: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str]) {
+            <span class="kw">let </span>t1 = build_tree(t1).text();
+            <span class="kw">let </span>t2 = build_tree(t2).text();
+            <span class="kw">let </span>expected = t1.to_string() == t2.to_string();
+            <span class="kw">let </span>actual = t1 == t2;
             <span class="macro">assert_eq!</span>(
-                <span class="ident">expected</span>, <span class="ident">actual</span>,
+                expected, actual,
                 <span class="string">&quot;`{}` (SyntaxText) `{}` (SyntaxText)&quot;</span>,
-                <span class="ident">t1</span>, <span class="ident">t2</span>
+                t1, t2
             );
-            <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">t1</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">t2</span>.<span class="ident">to_string</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">actual</span>, <span class="string">&quot;`{}` (SyntaxText) `{}` (&amp;str)&quot;</span>, <span class="ident">t1</span>, <span class="ident">t2</span>);
+            <span class="kw">let </span>actual = t1 == <span class="kw-2">*</span>t2.to_string();
+            <span class="macro">assert_eq!</span>(expected, actual, <span class="string">&quot;`{}` (SyntaxText) `{}` (&amp;str)&quot;</span>, t1, t2);
         }
-        <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">t1</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>], <span class="ident">t2</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>]) {
-            <span class="ident">do_check</span>(<span class="ident">t1</span>, <span class="ident">t2</span>);
-            <span class="ident">do_check</span>(<span class="ident">t2</span>, <span class="ident">t1</span>)
+        <span class="kw">fn </span>check(t1: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str], t2: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str]) {
+            do_check(t1, t2);
+            do_check(t2, t1)
         }
 
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;abc&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;def&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;hellowo&quot;</span>, <span class="string">&quot;rld&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;hell&quot;</span>, <span class="string">&quot;oworld&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;hel&quot;</span>, <span class="string">&quot;lowo&quot;</span>, <span class="string">&quot;rld&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;helloworld&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;123&quot;</span>, <span class="string">&quot;}&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;{&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;123&quot;</span>, <span class="string">&quot;}&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;123&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;{&quot;</span>]);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}ab&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;ab&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;abc&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;def&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;hellowo&quot;</span>, <span class="string">&quot;rld&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;hell&quot;</span>, <span class="string">&quot;oworld&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;hel&quot;</span>, <span class="string">&quot;lowo&quot;</span>, <span class="string">&quot;rld&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;helloworld&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;123&quot;</span>, <span class="string">&quot;}&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;{&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;123&quot;</span>, <span class="string">&quot;}&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;123&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;{&quot;</span>]);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}ab&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;ab&quot;</span>]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_chars</span>() {
-        <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">t1</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>], <span class="ident">expected</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
-            <span class="kw">let</span> <span class="ident">t1</span> <span class="op">=</span> <span class="ident">build_tree</span>(<span class="ident">t1</span>).<span class="ident">text</span>();
-            <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">t1</span>.<span class="ident">chars</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_chars() {
+        <span class="kw">fn </span>check(t1: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str], expected: <span class="kw-2">&amp;</span>str) {
+            <span class="kw">let </span>t1 = build_tree(t1).text();
+            <span class="kw">let </span>actual = t1.chars().collect::&lt;String&gt;();
 
             <span class="macro">assert_eq!</span>(
-                <span class="ident">expected</span>, <span class="kw-2">&amp;</span><span class="ident">actual</span>,
+                expected, <span class="kw-2">&amp;</span>actual,
                 <span class="string">&quot;`{}` (SyntaxText) `{}` (SyntaxText)&quot;</span>,
-                <span class="ident">actual</span>, <span class="ident">expected</span>
+                actual, expected
             );
         }
 
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;&quot;</span>], <span class="string">&quot;&quot;</span>);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>], <span class="string">&quot;a&quot;</span>);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>], <span class="string">&quot;helloworld&quot;</span>);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;hellowo&quot;</span>, <span class="string">&quot;rld&quot;</span>], <span class="string">&quot;helloworld&quot;</span>);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;hel&quot;</span>, <span class="string">&quot;lowo&quot;</span>, <span class="string">&quot;rld&quot;</span>], <span class="string">&quot;helloworld&quot;</span>);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>], <span class="string">&quot;{abc}&quot;</span>);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;{&quot;</span>], <span class="string">&quot;{abc}{&quot;</span>);
-        <span class="ident">check</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}ab&quot;</span>], <span class="string">&quot;{abc}ab&quot;</span>);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;&quot;</span>], <span class="string">&quot;&quot;</span>);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>], <span class="string">&quot;a&quot;</span>);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>], <span class="string">&quot;helloworld&quot;</span>);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;hellowo&quot;</span>, <span class="string">&quot;rld&quot;</span>], <span class="string">&quot;helloworld&quot;</span>);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;hel&quot;</span>, <span class="string">&quot;lowo&quot;</span>, <span class="string">&quot;rld&quot;</span>], <span class="string">&quot;helloworld&quot;</span>);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>], <span class="string">&quot;{abc}&quot;</span>);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;{&quot;</span>], <span class="string">&quot;{abc}{&quot;</span>);
+        check(<span class="kw-2">&amp;</span>[<span class="string">&quot;{&quot;</span>, <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;}ab&quot;</span>], <span class="string">&quot;{abc}ab&quot;</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

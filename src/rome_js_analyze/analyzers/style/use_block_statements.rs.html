@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/style/use_block_statements.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_block_statements.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/style/use_block_statements.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_block_statements.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -350,357 +350,357 @@
 <span id="350">350</span>
 <span id="351">351</span>
 <span id="352">352</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::iter</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::iter;
 
-<span class="kw">use</span> <span class="ident">rome_analyze::context::RuleContext</span>;
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleAction</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_factory::make</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsAnyStatement</span>, <span class="ident">JsDoWhileStatement</span>, <span class="ident">JsElseClause</span>, <span class="ident">JsForInStatement</span>, <span class="ident">JsForOfStatement</span>,
-    <span class="ident">JsForStatement</span>, <span class="ident">JsIfStatement</span>, <span class="ident">JsLanguage</span>, <span class="ident">JsSyntaxTrivia</span>, <span class="ident">JsWhileStatement</span>, <span class="ident">JsWithStatement</span>,
-    <span class="ident">TriviaPieceKind</span>, <span class="ident">T</span>,
+<span class="kw">use </span>rome_analyze::context::RuleContext;
+<span class="kw">use </span>rome_analyze::{declare_rule, ActionCategory, Ast, Rule, RuleAction, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_factory::make;
+<span class="kw">use </span>rome_js_syntax::{
+    JsAnyStatement, JsDoWhileStatement, JsElseClause, JsForInStatement, JsForOfStatement,
+    JsForStatement, JsIfStatement, JsLanguage, JsSyntaxTrivia, JsWhileStatement, JsWithStatement,
+    TriviaPieceKind, T,
 };
 
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">declare_node_union</span>, <span class="ident">AstNode</span>, <span class="ident">BatchMutationExt</span>, <span class="ident">SyntaxTriviaPiece</span>};
+<span class="kw">use </span>rome_rowan::{declare_node_union, AstNode, BatchMutationExt, SyntaxTriviaPiece};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsRuleAction</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">use_block_statements_diagnostic</span>, <span class="ident">use_block_statements_replace_body</span>};
+<span class="kw">use </span><span class="kw">crate</span>::JsRuleAction;
+<span class="kw">use crate</span>::{use_block_statements_diagnostic, use_block_statements_replace_body};
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Requires following curly brace conventions.</span>
-    <span class="doccomment">/// JavaScript allows the omission of curly braces when a block contains only one statement. However, it is considered by many to be best practice to never omit curly braces around blocks, even when they are optional, because it can lead to bugs and reduces code clarity.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">///  if (x) x;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">///  if (x) {</span>
-    <span class="doccomment">///    x;</span>
-    <span class="doccomment">///  } else y;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// if (x) {</span>
-    <span class="doccomment">///   x;</span>
-    <span class="doccomment">/// } else if (y) y;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">///    for (;;);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">///    for (p in obj);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">///   for (x of xs);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">///   do;</span>
-    <span class="doccomment">///   while (x);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">///    while (x);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">///   with (x);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseBlockStatements</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;useBlockStatements&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">true</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Requires following curly brace conventions.
+    /// JavaScript allows the omission of curly braces when a block contains only one statement. However, it is considered by many to be best practice to never omit curly braces around blocks, even when they are optional, because it can lead to bugs and reduces code clarity.
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    ///  if (x) x;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    ///  if (x) {
+    ///    x;
+    ///  } else y;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// if (x) {
+    ///   x;
+    /// } else if (y) y;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    ///    for (;;);
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    ///    for (p in obj);
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    ///   for (x of xs);
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    ///   do;
+    ///   while (x);
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    ///    while (x);
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    ///   with (x);
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) UseBlockStatements {
+        version: <span class="string">&quot;0.7.0&quot;</span>,
+        name: <span class="string">&quot;useBlockStatements&quot;</span>,
+        recommended: <span class="bool-val">true</span>,
     }
 }
 
-<span class="macro">declare_node_union!</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">JsAnyBlockStatement</span> <span class="op">=</span> <span class="ident">JsIfStatement</span> <span class="op">|</span> <span class="ident">JsElseClause</span> <span class="op">|</span> <span class="ident">JsDoWhileStatement</span> <span class="op">|</span> <span class="ident">JsForInStatement</span> <span class="op">|</span> <span class="ident">JsForOfStatement</span> <span class="op">|</span> <span class="ident">JsForStatement</span> <span class="op">|</span> <span class="ident">JsWhileStatement</span> <span class="op">|</span> <span class="ident">JsWithStatement</span>
+<span class="macro">declare_node_union! </span>{
+    <span class="kw">pub</span>(<span class="kw">crate</span>) JsAnyBlockStatement = JsIfStatement | JsElseClause | JsDoWhileStatement | JsForInStatement | JsForOfStatement | JsForStatement | JsWhileStatement | JsWithStatement
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseBlockStatements</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">JsAnyBlockStatement</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> <span class="ident">UseBlockStatementsOperationType</span>;
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>UseBlockStatements {
+    <span class="kw">type </span>Query = Ast&lt;JsAnyBlockStatement&gt;;
+    <span class="kw">type </span>State = UseBlockStatementsOperationType;
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">match</span> <span class="ident">node</span> {
-            <span class="ident">JsAnyBlockStatement::JsIfStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="macro">use_block_statements_diagnostic!</span>(<span class="ident">stmt</span>, <span class="ident">consequent</span>)
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="kw">match </span>node {
+            JsAnyBlockStatement::JsIfStatement(stmt) =&gt; {
+                <span class="macro">use_block_statements_diagnostic!</span>(stmt, consequent)
             }
-            <span class="ident">JsAnyBlockStatement::JsDoWhileStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="macro">use_block_statements_diagnostic!</span>(<span class="ident">stmt</span>)
+            JsAnyBlockStatement::JsDoWhileStatement(stmt) =&gt; {
+                <span class="macro">use_block_statements_diagnostic!</span>(stmt)
             }
-            <span class="ident">JsAnyBlockStatement::JsForInStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="macro">use_block_statements_diagnostic!</span>(<span class="ident">stmt</span>)
+            JsAnyBlockStatement::JsForInStatement(stmt) =&gt; {
+                <span class="macro">use_block_statements_diagnostic!</span>(stmt)
             }
-            <span class="ident">JsAnyBlockStatement::JsForOfStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="macro">use_block_statements_diagnostic!</span>(<span class="ident">stmt</span>)
+            JsAnyBlockStatement::JsForOfStatement(stmt) =&gt; {
+                <span class="macro">use_block_statements_diagnostic!</span>(stmt)
             }
-            <span class="ident">JsAnyBlockStatement::JsForStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="macro">use_block_statements_diagnostic!</span>(<span class="ident">stmt</span>)
+            JsAnyBlockStatement::JsForStatement(stmt) =&gt; {
+                <span class="macro">use_block_statements_diagnostic!</span>(stmt)
             }
-            <span class="ident">JsAnyBlockStatement::JsWhileStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="macro">use_block_statements_diagnostic!</span>(<span class="ident">stmt</span>)
+            JsAnyBlockStatement::JsWhileStatement(stmt) =&gt; {
+                <span class="macro">use_block_statements_diagnostic!</span>(stmt)
             }
-            <span class="ident">JsAnyBlockStatement::JsWithStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="macro">use_block_statements_diagnostic!</span>(<span class="ident">stmt</span>)
+            JsAnyBlockStatement::JsWithStatement(stmt) =&gt; {
+                <span class="macro">use_block_statements_diagnostic!</span>(stmt)
             }
-            <span class="ident">JsAnyBlockStatement::JsElseClause</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">stmt</span>.<span class="ident">alternate</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-                <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">body</span>, <span class="ident">JsAnyStatement::JsEmptyStatement</span>(<span class="kw">_</span>)) {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">UseBlockStatementsOperationType::ReplaceBody</span>);
+            JsAnyBlockStatement::JsElseClause(stmt) =&gt; {
+                <span class="kw">let </span>body = stmt.alternate().ok()<span class="question-mark">?</span>;
+                <span class="kw">if </span><span class="macro">matches!</span>(body, JsAnyStatement::JsEmptyStatement(<span class="kw">_</span>)) {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(UseBlockStatementsOperationType::ReplaceBody);
                 }
-                <span class="kw">let</span> <span class="ident">is_block</span> <span class="op">=</span> <span class="macro">matches!</span>(
-                    <span class="ident">body</span>,
-                    <span class="ident">JsAnyStatement::JsBlockStatement</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">JsAnyStatement::JsIfStatement</span>(<span class="kw">_</span>)
+                <span class="kw">let </span>is_block = <span class="macro">matches!</span>(
+                    body,
+                    JsAnyStatement::JsBlockStatement(<span class="kw">_</span>) | JsAnyStatement::JsIfStatement(<span class="kw">_</span>)
                 );
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">is_block</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">UseBlockStatementsOperationType::Wrap</span>(<span class="ident">body</span>));
+                <span class="kw">if </span>!is_block {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(UseBlockStatementsOperationType::Wrap(body));
                 }
-                <span class="prelude-val">None</span>
-            }
+                <span class="prelude-val">None
+            </span>}
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="prelude-val">Some</span>(<span class="ident">RuleDiagnostic::new</span>(
+    <span class="kw">fn </span>diagnostic(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="prelude-val">Some</span>(RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">node</span>.<span class="ident">range</span>(),
-            <span class="macro">markup!</span> {
-                <span class="string">&quot;Block statements are preferred in this position.&quot;</span>
-            },
+            node.range(),
+            <span class="macro">markup! </span>{
+                <span class="string">&quot;Block statements are preferred in this position.&quot;
+            </span>},
         ))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(
-        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
-        <span class="ident">nodes_need_to_replaced</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
+    <span class="kw">fn </span>action(
+        ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;,
+        nodes_need_to_replaced: <span class="kw-2">&amp;</span><span class="self">Self</span>::State,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
 
-        <span class="kw">match</span> <span class="ident">nodes_need_to_replaced</span> {
-            <span class="ident">UseBlockStatementsOperationType::Wrap</span>(<span class="ident">stmt</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">l_curly_token</span> <span class="op">=</span> <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]);
-                <span class="kw">let</span> <span class="ident">r_curly_token</span> <span class="op">=</span> <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]);
+        <span class="kw">match </span>nodes_need_to_replaced {
+            UseBlockStatementsOperationType::Wrap(stmt) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>l_curly_token = make::token(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]);
+                <span class="kw">let </span>r_curly_token = make::token(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]);
 
-                <span class="comment">// Ensure the opening curly token is separated from the previous token by at least one space</span>
-                <span class="kw">let</span> <span class="ident">has_previous_space</span> <span class="op">=</span> <span class="ident">stmt</span>
-                    .<span class="ident">syntax</span>()
-                    .<span class="ident">first_token</span>()
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident">token</span>.<span class="ident">prev_token</span>())
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> {
-                        <span class="ident">token</span>
-                            .<span class="ident">trailing_trivia</span>()
-                            .<span class="ident">pieces</span>()
-                            .<span class="ident">rev</span>()
-                            .<span class="ident">take_while</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="op">!</span><span class="ident">piece</span>.<span class="ident">is_newline</span>())
-                            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_whitespace</span>())
+                <span class="comment">// Ensure the opening curly token is separated from the previous token by at least one space
+                </span><span class="kw">let </span>has_previous_space = stmt
+                    .syntax()
+                    .first_token()
+                    .and_then(|token| token.prev_token())
+                    .map(|token| {
+                        token
+                            .trailing_trivia()
+                            .pieces()
+                            .rev()
+                            .take_while(|piece| !piece.is_newline())
+                            .any(|piece| piece.is_whitespace())
                     })
-                    .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>);
+                    .unwrap_or(<span class="bool-val">false</span>);
 
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">has_previous_space</span> {
-                    <span class="ident">l_curly_token</span> <span class="op">=</span> <span class="ident">l_curly_token</span>
-                        .<span class="ident">with_leading_trivia</span>(<span class="ident">iter::once</span>((<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="string">&quot; &quot;</span>)));
+                <span class="kw">if </span>!has_previous_space {
+                    l_curly_token = l_curly_token
+                        .with_leading_trivia(iter::once((TriviaPieceKind::Whitespace, <span class="string">&quot; &quot;</span>)));
                 }
 
-                <span class="comment">// Clone the leading trivia of the single statement as the</span>
-                <span class="comment">// leading trivia of the closing curly token</span>
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leading_trivia</span> <span class="op">=</span> <span class="ident">stmt</span>
-                    .<span class="ident">syntax</span>()
-                    .<span class="ident">first_leading_trivia</span>()
-                    .<span class="ident">map</span>(<span class="ident">collect_to_first_newline</span>)
-                    .<span class="ident">unwrap_or_else</span>(<span class="ident">Vec::new</span>);
+                <span class="comment">// Clone the leading trivia of the single statement as the
+                // leading trivia of the closing curly token
+                </span><span class="kw">let </span><span class="kw-2">mut </span>leading_trivia = stmt
+                    .syntax()
+                    .first_leading_trivia()
+                    .map(collect_to_first_newline)
+                    .unwrap_or_else(Vec::new);
 
-                <span class="comment">// If the statement has no leading trivia, add a space after</span>
-                <span class="comment">// the opening curly token</span>
-                <span class="kw">if</span> <span class="ident">leading_trivia</span>.<span class="ident">is_empty</span>() {
-                    <span class="ident">l_curly_token</span> <span class="op">=</span> <span class="ident">l_curly_token</span>
-                        .<span class="ident">with_trailing_trivia</span>(<span class="ident">iter::once</span>((<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="string">&quot; &quot;</span>)));
+                <span class="comment">// If the statement has no leading trivia, add a space after
+                // the opening curly token
+                </span><span class="kw">if </span>leading_trivia.is_empty() {
+                    l_curly_token = l_curly_token
+                        .with_trailing_trivia(iter::once((TriviaPieceKind::Whitespace, <span class="string">&quot; &quot;</span>)));
                 }
 
-                <span class="comment">// If the leading trivia for the statement contains any newline,</span>
-                <span class="comment">// then the indentation is probably one level too deep for the</span>
-                <span class="comment">// closing curly token, clone the leading trivia from the</span>
-                <span class="comment">// parent node instead</span>
-                <span class="kw">if</span> <span class="ident">leading_trivia</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_newline</span>()) {
-                    <span class="comment">// Find the parent block statement node, skipping over</span>
-                    <span class="comment">// else-clause nodes if this statement is part of an</span>
-                    <span class="comment">// else-if chain</span>
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">clone</span>();
-                    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">node</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsAnyBlockStatement</span><span class="op">&gt;</span>() {
-                        <span class="kw">if</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">parent</span>, <span class="ident">JsAnyBlockStatement::JsElseClause</span>(<span class="kw">_</span>)) {
+                <span class="comment">// If the leading trivia for the statement contains any newline,
+                // then the indentation is probably one level too deep for the
+                // closing curly token, clone the leading trivia from the
+                // parent node instead
+                </span><span class="kw">if </span>leading_trivia.iter().any(|piece| piece.is_newline()) {
+                    <span class="comment">// Find the parent block statement node, skipping over
+                    // else-clause nodes if this statement is part of an
+                    // else-if chain
+                    </span><span class="kw">let </span><span class="kw-2">mut </span>node = node.clone();
+                    <span class="kw">while let </span><span class="prelude-val">Some</span>(parent) = node.parent::&lt;JsAnyBlockStatement&gt;() {
+                        <span class="kw">if </span>!<span class="macro">matches!</span>(parent, JsAnyBlockStatement::JsElseClause(<span class="kw">_</span>)) {
                             <span class="kw">break</span>;
                         }
 
-                        <span class="ident">node</span> <span class="op">=</span> <span class="ident">parent</span>;
+                        node = parent;
                     }
 
-                    <span class="ident">leading_trivia</span> <span class="op">=</span> <span class="ident">node</span>
-                        .<span class="ident">syntax</span>()
-                        .<span class="ident">first_leading_trivia</span>()
-                        .<span class="ident">map</span>(<span class="ident">collect_to_first_newline</span>)
-                        .<span class="ident">unwrap_or_else</span>(<span class="ident">Vec::new</span>);
+                    leading_trivia = node
+                        .syntax()
+                        .first_leading_trivia()
+                        .map(collect_to_first_newline)
+                        .unwrap_or_else(Vec::new);
                 }
 
-                <span class="comment">// Apply the cloned trivia to the closing curly token, or</span>
-                <span class="comment">// fallback to a single space if it&#39;s still empty</span>
-                <span class="kw">let</span> <span class="ident">r_curly_token</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">leading_trivia</span>.<span class="ident">is_empty</span>() {
-                    <span class="kw">let</span> <span class="ident">leading_trivia</span> <span class="op">=</span> <span class="ident">leading_trivia</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">rev</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> (<span class="ident">piece</span>.<span class="ident">kind</span>(), <span class="ident">piece</span>.<span class="ident">text</span>()));
+                <span class="comment">// Apply the cloned trivia to the closing curly token, or
+                // fallback to a single space if it&#39;s still empty
+                </span><span class="kw">let </span>r_curly_token = <span class="kw">if </span>!leading_trivia.is_empty() {
+                    <span class="kw">let </span>leading_trivia = leading_trivia
+                        .iter()
+                        .rev()
+                        .map(|piece| (piece.kind(), piece.text()));
 
-                    <span class="ident">r_curly_token</span>.<span class="ident">with_leading_trivia</span>(<span class="ident">leading_trivia</span>)
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">has_trailing_single_line_comments</span> <span class="op">=</span> <span class="ident">stmt</span>
-                        .<span class="ident">syntax</span>()
-                        .<span class="ident">last_trailing_trivia</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">trivia</span><span class="op">|</span> {
-                            <span class="ident">trivia</span>
-                                .<span class="ident">pieces</span>()
-                                .<span class="ident">any</span>(<span class="op">|</span><span class="ident">trivia</span><span class="op">|</span> <span class="ident">trivia</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">TriviaPieceKind::SingleLineComment</span>)
+                    r_curly_token.with_leading_trivia(leading_trivia)
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span>has_trailing_single_line_comments = stmt
+                        .syntax()
+                        .last_trailing_trivia()
+                        .map(|trivia| {
+                            trivia
+                                .pieces()
+                                .any(|trivia| trivia.kind() == TriviaPieceKind::SingleLineComment)
                         })
-                        .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>);
-                    <span class="comment">// if the node we have to enclose has some trailing comments, then we add a new line</span>
-                    <span class="comment">// to the leading trivia of the right curly brace</span>
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">has_trailing_single_line_comments</span> {
-                        <span class="ident">r_curly_token</span>
-                            .<span class="ident">with_leading_trivia</span>(<span class="ident">iter::once</span>((<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="string">&quot; &quot;</span>)))
-                    } <span class="kw">else</span> {
-                        <span class="ident">r_curly_token</span>
-                            .<span class="ident">with_leading_trivia</span>(<span class="ident">iter::once</span>((<span class="ident">TriviaPieceKind::Newline</span>, <span class="string">&quot;\n&quot;</span>)))
+                        .unwrap_or(<span class="bool-val">false</span>);
+                    <span class="comment">// if the node we have to enclose has some trailing comments, then we add a new line
+                    // to the leading trivia of the right curly brace
+                    </span><span class="kw">if </span>!has_trailing_single_line_comments {
+                        r_curly_token
+                            .with_leading_trivia(iter::once((TriviaPieceKind::Whitespace, <span class="string">&quot; &quot;</span>)))
+                    } <span class="kw">else </span>{
+                        r_curly_token
+                            .with_leading_trivia(iter::once((TriviaPieceKind::Newline, <span class="string">&quot;\n&quot;</span>)))
                     }
                 };
 
-                <span class="ident">mutation</span>.<span class="ident">replace_node_discard_trivia</span>(
-                    <span class="ident">stmt</span>.<span class="ident">clone</span>(),
-                    <span class="ident">JsAnyStatement::JsBlockStatement</span>(<span class="ident">make::js_block_statement</span>(
-                        <span class="ident">l_curly_token</span>,
-                        <span class="ident">make::js_statement_list</span>(<span class="ident">iter::once</span>(<span class="ident">stmt</span>.<span class="ident">clone</span>())),
-                        <span class="ident">r_curly_token</span>,
+                mutation.replace_node_discard_trivia(
+                    stmt.clone(),
+                    JsAnyStatement::JsBlockStatement(make::js_block_statement(
+                        l_curly_token,
+                        make::js_statement_list(iter::once(stmt.clone())),
+                        r_curly_token,
                     )),
                 );
             }
-            <span class="ident">UseBlockStatementsOperationType::ReplaceBody</span> =&gt; <span class="kw">match</span> <span class="ident">node</span> {
-                <span class="ident">JsAnyBlockStatement::JsIfStatement</span>(<span class="ident">stmt</span>) =&gt; {
+            UseBlockStatementsOperationType::ReplaceBody =&gt; <span class="kw">match </span>node {
+                JsAnyBlockStatement::JsIfStatement(stmt) =&gt; {
                     <span class="macro">use_block_statements_replace_body!</span>(
-                        <span class="ident">JsIfStatement</span>,
-                        <span class="ident">with_consequent</span>,
-                        <span class="ident">mutation</span>,
-                        <span class="ident">node</span>,
-                        <span class="ident">stmt</span>
+                        JsIfStatement,
+                        with_consequent,
+                        mutation,
+                        node,
+                        stmt
                     )
                 }
-                <span class="ident">JsAnyBlockStatement::JsElseClause</span>(<span class="ident">stmt</span>) =&gt; {
+                JsAnyBlockStatement::JsElseClause(stmt) =&gt; {
                     <span class="macro">use_block_statements_replace_body!</span>(
-                        <span class="ident">JsElseClause</span>,
-                        <span class="ident">with_alternate</span>,
-                        <span class="ident">mutation</span>,
-                        <span class="ident">node</span>,
-                        <span class="ident">stmt</span>
+                        JsElseClause,
+                        with_alternate,
+                        mutation,
+                        node,
+                        stmt
                     )
                 }
-                <span class="ident">JsAnyBlockStatement::JsDoWhileStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="macro">use_block_statements_replace_body!</span>(<span class="ident">JsDoWhileStatement</span>, <span class="ident">mutation</span>, <span class="ident">node</span>, <span class="ident">stmt</span>)
+                JsAnyBlockStatement::JsDoWhileStatement(stmt) =&gt; {
+                    <span class="macro">use_block_statements_replace_body!</span>(JsDoWhileStatement, mutation, node, stmt)
                 }
-                <span class="ident">JsAnyBlockStatement::JsForInStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="macro">use_block_statements_replace_body!</span>(<span class="ident">JsForInStatement</span>, <span class="ident">mutation</span>, <span class="ident">node</span>, <span class="ident">stmt</span>)
+                JsAnyBlockStatement::JsForInStatement(stmt) =&gt; {
+                    <span class="macro">use_block_statements_replace_body!</span>(JsForInStatement, mutation, node, stmt)
                 }
-                <span class="ident">JsAnyBlockStatement::JsForOfStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="macro">use_block_statements_replace_body!</span>(<span class="ident">JsForOfStatement</span>, <span class="ident">mutation</span>, <span class="ident">node</span>, <span class="ident">stmt</span>)
+                JsAnyBlockStatement::JsForOfStatement(stmt) =&gt; {
+                    <span class="macro">use_block_statements_replace_body!</span>(JsForOfStatement, mutation, node, stmt)
                 }
-                <span class="ident">JsAnyBlockStatement::JsForStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="macro">use_block_statements_replace_body!</span>(<span class="ident">JsForStatement</span>, <span class="ident">mutation</span>, <span class="ident">node</span>, <span class="ident">stmt</span>)
+                JsAnyBlockStatement::JsForStatement(stmt) =&gt; {
+                    <span class="macro">use_block_statements_replace_body!</span>(JsForStatement, mutation, node, stmt)
                 }
-                <span class="ident">JsAnyBlockStatement::JsWhileStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="macro">use_block_statements_replace_body!</span>(<span class="ident">JsWhileStatement</span>, <span class="ident">mutation</span>, <span class="ident">node</span>, <span class="ident">stmt</span>)
+                JsAnyBlockStatement::JsWhileStatement(stmt) =&gt; {
+                    <span class="macro">use_block_statements_replace_body!</span>(JsWhileStatement, mutation, node, stmt)
                 }
-                <span class="ident">JsAnyBlockStatement::JsWithStatement</span>(<span class="ident">stmt</span>) =&gt; {
-                    <span class="macro">use_block_statements_replace_body!</span>(<span class="ident">JsWithStatement</span>, <span class="ident">mutation</span>, <span class="ident">node</span>, <span class="ident">stmt</span>)
+                JsAnyBlockStatement::JsWithStatement(stmt) =&gt; {
+                    <span class="macro">use_block_statements_replace_body!</span>(JsWithStatement, mutation, node, stmt)
                 }
             },
         };
-        <span class="prelude-val">Some</span>(<span class="ident">RuleAction</span> {
-            <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
-            <span class="ident">applicability</span>: <span class="ident">Applicability::MaybeIncorrect</span>,
-            <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;Wrap the statement with a `JsBlockStatement`&quot;</span> }.<span class="ident">to_owned</span>(),
-            <span class="ident">mutation</span>,
+        <span class="prelude-val">Some</span>(RuleAction {
+            category: ActionCategory::QuickFix,
+            applicability: Applicability::MaybeIncorrect,
+            message: <span class="macro">markup! </span>{ <span class="string">&quot;Wrap the statement with a `JsBlockStatement`&quot; </span>}.to_owned(),
+            mutation,
         })
     }
 }
 
-<span class="doccomment">/// Collect newline and comment trivia pieces in reverse order up to the first newline included</span>
-<span class="kw">fn</span> <span class="ident">collect_to_first_newline</span>(<span class="ident">trivia</span>: <span class="ident">JsSyntaxTrivia</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SyntaxTriviaPiece</span><span class="op">&lt;</span><span class="ident">JsLanguage</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_newline</span> <span class="op">=</span> <span class="bool-val">false</span>;
-    <span class="ident">trivia</span>
-        .<span class="ident">pieces</span>()
-        .<span class="ident">rev</span>()
-        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_newline</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">piece</span>.<span class="ident">is_whitespace</span>())
-        .<span class="ident">take_while</span>(<span class="op">|</span><span class="ident">piece</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">had_newline</span> <span class="op">=</span> <span class="ident">has_newline</span>;
-            <span class="ident">has_newline</span> <span class="op">|</span><span class="op">=</span> <span class="ident">piece</span>.<span class="ident">is_newline</span>();
-            <span class="op">!</span><span class="ident">had_newline</span>
+<span class="doccomment">/// Collect newline and comment trivia pieces in reverse order up to the first newline included
+</span><span class="kw">fn </span>collect_to_first_newline(trivia: JsSyntaxTrivia) -&gt; Vec&lt;SyntaxTriviaPiece&lt;JsLanguage&gt;&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>has_newline = <span class="bool-val">false</span>;
+    trivia
+        .pieces()
+        .rev()
+        .filter(|piece| piece.is_newline() || piece.is_whitespace())
+        .take_while(|piece| {
+            <span class="kw">let </span>had_newline = has_newline;
+            has_newline |= piece.is_newline();
+            !had_newline
         })
-        .<span class="ident">collect</span>()
+        .collect()
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UseBlockStatementsOperationType</span> {
-    <span class="ident">Wrap</span>(<span class="ident">JsAnyStatement</span>),
-    <span class="ident">ReplaceBody</span>,
+<span class="kw">pub enum </span>UseBlockStatementsOperationType {
+    Wrap(JsAnyStatement),
+    ReplaceBody,
 }
 
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">use_block_statements_diagnostic</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>:<span class="ident">ident</span>) =&gt; {{
-        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">body</span>, <span class="ident">JsAnyStatement::JsEmptyStatement</span>(<span class="kw">_</span>)) {
-            <span class="prelude-val">Some</span>(<span class="ident">UseBlockStatementsOperationType::ReplaceBody</span>)
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">body</span>, <span class="ident">JsAnyStatement::JsBlockStatement</span>(<span class="kw">_</span>)) {
-            <span class="prelude-val">Some</span>(<span class="ident">UseBlockStatementsOperationType::Wrap</span>(<span class="ident">body</span>))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+<span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>use_block_statements_diagnostic {
+    (<span class="macro-nonterminal">$id</span>:ident, <span class="macro-nonterminal">$field</span>:ident) =&gt; {{
+        <span class="kw">let </span>body = <span class="macro-nonterminal">$id</span>.<span class="macro-nonterminal">$field</span>().ok()<span class="question-mark">?</span>;
+        <span class="kw">if </span><span class="macro">matches!</span>(body, JsAnyStatement::JsEmptyStatement(<span class="kw">_</span>)) {
+            <span class="prelude-val">Some</span>(UseBlockStatementsOperationType::ReplaceBody)
+        } <span class="kw">else if </span>!<span class="macro">matches!</span>(body, JsAnyStatement::JsBlockStatement(<span class="kw">_</span>)) {
+            <span class="prelude-val">Some</span>(UseBlockStatementsOperationType::Wrap(body))
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }};
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>:<span class="ident">ident</span>) =&gt; {
-        <span class="macro">use_block_statements_diagnostic!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>, <span class="ident">body</span>)
+    (<span class="macro-nonterminal">$id</span>:ident) =&gt; {
+        <span class="macro">use_block_statements_diagnostic!</span>(<span class="macro-nonterminal">$id</span>, body)
     };
 }
 
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">use_block_statements_replace_body</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">stmt_type</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">builder_method</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">mutation</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">node</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">stmt</span>:<span class="ident">ident</span>) =&gt; {
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">mutation</span>.<span class="ident">replace_node</span>(
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">node</span>.<span class="ident">clone</span>(),
-            <span class="ident">JsAnyBlockStatement</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">stmt_type</span>(
-                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">stmt</span>
-                    .<span class="ident">clone</span>()
-                    .<span class="macro-nonterminal">$</span><span class="macro-nonterminal">builder_method</span>(<span class="ident">JsAnyStatement::JsBlockStatement</span>(<span class="ident">make::js_block_statement</span>(
-                        <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>])
-                            .<span class="ident">with_leading_trivia</span>(<span class="ident">iter::once</span>((<span class="ident">TriviaPieceKind::Whitespace</span>, <span class="string">&quot; &quot;</span>))),
-                        <span class="ident">make::js_statement_list</span>([]),
-                        <span class="ident">make::token</span>(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]),
+<span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>use_block_statements_replace_body {
+    (<span class="macro-nonterminal">$stmt_type</span>:ident, <span class="macro-nonterminal">$builder_method</span>:ident, <span class="macro-nonterminal">$mutation</span>:ident, <span class="macro-nonterminal">$node</span>:ident, <span class="macro-nonterminal">$stmt</span>:ident) =&gt; {
+        <span class="macro-nonterminal">$mutation</span>.replace_node(
+            <span class="macro-nonterminal">$node</span>.clone(),
+            JsAnyBlockStatement::<span class="macro-nonterminal">$stmt_type</span>(
+                <span class="macro-nonterminal">$stmt
+                    </span>.clone()
+                    .<span class="macro-nonterminal">$builder_method</span>(JsAnyStatement::JsBlockStatement(make::js_block_statement(
+                        make::token(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>])
+                            .with_leading_trivia(iter::once((TriviaPieceKind::Whitespace, <span class="string">&quot; &quot;</span>))),
+                        make::js_statement_list([]),
+                        make::token(<span class="macro">T!</span>[<span class="string">&#39;}&#39;</span>]),
                     ))),
             ),
         )
     };
 
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">stmt_type</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">mutation</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">node</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">stmt</span>:<span class="ident">ident</span>) =&gt; {
-        <span class="macro">use_block_statements_replace_body!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">stmt_type</span>, <span class="ident">with_body</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">mutation</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">node</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">stmt</span>)
+    (<span class="macro-nonterminal">$stmt_type</span>:ident, <span class="macro-nonterminal">$mutation</span>:ident, <span class="macro-nonterminal">$node</span>:ident, <span class="macro-nonterminal">$stmt</span>:ident) =&gt; {
+        <span class="macro">use_block_statements_replace_body!</span>(<span class="macro-nonterminal">$stmt_type</span>, with_body, <span class="macro-nonterminal">$mutation</span>, <span class="macro-nonterminal">$node</span>, <span class="macro-nonterminal">$stmt</span>)
     };
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

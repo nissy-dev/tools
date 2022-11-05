@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/correctness/no_unnecessary_continue.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>no_unnecessary_continue.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/analyzers/correctness/no_unnecessary_continue.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>no_unnecessary_continue.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -186,193 +186,193 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">context::RuleContext</span>, <span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Ast</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsContinueStatement</span>, <span class="ident">JsLabeledStatement</span>, <span class="ident">JsSyntaxKind</span>, <span class="ident">JsSyntaxNode</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">BatchMutationExt</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>rome_analyze::{context::RuleContext, declare_rule, ActionCategory, Ast, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_syntax::{JsContinueStatement, JsLabeledStatement, JsSyntaxKind, JsSyntaxNode};
+<span class="kw">use </span>rome_rowan::{AstNode, BatchMutationExt};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">utils</span>, <span class="ident">JsRuleAction</span>};
+<span class="kw">use crate</span>::{utils, JsRuleAction};
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Avoid using unnecessary `continue`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// loop: for (let i = 0; i &lt; 5; i++) {</span>
-    <span class="doccomment">///   continue loop;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// while (i--) {</span>
-    <span class="doccomment">///   continue;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// while (1) {</span>
-    <span class="doccomment">///   continue;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// for (let i = 0; i &lt; 10; i++) {</span>
-    <span class="doccomment">///   if (i &gt; 5) {</span>
-    <span class="doccomment">///     console.log(&quot;foo&quot;);</span>
-    <span class="doccomment">///     continue;</span>
-    <span class="doccomment">///   } else if (i &gt;= 5 &amp;&amp; i &lt; 8) {</span>
-    <span class="doccomment">///     console.log(&quot;test&quot;);</span>
-    <span class="doccomment">///   } else {</span>
-    <span class="doccomment">///     console.log(&quot;test&quot;);</span>
-    <span class="doccomment">///   }</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// for (let i = 0; i &lt; 9; i++) {</span>
-    <span class="doccomment">///   continue;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js, expect_diagnostic</span>
-    <span class="doccomment">/// test2: do {</span>
-    <span class="doccomment">/// 	continue test2;</span>
-    <span class="doccomment">/// } while (true);</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Valid</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// while (i) {</span>
-    <span class="doccomment">///   if (i &gt; 5) {</span>
-    <span class="doccomment">///     continue;</span>
-    <span class="doccomment">///   }</span>
-    <span class="doccomment">///   console.log(i);</span>
-    <span class="doccomment">///   i--;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// loop: while (1) {</span>
-    <span class="doccomment">///   forLoop: for (let i = 0; i &lt; 5; i++) {</span>
-    <span class="doccomment">///     if (someCondition) {</span>
-    <span class="doccomment">///       continue loop;</span>
-    <span class="doccomment">///     }</span>
-    <span class="doccomment">///   }</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">NoUnnecessaryContinue</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.7.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;noUnnecessaryContinue&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">true</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Avoid using unnecessary `continue`.
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    /// ```js,expect_diagnostic
+    /// loop: for (let i = 0; i &lt; 5; i++) {
+    ///   continue loop;
+    /// }
+    /// ```
+    /// ```js,expect_diagnostic
+    /// while (i--) {
+    ///   continue;
+    /// }
+    /// ```
+    /// ```js,expect_diagnostic
+    /// while (1) {
+    ///   continue;
+    /// }
+    /// ```
+    /// ```js,expect_diagnostic
+    /// for (let i = 0; i &lt; 10; i++) {
+    ///   if (i &gt; 5) {
+    ///     console.log(&quot;foo&quot;);
+    ///     continue;
+    ///   } else if (i &gt;= 5 &amp;&amp; i &lt; 8) {
+    ///     console.log(&quot;test&quot;);
+    ///   } else {
+    ///     console.log(&quot;test&quot;);
+    ///   }
+    /// }
+    /// ```
+    /// ```js,expect_diagnostic
+    /// for (let i = 0; i &lt; 9; i++) {
+    ///   continue;
+    /// }
+    /// ```
+    ///
+    /// ```js, expect_diagnostic
+    /// test2: do {
+    /// 	continue test2;
+    /// } while (true);
+    /// ```
+    ///
+    /// ### Valid
+    /// ```js
+    /// while (i) {
+    ///   if (i &gt; 5) {
+    ///     continue;
+    ///   }
+    ///   console.log(i);
+    ///   i--;
+    /// }
+    ///
+    /// loop: while (1) {
+    ///   forLoop: for (let i = 0; i &lt; 5; i++) {
+    ///     if (someCondition) {
+    ///       continue loop;
+    ///     }
+    ///   }
+    /// }
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) NoUnnecessaryContinue {
+        version: <span class="string">&quot;0.7.0&quot;</span>,
+        name: <span class="string">&quot;noUnnecessaryContinue&quot;</span>,
+        recommended: <span class="bool-val">true</span>,
     }
 
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">NoUnnecessaryContinue</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Ast</span><span class="op">&lt;</span><span class="ident">JsContinueStatement</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> ();
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>NoUnnecessaryContinue {
+    <span class="kw">type </span>Query = Ast&lt;JsContinueStatement&gt;;
+    <span class="kw">type </span>State = ();
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="ident">is_continue_un_necessary</span>(<span class="ident">node</span>)<span class="question-mark">?</span>.<span class="ident">then_some</span>(())
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        is_continue_un_necessary(node)<span class="question-mark">?</span>.then_some(())
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="prelude-val">Some</span>(<span class="ident">RuleDiagnostic::new</span>(
+    <span class="kw">fn </span>diagnostic(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>node = ctx.query();
+        <span class="prelude-val">Some</span>(RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">node</span>.<span class="ident">range</span>(),
-            <span class="macro">markup!</span> {
-                <span class="string">&quot;Unnecessary continue statement&quot;</span>
-            },
+            node.range(),
+            <span class="macro">markup! </span>{
+                <span class="string">&quot;Unnecessary continue statement&quot;
+            </span>},
         ))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+    <span class="kw">fn </span>action(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">let </span>node = ctx.query();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mutation</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
-        <span class="ident">utils::remove_statement</span>(<span class="kw-2">&amp;mut</span> <span class="ident">mutation</span>, <span class="ident">node</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>mutation = ctx.root().begin();
+        utils::remove_statement(<span class="kw-2">&amp;mut </span>mutation, node)<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-            <span class="ident">category</span>: <span class="ident">ActionCategory::QuickFix</span>,
-            <span class="ident">applicability</span>: <span class="ident">Applicability::MaybeIncorrect</span>,
-            <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;Delete the unnecessary continue statement&quot;</span> }.<span class="ident">to_owned</span>(),
-            <span class="ident">mutation</span>,
+        <span class="prelude-val">Some</span>(JsRuleAction {
+            category: ActionCategory::QuickFix,
+            applicability: Applicability::MaybeIncorrect,
+            message: <span class="macro">markup! </span>{ <span class="string">&quot;Delete the unnecessary continue statement&quot; </span>}.to_owned(),
+            mutation,
         })
     }
 }
 
-<span class="kw">fn</span> <span class="ident">is_continue_un_necessary</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">JsContinueStatement</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>::<span class="kw-2">*</span>;
-    <span class="kw">let</span> <span class="ident">syntax</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">clone</span>().<span class="ident">into_syntax</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">syntax</span>.<span class="ident">clone</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ancestors</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">loop_stmt</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">current</span>.<span class="ident">parent</span>() {
-        <span class="kw">if</span> <span class="op">!</span><span class="macro">matches!</span>(
-            <span class="ident">parent</span>.<span class="ident">kind</span>(),
-            <span class="ident">JS_FOR_IN_STATEMENT</span>
-                <span class="op">|</span> <span class="ident">JS_FOR_OF_STATEMENT</span>
-                <span class="op">|</span> <span class="ident">JS_FOR_STATEMENT</span>
-                <span class="op">|</span> <span class="ident">JS_WHILE_STATEMENT</span>
-                <span class="op">|</span> <span class="ident">JS_DO_WHILE_STATEMENT</span>
+<span class="kw">fn </span>is_continue_un_necessary(node: <span class="kw-2">&amp;</span>JsContinueStatement) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    <span class="kw">use </span>rome_js_syntax::JsSyntaxKind::<span class="kw-2">*</span>;
+    <span class="kw">let </span>syntax = node.clone().into_syntax();
+    <span class="kw">let </span><span class="kw-2">mut </span>current = syntax.clone();
+    <span class="kw">let </span><span class="kw-2">mut </span>ancestors = <span class="macro">vec!</span>[];
+    <span class="kw">let </span><span class="kw-2">mut </span>loop_stmt = <span class="prelude-val">None</span>;
+    <span class="kw">while let </span><span class="prelude-val">Some</span>(parent) = current.parent() {
+        <span class="kw">if </span>!<span class="macro">matches!</span>(
+            parent.kind(),
+            JS_FOR_IN_STATEMENT
+                | JS_FOR_OF_STATEMENT
+                | JS_FOR_STATEMENT
+                | JS_WHILE_STATEMENT
+                | JS_DO_WHILE_STATEMENT
         ) {
-            <span class="ident">ancestors</span>.<span class="ident">push</span>(<span class="ident">parent</span>.<span class="ident">clone</span>());
-        } <span class="kw">else</span> {
-            <span class="ident">loop_stmt</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>);
+            ancestors.push(parent.clone());
+        } <span class="kw">else </span>{
+            loop_stmt = <span class="prelude-val">Some</span>(parent);
             <span class="kw">break</span>;
         }
-        <span class="ident">current</span> <span class="op">=</span> <span class="ident">parent</span>;
+        current = parent;
     }
-    <span class="kw">let</span> <span class="ident">loop_stmt</span> <span class="op">=</span> <span class="ident">loop_stmt</span><span class="question-mark">?</span>;
-    <span class="kw">if</span> <span class="ident">ancestors</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>);
+    <span class="kw">let </span>loop_stmt = loop_stmt<span class="question-mark">?</span>;
+    <span class="kw">if </span>ancestors.is_empty() {
+        <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="bool-val">true</span>);
     }
     <span class="prelude-val">Some</span>(
-        <span class="ident">is_continue_last_statement</span>(<span class="kw-2">&amp;</span><span class="ident">ancestors</span>, <span class="ident">syntax</span>.<span class="ident">clone</span>()).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
-            <span class="op">&amp;&amp;</span> <span class="ident">contains_parent_loop_label</span>(<span class="ident">syntax</span>.<span class="ident">clone</span>(), <span class="ident">loop_stmt</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
-            <span class="op">&amp;&amp;</span> <span class="ident">is_continue_inside_last_ancestors</span>(<span class="kw-2">&amp;</span><span class="ident">ancestors</span>, <span class="ident">syntax</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>),
+        is_continue_last_statement(<span class="kw-2">&amp;</span>ancestors, syntax.clone()).unwrap_or(<span class="bool-val">false</span>)
+            &amp;&amp; contains_parent_loop_label(syntax.clone(), loop_stmt).unwrap_or(<span class="bool-val">false</span>)
+            &amp;&amp; is_continue_inside_last_ancestors(<span class="kw-2">&amp;</span>ancestors, syntax).unwrap_or(<span class="bool-val">false</span>),
     )
 }
 
-<span class="kw">fn</span> <span class="ident">is_continue_last_statement</span>(<span class="ident">ancestors</span>: <span class="kw-2">&amp;</span>[<span class="ident">JsSyntaxNode</span>], <span class="ident">syntax</span>: <span class="ident">JsSyntaxNode</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">first_node</span> <span class="op">=</span> <span class="ident">ancestors</span>.<span class="ident">first</span>()<span class="question-mark">?</span>;
-    <span class="kw">if</span> <span class="ident">first_node</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">JsSyntaxKind::JS_STATEMENT_LIST</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">first_node</span>.<span class="ident">children</span>().<span class="ident">last</span>()<span class="question-mark">?</span> <span class="op">==</span> <span class="ident">syntax</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
-    }
+<span class="kw">fn </span>is_continue_last_statement(ancestors: <span class="kw-2">&amp;</span>[JsSyntaxNode], syntax: JsSyntaxNode) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    <span class="kw">let </span>first_node = ancestors.first()<span class="question-mark">?</span>;
+    <span class="kw">if </span>first_node.kind() == JsSyntaxKind::JS_STATEMENT_LIST {
+        <span class="prelude-val">Some</span>(first_node.children().last()<span class="question-mark">? </span>== syntax)
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>}
 }
 
-<span class="doccomment">/// return true if continue label is undefined or equal to its parent&#39;s looplabel</span>
-<span class="kw">fn</span> <span class="ident">contains_parent_loop_label</span>(<span class="ident">node</span>: <span class="ident">JsSyntaxNode</span>, <span class="ident">loop_stmt</span>: <span class="ident">JsSyntaxNode</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">continue_stmt</span> <span class="op">=</span> <span class="ident">JsContinueStatement::cast</span>(<span class="ident">node</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">continue_stmt_label</span> <span class="op">=</span> <span class="ident">continue_stmt</span>.<span class="ident">label_token</span>();
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">label</span>) <span class="op">=</span> <span class="ident">continue_stmt_label</span> {
-        <span class="kw">let</span> <span class="ident">label_stmt</span> <span class="op">=</span> <span class="ident">JsLabeledStatement::cast</span>(<span class="ident">loop_stmt</span>.<span class="ident">parent</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Some</span>(<span class="ident">label_stmt</span>.<span class="ident">label_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>.<span class="ident">text_trimmed</span>() <span class="op">==</span> <span class="ident">label</span>.<span class="ident">text_trimmed</span>())
-    } <span class="kw">else</span> {
+<span class="doccomment">/// return true if continue label is undefined or equal to its parent&#39;s looplabel
+</span><span class="kw">fn </span>contains_parent_loop_label(node: JsSyntaxNode, loop_stmt: JsSyntaxNode) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    <span class="kw">let </span>continue_stmt = JsContinueStatement::cast(node)<span class="question-mark">?</span>;
+    <span class="kw">let </span>continue_stmt_label = continue_stmt.label_token();
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(label) = continue_stmt_label {
+        <span class="kw">let </span>label_stmt = JsLabeledStatement::cast(loop_stmt.parent()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+        <span class="prelude-val">Some</span>(label_stmt.label_token().ok()<span class="question-mark">?</span>.text_trimmed() == label.text_trimmed())
+    } <span class="kw">else </span>{
         <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">is_continue_inside_last_ancestors</span>(
-    <span class="ident">ancestors</span>: <span class="kw-2">&amp;</span>[<span class="ident">JsSyntaxNode</span>],
-    <span class="ident">syntax</span>: <span class="ident">JsSyntaxNode</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">ancestors</span>.<span class="ident">len</span>();
-    <span class="kw">for</span> <span class="ident">ancestor_window</span> <span class="kw">in</span> <span class="ident">ancestors</span>.<span class="ident">windows</span>(<span class="number">2</span>).<span class="ident">rev</span>() {
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">ancestor_window</span>[<span class="number">1</span>];
-        <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">ancestor_window</span>[<span class="number">0</span>];
-        <span class="kw">if</span> <span class="ident">parent</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">JsSyntaxKind::JS_STATEMENT_LIST</span> {
-            <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">children</span>();
-            <span class="kw">let</span> <span class="ident">last_body_node</span> <span class="op">=</span> <span class="ident">body</span>.<span class="ident">last</span>()<span class="question-mark">?</span>;
-            <span class="kw">if</span> <span class="op">!</span>((<span class="ident">len</span> <span class="op">==</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">last_body_node</span> <span class="op">==</span> <span class="ident">syntax</span>) <span class="op">|</span><span class="op">|</span> (<span class="ident">len</span> <span class="op">&gt;</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="kw-2">&amp;</span><span class="ident">last_body_node</span> <span class="op">==</span> <span class="ident">child</span>)) {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="bool-val">false</span>);
+<span class="kw">fn </span>is_continue_inside_last_ancestors(
+    ancestors: <span class="kw-2">&amp;</span>[JsSyntaxNode],
+    syntax: JsSyntaxNode,
+) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    <span class="kw">let </span>len = ancestors.len();
+    <span class="kw">for </span>ancestor_window <span class="kw">in </span>ancestors.windows(<span class="number">2</span>).rev() {
+        <span class="kw">let </span>parent = <span class="kw-2">&amp;</span>ancestor_window[<span class="number">1</span>];
+        <span class="kw">let </span>child = <span class="kw-2">&amp;</span>ancestor_window[<span class="number">0</span>];
+        <span class="kw">if </span>parent.kind() == JsSyntaxKind::JS_STATEMENT_LIST {
+            <span class="kw">let </span>body = parent.children();
+            <span class="kw">let </span>last_body_node = body.last()<span class="question-mark">?</span>;
+            <span class="kw">if </span>!((len == <span class="number">1 </span>&amp;&amp; last_body_node == syntax) || (len &gt; <span class="number">1 </span>&amp;&amp; <span class="kw-2">&amp;</span>last_body_node == child)) {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="bool-val">false</span>);
             }
         }
     }
     <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

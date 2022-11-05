@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_cli/src/traversal.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>traversal.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_cli/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_cli/src/traversal.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>traversal.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_cli/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -919,926 +919,926 @@
 <span id="919">919</span>
 <span id="920">920</span>
 <span id="921">921</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">CliSession</span>, <span class="ident">Execution</span>, <span class="ident">FormatterReportFileDetail</span>, <span class="ident">FormatterReportSummary</span>, <span class="ident">Report</span>,
-    <span class="ident">ReportDiagnostic</span>, <span class="ident">ReportDiff</span>, <span class="ident">ReportErrorKind</span>, <span class="ident">ReportKind</span>, <span class="ident">Termination</span>, <span class="ident">TraversalMode</span>,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    CliSession, Execution, FormatterReportFileDetail, FormatterReportSummary, Report,
+    ReportDiagnostic, ReportDiff, ReportErrorKind, ReportKind, Termination, TraversalMode,
 };
-<span class="kw">use</span> <span class="ident">crossbeam::channel</span>::{<span class="ident">unbounded</span>, <span class="ident">Receiver</span>, <span class="ident">Sender</span>};
-<span class="kw">use</span> <span class="ident">rome_console</span>::{<span class="ident">markup</span>, <span class="ident">Console</span>, <span class="ident">ConsoleExt</span>};
-<span class="kw">use</span> <span class="ident">rome_diagnostics</span>::{
-    <span class="ident">file::FileId</span>,
-    <span class="ident">v2</span>::{
+<span class="kw">use </span>crossbeam::channel::{unbounded, Receiver, Sender};
+<span class="kw">use </span>rome_console::{markup, Console, ConsoleExt};
+<span class="kw">use </span>rome_diagnostics::{
+    file::FileId,
+    v2::{
         <span class="self">self</span>,
-        <span class="ident">adapters</span>::{<span class="ident">IoError</span>, <span class="ident">StdError</span>},
-        <span class="ident">category</span>, <span class="ident">Advices</span>, <span class="ident">Category</span>, <span class="ident">DiagnosticExt</span>, <span class="ident">Error</span>, <span class="ident">FilePath</span>, <span class="ident">PrintDescription</span>,
-        <span class="ident">PrintDiagnostic</span>, <span class="ident">Severity</span>, <span class="ident">Visit</span>,
+        adapters::{IoError, StdError},
+        category, Advices, Category, DiagnosticExt, Error, FilePath, PrintDescription,
+        PrintDiagnostic, Severity, Visit,
     },
-    <span class="ident">MAXIMUM_DISPLAYABLE_DIAGNOSTICS</span>,
+    MAXIMUM_DISPLAYABLE_DIAGNOSTICS,
 };
-<span class="kw">use</span> <span class="ident">rome_fs</span>::{<span class="ident">AtomicInterner</span>, <span class="ident">FileSystem</span>, <span class="ident">OpenOptions</span>, <span class="ident">PathInterner</span>, <span class="ident">RomePath</span>};
-<span class="kw">use</span> <span class="ident">rome_fs</span>::{<span class="ident">TraversalContext</span>, <span class="ident">TraversalScope</span>};
-<span class="kw">use</span> <span class="ident">rome_service::workspace</span>::{<span class="ident">SupportsFeatureResult</span>, <span class="ident">UnsupportedReason</span>};
-<span class="kw">use</span> <span class="ident">rome_service</span>::{
-    <span class="ident">workspace</span>::{
-        <span class="ident">FeatureName</span>, <span class="ident">FileGuard</span>, <span class="ident">Language</span>, <span class="ident">OpenFileParams</span>, <span class="ident">RuleCategories</span>, <span class="ident">SupportsFeatureParams</span>,
+<span class="kw">use </span>rome_fs::{AtomicInterner, FileSystem, OpenOptions, PathInterner, RomePath};
+<span class="kw">use </span>rome_fs::{TraversalContext, TraversalScope};
+<span class="kw">use </span>rome_service::workspace::{SupportsFeatureResult, UnsupportedReason};
+<span class="kw">use </span>rome_service::{
+    workspace::{
+        FeatureName, FileGuard, Language, OpenFileParams, RuleCategories, SupportsFeatureParams,
     },
-    <span class="ident">RomeError</span>, <span class="ident">Workspace</span>,
+    RomeError, Workspace,
 };
-<span class="kw">use</span> <span class="ident">rome_text_edit::TextEdit</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">collections::HashMap</span>,
-    <span class="ident">ffi::OsString</span>,
-    <span class="ident">io</span>,
-    <span class="ident">panic::catch_unwind</span>,
-    <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
-    <span class="ident">sync</span>::{
-        <span class="ident">atomic</span>::{<span class="ident">AtomicU64</span>, <span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>},
-        <span class="ident">Arc</span>,
+<span class="kw">use </span>rome_text_edit::TextEdit;
+<span class="kw">use </span>std::{
+    collections::HashMap,
+    ffi::OsString,
+    io,
+    panic::catch_unwind,
+    path::{Path, PathBuf},
+    sync::{
+        atomic::{AtomicU64, AtomicUsize, Ordering},
+        Arc,
     },
-    <span class="ident">time</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>},
+    time::{Duration, Instant},
 };
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">traverse</span>(<span class="ident">execution</span>: <span class="ident">Execution</span>, <span class="kw-2">mut</span> <span class="ident">session</span>: <span class="ident">CliSession</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Termination</span><span class="op">&gt;</span> {
-    <span class="comment">// Check that at least one input file / directory was specified in the command line</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inputs</span> <span class="op">=</span> <span class="macro">vec!</span>[];
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>traverse(execution: Execution, <span class="kw-2">mut </span>session: CliSession) -&gt; <span class="prelude-ty">Result</span>&lt;(), Termination&gt; {
+    <span class="comment">// Check that at least one input file / directory was specified in the command line
+    </span><span class="kw">let </span><span class="kw-2">mut </span>inputs = <span class="macro">vec!</span>[];
 
-    <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="ident">session</span>.<span class="ident">args</span>.<span class="ident">finish</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">maybe_arg</span>) <span class="op">=</span> <span class="ident">input</span>.<span class="ident">to_str</span>() {
-            <span class="kw">let</span> <span class="ident">without_dashes</span> <span class="op">=</span> <span class="ident">maybe_arg</span>.<span class="ident">trim_start_matches</span>(<span class="string">&#39;-&#39;</span>);
-            <span class="kw">if</span> <span class="ident">without_dashes</span>.<span class="ident">is_empty</span>() {
-                <span class="comment">// `-` or `--`</span>
-                <span class="kw">continue</span>;
+    <span class="kw">for </span>input <span class="kw">in </span>session.args.finish() {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(maybe_arg) = input.to_str() {
+            <span class="kw">let </span>without_dashes = maybe_arg.trim_start_matches(<span class="string">&#39;-&#39;</span>);
+            <span class="kw">if </span>without_dashes.is_empty() {
+                <span class="comment">// `-` or `--`
+                </span><span class="kw">continue</span>;
             }
-            <span class="comment">// `--&lt;some character&gt;` or `-&lt;some character&gt;`</span>
-            <span class="kw">if</span> <span class="ident">without_dashes</span> <span class="op">!</span><span class="op">=</span> <span class="ident">input</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Termination::UnexpectedArgument</span> {
-                    <span class="ident">subcommand</span>: <span class="ident">execution</span>.<span class="ident">traversal_mode_subcommand</span>(),
-                    <span class="ident">argument</span>: <span class="ident">input</span>,
+            <span class="comment">// `--&lt;some character&gt;` or `-&lt;some character&gt;`
+            </span><span class="kw">if </span>without_dashes != input {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Termination::UnexpectedArgument {
+                    subcommand: execution.traversal_mode_subcommand(),
+                    argument: input,
                 });
             }
         }
-        <span class="ident">inputs</span>.<span class="ident">push</span>(<span class="ident">input</span>);
+        inputs.push(input);
     }
 
-    <span class="kw">if</span> <span class="ident">inputs</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">execution</span>.<span class="ident">as_stdin_file</span>().<span class="ident">is_none</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Termination::MissingArgument</span> {
-            <span class="ident">subcommand</span>: <span class="ident">execution</span>.<span class="ident">traversal_mode_subcommand</span>(),
-            <span class="ident">argument</span>: <span class="string">&quot;&lt;INPUT&gt;&quot;</span>,
+    <span class="kw">if </span>inputs.is_empty() &amp;&amp; execution.as_stdin_file().is_none() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Termination::MissingArgument {
+            subcommand: execution.traversal_mode_subcommand(),
+            argument: <span class="string">&quot;&lt;INPUT&gt;&quot;</span>,
         });
     }
 
-    <span class="kw">let</span> (<span class="ident">interner</span>, <span class="ident">recv_files</span>) <span class="op">=</span> <span class="ident">AtomicInterner::new</span>();
-    <span class="kw">let</span> (<span class="ident">send_msgs</span>, <span class="ident">recv_msgs</span>) <span class="op">=</span> <span class="ident">unbounded</span>();
-    <span class="kw">let</span> (<span class="ident">sender_reports_from_traversal</span>, <span class="ident">receiver_reports</span>) <span class="op">=</span> <span class="ident">unbounded</span>();
+    <span class="kw">let </span>(interner, recv_files) = AtomicInterner::new();
+    <span class="kw">let </span>(send_msgs, recv_msgs) = unbounded();
+    <span class="kw">let </span>(sender_reports_from_traversal, receiver_reports) = unbounded();
 
-    <span class="kw">let</span> <span class="ident">processed</span> <span class="op">=</span> <span class="ident">AtomicUsize::new</span>(<span class="number">0</span>);
-    <span class="kw">let</span> <span class="ident">skipped</span> <span class="op">=</span> <span class="ident">AtomicUsize::new</span>(<span class="number">0</span>);
+    <span class="kw">let </span>processed = AtomicUsize::new(<span class="number">0</span>);
+    <span class="kw">let </span>skipped = AtomicUsize::new(<span class="number">0</span>);
 
-    <span class="kw">let</span> <span class="ident">fs</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">session</span>.<span class="ident">app</span>.<span class="ident">fs</span>;
-    <span class="kw">let</span> <span class="ident">workspace</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">session</span>.<span class="ident">app</span>.<span class="ident">workspace</span>;
-    <span class="kw">let</span> <span class="ident">console</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">session</span>.<span class="ident">app</span>.<span class="ident">console</span>;
+    <span class="kw">let </span>fs = <span class="kw-2">&amp;*</span>session.app.fs;
+    <span class="kw">let </span>workspace = <span class="kw-2">&amp;*</span>session.app.workspace;
+    <span class="kw">let </span>console = <span class="kw-2">&amp;mut *</span>session.app.console;
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">let</span> <span class="ident">remaining_diagnostics</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">AtomicU64::new</span>(<span class="ident">u64::MAX</span>));
+    <span class="kw">let </span><span class="kw-2">mut </span>has_errors = <span class="prelude-val">None</span>;
+    <span class="kw">let </span>remaining_diagnostics = Arc::new(AtomicU64::new(u64::MAX));
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">duration</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">report</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">let</span> <span class="ident">sender_reports_from_messages</span> <span class="op">=</span> <span class="ident">sender_reports_from_traversal</span>.<span class="ident">clone</span>();
-    <span class="ident">rayon::scope</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> {
-        <span class="ident">s</span>.<span class="ident">spawn</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-            <span class="ident">report</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">collect_reports</span>(<span class="ident">receiver_reports</span>));
+    <span class="kw">let </span><span class="kw-2">mut </span>duration = <span class="prelude-val">None</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>report = <span class="prelude-val">None</span>;
+    <span class="kw">let </span>sender_reports_from_messages = sender_reports_from_traversal.clone();
+    rayon::scope(|s| {
+        s.spawn(|<span class="kw">_</span>| {
+            report = <span class="prelude-val">Some</span>(collect_reports(receiver_reports));
         });
 
-        <span class="ident">s</span>.<span class="ident">spawn</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-            <span class="ident">has_errors</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">process_messages</span>(<span class="ident">ProcessMessagesOptions</span> {
-                <span class="ident">execution</span>: <span class="ident">execution</span>.<span class="ident">clone</span>(),
-                <span class="ident">console</span>,
-                <span class="ident">recv_files</span>,
-                <span class="ident">recv_msgs</span>,
-                <span class="ident">sender_reports</span>: <span class="ident">sender_reports_from_messages</span>,
-                <span class="ident">remaining_diagnostics</span>: <span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="ident">remaining_diagnostics</span>),
+        s.spawn(|<span class="kw">_</span>| {
+            has_errors = <span class="prelude-val">Some</span>(process_messages(ProcessMessagesOptions {
+                execution: execution.clone(),
+                console,
+                recv_files,
+                recv_msgs,
+                sender_reports: sender_reports_from_messages,
+                remaining_diagnostics: Arc::clone(<span class="kw-2">&amp;</span>remaining_diagnostics),
             }));
         });
-        <span class="ident">s</span>.<span class="ident">spawn</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-            <span class="comment">// The traversal context is scoped to ensure all the channels it</span>
-            <span class="comment">// contains are properly closed once the traversal finishes</span>
-            <span class="ident">duration</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">traverse_inputs</span>(
-                <span class="ident">fs</span>,
-                <span class="ident">inputs</span>,
-                <span class="kw-2">&amp;</span><span class="ident">TraversalOptions</span> {
-                    <span class="ident">fs</span>,
-                    <span class="ident">workspace</span>,
-                    <span class="ident">execution</span>: <span class="ident">execution</span>.<span class="ident">clone</span>(),
-                    <span class="ident">interner</span>,
-                    <span class="ident">processed</span>: <span class="kw-2">&amp;</span><span class="ident">processed</span>,
-                    <span class="ident">skipped</span>: <span class="kw-2">&amp;</span><span class="ident">skipped</span>,
-                    <span class="ident">messages</span>: <span class="ident">send_msgs</span>,
-                    <span class="ident">sender_reports</span>: <span class="ident">sender_reports_from_traversal</span>,
-                    <span class="ident">remaining_diagnostics</span>: <span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="ident">remaining_diagnostics</span>),
+        s.spawn(|<span class="kw">_</span>| {
+            <span class="comment">// The traversal context is scoped to ensure all the channels it
+            // contains are properly closed once the traversal finishes
+            </span>duration = <span class="prelude-val">Some</span>(traverse_inputs(
+                fs,
+                inputs,
+                <span class="kw-2">&amp;</span>TraversalOptions {
+                    fs,
+                    workspace,
+                    execution: execution.clone(),
+                    interner,
+                    processed: <span class="kw-2">&amp;</span>processed,
+                    skipped: <span class="kw-2">&amp;</span>skipped,
+                    messages: send_msgs,
+                    sender_reports: sender_reports_from_traversal,
+                    remaining_diagnostics: Arc::clone(<span class="kw-2">&amp;</span>remaining_diagnostics),
                 },
             ));
         })
     });
 
-    <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">processed</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>);
-    <span class="kw">let</span> <span class="ident">skipped</span> <span class="op">=</span> <span class="ident">skipped</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>);
+    <span class="kw">let </span>count = processed.load(Ordering::Relaxed);
+    <span class="kw">let </span>skipped = skipped.load(Ordering::Relaxed);
 
-    <span class="kw">let</span> <span class="ident">to_terminal</span> <span class="op">=</span> <span class="ident">execution</span>.<span class="ident">should_report_to_terminal</span>();
+    <span class="kw">let </span>to_terminal = execution.should_report_to_terminal();
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">duration</span>) <span class="op">=</span> <span class="ident">duration</span> {
-        <span class="kw">if</span> <span class="ident">to_terminal</span> {
-            <span class="kw">match</span> <span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
-                <span class="ident">TraversalMode::Check</span> { .. } =&gt; {
-                    <span class="kw">if</span> <span class="ident">execution</span>.<span class="ident">as_fix_file_mode</span>().<span class="ident">is_some</span>() {
-                        <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-                            <span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;Fixed &quot;</span>{<span class="ident">count</span>}<span class="string">&quot; files in &quot;</span>{<span class="ident">duration</span>}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span>
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(duration) = duration {
+        <span class="kw">if </span>to_terminal {
+            <span class="kw">match </span>execution.traversal_mode() {
+                TraversalMode::Check { .. } =&gt; {
+                    <span class="kw">if </span>execution.as_fix_file_mode().is_some() {
+                        console.log(<span class="macro">markup! </span>{
+                            &lt;Info&gt;<span class="string">&quot;Fixed &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
                         });
-                    } <span class="kw">else</span> {
-                        <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-                            <span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;Checked &quot;</span>{<span class="ident">count</span>}<span class="string">&quot; files in &quot;</span>{<span class="ident">duration</span>}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span>
-                        });
-                    }
-                }
-                <span class="ident">TraversalMode::CI</span> { .. } =&gt; {
-                    <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-                        <span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;Checked &quot;</span>{<span class="ident">count</span>}<span class="string">&quot; files in &quot;</span>{<span class="ident">duration</span>}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span>
-                    });
-                }
-                <span class="ident">TraversalMode::Format</span> { <span class="ident">write</span>: <span class="bool-val">false</span>, .. } =&gt; {
-                    <span class="kw">if</span> <span class="ident">to_terminal</span> {
-                        <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-                            <span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;Compared &quot;</span>{<span class="ident">count</span>}<span class="string">&quot; files in &quot;</span>{<span class="ident">duration</span>}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span>
+                    } <span class="kw">else </span>{
+                        console.log(<span class="macro">markup! </span>{
+                            &lt;Info&gt;<span class="string">&quot;Checked &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
                         });
                     }
                 }
-                <span class="ident">TraversalMode::Format</span> { <span class="ident">write</span>: <span class="bool-val">true</span>, .. } =&gt; {
-                    <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-                        <span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;Formatted &quot;</span>{<span class="ident">count</span>}<span class="string">&quot; files in &quot;</span>{<span class="ident">duration</span>}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span>
+                TraversalMode::CI { .. } =&gt; {
+                    console.log(<span class="macro">markup! </span>{
+                        &lt;Info&gt;<span class="string">&quot;Checked &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
+                    });
+                }
+                TraversalMode::Format { write: <span class="bool-val">false</span>, .. } =&gt; {
+                    <span class="kw">if </span>to_terminal {
+                        console.log(<span class="macro">markup! </span>{
+                            &lt;Info&gt;<span class="string">&quot;Compared &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
+                        });
+                    }
+                }
+                TraversalMode::Format { write: <span class="bool-val">true</span>, .. } =&gt; {
+                    console.log(<span class="macro">markup! </span>{
+                        &lt;Info&gt;<span class="string">&quot;Formatted &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
                     });
                 }
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">report</span>) <span class="op">=</span> <span class="ident">report</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">TraversalMode::Format</span> { <span class="ident">write</span>, .. } <span class="op">=</span> <span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">summary</span> <span class="op">=</span> <span class="ident">FormatterReportSummary::default</span>();
-                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">write</span> {
-                    <span class="ident">summary</span>.<span class="ident">set_files_written</span>(<span class="ident">count</span>);
-                } <span class="kw">else</span> {
-                    <span class="ident">summary</span>.<span class="ident">set_files_compared</span>(<span class="ident">count</span>);
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>report) = report {
+            <span class="kw">if let </span>TraversalMode::Format { write, .. } = execution.traversal_mode() {
+                <span class="kw">let </span><span class="kw-2">mut </span>summary = FormatterReportSummary::default();
+                <span class="kw">if </span><span class="kw-2">*</span>write {
+                    summary.set_files_written(count);
+                } <span class="kw">else </span>{
+                    summary.set_files_compared(count);
                 }
-                <span class="ident">report</span>.<span class="ident">set_formatter_summary</span>(<span class="ident">summary</span>);
+                report.set_formatter_summary(summary);
             }
 
-            <span class="kw">let</span> <span class="ident">to_print</span> <span class="op">=</span> <span class="ident">report</span>.<span class="ident">as_serialized_reports</span>()<span class="question-mark">?</span>;
-            <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-                {<span class="ident">to_print</span>}
+            <span class="kw">let </span>to_print = report.as_serialized_reports()<span class="question-mark">?</span>;
+            console.log(<span class="macro">markup! </span>{
+                {to_print}
             });
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
     }
 
-    <span class="kw">if</span> <span class="ident">skipped</span> <span class="op">&gt;</span> <span class="number">0</span> {
-        <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-            <span class="op">&lt;</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;Skipped &quot;</span>{<span class="ident">skipped</span>}<span class="string">&quot; files&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Warn</span><span class="op">&gt;</span>
+    <span class="kw">if </span>skipped &gt; <span class="number">0 </span>{
+        console.log(<span class="macro">markup! </span>{
+            &lt;Warn&gt;<span class="string">&quot;Skipped &quot;</span>{skipped}<span class="string">&quot; files&quot;</span>&lt;/Warn&gt;
         });
     }
 
-    <span class="comment">// Processing emitted error diagnostics, exit with a non-zero code</span>
-    <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">has_errors</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)) {
-        <span class="prelude-val">Err</span>(<span class="ident">Termination::CheckError</span>)
-    } <span class="kw">else</span> {
+    <span class="comment">// Processing emitted error diagnostics, exit with a non-zero code
+    </span><span class="kw">if </span><span class="macro">matches!</span>(has_errors, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)) {
+        <span class="prelude-val">Err</span>(Termination::CheckError)
+    } <span class="kw">else </span>{
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="doccomment">/// Initiate the filesystem traversal tasks with the provided input paths and</span>
-<span class="doccomment">/// run it to completion, returning the duration of the process</span>
-<span class="kw">fn</span> <span class="ident">traverse_inputs</span>(<span class="ident">fs</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">FileSystem</span>, <span class="ident">inputs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>, <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">TraversalOptions</span>) -&gt; <span class="ident">Duration</span> {
-    <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">Instant::now</span>();
+<span class="doccomment">/// Initiate the filesystem traversal tasks with the provided input paths and
+/// run it to completion, returning the duration of the process
+</span><span class="kw">fn </span>traverse_inputs(fs: <span class="kw-2">&amp;</span><span class="kw">dyn </span>FileSystem, inputs: Vec&lt;OsString&gt;, ctx: <span class="kw-2">&amp;</span>TraversalOptions) -&gt; Duration {
+    <span class="kw">let </span>start = Instant::now();
 
-    <span class="ident">fs</span>.<span class="ident">traversal</span>(<span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">scope</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">TraversalScope</span><span class="op">|</span> {
-        <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="ident">inputs</span> {
-            <span class="ident">scope</span>.<span class="ident">spawn</span>(<span class="ident">ctx</span>, <span class="ident">PathBuf::from</span>(<span class="ident">input</span>));
+    fs.traversal(Box::new(<span class="kw">move </span>|scope: <span class="kw-2">&amp;</span><span class="kw">dyn </span>TraversalScope| {
+        <span class="kw">for </span>input <span class="kw">in </span>inputs {
+            scope.spawn(ctx, PathBuf::from(input));
         }
     }));
 
-    <span class="ident">start</span>.<span class="ident">elapsed</span>()
+    start.elapsed()
 }
 
-<span class="kw">struct</span> <span class="ident">ProcessMessagesOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span><span class="op">&gt;</span> {
-    <span class="doccomment">///  Execution of the traversal</span>
-    <span class="ident">execution</span>: <span class="ident">Execution</span>,
-    <span class="doccomment">/// Mutable reference to the [console](Console)</span>
-    <span class="ident">console</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Console</span>,
-    <span class="doccomment">/// Receiver channel that expects info when a file is processed</span>
-    <span class="ident">recv_files</span>: <span class="ident">Receiver</span><span class="op">&lt;</span>(<span class="ident">FileId</span>, <span class="ident">PathBuf</span>)<span class="op">&gt;</span>,
-    <span class="doccomment">/// Receiver channel that expects info when a message is sent</span>
-    <span class="ident">recv_msgs</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Sender of reports</span>
-    <span class="ident">sender_reports</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">ReportKind</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The approximate number of diagnostics the console will print before</span>
-    <span class="doccomment">/// folding the rest into the &quot;skipped diagnostics&quot; counter</span>
-    <span class="ident">remaining_diagnostics</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicU64</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>ProcessMessagesOptions&lt;<span class="lifetime">&#39;ctx</span>&gt; {
+    <span class="doccomment">///  Execution of the traversal
+    </span>execution: Execution,
+    <span class="doccomment">/// Mutable reference to the [console](Console)
+    </span>console: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span><span class="kw-2">mut </span><span class="kw">dyn </span>Console,
+    <span class="doccomment">/// Receiver channel that expects info when a file is processed
+    </span>recv_files: Receiver&lt;(FileId, PathBuf)&gt;,
+    <span class="doccomment">/// Receiver channel that expects info when a message is sent
+    </span>recv_msgs: Receiver&lt;Message&gt;,
+    <span class="doccomment">/// Sender of reports
+    </span>sender_reports: Sender&lt;ReportKind&gt;,
+    <span class="doccomment">/// The approximate number of diagnostics the console will print before
+    /// folding the rest into the &quot;skipped diagnostics&quot; counter
+    </span>remaining_diagnostics: Arc&lt;AtomicU64&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">v2::Diagnostic</span>)]</span>
-<span class="attribute">#[<span class="ident">diagnostic</span>(
-    <span class="ident">category</span> <span class="op">=</span> <span class="string">&quot;format&quot;</span>,
-    <span class="ident">message</span> <span class="op">=</span> <span class="string">&quot;File content differs from formatting output&quot;</span>
-)]</span>
-<span class="kw">struct</span> <span class="ident">CIDiffDiagnostic</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">location</span>(<span class="ident">resource</span>)]</span>
-    <span class="ident">file_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    <span class="attribute">#[<span class="ident">advice</span>]</span>
-    <span class="ident">diff</span>: <span class="ident">FormatDiffAdvice</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, v2::Diagnostic)]
+#[diagnostic(
+    category = <span class="string">&quot;format&quot;</span>,
+    message = <span class="string">&quot;File content differs from formatting output&quot;
+</span>)]
+</span><span class="kw">struct </span>CIDiffDiagnostic&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="attribute">#[location(resource)]
+    </span>file_name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    <span class="attribute">#[advice]
+    </span>diff: FormatDiffAdvice&lt;<span class="lifetime">&#39;a</span>&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">v2::Diagnostic</span>)]</span>
-<span class="attribute">#[<span class="ident">diagnostic</span>(
-    <span class="ident">severity</span> <span class="op">=</span> <span class="ident">Information</span>,
-    <span class="ident">category</span> <span class="op">=</span> <span class="string">&quot;format&quot;</span>,
-    <span class="ident">message</span> <span class="op">=</span> <span class="string">&quot;Formatter would have printed the following content:&quot;</span>
-)]</span>
-<span class="kw">struct</span> <span class="ident">FormatDiffDiagnostic</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">location</span>(<span class="ident">resource</span>)]</span>
-    <span class="ident">file_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    <span class="attribute">#[<span class="ident">advice</span>]</span>
-    <span class="ident">diff</span>: <span class="ident">FormatDiffAdvice</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, v2::Diagnostic)]
+#[diagnostic(
+    severity = Information,
+    category = <span class="string">&quot;format&quot;</span>,
+    message = <span class="string">&quot;Formatter would have printed the following content:&quot;
+</span>)]
+</span><span class="kw">struct </span>FormatDiffDiagnostic&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="attribute">#[location(resource)]
+    </span>file_name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    <span class="attribute">#[advice]
+    </span>diff: FormatDiffAdvice&lt;<span class="lifetime">&#39;a</span>&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">FormatDiffAdvice</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">old</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    <span class="ident">new</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>FormatDiffAdvice&lt;<span class="lifetime">&#39;a</span>&gt; {
+    old: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    new: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
 }
 
-<span class="kw">impl</span> <span class="ident">Advices</span> <span class="kw">for</span> <span class="ident">FormatDiffAdvice</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">diff</span> <span class="op">=</span> <span class="ident">TextEdit::from_unicode_words</span>(<span class="self">self</span>.<span class="ident">old</span>, <span class="self">self</span>.<span class="ident">new</span>);
-        <span class="ident">visitor</span>.<span class="ident">record_diff</span>(<span class="kw-2">&amp;</span><span class="ident">diff</span>)
+<span class="kw">impl </span>Advices <span class="kw">for </span>FormatDiffAdvice&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>record(<span class="kw-2">&amp;</span><span class="self">self</span>, visitor: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Visit) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span>diff = TextEdit::from_unicode_words(<span class="self">self</span>.old, <span class="self">self</span>.new);
+        visitor.record_diff(<span class="kw-2">&amp;</span>diff)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">v2::Diagnostic</span>)]</span>
-<span class="kw">struct</span> <span class="ident">TraversalDiagnostic</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">location</span>(<span class="ident">resource</span>)]</span>
-    <span class="ident">file_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">severity</span>]</span>
-    <span class="ident">severity</span>: <span class="ident">v2::Severity</span>,
-    <span class="attribute">#[<span class="ident">category</span>]</span>
-    <span class="ident">category</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>,
-    <span class="attribute">#[<span class="ident">message</span>]</span>
-    <span class="attribute">#[<span class="ident">description</span>]</span>
-    <span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
+<span class="attribute">#[derive(Debug, v2::Diagnostic)]
+</span><span class="kw">struct </span>TraversalDiagnostic&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="attribute">#[location(resource)]
+    </span>file_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    <span class="attribute">#[severity]
+    </span>severity: v2::Severity,
+    <span class="attribute">#[category]
+    </span>category: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category,
+    <span class="attribute">#[message]
+    #[description]
+    </span>message: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
 }
 
-<span class="doccomment">/// This thread receives [Message]s from the workers through the `recv_msgs`</span>
-<span class="doccomment">/// and `recv_files` channels and handles them based on [Execution]</span>
-<span class="kw">fn</span> <span class="ident">process_messages</span>(<span class="ident">options</span>: <span class="ident">ProcessMessagesOptions</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">let</span> <span class="ident">ProcessMessagesOptions</span> {
-        <span class="ident">execution</span>: <span class="ident">mode</span>,
-        <span class="ident">console</span>,
-        <span class="ident">recv_files</span>,
-        <span class="ident">recv_msgs</span>,
-        <span class="ident">sender_reports</span>,
-        <span class="ident">remaining_diagnostics</span>,
-    } <span class="op">=</span> <span class="ident">options</span>;
+<span class="doccomment">/// This thread receives [Message]s from the workers through the `recv_msgs`
+/// and `recv_files` channels and handles them based on [Execution]
+</span><span class="kw">fn </span>process_messages(options: ProcessMessagesOptions) -&gt; bool {
+    <span class="kw">let </span>ProcessMessagesOptions {
+        execution: mode,
+        console,
+        recv_files,
+        recv_msgs,
+        sender_reports,
+        remaining_diagnostics,
+    } = options;
 
-    <span class="comment">// The command `rome check` gives a default value of 20.</span>
-    <span class="comment">// In case of other commands that pass here, we limit to 50 to avoid to delay the terminal.</span>
-    <span class="comment">// Once `--max-diagnostics` will be a global argument, `unwrap_of_default` should be enough.</span>
-    <span class="kw">let</span> <span class="ident">max_diagnostics</span> <span class="op">=</span> <span class="ident">mode</span>
-        .<span class="ident">get_max_diagnostics</span>()
-        .<span class="ident">unwrap_or</span>(<span class="ident">MAXIMUM_DISPLAYABLE_DIAGNOSTICS</span>);
+    <span class="comment">// The command `rome check` gives a default value of 20.
+    // In case of other commands that pass here, we limit to 50 to avoid to delay the terminal.
+    // Once `--max-diagnostics` will be a global argument, `unwrap_of_default` should be enough.
+    </span><span class="kw">let </span>max_diagnostics = mode
+        .get_max_diagnostics()
+        .unwrap_or(MAXIMUM_DISPLAYABLE_DIAGNOSTICS);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="bool-val">false</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paths</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">printed_diagnostics</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">not_printed_diagnostics</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total_skipped_suggested_fixes</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>has_errors = <span class="bool-val">false</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>paths = HashMap::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>printed_diagnostics: u16 = <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>not_printed_diagnostics = <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>total_skipped_suggested_fixes = <span class="number">0</span>;
 
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="ident">recv_msgs</span>.<span class="ident">recv</span>() {
-        <span class="kw">match</span> <span class="ident">msg</span> {
-            <span class="ident">Message::SkippedFixes</span> {
-                <span class="ident">skipped_suggested_fixes</span>,
+    <span class="kw">while let </span><span class="prelude-val">Ok</span>(msg) = recv_msgs.recv() {
+        <span class="kw">match </span>msg {
+            Message::SkippedFixes {
+                skipped_suggested_fixes,
             } =&gt; {
-                <span class="ident">total_skipped_suggested_fixes</span> <span class="op">+</span><span class="op">=</span> <span class="ident">skipped_suggested_fixes</span>;
+                total_skipped_suggested_fixes += skipped_suggested_fixes;
             }
 
-            <span class="ident">Message::Error</span>(<span class="kw-2">mut</span> <span class="ident">err</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">location</span>) <span class="op">=</span> <span class="ident">err</span>.<span class="ident">location</span>() {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">v2::Resource::File</span>(<span class="ident">FilePath::FileId</span>(<span class="ident">file_id</span>)) <span class="op">=</span> <span class="ident">location</span>.<span class="ident">resource</span> {
-                        <span class="comment">// Retrieves the file name from the file ID cache, if it&#39;s a miss</span>
-                        <span class="comment">// flush entries from the interner channel until it&#39;s found</span>
-                        <span class="kw">let</span> <span class="ident">file_name</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">paths</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">file_id</span>) {
-                            <span class="prelude-val">Some</span>(<span class="ident">path</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">path</span>),
-                            <span class="prelude-val">None</span> =&gt; <span class="kw">loop</span> {
-                                <span class="kw">match</span> <span class="ident">recv_files</span>.<span class="ident">recv</span>() {
-                                    <span class="prelude-val">Ok</span>((<span class="ident">id</span>, <span class="ident">path</span>)) =&gt; {
-                                        <span class="ident">paths</span>.<span class="ident">insert</span>(<span class="ident">id</span>, <span class="ident">path</span>.<span class="ident">display</span>().<span class="ident">to_string</span>());
-                                        <span class="kw">if</span> <span class="ident">id</span> <span class="op">==</span> <span class="ident">file_id</span> {
-                                            <span class="kw">break</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">paths</span>[<span class="kw-2">&amp;</span><span class="ident">file_id</span>]);
+            Message::Error(<span class="kw-2">mut </span>err) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(location) = err.location() {
+                    <span class="kw">if let </span>v2::Resource::File(FilePath::FileId(file_id)) = location.resource {
+                        <span class="comment">// Retrieves the file name from the file ID cache, if it&#39;s a miss
+                        // flush entries from the interner channel until it&#39;s found
+                        </span><span class="kw">let </span>file_name = <span class="kw">match </span>paths.get(<span class="kw-2">&amp;</span>file_id) {
+                            <span class="prelude-val">Some</span>(path) =&gt; <span class="prelude-val">Some</span>(path),
+                            <span class="prelude-val">None </span>=&gt; <span class="kw">loop </span>{
+                                <span class="kw">match </span>recv_files.recv() {
+                                    <span class="prelude-val">Ok</span>((id, path)) =&gt; {
+                                        paths.insert(id, path.display().to_string());
+                                        <span class="kw">if </span>id == file_id {
+                                            <span class="kw">break </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>paths[<span class="kw-2">&amp;</span>file_id]);
                                         }
                                     }
-                                    <span class="comment">// In case the channel disconnected without sending</span>
-                                    <span class="comment">// the path we need, print the error without a file</span>
-                                    <span class="comment">// name (normally this should never happen)</span>
-                                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">break</span> <span class="prelude-val">None</span>,
+                                    <span class="comment">// In case the channel disconnected without sending
+                                    // the path we need, print the error without a file
+                                    // name (normally this should never happen)
+                                    </span><span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">break </span><span class="prelude-val">None</span>,
                                 }
                             },
                         };
 
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">file_name</span> {
-                            <span class="ident">err</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">with_file_path</span>(<span class="ident">FilePath::PathAndId</span> {
-                                <span class="ident">path</span>: <span class="ident">path</span>.<span class="ident">as_str</span>(),
-                                <span class="ident">file_id</span>,
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(path) = file_name {
+                            err = err.with_file_path(FilePath::PathAndId {
+                                path: path.as_str(),
+                                file_id,
                             });
                         }
                     }
                 }
 
-                <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">should_report_to_terminal</span>() {
-                    <span class="ident">console</span>.<span class="ident">error</span>(<span class="macro">markup!</span> {
-                        {<span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">err</span>)}
+                <span class="kw">if </span>mode.should_report_to_terminal() {
+                    console.error(<span class="macro">markup! </span>{
+                        {PrintDiagnostic(<span class="kw-2">&amp;</span>err)}
                     });
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">file_name</span> <span class="op">=</span> <span class="ident">err</span>
-                        .<span class="ident">location</span>()
-                        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">location</span><span class="op">|</span> {
-                            <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">location</span>.<span class="ident">resource</span> {
-                                <span class="ident">v2::Resource::File</span>(<span class="ident">file</span>) =&gt; <span class="ident">file</span>,
-                                <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span>file_name = err
+                        .location()
+                        .and_then(|location| {
+                            <span class="kw">let </span>path = <span class="kw">match </span><span class="kw-2">&amp;</span>location.resource {
+                                v2::Resource::File(file) =&gt; file,
+                                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
                             };
 
-                            <span class="ident">path</span>.<span class="ident">path</span>()
+                            path.path()
                         })
-                        .<span class="ident">unwrap_or</span>(<span class="string">&quot;&lt;unknown&gt;&quot;</span>);
+                        .unwrap_or(<span class="string">&quot;&lt;unknown&gt;&quot;</span>);
 
-                    <span class="kw">let</span> <span class="ident">title</span> <span class="op">=</span> <span class="ident">PrintDescription</span>(<span class="kw-2">&amp;</span><span class="ident">err</span>).<span class="ident">to_string</span>();
-                    <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">category</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">code</span><span class="op">|</span> <span class="ident">code</span>.<span class="ident">name</span>().<span class="ident">parse</span>().<span class="ident">ok</span>());
+                    <span class="kw">let </span>title = PrintDescription(<span class="kw-2">&amp;</span>err).to_string();
+                    <span class="kw">let </span>code = err.category().and_then(|code| code.name().parse().ok());
 
-                    <span class="ident">sender_reports</span>
-                        .<span class="ident">send</span>(<span class="ident">ReportKind::Error</span>(
-                            <span class="ident">file_name</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">ReportErrorKind::Diagnostic</span>(<span class="ident">ReportDiagnostic</span> {
-                                <span class="ident">code</span>,
-                                <span class="ident">title</span>,
-                                <span class="ident">severity</span>: <span class="ident">err</span>.<span class="ident">severity</span>(),
+                    sender_reports
+                        .send(ReportKind::Error(
+                            file_name.to_string(),
+                            ReportErrorKind::Diagnostic(ReportDiagnostic {
+                                code,
+                                title,
+                                severity: err.severity(),
                             }),
                         ))
-                        .<span class="ident">ok</span>();
+                        .ok();
                 }
             }
 
-            <span class="ident">Message::Diagnostics</span> {
-                <span class="ident">name</span>,
-                <span class="ident">content</span>,
-                <span class="ident">diagnostics</span>,
-                <span class="ident">skipped_diagnostics</span>,
+            Message::Diagnostics {
+                name,
+                content,
+                diagnostics,
+                skipped_diagnostics,
             } =&gt; {
-                <span class="ident">not_printed_diagnostics</span> <span class="op">+</span><span class="op">=</span> <span class="ident">skipped_diagnostics</span>;
+                not_printed_diagnostics += skipped_diagnostics;
 
-                <span class="comment">// is CI mode we want to print all the diagnostics</span>
-                <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">is_ci</span>() {
-                    <span class="kw">for</span> <span class="ident">diag</span> <span class="kw">in</span> <span class="ident">diagnostics</span> {
-                        <span class="ident">has_errors</span> <span class="op">|</span><span class="op">=</span> <span class="ident">diag</span>.<span class="ident">severity</span>() <span class="op">==</span> <span class="ident">Severity::Error</span>;
-                        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">with_file_path</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="ident">with_file_source_code</span>(<span class="kw-2">&amp;</span><span class="ident">content</span>);
-                        <span class="ident">console</span>.<span class="ident">error</span>(<span class="macro">markup!</span> {
-                            {<span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>)}
+                <span class="comment">// is CI mode we want to print all the diagnostics
+                </span><span class="kw">if </span>mode.is_ci() {
+                    <span class="kw">for </span>diag <span class="kw">in </span>diagnostics {
+                        has_errors |= diag.severity() == Severity::Error;
+                        <span class="kw">let </span>diag = diag.with_file_path(<span class="kw-2">&amp;</span>name).with_file_source_code(<span class="kw-2">&amp;</span>content);
+                        console.error(<span class="macro">markup! </span>{
+                            {PrintDiagnostic(<span class="kw-2">&amp;</span>diag)}
                         });
                     }
-                } <span class="kw">else</span> {
-                    <span class="kw">for</span> <span class="ident">diag</span> <span class="kw">in</span> <span class="ident">diagnostics</span> {
-                        <span class="kw">let</span> <span class="ident">severity</span> <span class="op">=</span> <span class="ident">diag</span>.<span class="ident">severity</span>();
-                        <span class="ident">has_errors</span> <span class="op">|</span><span class="op">=</span> <span class="ident">severity</span> <span class="op">==</span> <span class="ident">Severity::Error</span>;
+                } <span class="kw">else </span>{
+                    <span class="kw">for </span>diag <span class="kw">in </span>diagnostics {
+                        <span class="kw">let </span>severity = diag.severity();
+                        has_errors |= severity == Severity::Error;
 
-                        <span class="kw">let</span> <span class="ident">should_print</span> <span class="op">=</span> <span class="ident">printed_diagnostics</span> <span class="op">&lt;</span> <span class="ident">max_diagnostics</span>;
-                        <span class="kw">if</span> <span class="ident">should_print</span> {
-                            <span class="ident">printed_diagnostics</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                            <span class="ident">remaining_diagnostics</span>.<span class="ident">store</span>(
-                                <span class="ident">u64::from</span>(<span class="ident">max_diagnostics</span>.<span class="ident">saturating_sub</span>(<span class="ident">printed_diagnostics</span>)),
-                                <span class="ident">Ordering::Relaxed</span>,
+                        <span class="kw">let </span>should_print = printed_diagnostics &lt; max_diagnostics;
+                        <span class="kw">if </span>should_print {
+                            printed_diagnostics += <span class="number">1</span>;
+                            remaining_diagnostics.store(
+                                u64::from(max_diagnostics.saturating_sub(printed_diagnostics)),
+                                Ordering::Relaxed,
                             );
-                        } <span class="kw">else</span> {
-                            <span class="ident">not_printed_diagnostics</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                        } <span class="kw">else </span>{
+                            not_printed_diagnostics += <span class="number">1</span>;
                         }
 
-                        <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">should_report_to_terminal</span>() {
-                            <span class="kw">if</span> <span class="ident">should_print</span> {
-                                <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span>
-                                    <span class="ident">diag</span>.<span class="ident">with_file_path</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="ident">with_file_source_code</span>(<span class="kw-2">&amp;</span><span class="ident">content</span>);
-                                <span class="ident">console</span>.<span class="ident">error</span>(<span class="macro">markup!</span> {
-                                    {<span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>)}
+                        <span class="kw">if </span>mode.should_report_to_terminal() {
+                            <span class="kw">if </span>should_print {
+                                <span class="kw">let </span>diag =
+                                    diag.with_file_path(<span class="kw-2">&amp;</span>name).with_file_source_code(<span class="kw-2">&amp;</span>content);
+                                console.error(<span class="macro">markup! </span>{
+                                    {PrintDiagnostic(<span class="kw-2">&amp;</span>diag)}
                                 });
                             }
-                        } <span class="kw">else</span> {
-                            <span class="ident">sender_reports</span>
-                                .<span class="ident">send</span>(<span class="ident">ReportKind::Error</span>(
-                                    <span class="ident">name</span>.<span class="ident">to_string</span>(),
-                                    <span class="ident">ReportErrorKind::Diagnostic</span>(<span class="ident">ReportDiagnostic</span> {
-                                        <span class="ident">code</span>: <span class="ident">diag</span>
-                                            .<span class="ident">category</span>()
-                                            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">code</span><span class="op">|</span> <span class="ident">code</span>.<span class="ident">name</span>().<span class="ident">parse</span>().<span class="ident">ok</span>()),
-                                        <span class="ident">title</span>: <span class="ident">String::from</span>(<span class="string">&quot;test here&quot;</span>),
-                                        <span class="ident">severity</span>,
+                        } <span class="kw">else </span>{
+                            sender_reports
+                                .send(ReportKind::Error(
+                                    name.to_string(),
+                                    ReportErrorKind::Diagnostic(ReportDiagnostic {
+                                        code: diag
+                                            .category()
+                                            .and_then(|code| code.name().parse().ok()),
+                                        title: String::from(<span class="string">&quot;test here&quot;</span>),
+                                        severity,
                                     }),
                                 ))
-                                .<span class="ident">ok</span>();
+                                .ok();
                         }
                     }
                 }
             }
 
-            <span class="ident">Message::Diff</span> {
-                <span class="ident">file_name</span>,
-                <span class="ident">old</span>,
-                <span class="ident">new</span>,
+            Message::Diff {
+                file_name,
+                old,
+                new,
             } =&gt; {
-                <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">is_ci</span>() {
-                    <span class="comment">// A diff is an error in CI mode</span>
-                    <span class="ident">has_errors</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                <span class="kw">if </span>mode.is_ci() {
+                    <span class="comment">// A diff is an error in CI mode
+                    </span>has_errors = <span class="bool-val">true</span>;
                 }
 
-                <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">should_report_to_terminal</span>() {
-                    <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">is_ci</span>() {
-                        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">CIDiffDiagnostic</span> {
-                            <span class="ident">file_name</span>: <span class="kw-2">&amp;</span><span class="ident">file_name</span>,
-                            <span class="ident">diff</span>: <span class="ident">FormatDiffAdvice</span> {
-                                <span class="ident">old</span>: <span class="kw-2">&amp;</span><span class="ident">old</span>,
-                                <span class="ident">new</span>: <span class="kw-2">&amp;</span><span class="ident">new</span>,
+                <span class="kw">if </span>mode.should_report_to_terminal() {
+                    <span class="kw">if </span>mode.is_ci() {
+                        <span class="kw">let </span>diag = CIDiffDiagnostic {
+                            file_name: <span class="kw-2">&amp;</span>file_name,
+                            diff: FormatDiffAdvice {
+                                old: <span class="kw-2">&amp;</span>old,
+                                new: <span class="kw-2">&amp;</span>new,
                             },
                         };
 
-                        <span class="ident">console</span>.<span class="ident">error</span>(<span class="macro">markup!</span> {
-                            {<span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>)}
+                        console.error(<span class="macro">markup! </span>{
+                            {PrintDiagnostic(<span class="kw-2">&amp;</span>diag)}
                         });
-                    } <span class="kw">else</span> {
-                        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">FormatDiffDiagnostic</span> {
-                            <span class="ident">file_name</span>: <span class="kw-2">&amp;</span><span class="ident">file_name</span>,
-                            <span class="ident">diff</span>: <span class="ident">FormatDiffAdvice</span> {
-                                <span class="ident">old</span>: <span class="kw-2">&amp;</span><span class="ident">old</span>,
-                                <span class="ident">new</span>: <span class="kw-2">&amp;</span><span class="ident">new</span>,
+                    } <span class="kw">else </span>{
+                        <span class="kw">let </span>diag = FormatDiffDiagnostic {
+                            file_name: <span class="kw-2">&amp;</span>file_name,
+                            diff: FormatDiffAdvice {
+                                old: <span class="kw-2">&amp;</span>old,
+                                new: <span class="kw-2">&amp;</span>new,
                             },
                         };
 
-                        <span class="ident">console</span>.<span class="ident">error</span>(<span class="macro">markup!</span> {
-                            {<span class="ident">PrintDiagnostic</span>(<span class="kw-2">&amp;</span><span class="ident">diag</span>)}
+                        console.error(<span class="macro">markup! </span>{
+                            {PrintDiagnostic(<span class="kw-2">&amp;</span>diag)}
                         });
                     }
-                } <span class="kw">else</span> {
-                    <span class="ident">sender_reports</span>
-                        .<span class="ident">send</span>(<span class="ident">ReportKind::Error</span>(
-                            <span class="ident">file_name</span>,
-                            <span class="ident">ReportErrorKind::Diff</span>(<span class="ident">ReportDiff</span> {
-                                <span class="ident">before</span>: <span class="ident">old</span>,
-                                <span class="ident">after</span>: <span class="ident">new</span>,
-                                <span class="ident">severity</span>: <span class="ident">Severity::Error</span>,
+                } <span class="kw">else </span>{
+                    sender_reports
+                        .send(ReportKind::Error(
+                            file_name,
+                            ReportErrorKind::Diff(ReportDiff {
+                                before: old,
+                                after: new,
+                                severity: Severity::Error,
                             }),
                         ))
-                        .<span class="ident">ok</span>();
+                        .ok();
                 }
             }
         }
     }
 
-    <span class="kw">if</span> <span class="ident">mode</span>.<span class="ident">is_check</span>() <span class="op">&amp;&amp;</span> <span class="ident">total_skipped_suggested_fixes</span> <span class="op">&gt;</span> <span class="number">0</span> {
-        <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-            <span class="op">&lt;</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;Skipped &quot;</span>{<span class="ident">total_skipped_suggested_fixes</span>}<span class="string">&quot; suggested fixes.\n&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Warn</span><span class="op">&gt;</span>
-            <span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;If you wish to apply the suggested fixes, use the command &quot;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="string">&quot;rome check --apply-suggested\n&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span>
+    <span class="kw">if </span>mode.is_check() &amp;&amp; total_skipped_suggested_fixes &gt; <span class="number">0 </span>{
+        console.log(<span class="macro">markup! </span>{
+            &lt;Warn&gt;<span class="string">&quot;Skipped &quot;</span>{total_skipped_suggested_fixes}<span class="string">&quot; suggested fixes.\n&quot;</span>&lt;/Warn&gt;
+            &lt;Info&gt;<span class="string">&quot;If you wish to apply the suggested fixes, use the command &quot;</span>&lt;Emphasis&gt;<span class="string">&quot;rome check --apply-suggested\n&quot;</span>&lt;/Emphasis&gt;&lt;/Info&gt;
         })
     }
 
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">mode</span>.<span class="ident">is_ci</span>() <span class="op">&amp;&amp;</span> <span class="ident">not_printed_diagnostics</span> <span class="op">&gt;</span> <span class="number">0</span> {
-        <span class="ident">console</span>.<span class="ident">log</span>(<span class="macro">markup!</span> {
-            <span class="op">&lt;</span><span class="ident">Warn</span><span class="op">&gt;</span><span class="string">&quot;The number of diagnostics exceeds the number allowed by Rome.\n&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Warn</span><span class="op">&gt;</span>
-            <span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;Diagnostics not shown: &quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Emphasis</span><span class="op">&gt;</span>{<span class="ident">not_printed_diagnostics</span>}<span class="op">&lt;</span><span class="op">/</span><span class="ident">Emphasis</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="ident">Info</span><span class="op">&gt;</span><span class="string">&quot;.&quot;</span><span class="op">&lt;</span><span class="op">/</span><span class="ident">Info</span><span class="op">&gt;</span>
+    <span class="kw">if </span>!mode.is_ci() &amp;&amp; not_printed_diagnostics &gt; <span class="number">0 </span>{
+        console.log(<span class="macro">markup! </span>{
+            &lt;Warn&gt;<span class="string">&quot;The number of diagnostics exceeds the number allowed by Rome.\n&quot;</span>&lt;/Warn&gt;
+            &lt;Info&gt;<span class="string">&quot;Diagnostics not shown: &quot;</span>&lt;/Info&gt;&lt;Emphasis&gt;{not_printed_diagnostics}&lt;/Emphasis&gt;&lt;Info&gt;<span class="string">&quot;.&quot;</span>&lt;/Info&gt;
         })
     }
 
-    <span class="ident">has_errors</span>
+    has_errors
 }
 
-<span class="kw">fn</span> <span class="ident">collect_reports</span>(<span class="ident">receiver</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">ReportKind</span><span class="op">&gt;</span>) -&gt; <span class="ident">Report</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">report</span> <span class="op">=</span> <span class="ident">Report::default</span>();
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">stat</span>) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">recv</span>() {
-        <span class="ident">report</span>.<span class="ident">push_detail_report</span>(<span class="ident">stat</span>);
+<span class="kw">fn </span>collect_reports(receiver: Receiver&lt;ReportKind&gt;) -&gt; Report {
+    <span class="kw">let </span><span class="kw-2">mut </span>report = Report::default();
+    <span class="kw">while let </span><span class="prelude-val">Ok</span>(stat) = receiver.recv() {
+        report.push_detail_report(stat);
     }
 
-    <span class="ident">report</span>
+    report
 }
 
-<span class="doccomment">/// Context object shared between directory traversal tasks</span>
-<span class="kw">struct</span> <span class="ident">TraversalOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Shared instance of [FileSystem]</span>
-    <span class="ident">fs</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;app</span> <span class="kw">dyn</span> <span class="ident">FileSystem</span>,
-    <span class="doccomment">/// Instance of [Workspace] used by this instance of the CLI</span>
-    <span class="ident">workspace</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx</span> <span class="kw">dyn</span> <span class="ident">Workspace</span>,
-    <span class="doccomment">/// Determines how the files should be processed</span>
-    <span class="ident">execution</span>: <span class="ident">Execution</span>,
-    <span class="doccomment">/// File paths interner used by the filesystem traversal</span>
-    <span class="ident">interner</span>: <span class="ident">AtomicInterner</span>,
-    <span class="doccomment">/// Shared atomic counter storing the number of processed files</span>
-    <span class="ident">processed</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx</span> <span class="ident">AtomicUsize</span>,
-    <span class="doccomment">/// Shared atomic counter storing the number of skipped files</span>
-    <span class="ident">skipped</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx</span> <span class="ident">AtomicUsize</span>,
-    <span class="doccomment">/// Channel sending messages to the display thread</span>
-    <span class="ident">messages</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Channel sending reports to the reports thread</span>
-    <span class="ident">sender_reports</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">ReportKind</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The approximate number of diagnostics the console will print before</span>
-    <span class="doccomment">/// folding the rest into the &quot;skipped diagnostics&quot; counter</span>
-    <span class="ident">remaining_diagnostics</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicU64</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Context object shared between directory traversal tasks
+</span><span class="kw">struct </span>TraversalOptions&lt;<span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span>&gt; {
+    <span class="doccomment">/// Shared instance of [FileSystem]
+    </span>fs: <span class="kw-2">&amp;</span><span class="lifetime">&#39;app </span><span class="kw">dyn </span>FileSystem,
+    <span class="doccomment">/// Instance of [Workspace] used by this instance of the CLI
+    </span>workspace: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span><span class="kw">dyn </span>Workspace,
+    <span class="doccomment">/// Determines how the files should be processed
+    </span>execution: Execution,
+    <span class="doccomment">/// File paths interner used by the filesystem traversal
+    </span>interner: AtomicInterner,
+    <span class="doccomment">/// Shared atomic counter storing the number of processed files
+    </span>processed: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span>AtomicUsize,
+    <span class="doccomment">/// Shared atomic counter storing the number of skipped files
+    </span>skipped: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span>AtomicUsize,
+    <span class="doccomment">/// Channel sending messages to the display thread
+    </span>messages: Sender&lt;Message&gt;,
+    <span class="doccomment">/// Channel sending reports to the reports thread
+    </span>sender_reports: Sender&lt;ReportKind&gt;,
+    <span class="doccomment">/// The approximate number of diagnostics the console will print before
+    /// folding the rest into the &quot;skipped diagnostics&quot; counter
+    </span>remaining_diagnostics: Arc&lt;AtomicU64&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> <span class="ident">TraversalOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Send a message to the display thread</span>
-    <span class="kw">fn</span> <span class="ident">push_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">messages</span>.<span class="ident">send</span>(<span class="ident">msg</span>.<span class="ident">into</span>()).<span class="ident">ok</span>();
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span>&gt; TraversalOptions&lt;<span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span>&gt; {
+    <span class="doccomment">/// Send a message to the display thread
+    </span><span class="kw">fn </span>push_message(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: <span class="kw">impl </span>Into&lt;Message&gt;) {
+        <span class="self">self</span>.messages.send(msg.into()).ok();
     }
 
-    <span class="kw">fn</span> <span class="ident">can_format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SupportsFeatureResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">supports_feature</span>(<span class="ident">SupportsFeatureParams</span> {
-            <span class="ident">path</span>: <span class="ident">rome_path</span>.<span class="ident">clone</span>(),
-            <span class="ident">feature</span>: <span class="ident">FeatureName::Format</span>,
+    <span class="kw">fn </span>can_format(<span class="kw-2">&amp;</span><span class="self">self</span>, rome_path: <span class="kw-2">&amp;</span>RomePath) -&gt; <span class="prelude-ty">Result</span>&lt;SupportsFeatureResult, RomeError&gt; {
+        <span class="self">self</span>.workspace.supports_feature(SupportsFeatureParams {
+            path: rome_path.clone(),
+            feature: FeatureName::Format,
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">push_format_stat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="ident">String</span>, <span class="ident">stat</span>: <span class="ident">FormatterReportFileDetail</span>) {
-        <span class="self">self</span>.<span class="ident">sender_reports</span>
-            .<span class="ident">send</span>(<span class="ident">ReportKind::Formatter</span>(<span class="ident">path</span>, <span class="ident">stat</span>))
-            .<span class="ident">ok</span>();
+    <span class="kw">fn </span>push_format_stat(<span class="kw-2">&amp;</span><span class="self">self</span>, path: String, stat: FormatterReportFileDetail) {
+        <span class="self">self</span>.sender_reports
+            .send(ReportKind::Formatter(path, stat))
+            .ok();
     }
 
-    <span class="kw">fn</span> <span class="ident">can_lint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SupportsFeatureResult</span>, <span class="ident">RomeError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">workspace</span>.<span class="ident">supports_feature</span>(<span class="ident">SupportsFeatureParams</span> {
-            <span class="ident">path</span>: <span class="ident">rome_path</span>.<span class="ident">clone</span>(),
-            <span class="ident">feature</span>: <span class="ident">FeatureName::Lint</span>,
+    <span class="kw">fn </span>can_lint(<span class="kw-2">&amp;</span><span class="self">self</span>, rome_path: <span class="kw-2">&amp;</span>RomePath) -&gt; <span class="prelude-ty">Result</span>&lt;SupportsFeatureResult, RomeError&gt; {
+        <span class="self">self</span>.workspace.supports_feature(SupportsFeatureParams {
+            path: rome_path.clone(),
+            feature: FeatureName::Lint,
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">miss_handler_err</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">err</span>: <span class="ident">RomeError</span>, <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>) {
-        <span class="self">self</span>.<span class="ident">push_diagnostic</span>(
-            <span class="ident">StdError::from</span>(<span class="ident">err</span>)
-                .<span class="ident">with_category</span>(<span class="macro">category!</span>(<span class="string">&quot;files/missingHandler&quot;</span>))
-                .<span class="ident">with_file_path</span>(<span class="ident">rome_path</span>.<span class="ident">file_id</span>()),
+    <span class="kw">fn </span>miss_handler_err(<span class="kw-2">&amp;</span><span class="self">self</span>, err: RomeError, rome_path: <span class="kw-2">&amp;</span>RomePath) {
+        <span class="self">self</span>.push_diagnostic(
+            StdError::from(err)
+                .with_category(<span class="macro">category!</span>(<span class="string">&quot;files/missingHandler&quot;</span>))
+                .with_file_path(rome_path.file_id()),
         );
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> <span class="ident">TraversalContext</span> <span class="kw">for</span> <span class="ident">TraversalOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">interner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">PathInterner</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">interner</span>
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span>&gt; TraversalContext <span class="kw">for </span>TraversalOptions&lt;<span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span>&gt; {
+    <span class="kw">fn </span>interner(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>PathInterner {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.interner
     }
 
-    <span class="kw">fn</span> <span class="ident">push_diagnostic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">error</span>: <span class="ident">Error</span>) {
-        <span class="self">self</span>.<span class="ident">push_message</span>(<span class="ident">error</span>);
+    <span class="kw">fn </span>push_diagnostic(<span class="kw-2">&amp;</span><span class="self">self</span>, error: Error) {
+        <span class="self">self</span>.push_message(error);
     }
 
-    <span class="kw">fn</span> <span class="ident">can_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rome_path</span>: <span class="kw-2">&amp;</span><span class="ident">RomePath</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">can_lint</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">can_lint</span>(<span class="ident">rome_path</span>);
-        <span class="kw">let</span> <span class="ident">can_format</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">can_format</span>(<span class="ident">rome_path</span>);
+    <span class="kw">fn </span>can_handle(<span class="kw-2">&amp;</span><span class="self">self</span>, rome_path: <span class="kw-2">&amp;</span>RomePath) -&gt; bool {
+        <span class="kw">let </span>can_lint = <span class="self">self</span>.can_lint(rome_path);
+        <span class="kw">let </span>can_format = <span class="self">self</span>.can_format(rome_path);
 
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
-            <span class="ident">TraversalMode::Check</span> { .. } =&gt; <span class="ident">can_lint</span>
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">result</span><span class="op">|</span> <span class="ident">result</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>())
-                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-                    <span class="self">self</span>.<span class="ident">miss_handler_err</span>(<span class="ident">err</span>, <span class="ident">rome_path</span>);
-                    <span class="bool-val">false</span>
-                }),
-            <span class="ident">TraversalMode::CI</span> { .. } =&gt; <span class="kw">match</span> (<span class="ident">can_format</span>, <span class="ident">can_lint</span>) {
-                <span class="comment">// the result of the error is the same, rome can&#39;t handle the file</span>
-                (<span class="prelude-val">Err</span>(<span class="ident">err</span>), <span class="kw">_</span>) <span class="op">|</span> (<span class="kw">_</span>, <span class="prelude-val">Err</span>(<span class="ident">err</span>)) =&gt; {
-                    <span class="self">self</span>.<span class="ident">miss_handler_err</span>(<span class="ident">err</span>, <span class="ident">rome_path</span>);
-                    <span class="bool-val">false</span>
-                }
-                (<span class="prelude-val">Ok</span>(<span class="ident">can_format</span>), <span class="prelude-val">Ok</span>(<span class="ident">can_lint</span>)) =&gt; {
-                    <span class="ident">can_lint</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">can_format</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>()
+        <span class="kw">match </span><span class="self">self</span>.execution.traversal_mode() {
+            TraversalMode::Check { .. } =&gt; can_lint
+                .map(|result| result.reason.is_none())
+                .unwrap_or_else(|err| {
+                    <span class="self">self</span>.miss_handler_err(err, rome_path);
+                    <span class="bool-val">false
+                </span>}),
+            TraversalMode::CI { .. } =&gt; <span class="kw">match </span>(can_format, can_lint) {
+                <span class="comment">// the result of the error is the same, rome can&#39;t handle the file
+                </span>(<span class="prelude-val">Err</span>(err), <span class="kw">_</span>) | (<span class="kw">_</span>, <span class="prelude-val">Err</span>(err)) =&gt; {
+                    <span class="self">self</span>.miss_handler_err(err, rome_path);
+                    <span class="bool-val">false
+                </span>}
+                (<span class="prelude-val">Ok</span>(can_format), <span class="prelude-val">Ok</span>(can_lint)) =&gt; {
+                    can_lint.reason.is_none() || can_format.reason.is_none()
                 }
             },
-            <span class="ident">TraversalMode::Format</span> { .. } =&gt; <span class="ident">can_format</span>
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">result</span><span class="op">|</span> <span class="ident">result</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>())
-                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-                    <span class="self">self</span>.<span class="ident">miss_handler_err</span>(<span class="ident">err</span>, <span class="ident">rome_path</span>);
-                    <span class="bool-val">false</span>
-                }),
+            TraversalMode::Format { .. } =&gt; can_format
+                .map(|result| result.reason.is_none())
+                .unwrap_or_else(|err| {
+                    <span class="self">self</span>.miss_handler_err(err, rome_path);
+                    <span class="bool-val">false
+                </span>}),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">handle_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">file_id</span>: <span class="ident">FileId</span>) {
-        <span class="ident">handle_file</span>(<span class="self">self</span>, <span class="ident">path</span>, <span class="ident">file_id</span>)
+    <span class="kw">fn </span>handle_file(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path, file_id: FileId) {
+        handle_file(<span class="self">self</span>, path, file_id)
     }
 }
 
-<span class="doccomment">/// This function wraps the [process_file] function implementing the traversal</span>
-<span class="doccomment">/// in a [catch_unwind] block and emit diagnostics in case of error (either the</span>
-<span class="doccomment">/// traversal function returns Err or panics)</span>
-<span class="kw">fn</span> <span class="ident">handle_file</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">TraversalOptions</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">file_id</span>: <span class="ident">FileId</span>) {
-    <span class="kw">match</span> <span class="ident">catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="ident">process_file</span>(<span class="ident">ctx</span>, <span class="ident">path</span>, <span class="ident">file_id</span>)) {
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">FileStatus::Success</span>)) =&gt; {
-            <span class="ident">ctx</span>.<span class="ident">processed</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::Relaxed</span>);
+<span class="doccomment">/// This function wraps the [process_file] function implementing the traversal
+/// in a [catch_unwind] block and emit diagnostics in case of error (either the
+/// traversal function returns Err or panics)
+</span><span class="kw">fn </span>handle_file(ctx: <span class="kw-2">&amp;</span>TraversalOptions, path: <span class="kw-2">&amp;</span>Path, file_id: FileId) {
+    <span class="kw">match </span>catch_unwind(<span class="kw">move </span>|| process_file(ctx, path, file_id)) {
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(FileStatus::Success)) =&gt; {
+            ctx.processed.fetch_add(<span class="number">1</span>, Ordering::Relaxed);
         }
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">FileStatus::Message</span>(<span class="ident">msg</span>))) =&gt; {
-            <span class="ident">ctx</span>.<span class="ident">processed</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::Relaxed</span>);
-            <span class="ident">ctx</span>.<span class="ident">push_message</span>(<span class="ident">msg</span>);
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(FileStatus::Message(msg))) =&gt; {
+            ctx.processed.fetch_add(<span class="number">1</span>, Ordering::Relaxed);
+            ctx.push_message(msg);
         }
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">FileStatus::Ignored</span>)) =&gt; {}
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)) =&gt; {
-            <span class="ident">ctx</span>.<span class="ident">skipped</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::Relaxed</span>);
-            <span class="ident">ctx</span>.<span class="ident">push_message</span>(<span class="ident">err</span>);
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(FileStatus::Ignored)) =&gt; {}
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(err)) =&gt; {
+            ctx.skipped.fetch_add(<span class="number">1</span>, Ordering::Relaxed);
+            ctx.push_message(err);
         }
-        <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
-            <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">err</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>() {
-                <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;processing panicked: {msg}&quot;</span>),
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="kw">match</span> <span class="ident">err</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;processing panicked: {msg}&quot;</span>),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="ident">String::from</span>(<span class="string">&quot;processing panicked&quot;</span>),
+        <span class="prelude-val">Err</span>(err) =&gt; {
+            <span class="kw">let </span>message = <span class="kw">match </span>err.downcast::&lt;String&gt;() {
+                <span class="prelude-val">Ok</span>(msg) =&gt; <span class="macro">format!</span>(<span class="string">&quot;processing panicked: {msg}&quot;</span>),
+                <span class="prelude-val">Err</span>(err) =&gt; <span class="kw">match </span>err.downcast::&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;() {
+                    <span class="prelude-val">Ok</span>(msg) =&gt; <span class="macro">format!</span>(<span class="string">&quot;processing panicked: {msg}&quot;</span>),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; String::from(<span class="string">&quot;processing panicked&quot;</span>),
                 },
             };
 
-            <span class="ident">ctx</span>.<span class="ident">push_message</span>(<span class="ident">PanicDiagnostic</span> { <span class="ident">message</span> }.<span class="ident">with_file_path</span>(<span class="ident">file_id</span>));
+            ctx.push_message(PanicDiagnostic { message }.with_file_path(file_id));
         }
     }
 }
 
-<span class="kw">enum</span> <span class="ident">FileStatus</span> {
-    <span class="ident">Success</span>,
-    <span class="ident">Message</span>(<span class="ident">Message</span>),
-    <span class="ident">Ignored</span>,
+<span class="kw">enum </span>FileStatus {
+    Success,
+    Message(Message),
+    Ignored,
 }
 
-<span class="doccomment">/// The return type for [process_file], with the following semantics:</span>
-<span class="doccomment">/// - `Ok(Success)` means the operation was successful (the file is added to</span>
-<span class="doccomment">///   the `processed` counter)</span>
-<span class="doccomment">/// - `Ok(Message(_))` means the operation was successful but a message still</span>
-<span class="doccomment">///   needs to be printed (eg. the diff when not in CI or write mode)</span>
-<span class="doccomment">/// - `Ok(Ignored)` means the file was ignored (the file is not added to the</span>
-<span class="doccomment">///   `processed` or `skipped` counters)</span>
-<span class="doccomment">/// - `Err(_)` means the operation failed and the file should be added to the</span>
-<span class="doccomment">///   `skipped` counter</span>
-<span class="kw">type</span> <span class="ident">FileResult</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FileStatus</span>, <span class="ident">Message</span><span class="op">&gt;</span>;
+<span class="doccomment">/// The return type for [process_file], with the following semantics:
+/// - `Ok(Success)` means the operation was successful (the file is added to
+///   the `processed` counter)
+/// - `Ok(Message(_))` means the operation was successful but a message still
+///   needs to be printed (eg. the diff when not in CI or write mode)
+/// - `Ok(Ignored)` means the file was ignored (the file is not added to the
+///   `processed` or `skipped` counters)
+/// - `Err(_)` means the operation failed and the file should be added to the
+///   `skipped` counter
+</span><span class="kw">type </span>FileResult = <span class="prelude-ty">Result</span>&lt;FileStatus, Message&gt;;
 
-<span class="doccomment">/// This function performs the actual processing: it reads the file from disk</span>
-<span class="doccomment">/// and parse it; analyze and / or format it; then it either fails if error</span>
-<span class="doccomment">/// diagnostics where emitted, or compare the formatted code with the original</span>
-<span class="doccomment">/// content of the file and emit a diff or write the new content to the disk if</span>
-<span class="doccomment">/// write mode is enabled</span>
-<span class="kw">fn</span> <span class="ident">process_file</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">TraversalOptions</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">file_id</span>: <span class="ident">FileId</span>) -&gt; <span class="ident">FileResult</span> {
-    <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;process_file&quot;</span>, <span class="ident">path</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">path</span>).<span class="ident">in_scope</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">rome_path</span> <span class="op">=</span> <span class="ident">RomePath::new</span>(<span class="ident">path</span>, <span class="ident">file_id</span>);
-        <span class="kw">let</span> <span class="ident">supported_format</span> <span class="op">=</span> <span class="ident">ctx</span>
-            .<span class="ident">can_format</span>(<span class="kw-2">&amp;</span><span class="ident">rome_path</span>)
-            .<span class="ident">with_file_id_and_code</span>(<span class="ident">file_id</span>, <span class="macro">category!</span>(<span class="string">&quot;files/missingHandler&quot;</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">supported_lint</span> <span class="op">=</span> <span class="ident">ctx</span>
-            .<span class="ident">can_lint</span>(<span class="kw-2">&amp;</span><span class="ident">rome_path</span>)
-            .<span class="ident">with_file_id_and_code</span>(<span class="ident">file_id</span>, <span class="macro">category!</span>(<span class="string">&quot;files/missingHandler&quot;</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">supported_file</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
-            <span class="ident">TraversalMode::Check</span> { .. } =&gt; <span class="ident">supported_lint</span>.<span class="ident">reason</span>.<span class="ident">as_ref</span>(),
-            <span class="ident">TraversalMode::CI</span> { .. } =&gt; <span class="ident">supported_lint</span>
-                .<span class="ident">reason</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">and</span>(<span class="ident">supported_format</span>.<span class="ident">reason</span>.<span class="ident">as_ref</span>()),
-            <span class="ident">TraversalMode::Format</span> { .. } =&gt; <span class="ident">supported_format</span>.<span class="ident">reason</span>.<span class="ident">as_ref</span>(),
+<span class="doccomment">/// This function performs the actual processing: it reads the file from disk
+/// and parse it; analyze and / or format it; then it either fails if error
+/// diagnostics where emitted, or compare the formatted code with the original
+/// content of the file and emit a diff or write the new content to the disk if
+/// write mode is enabled
+</span><span class="kw">fn </span>process_file(ctx: <span class="kw-2">&amp;</span>TraversalOptions, path: <span class="kw-2">&amp;</span>Path, file_id: FileId) -&gt; FileResult {
+    <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;process_file&quot;</span>, path = <span class="question-mark">?</span>path).in_scope(<span class="kw">move </span>|| {
+        <span class="kw">let </span>rome_path = RomePath::new(path, file_id);
+        <span class="kw">let </span>supported_format = ctx
+            .can_format(<span class="kw-2">&amp;</span>rome_path)
+            .with_file_id_and_code(file_id, <span class="macro">category!</span>(<span class="string">&quot;files/missingHandler&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span>supported_lint = ctx
+            .can_lint(<span class="kw-2">&amp;</span>rome_path)
+            .with_file_id_and_code(file_id, <span class="macro">category!</span>(<span class="string">&quot;files/missingHandler&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span>supported_file = <span class="kw">match </span>ctx.execution.traversal_mode() {
+            TraversalMode::Check { .. } =&gt; supported_lint.reason.as_ref(),
+            TraversalMode::CI { .. } =&gt; supported_lint
+                .reason
+                .as_ref()
+                .and(supported_format.reason.as_ref()),
+            TraversalMode::Format { .. } =&gt; supported_format.reason.as_ref(),
         };
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">reason</span>) <span class="op">=</span> <span class="ident">supported_file</span> {
-            <span class="kw">return</span> <span class="kw">match</span> <span class="ident">reason</span> {
-                <span class="ident">UnsupportedReason::FileNotSupported</span> =&gt; {
-                    <span class="prelude-val">Err</span>(<span class="ident">Message::from</span>(<span class="ident">UnhandledDiagnostic</span>.<span class="ident">with_file_path</span>(<span class="ident">file_id</span>)))
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(reason) = supported_file {
+            <span class="kw">return match </span>reason {
+                UnsupportedReason::FileNotSupported =&gt; {
+                    <span class="prelude-val">Err</span>(Message::from(UnhandledDiagnostic.with_file_path(file_id)))
                 }
-                <span class="ident">UnsupportedReason::FeatureNotEnabled</span> <span class="op">|</span> <span class="ident">UnsupportedReason::Ignored</span> =&gt; {
-                    <span class="prelude-val">Ok</span>(<span class="ident">FileStatus::Ignored</span>)
+                UnsupportedReason::FeatureNotEnabled | UnsupportedReason::Ignored =&gt; {
+                    <span class="prelude-val">Ok</span>(FileStatus::Ignored)
                 }
             };
         }
 
-        <span class="kw">let</span> <span class="ident">open_options</span> <span class="op">=</span> <span class="ident">OpenOptions::default</span>().<span class="ident">read</span>(<span class="bool-val">true</span>).<span class="ident">write</span>(<span class="bool-val">true</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">ctx</span>
-            .<span class="ident">fs</span>
-            .<span class="ident">open_with_options</span>(<span class="ident">path</span>, <span class="ident">open_options</span>)
-            .<span class="ident">with_file_id</span>(<span class="ident">file_id</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>open_options = OpenOptions::default().read(<span class="bool-val">true</span>).write(<span class="bool-val">true</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>file = ctx
+            .fs
+            .open_with_options(path, open_options)
+            .with_file_id(file_id)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">String::new</span>();
-        <span class="ident">file</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;mut</span> <span class="ident">input</span>).<span class="ident">with_file_id</span>(<span class="ident">file_id</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>input = String::new();
+        file.read_to_string(<span class="kw-2">&amp;mut </span>input).with_file_id(file_id)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">file_guard</span> <span class="op">=</span> <span class="ident">FileGuard::open</span>(
-            <span class="ident">ctx</span>.<span class="ident">workspace</span>,
-            <span class="ident">OpenFileParams</span> {
-                <span class="ident">path</span>: <span class="ident">rome_path</span>,
-                <span class="ident">version</span>: <span class="number">0</span>,
-                <span class="ident">content</span>: <span class="ident">input</span>.<span class="ident">clone</span>(),
-                <span class="ident">language_hint</span>: <span class="ident">Language::default</span>(),
+        <span class="kw">let </span>file_guard = FileGuard::open(
+            ctx.workspace,
+            OpenFileParams {
+                path: rome_path,
+                version: <span class="number">0</span>,
+                content: input.clone(),
+                language_hint: Language::default(),
             },
         )
-        .<span class="ident">with_file_id_and_code</span>(<span class="ident">file_id</span>, <span class="macro">category!</span>(<span class="string">&quot;internalError/fs&quot;</span>))<span class="question-mark">?</span>;
+        .with_file_id_and_code(file_id, <span class="macro">category!</span>(<span class="string">&quot;internalError/fs&quot;</span>))<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">fix_mode</span>) <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">as_fix_file_mode</span>() {
-            <span class="kw">let</span> <span class="ident">fixed</span> <span class="op">=</span> <span class="ident">file_guard</span>
-                .<span class="ident">fix_file</span>(<span class="kw-2">*</span><span class="ident">fix_mode</span>)
-                .<span class="ident">with_file_id_and_code</span>(<span class="ident">file_id</span>, <span class="macro">category!</span>(<span class="string">&quot;lint&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(fix_mode) = ctx.execution.as_fix_file_mode() {
+            <span class="kw">let </span>fixed = file_guard
+                .fix_file(<span class="kw-2">*</span>fix_mode)
+                .with_file_id_and_code(file_id, <span class="macro">category!</span>(<span class="string">&quot;lint&quot;</span>))<span class="question-mark">?</span>;
 
-            <span class="ident">ctx</span>.<span class="ident">push_message</span>(<span class="ident">Message::SkippedFixes</span> {
-                <span class="ident">skipped_suggested_fixes</span>: <span class="ident">fixed</span>.<span class="ident">skipped_suggested_fixes</span>,
+            ctx.push_message(Message::SkippedFixes {
+                skipped_suggested_fixes: fixed.skipped_suggested_fixes,
             });
 
-            <span class="kw">if</span> <span class="ident">fixed</span>.<span class="ident">code</span> <span class="op">!</span><span class="op">=</span> <span class="ident">input</span> {
-                <span class="ident">file</span>.<span class="ident">set_content</span>(<span class="ident">fixed</span>.<span class="ident">code</span>.<span class="ident">as_bytes</span>())
-                    .<span class="ident">with_file_id</span>(<span class="ident">file_id</span>)<span class="question-mark">?</span>;
+            <span class="kw">if </span>fixed.code != input {
+                file.set_content(fixed.code.as_bytes())
+                    .with_file_id(file_id)<span class="question-mark">?</span>;
 
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">FileStatus::Success</span>);
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(FileStatus::Success);
             }
 
-            <span class="comment">// If the file isn&#39;t changed, do not increment the &quot;fixed files&quot; counter</span>
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">FileStatus::Ignored</span>);
+            <span class="comment">// If the file isn&#39;t changed, do not increment the &quot;fixed files&quot; counter
+            </span><span class="kw">return </span><span class="prelude-val">Ok</span>(FileStatus::Ignored);
         }
 
-        <span class="kw">let</span> <span class="ident">categories</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">is_format</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">supported_lint</span>.<span class="ident">reason</span>.<span class="ident">is_some</span>() {
-            <span class="ident">RuleCategories::SYNTAX</span>
-        } <span class="kw">else</span> {
-            <span class="ident">RuleCategories::SYNTAX</span> <span class="op">|</span> <span class="ident">RuleCategories::LINT</span>
+        <span class="kw">let </span>categories = <span class="kw">if </span>ctx.execution.is_format() || supported_lint.reason.is_some() {
+            RuleCategories::SYNTAX
+        } <span class="kw">else </span>{
+            RuleCategories::SYNTAX | RuleCategories::LINT
         };
 
-        <span class="kw">let</span> <span class="ident">max_diagnostics</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">remaining_diagnostics</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">file_guard</span>
-            .<span class="ident">pull_diagnostics</span>(<span class="ident">categories</span>, <span class="ident">max_diagnostics</span>)
-            .<span class="ident">with_file_id_and_code</span>(<span class="ident">file_id</span>, <span class="macro">category!</span>(<span class="string">&quot;lint&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span>max_diagnostics = ctx.remaining_diagnostics.load(Ordering::Relaxed);
+        <span class="kw">let </span>result = file_guard
+            .pull_diagnostics(categories, max_diagnostics)
+            .with_file_id_and_code(file_id, <span class="macro">category!</span>(<span class="string">&quot;lint&quot;</span>))<span class="question-mark">?</span>;
 
-        <span class="comment">// In formatting mode, abort immediately if the file has errors</span>
-        <span class="kw">let</span> <span class="ident">has_errors</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">has_errors</span>;
-        <span class="kw">match</span> <span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
-            <span class="ident">TraversalMode::Format</span> { <span class="ident">ignore_errors</span>, .. } <span class="kw">if</span> <span class="ident">has_errors</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">if</span> <span class="kw-2">*</span><span class="ident">ignore_errors</span> {
-                    <span class="ident">Message::from</span>(<span class="ident">SkippedDiagnostic</span>.<span class="ident">with_file_path</span>(<span class="ident">file_id</span>))
-                } <span class="kw">else</span> {
-                    <span class="ident">Message::Diagnostics</span> {
-                        <span class="ident">name</span>: <span class="ident">path</span>.<span class="ident">display</span>().<span class="ident">to_string</span>(),
-                        <span class="ident">content</span>: <span class="ident">input</span>,
-                        <span class="ident">diagnostics</span>: <span class="ident">result</span>.<span class="ident">diagnostics</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Error::from</span>).<span class="ident">collect</span>(),
-                        <span class="ident">skipped_diagnostics</span>: <span class="ident">result</span>.<span class="ident">skipped_diagnostics</span>,
+        <span class="comment">// In formatting mode, abort immediately if the file has errors
+        </span><span class="kw">let </span>has_errors = result.has_errors;
+        <span class="kw">match </span>ctx.execution.traversal_mode() {
+            TraversalMode::Format { ignore_errors, .. } <span class="kw">if </span>has_errors =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="kw">if </span><span class="kw-2">*</span>ignore_errors {
+                    Message::from(SkippedDiagnostic.with_file_path(file_id))
+                } <span class="kw">else </span>{
+                    Message::Diagnostics {
+                        name: path.display().to_string(),
+                        content: input,
+                        diagnostics: result.diagnostics.into_iter().map(Error::from).collect(),
+                        skipped_diagnostics: result.skipped_diagnostics,
                     }
                 });
             }
 
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         }
 
-        <span class="comment">// In format mode the diagnostics have already been checked for errors</span>
-        <span class="comment">// at this point, so they can just be dropped now since we don&#39;t want</span>
-        <span class="comment">// to print syntax warnings for the format command</span>
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">result</span>.<span class="ident">diagnostics</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">is_format</span>() {
-            <span class="ident">FileStatus::Success</span>
-        } <span class="kw">else</span> {
-            <span class="ident">FileStatus::Message</span>(<span class="ident">Message::Diagnostics</span> {
-                <span class="ident">name</span>: <span class="ident">path</span>.<span class="ident">display</span>().<span class="ident">to_string</span>(),
-                <span class="ident">content</span>: <span class="ident">input</span>.<span class="ident">clone</span>(),
-                <span class="ident">diagnostics</span>: <span class="ident">result</span>.<span class="ident">diagnostics</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Error::from</span>).<span class="ident">collect</span>(),
-                <span class="ident">skipped_diagnostics</span>: <span class="ident">result</span>.<span class="ident">skipped_diagnostics</span>,
+        <span class="comment">// In format mode the diagnostics have already been checked for errors
+        // at this point, so they can just be dropped now since we don&#39;t want
+        // to print syntax warnings for the format command
+        </span><span class="kw">let </span>result = <span class="kw">if </span>result.diagnostics.is_empty() || ctx.execution.is_format() {
+            FileStatus::Success
+        } <span class="kw">else </span>{
+            FileStatus::Message(Message::Diagnostics {
+                name: path.display().to_string(),
+                content: input.clone(),
+                diagnostics: result.diagnostics.into_iter().map(Error::from).collect(),
+                skipped_diagnostics: result.skipped_diagnostics,
             })
         };
 
-        <span class="kw">if</span> <span class="ident">has_errors</span> {
-            <span class="comment">// Having errors is considered a &quot;success&quot; at this point because</span>
-            <span class="comment">// this is only reachable on the check / CI path (the parser result</span>
-            <span class="comment">// is checked for errors earlier on the format path, and that mode</span>
-            <span class="comment">// doesn&#39;t run the analyzer so no new diagnostics could have been</span>
-            <span class="comment">// added), and having errors on these paths still means the file</span>
-            <span class="comment">// was processed (added to the checked files counter)</span>
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">result</span>);
+        <span class="kw">if </span>has_errors {
+            <span class="comment">// Having errors is considered a &quot;success&quot; at this point because
+            // this is only reachable on the check / CI path (the parser result
+            // is checked for errors earlier on the format path, and that mode
+            // doesn&#39;t run the analyzer so no new diagnostics could have been
+            // added), and having errors on these paths still means the file
+            // was processed (added to the checked files counter)
+            </span><span class="kw">return </span><span class="prelude-val">Ok</span>(result);
         }
 
-        <span class="kw">if</span> <span class="ident">supported_format</span>.<span class="ident">reason</span>.<span class="ident">is_none</span>() {
-            <span class="kw">let</span> <span class="ident">write</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">traversal_mode</span>() {
-                <span class="comment">// In check mode do not run the formatter and return the result immediately,</span>
-                <span class="comment">// but only if the argument `--apply` is not passed.</span>
-                <span class="ident">TraversalMode::Check</span> { .. } =&gt; {
-                    <span class="kw">if</span> <span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">as_fix_file_mode</span>().<span class="ident">is_some</span>() {
-                        <span class="bool-val">true</span>
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">result</span>);
+        <span class="kw">if </span>supported_format.reason.is_none() {
+            <span class="kw">let </span>write = <span class="kw">match </span>ctx.execution.traversal_mode() {
+                <span class="comment">// In check mode do not run the formatter and return the result immediately,
+                // but only if the argument `--apply` is not passed.
+                </span>TraversalMode::Check { .. } =&gt; {
+                    <span class="kw">if </span>ctx.execution.as_fix_file_mode().is_some() {
+                        <span class="bool-val">true
+                    </span>} <span class="kw">else </span>{
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(result);
                     }
                 }
-                <span class="ident">TraversalMode::CI</span> { .. } =&gt; <span class="bool-val">false</span>,
-                <span class="ident">TraversalMode::Format</span> { <span class="ident">write</span>, .. } =&gt; <span class="kw-2">*</span><span class="ident">write</span>,
+                TraversalMode::CI { .. } =&gt; <span class="bool-val">false</span>,
+                TraversalMode::Format { write, .. } =&gt; <span class="kw-2">*</span>write,
             };
 
-            <span class="kw">let</span> <span class="ident">printed</span> <span class="op">=</span> <span class="ident">file_guard</span>
-                .<span class="ident">format_file</span>()
-                .<span class="ident">with_file_id_and_code</span>(<span class="ident">file_id</span>, <span class="macro">category!</span>(<span class="string">&quot;format&quot;</span>))<span class="question-mark">?</span>;
+            <span class="kw">let </span>printed = file_guard
+                .format_file()
+                .with_file_id_and_code(file_id, <span class="macro">category!</span>(<span class="string">&quot;format&quot;</span>))<span class="question-mark">?</span>;
 
-            <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">printed</span>.<span class="ident">into_code</span>();
-            <span class="kw">if</span> <span class="ident">output</span> <span class="op">!</span><span class="op">=</span> <span class="ident">input</span> {
-                <span class="kw">if</span> <span class="ident">write</span> {
-                    <span class="ident">file</span>.<span class="ident">set_content</span>(<span class="ident">output</span>.<span class="ident">as_bytes</span>()).<span class="ident">with_file_id</span>(<span class="ident">file_id</span>)<span class="question-mark">?</span>;
-                } <span class="kw">else</span> {
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">ctx</span>.<span class="ident">execution</span>.<span class="ident">should_report_to_terminal</span>() {
-                        <span class="ident">ctx</span>.<span class="ident">push_format_stat</span>(
-                            <span class="ident">path</span>.<span class="ident">display</span>().<span class="ident">to_string</span>(),
-                            <span class="ident">FormatterReportFileDetail</span> {
-                                <span class="ident">formatted_content</span>: <span class="prelude-val">Some</span>(<span class="ident">output</span>.<span class="ident">clone</span>()),
+            <span class="kw">let </span>output = printed.into_code();
+            <span class="kw">if </span>output != input {
+                <span class="kw">if </span>write {
+                    file.set_content(output.as_bytes()).with_file_id(file_id)<span class="question-mark">?</span>;
+                } <span class="kw">else </span>{
+                    <span class="kw">if </span>!ctx.execution.should_report_to_terminal() {
+                        ctx.push_format_stat(
+                            path.display().to_string(),
+                            FormatterReportFileDetail {
+                                formatted_content: <span class="prelude-val">Some</span>(output.clone()),
                             },
                         )
                     }
-                    <span class="comment">// Returning the diff message will discard the content of</span>
-                    <span class="comment">// diagnostics, meaning those would not be printed so they</span>
-                    <span class="comment">// have to be manually sent through the console channel</span>
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">FileStatus::Message</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="ident">result</span> {
-                        <span class="ident">ctx</span>.<span class="ident">messages</span>.<span class="ident">send</span>(<span class="ident">msg</span>).<span class="ident">ok</span>();
+                    <span class="comment">// Returning the diff message will discard the content of
+                    // diagnostics, meaning those would not be printed so they
+                    // have to be manually sent through the console channel
+                    </span><span class="kw">if let </span>FileStatus::Message(msg) = result {
+                        ctx.messages.send(msg).ok();
                     }
 
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">FileStatus::Message</span>(<span class="ident">Message::Diff</span> {
-                        <span class="ident">file_name</span>: <span class="ident">path</span>.<span class="ident">display</span>().<span class="ident">to_string</span>(),
-                        <span class="ident">old</span>: <span class="ident">input</span>,
-                        <span class="ident">new</span>: <span class="ident">output</span>,
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(FileStatus::Message(Message::Diff {
+                        file_name: path.display().to_string(),
+                        old: input,
+                        new: output,
                     }));
                 }
             }
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+        <span class="prelude-val">Ok</span>(result)
     })
 }
 
-<span class="doccomment">/// Wrapper type for messages that can be printed during the traversal process</span>
-<span class="kw">enum</span> <span class="ident">Message</span> {
-    <span class="ident">SkippedFixes</span> {
-        <span class="doccomment">/// Suggested fixes skipped during the lint traversal</span>
-        <span class="ident">skipped_suggested_fixes</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// Wrapper type for messages that can be printed during the traversal process
+</span><span class="kw">enum </span>Message {
+    SkippedFixes {
+        <span class="doccomment">/// Suggested fixes skipped during the lint traversal
+        </span>skipped_suggested_fixes: u32,
     },
-    <span class="ident">Error</span>(<span class="ident">Error</span>),
-    <span class="ident">Diagnostics</span> {
-        <span class="ident">name</span>: <span class="ident">String</span>,
-        <span class="ident">content</span>: <span class="ident">String</span>,
-        <span class="ident">diagnostics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>,
-        <span class="ident">skipped_diagnostics</span>: <span class="ident">u64</span>,
+    Error(Error),
+    Diagnostics {
+        name: String,
+        content: String,
+        diagnostics: Vec&lt;Error&gt;,
+        skipped_diagnostics: u64,
     },
-    <span class="ident">Diff</span> {
-        <span class="ident">file_name</span>: <span class="ident">String</span>,
-        <span class="ident">old</span>: <span class="ident">String</span>,
-        <span class="ident">new</span>: <span class="ident">String</span>,
+    Diff {
+        file_name: String,
+        old: String,
+        new: String,
     },
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Message</span>
-<span class="kw">where</span>
-    <span class="ident">Error</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;D&gt; From&lt;D&gt; <span class="kw">for </span>Message
+<span class="kw">where
+    </span>Error: From&lt;D&gt;,
 {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">D</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Error</span>(<span class="ident">Error::from</span>(<span class="ident">err</span>))
+    <span class="kw">fn </span>from(err: D) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Error(Error::from(err))
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">v2::Diagnostic</span>)]</span>
-<span class="attribute">#[<span class="ident">diagnostic</span>(<span class="ident">category</span> <span class="op">=</span> <span class="string">&quot;internalError/panic&quot;</span>, <span class="ident">tags</span>(<span class="ident">INTERNAL</span>))]</span>
-<span class="kw">struct</span> <span class="ident">PanicDiagnostic</span> {
-    <span class="attribute">#[<span class="ident">description</span>]</span>
-    <span class="attribute">#[<span class="ident">message</span>]</span>
-    <span class="ident">message</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(Debug, v2::Diagnostic)]
+#[diagnostic(category = <span class="string">&quot;internalError/panic&quot;</span>, tags(INTERNAL))]
+</span><span class="kw">struct </span>PanicDiagnostic {
+    <span class="attribute">#[description]
+    #[message]
+    </span>message: String,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">v2::Diagnostic</span>)]</span>
-<span class="attribute">#[<span class="ident">diagnostic</span>(<span class="ident">category</span> <span class="op">=</span> <span class="string">&quot;files/missingHandler&quot;</span>, <span class="ident">message</span> <span class="op">=</span> <span class="string">&quot;unhandled file type&quot;</span>)]</span>
-<span class="kw">struct</span> <span class="ident">UnhandledDiagnostic</span>;
+<span class="attribute">#[derive(Debug, v2::Diagnostic)]
+#[diagnostic(category = <span class="string">&quot;files/missingHandler&quot;</span>, message = <span class="string">&quot;unhandled file type&quot;</span>)]
+</span><span class="kw">struct </span>UnhandledDiagnostic;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">v2::Diagnostic</span>)]</span>
-<span class="attribute">#[<span class="ident">diagnostic</span>(<span class="ident">category</span> <span class="op">=</span> <span class="string">&quot;parse&quot;</span>, <span class="ident">message</span> <span class="op">=</span> <span class="string">&quot;Skipped file with syntax errors&quot;</span>)]</span>
-<span class="kw">struct</span> <span class="ident">SkippedDiagnostic</span>;
+<span class="attribute">#[derive(Debug, v2::Diagnostic)]
+#[diagnostic(category = <span class="string">&quot;parse&quot;</span>, message = <span class="string">&quot;Skipped file with syntax errors&quot;</span>)]
+</span><span class="kw">struct </span>SkippedDiagnostic;
 
-<span class="doccomment">/// Extension trait for turning [Display]-able error types into [TraversalError]</span>
-<span class="kw">trait</span> <span class="ident">ResultExt</span> {
-    <span class="kw">type</span> <span class="prelude-ty">Result</span>;
-    <span class="kw">fn</span> <span class="ident">with_file_id_and_code</span>(
+<span class="doccomment">/// Extension trait for turning [Display]-able error types into [TraversalError]
+</span><span class="kw">trait </span>ResultExt {
+    <span class="kw">type </span><span class="prelude-ty">Result</span>;
+    <span class="kw">fn </span>with_file_id_and_code(
         <span class="self">self</span>,
-        <span class="ident">file_id</span>: <span class="ident">FileId</span>,
-        <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Result</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+        file_id: FileId,
+        code: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Result, Error&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span> <span class="ident">ResultExt</span> <span class="kw">for</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">E</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="kw">impl</span>&lt;T, E&gt; ResultExt <span class="kw">for </span><span class="prelude-ty">Result</span>&lt;T, E&gt;
+<span class="kw">where
+    </span>E: std::error::Error + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">type</span> <span class="prelude-ty">Result</span> <span class="op">=</span> <span class="ident">T</span>;
+    <span class="kw">type </span><span class="prelude-ty">Result </span>= T;
 
-    <span class="kw">fn</span> <span class="ident">with_file_id_and_code</span>(
+    <span class="kw">fn </span>with_file_id_and_code(
         <span class="self">self</span>,
-        <span class="ident">file_id</span>: <span class="ident">FileId</span>,
-        <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Category</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Result</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">map_err</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-            <span class="ident">StdError::from</span>(<span class="ident">err</span>)
-                .<span class="ident">with_category</span>(<span class="ident">code</span>)
-                .<span class="ident">with_file_path</span>(<span class="ident">file_id</span>)
+        file_id: FileId,
+        code: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Category,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Result, Error&gt; {
+        <span class="self">self</span>.map_err(<span class="kw">move </span>|err| {
+            StdError::from(err)
+                .with_category(code)
+                .with_file_path(file_id)
         })
     }
 }
 
-<span class="doccomment">/// Extension trait for turning [io::Error] into [Error]</span>
-<span class="kw">trait</span> <span class="ident">ResultIoExt</span>: <span class="ident">ResultExt</span> {
-    <span class="kw">fn</span> <span class="ident">with_file_id</span>(<span class="self">self</span>, <span class="ident">file_id</span>: <span class="ident">FileId</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Result</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Extension trait for turning [io::Error] into [Error]
+</span><span class="kw">trait </span>ResultIoExt: ResultExt {
+    <span class="kw">fn </span>with_file_id(<span class="self">self</span>, file_id: FileId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Result, Error&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">ResultIoExt</span> <span class="kw">for</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">with_file_id</span>(<span class="self">self</span>, <span class="ident">file_id</span>: <span class="ident">FileId</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Result</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">error</span><span class="op">|</span> <span class="ident">IoError::from</span>(<span class="ident">error</span>).<span class="ident">with_file_path</span>(<span class="ident">file_id</span>))
+<span class="kw">impl</span>&lt;T&gt; ResultIoExt <span class="kw">for </span>io::Result&lt;T&gt; {
+    <span class="kw">fn </span>with_file_id(<span class="self">self</span>, file_id: FileId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Result, Error&gt; {
+        <span class="self">self</span>.map_err(|error| IoError::from(error).with_file_path(file_id))
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

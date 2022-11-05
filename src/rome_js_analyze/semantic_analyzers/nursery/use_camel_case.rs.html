@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/semantic_analyzers/nursery/use_camel_case.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_camel_case.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_analyze/src/semantic_analyzers/nursery/use_camel_case.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>use_camel_case.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rome_js_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rome_js_analyze/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -214,221 +214,221 @@
 <span id="214">214</span>
 <span id="215">215</span>
 <span id="216">216</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">semantic_services::Semantic</span>,
-    <span class="ident">utils</span>::{<span class="ident">rename::RenameSymbolExtensions</span>, <span class="ident">ToCamelCase</span>},
-    <span class="ident">JsRuleAction</span>,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    semantic_services::Semantic,
+    utils::{rename::RenameSymbolExtensions, ToCamelCase},
+    JsRuleAction,
 };
-<span class="kw">use</span> <span class="ident">rome_analyze</span>::{<span class="ident">context::RuleContext</span>, <span class="ident">declare_rule</span>, <span class="ident">ActionCategory</span>, <span class="ident">Rule</span>, <span class="ident">RuleDiagnostic</span>};
-<span class="kw">use</span> <span class="ident">rome_console::markup</span>;
-<span class="kw">use</span> <span class="ident">rome_diagnostics::Applicability</span>;
-<span class="kw">use</span> <span class="ident">rome_js_semantic</span>::{<span class="ident">AllReferencesExtensions</span>, <span class="ident">CanBeImportedExported</span>, <span class="ident">SemanticModel</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{
-    <span class="ident">JsFormalParameter</span>, <span class="ident">JsFunctionDeclaration</span>, <span class="ident">JsFunctionExportDefaultDeclaration</span>,
-    <span class="ident">JsGetterClassMember</span>, <span class="ident">JsIdentifierBinding</span>, <span class="ident">JsLiteralMemberName</span>, <span class="ident">JsMethodClassMember</span>,
-    <span class="ident">JsPrivateClassMemberName</span>, <span class="ident">JsPropertyClassMember</span>, <span class="ident">JsSetterClassMember</span>, <span class="ident">JsSyntaxKind</span>,
-    <span class="ident">JsVariableDeclaration</span>, <span class="ident">JsVariableDeclarator</span>, <span class="ident">JsVariableDeclaratorList</span>, <span class="ident">JsxReferenceIdentifier</span>,
+<span class="kw">use </span>rome_analyze::{context::RuleContext, declare_rule, ActionCategory, Rule, RuleDiagnostic};
+<span class="kw">use </span>rome_console::markup;
+<span class="kw">use </span>rome_diagnostics::Applicability;
+<span class="kw">use </span>rome_js_semantic::{AllReferencesExtensions, CanBeImportedExported, SemanticModel};
+<span class="kw">use </span>rome_js_syntax::{
+    JsFormalParameter, JsFunctionDeclaration, JsFunctionExportDefaultDeclaration,
+    JsGetterClassMember, JsIdentifierBinding, JsLiteralMemberName, JsMethodClassMember,
+    JsPrivateClassMemberName, JsPropertyClassMember, JsSetterClassMember, JsSyntaxKind,
+    JsVariableDeclaration, JsVariableDeclarator, JsVariableDeclaratorList, JsxReferenceIdentifier,
 };
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">declare_node_union</span>, <span class="ident">AstNode</span>, <span class="ident">BatchMutationExt</span>, <span class="ident">SyntaxNodeOptionExt</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">iter::once</span>};
+<span class="kw">use </span>rome_rowan::{declare_node_union, AstNode, BatchMutationExt, SyntaxNodeOptionExt};
+<span class="kw">use </span>std::{borrow::Cow, iter::once};
 
-<span class="macro">declare_rule!</span> {
-    <span class="doccomment">/// Enforce camel case naming convention.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Invalid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// let snake_case;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js,expect_diagnostic</span>
-    <span class="doccomment">/// let PascalCase;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Valid</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```js</span>
-    <span class="doccomment">/// let camelCase;</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">UseCamelCase</span> {
-        <span class="ident">version</span>: <span class="string">&quot;0.8.0&quot;</span>,
-        <span class="ident">name</span>: <span class="string">&quot;useCamelCase&quot;</span>,
-        <span class="ident">recommended</span>: <span class="bool-val">false</span>,
+<span class="macro">declare_rule! </span>{
+    <span class="doccomment">/// Enforce camel case naming convention.
+    ///
+    /// ## Examples
+    ///
+    /// ### Invalid
+    ///
+    /// ```js,expect_diagnostic
+    /// let snake_case;
+    /// ```
+    ///
+    /// ```js,expect_diagnostic
+    /// let PascalCase;
+    /// ```
+    ///
+    /// ## Valid
+    ///
+    /// ```js
+    /// let camelCase;
+    /// ```
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) UseCamelCase {
+        version: <span class="string">&quot;0.8.0&quot;</span>,
+        name: <span class="string">&quot;useCamelCase&quot;</span>,
+        recommended: <span class="bool-val">false</span>,
     }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">State</span> {
-    <span class="ident">new_name</span>: <span class="ident">String</span>,
+<span class="kw">pub struct </span>State {
+    new_name: String,
 }
 
-<span class="kw">fn</span> <span class="ident">check_is_camel</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">State</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">name</span>.<span class="ident">starts_with</span>(<span class="string">&#39;_&#39;</span>) {
-        <span class="kw">return</span> <span class="prelude-val">None</span>;
+<span class="kw">fn </span>check_is_camel(name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;State&gt; {
+    <span class="kw">if </span>name.starts_with(<span class="string">&#39;_&#39;</span>) {
+        <span class="kw">return </span><span class="prelude-val">None</span>;
     }
 
-    <span class="kw">match</span> <span class="ident">name</span>.<span class="ident">to_camel_case</span>() {
-        <span class="ident">Cow::Borrowed</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
-        <span class="ident">Cow::Owned</span>(<span class="ident">new_name</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="ident">new_name</span> }),
+    <span class="kw">match </span>name.to_camel_case() {
+        Cow::Borrowed(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+        Cow::Owned(new_name) =&gt; <span class="prelude-val">Some</span>(State { new_name }),
     }
 }
 
-<span class="comment">// It is OK to be non camel case when:</span>
-<span class="comment">// 1. it&#39;s a const variable (eg: const THIS_IS_OK);</span>
-<span class="comment">// 2. it&#39;s a function used in a new expression (eg: new PascalCase());</span>
-<span class="comment">// 3. it&#39;s a exported function.</span>
-<span class="kw">fn</span> <span class="ident">is_non_camel_ok</span>(<span class="ident">binding</span>: <span class="kw-2">&amp;</span><span class="ident">JsIdentifierBinding</span>, <span class="ident">model</span>: <span class="kw-2">&amp;</span><span class="ident">SemanticModel</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="ident">JsSyntaxKind</span>::<span class="kw-2">*</span>;
-    <span class="kw">match</span> <span class="ident">binding</span>.<span class="ident">syntax</span>().<span class="ident">parent</span>()<span class="question-mark">?</span>.<span class="ident">kind</span>() {
-        <span class="ident">JS_VARIABLE_DECLARATOR</span> =&gt; {
-            <span class="kw">let</span> <span class="ident">declarator</span> <span class="op">=</span> <span class="ident">binding</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsVariableDeclarator</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">is_ok</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">declarator</span>.<span class="ident">syntax</span>().<span class="ident">parent</span>().<span class="ident">kind</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">JS_VARIABLE_DECLARATOR_LIST</span>) =&gt; <span class="ident">declarator</span>
-                    .<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsVariableDeclaratorList</span><span class="op">&gt;</span>()<span class="question-mark">?</span>
-                    .<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsVariableDeclaration</span><span class="op">&gt;</span>()<span class="question-mark">?</span>
-                    .<span class="ident">is_const</span>(),
-                <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
+<span class="comment">// It is OK to be non camel case when:
+// 1. it&#39;s a const variable (eg: const THIS_IS_OK);
+// 2. it&#39;s a function used in a new expression (eg: new PascalCase());
+// 3. it&#39;s a exported function.
+</span><span class="kw">fn </span>is_non_camel_ok(binding: <span class="kw-2">&amp;</span>JsIdentifierBinding, model: <span class="kw-2">&amp;</span>SemanticModel) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    <span class="kw">use </span>JsSyntaxKind::<span class="kw-2">*</span>;
+    <span class="kw">match </span>binding.syntax().parent()<span class="question-mark">?</span>.kind() {
+        JS_VARIABLE_DECLARATOR =&gt; {
+            <span class="kw">let </span>declarator = binding.parent::&lt;JsVariableDeclarator&gt;()<span class="question-mark">?</span>;
+            <span class="kw">let </span>is_ok = <span class="kw">match </span>declarator.syntax().parent().kind() {
+                <span class="prelude-val">Some</span>(JS_VARIABLE_DECLARATOR_LIST) =&gt; declarator
+                    .parent::&lt;JsVariableDeclaratorList&gt;()<span class="question-mark">?
+                    </span>.parent::&lt;JsVariableDeclaration&gt;()<span class="question-mark">?
+                    </span>.is_const(),
+                <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
             };
-            <span class="prelude-val">Some</span>(<span class="ident">is_ok</span>)
+            <span class="prelude-val">Some</span>(is_ok)
         }
-        <span class="ident">JS_FUNCTION_DECLARATION</span> =&gt; {
-            <span class="kw">if</span> <span class="ident">binding</span>.<span class="ident">is_exported</span>(<span class="ident">model</span>) {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>);
+        JS_FUNCTION_DECLARATION =&gt; {
+            <span class="kw">if </span>binding.is_exported(model) {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="bool-val">true</span>);
             }
 
-            <span class="kw">for</span> <span class="ident">reference</span> <span class="kw">in</span> <span class="ident">binding</span>.<span class="ident">all_reads</span>(<span class="ident">model</span>) {
-                <span class="kw">let</span> <span class="ident">greatparent</span> <span class="op">=</span> <span class="ident">reference</span>.<span class="ident">node</span>().<span class="ident">grand_parent</span>()<span class="question-mark">?</span>;
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">JS_NEW_EXPRESSION</span> <span class="op">=</span> <span class="ident">greatparent</span>.<span class="ident">kind</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>);
+            <span class="kw">for </span>reference <span class="kw">in </span>binding.all_reads(model) {
+                <span class="kw">let </span>greatparent = reference.node().grand_parent()<span class="question-mark">?</span>;
+                <span class="kw">if let </span>JS_NEW_EXPRESSION = greatparent.kind() {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="bool-val">true</span>);
                 }
             }
 
             <span class="prelude-val">Some</span>(<span class="bool-val">false</span>)
         }
-        <span class="kw">_</span> =&gt; <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
+        <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Rule</span> <span class="kw">for</span> <span class="ident">UseCamelCase</span> {
-    <span class="kw">type</span> <span class="ident">Query</span> <span class="op">=</span> <span class="ident">Semantic</span><span class="op">&lt;</span><span class="ident">JsAnyCamelCaseName</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">State</span> <span class="op">=</span> <span class="ident">State</span>;
-    <span class="kw">type</span> <span class="ident">Signals</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Options</span> <span class="op">=</span> ();
+<span class="kw">impl </span>Rule <span class="kw">for </span>UseCamelCase {
+    <span class="kw">type </span>Query = Semantic&lt;JsAnyCamelCaseName&gt;;
+    <span class="kw">type </span>State = State;
+    <span class="kw">type </span>Signals = <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt;;
+    <span class="kw">type </span>Options = ();
 
-    <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::State</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
-        <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">model</span>();
+    <span class="kw">fn </span>run(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::State&gt; {
+        <span class="kw">let </span>name = ctx.query();
+        <span class="kw">let </span>model = ctx.model();
 
-        <span class="kw">match</span> <span class="ident">name</span> {
-            <span class="ident">JsAnyCamelCaseName::JsIdentifierBinding</span>(<span class="ident">binding</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">is_non_camel_ok</span> <span class="op">=</span> <span class="ident">is_non_camel_ok</span>(<span class="ident">binding</span>, <span class="ident">model</span>);
-                <span class="kw">match</span> <span class="ident">is_non_camel_ok</span> {
-                    <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) <span class="op">|</span> <span class="prelude-val">None</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">is_variable</span> <span class="op">=</span> <span class="ident">binding</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsVariableDeclarator</span><span class="op">&gt;</span>().<span class="ident">is_some</span>();
-                        <span class="kw">let</span> <span class="ident">is_parameter</span> <span class="op">=</span> <span class="ident">binding</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsFormalParameter</span><span class="op">&gt;</span>().<span class="ident">is_some</span>();
-                        <span class="kw">let</span> <span class="ident">is_function</span> <span class="op">=</span> <span class="ident">binding</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsFunctionDeclaration</span><span class="op">&gt;</span>().<span class="ident">is_some</span>();
-                        <span class="kw">let</span> <span class="ident">is_exported_function</span> <span class="op">=</span> <span class="ident">binding</span>
-                            .<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsFunctionExportDefaultDeclaration</span><span class="op">&gt;</span>()
-                            .<span class="ident">is_some</span>();
+        <span class="kw">match </span>name {
+            JsAnyCamelCaseName::JsIdentifierBinding(binding) =&gt; {
+                <span class="kw">let </span>is_non_camel_ok = is_non_camel_ok(binding, model);
+                <span class="kw">match </span>is_non_camel_ok {
+                    <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) | <span class="prelude-val">None </span>=&gt; {
+                        <span class="kw">let </span>is_variable = binding.parent::&lt;JsVariableDeclarator&gt;().is_some();
+                        <span class="kw">let </span>is_parameter = binding.parent::&lt;JsFormalParameter&gt;().is_some();
+                        <span class="kw">let </span>is_function = binding.parent::&lt;JsFunctionDeclaration&gt;().is_some();
+                        <span class="kw">let </span>is_exported_function = binding
+                            .parent::&lt;JsFunctionExportDefaultDeclaration&gt;()
+                            .is_some();
 
-                        <span class="kw">if</span> <span class="ident">is_variable</span> <span class="op">|</span><span class="op">|</span> <span class="ident">is_parameter</span> <span class="op">|</span><span class="op">|</span> <span class="ident">is_function</span> <span class="op">|</span><span class="op">|</span> <span class="ident">is_exported_function</span> {
-                            <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">binding</span>.<span class="ident">name_token</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>;
-                            <span class="kw">let</span> <span class="ident">is_camel_case</span> <span class="op">=</span> <span class="ident">check_is_camel</span>(<span class="ident">name</span>.<span class="ident">text_trimmed</span>());
-                            <span class="kw">if</span> <span class="ident">is_camel_case</span>.<span class="ident">is_some</span>() {
-                                <span class="kw">let</span> <span class="ident">is_jsx_component</span> <span class="op">=</span> <span class="ident">model</span>.<span class="ident">all_reads</span>(<span class="ident">binding</span>).<span class="ident">any</span>(<span class="op">|</span><span class="ident">reference</span><span class="op">|</span> {
-                                    <span class="ident">JsxReferenceIdentifier::can_cast</span>(<span class="ident">reference</span>.<span class="ident">node</span>().<span class="ident">kind</span>())
+                        <span class="kw">if </span>is_variable || is_parameter || is_function || is_exported_function {
+                            <span class="kw">let </span>name = binding.name_token().ok()<span class="question-mark">?</span>;
+                            <span class="kw">let </span>is_camel_case = check_is_camel(name.text_trimmed());
+                            <span class="kw">if </span>is_camel_case.is_some() {
+                                <span class="kw">let </span>is_jsx_component = model.all_reads(binding).any(|reference| {
+                                    JsxReferenceIdentifier::can_cast(reference.node().kind())
                                 });
-                                <span class="kw">if</span> <span class="op">!</span><span class="ident">is_jsx_component</span> {
-                                    <span class="kw">return</span> <span class="ident">is_camel_case</span>;
+                                <span class="kw">if </span>!is_jsx_component {
+                                    <span class="kw">return </span>is_camel_case;
                                 }
                             }
                         }
 
-                        <span class="prelude-val">None</span>
-                    }
-                    <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                        <span class="prelude-val">None
+                    </span>}
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
                 }
             }
-            <span class="ident">JsAnyCamelCaseName::JsLiteralMemberName</span>(<span class="ident">name</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">is_method_class</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsMethodClassMember</span><span class="op">&gt;</span>().<span class="ident">is_some</span>();
-                <span class="kw">let</span> <span class="ident">is_getter</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsGetterClassMember</span><span class="op">&gt;</span>().<span class="ident">is_some</span>();
-                <span class="kw">let</span> <span class="ident">is_setter</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsSetterClassMember</span><span class="op">&gt;</span>().<span class="ident">is_some</span>();
-                <span class="kw">let</span> <span class="ident">is_property</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsPropertyClassMember</span><span class="op">&gt;</span>().<span class="ident">is_some</span>();
-                <span class="kw">if</span> <span class="ident">is_method_class</span> <span class="op">|</span><span class="op">|</span> <span class="ident">is_getter</span> <span class="op">|</span><span class="op">|</span> <span class="ident">is_setter</span> <span class="op">|</span><span class="op">|</span> <span class="ident">is_property</span> {
-                    <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">text</span>();
-                    <span class="ident">check_is_camel</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>)
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">None</span>
-                }
+            JsAnyCamelCaseName::JsLiteralMemberName(name) =&gt; {
+                <span class="kw">let </span>is_method_class = name.parent::&lt;JsMethodClassMember&gt;().is_some();
+                <span class="kw">let </span>is_getter = name.parent::&lt;JsGetterClassMember&gt;().is_some();
+                <span class="kw">let </span>is_setter = name.parent::&lt;JsSetterClassMember&gt;().is_some();
+                <span class="kw">let </span>is_property = name.parent::&lt;JsPropertyClassMember&gt;().is_some();
+                <span class="kw">if </span>is_method_class || is_getter || is_setter || is_property {
+                    <span class="kw">let </span>name = name.text();
+                    check_is_camel(<span class="kw-2">&amp;</span>name)
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">None
+                </span>}
             }
-            <span class="ident">JsAnyCamelCaseName::JsPrivateClassMemberName</span>(<span class="ident">name</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">is_property</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">parent</span>::<span class="op">&lt;</span><span class="ident">JsPropertyClassMember</span><span class="op">&gt;</span>().<span class="ident">is_some</span>();
-                <span class="kw">if</span> <span class="ident">is_property</span> {
-                    <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">text</span>();
-                    <span class="ident">check_is_camel</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>)
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">None</span>
-                }
+            JsAnyCamelCaseName::JsPrivateClassMemberName(name) =&gt; {
+                <span class="kw">let </span>is_property = name.parent::&lt;JsPropertyClassMember&gt;().is_some();
+                <span class="kw">if </span>is_property {
+                    <span class="kw">let </span>name = name.text();
+                    check_is_camel(<span class="kw-2">&amp;</span>name)
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">None
+                </span>}
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">diagnostic</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleDiagnostic</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">binding</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">query</span>();
+    <span class="kw">fn </span>diagnostic(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;RuleDiagnostic&gt; {
+        <span class="kw">let </span>binding = ctx.query();
 
-        <span class="kw">let</span> <span class="ident">symbol_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">binding</span>.<span class="ident">syntax</span>().<span class="ident">parent</span>().<span class="ident">unwrap</span>().<span class="ident">kind</span>() {
-            <span class="ident">JsSyntaxKind::JS_FORMAL_PARAMETER</span> =&gt; <span class="string">&quot;parameters&quot;</span>,
-            <span class="ident">JsSyntaxKind::JS_FUNCTION_DECLARATION</span> =&gt; <span class="string">&quot;functions&quot;</span>,
-            <span class="ident">JsSyntaxKind::JS_GETTER_CLASS_MEMBER</span>
-            <span class="op">|</span> <span class="ident">JsSyntaxKind::JS_SETTER_CLASS_MEMBER</span>
-            <span class="op">|</span> <span class="ident">JsSyntaxKind::JS_METHOD_CLASS_MEMBER</span> =&gt; <span class="string">&quot;methods&quot;</span>,
-            <span class="ident">JsSyntaxKind::JS_PROPERTY_CLASS_MEMBER</span> <span class="op">|</span> <span class="ident">JsSyntaxKind::JS_PRIVATE_CLASS_MEMBER_NAME</span> =&gt; {
-                <span class="string">&quot;properties&quot;</span>
-            }
-            <span class="kw">_</span> =&gt; <span class="string">&quot;variables&quot;</span>,
+        <span class="kw">let </span>symbol_type = <span class="kw">match </span>binding.syntax().parent().unwrap().kind() {
+            JsSyntaxKind::JS_FORMAL_PARAMETER =&gt; <span class="string">&quot;parameters&quot;</span>,
+            JsSyntaxKind::JS_FUNCTION_DECLARATION =&gt; <span class="string">&quot;functions&quot;</span>,
+            JsSyntaxKind::JS_GETTER_CLASS_MEMBER
+            | JsSyntaxKind::JS_SETTER_CLASS_MEMBER
+            | JsSyntaxKind::JS_METHOD_CLASS_MEMBER =&gt; <span class="string">&quot;methods&quot;</span>,
+            JsSyntaxKind::JS_PROPERTY_CLASS_MEMBER | JsSyntaxKind::JS_PRIVATE_CLASS_MEMBER_NAME =&gt; {
+                <span class="string">&quot;properties&quot;
+            </span>}
+            <span class="kw">_ </span>=&gt; <span class="string">&quot;variables&quot;</span>,
         };
 
-        <span class="kw">let</span> <span class="ident">diag</span> <span class="op">=</span> <span class="ident">RuleDiagnostic::new</span>(
+        <span class="kw">let </span>diag = RuleDiagnostic::new(
             <span class="macro">rule_category!</span>(),
-            <span class="ident">binding</span>.<span class="ident">syntax</span>().<span class="ident">text_trimmed_range</span>(),
-            <span class="macro">markup!</span> {
-                <span class="string">&quot;Prefer &quot;</span> {<span class="ident">symbol_type</span>} <span class="string">&quot; names in camel case.&quot;</span>
-            },
+            binding.syntax().text_trimmed_range(),
+            <span class="macro">markup! </span>{
+                <span class="string">&quot;Prefer &quot; </span>{symbol_type} <span class="string">&quot; names in camel case.&quot;
+            </span>},
         );
 
-        <span class="prelude-val">Some</span>(<span class="ident">diag</span>)
+        <span class="prelude-val">Some</span>(diag)
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RuleContext</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">State</span> { <span class="ident">new_name</span> }: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::State</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JsRuleAction</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">model</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">batch</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>().<span class="ident">begin</span>();
+    <span class="kw">fn </span>action(ctx: <span class="kw-2">&amp;</span>RuleContext&lt;<span class="self">Self</span>&gt;, State { new_name }: <span class="kw-2">&amp;</span><span class="self">Self</span>::State) -&gt; <span class="prelude-ty">Option</span>&lt;JsRuleAction&gt; {
+        <span class="kw">let </span>model = ctx.model();
+        <span class="kw">let </span><span class="kw-2">mut </span>batch = ctx.root().begin();
 
-        <span class="kw">let</span> <span class="ident">candidates</span> <span class="op">=</span> (<span class="number">2</span>..).<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">new_name</span>, <span class="ident">i</span>).<span class="ident">into</span>());
-        <span class="kw">let</span> <span class="ident">candidates</span> <span class="op">=</span> <span class="ident">once</span>(<span class="ident">Cow::from</span>(<span class="ident">new_name</span>)).<span class="ident">chain</span>(<span class="ident">candidates</span>);
+        <span class="kw">let </span>candidates = (<span class="number">2</span>..).map(|i| <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, new_name, i).into());
+        <span class="kw">let </span>candidates = once(Cow::from(new_name)).chain(candidates);
 
-        <span class="kw">match</span> <span class="ident">ctx</span>.<span class="ident">query</span>() {
-            <span class="ident">JsAnyCamelCaseName::JsIdentifierBinding</span>(<span class="ident">binding</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">renamed</span> <span class="op">=</span>
-                    <span class="ident">batch</span>.<span class="ident">rename_node_declaration_with_retry</span>(<span class="ident">model</span>, <span class="ident">binding</span>.<span class="ident">clone</span>(), <span class="ident">candidates</span>);
-                <span class="kw">if</span> <span class="ident">renamed</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">JsRuleAction</span> {
-                        <span class="ident">category</span>: <span class="ident">ActionCategory::Refactor</span>,
-                        <span class="ident">applicability</span>: <span class="ident">Applicability::Always</span>,
-                        <span class="ident">message</span>: <span class="macro">markup!</span> { <span class="string">&quot;Rename this symbol to camel case&quot;</span> }.<span class="ident">to_owned</span>(),
-                        <span class="ident">mutation</span>: <span class="ident">batch</span>,
+        <span class="kw">match </span>ctx.query() {
+            JsAnyCamelCaseName::JsIdentifierBinding(binding) =&gt; {
+                <span class="kw">let </span>renamed =
+                    batch.rename_node_declaration_with_retry(model, binding.clone(), candidates);
+                <span class="kw">if </span>renamed {
+                    <span class="prelude-val">Some</span>(JsRuleAction {
+                        category: ActionCategory::Refactor,
+                        applicability: Applicability::Always,
+                        message: <span class="macro">markup! </span>{ <span class="string">&quot;Rename this symbol to camel case&quot; </span>}.to_owned(),
+                        mutation: batch,
                     })
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">None</span>
-                }
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">None
+                </span>}
             }
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="macro">declare_node_union!</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">JsAnyCamelCaseName</span> <span class="op">=</span> <span class="ident">JsIdentifierBinding</span> <span class="op">|</span> <span class="ident">JsLiteralMemberName</span> <span class="op">|</span> <span class="ident">JsPrivateClassMemberName</span>
+<span class="macro">declare_node_union! </span>{
+    <span class="kw">pub</span>(<span class="kw">crate</span>) JsAnyCamelCaseName = JsIdentifierBinding | JsLiteralMemberName | JsPrivateClassMemberName
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rome_js_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

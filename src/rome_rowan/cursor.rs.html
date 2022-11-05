@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/cursor.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cursor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_rowan/src/cursor.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cursor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_rowan/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_rowan/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -380,387 +380,387 @@
 <span id="380">380</span>
 <span id="381">381</span>
 <span id="382">382</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Implementation of the cursors -- API for convenient access to syntax trees.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Functional programmers will recognize that this module implements a zipper</span>
-<span class="doccomment">//! for a purely functional (green) tree.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A cursor node (`SyntaxNode`) points to a `GreenNode` and a parent</span>
-<span class="doccomment">//! `SyntaxNode`. This allows cursor to provide iteration over both ancestors</span>
-<span class="doccomment">//! and descendants, as well as a cheep access to absolute offset of the node in</span>
-<span class="doccomment">//! file.</span>
-<span class="doccomment">//!</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Implementation of the cursors -- API for convenient access to syntax trees.
+//!
+//! Functional programmers will recognize that this module implements a zipper
+//! for a purely functional (green) tree.
+//!
+//! A cursor node (`SyntaxNode`) points to a `GreenNode` and a parent
+//! `SyntaxNode`. This allows cursor to provide iteration over both ancestors
+//! and descendants, as well as a cheep access to absolute offset of the node in
+//! file.
+//!
 
-<span class="comment">// Implementation notes:</span>
-<span class="comment">//</span>
-<span class="comment">// The implementation is utterly and horribly unsafe. This whole module is an</span>
-<span class="comment">// unsafety boundary. It is believed that the API here is, in principle, sound,</span>
-<span class="comment">// but the implementation might have bugs.</span>
-<span class="comment">//</span>
-<span class="comment">// The core type is `NodeData` -- a heap-allocated reference counted object,</span>
-<span class="comment">// which points to a green node or a green token, and to the parent `NodeData`.</span>
-<span class="comment">// Publicly-exposed `SyntaxNode` and `SyntaxToken` own a reference to</span>
-<span class="comment">// `NodeData`.</span>
-<span class="comment">//</span>
-<span class="comment">// `NodeData`s are transient, and are created and destroyed during tree</span>
-<span class="comment">// traversals. In general, only currently referenced nodes and their ancestors</span>
-<span class="comment">// are alive at any given moment.</span>
-<span class="comment">//</span>
-<span class="comment">// More specifically, `NodeData`&#39;s ref count is equal to the number of</span>
-<span class="comment">// outstanding `SyntaxNode` and `SyntaxToken` plus the number of children with</span>
-<span class="comment">// non-zero ref counts. For example, if the user has only a single `SyntaxNode`</span>
-<span class="comment">// pointing somewhere in the middle of the tree, then all `NodeData` on the path</span>
-<span class="comment">// from that point towards the root have ref count equal to one.</span>
-<span class="comment">//</span>
-<span class="comment">// `NodeData` which doesn&#39;t have a parent (is a root) owns the corresponding</span>
-<span class="comment">// green node or token, and is responsible for freeing it. For child `NodeData`</span>
-<span class="comment">// however since they hold a strong reference to their parent node and thus</span>
-<span class="comment">// to the root, their corresponding green node is guaranteed to be alive as</span>
-<span class="comment">// a reference cycle to is know to exist (child `NodeData` -&gt; root `NodeData`</span>
-<span class="comment">// -&gt; root `GreenNode` -&gt; child `GreenNode`) and they can safely use a &quot;weak</span>
-<span class="comment">// reference&quot; (raw pointer) to the corresponding green node as an optimization</span>
-<span class="comment">// to avoid having to track atomic references on the traversal hot path</span>
+</span><span class="comment">// Implementation notes:
+//
+// The implementation is utterly and horribly unsafe. This whole module is an
+// unsafety boundary. It is believed that the API here is, in principle, sound,
+// but the implementation might have bugs.
+//
+// The core type is `NodeData` -- a heap-allocated reference counted object,
+// which points to a green node or a green token, and to the parent `NodeData`.
+// Publicly-exposed `SyntaxNode` and `SyntaxToken` own a reference to
+// `NodeData`.
+//
+// `NodeData`s are transient, and are created and destroyed during tree
+// traversals. In general, only currently referenced nodes and their ancestors
+// are alive at any given moment.
+//
+// More specifically, `NodeData`&#39;s ref count is equal to the number of
+// outstanding `SyntaxNode` and `SyntaxToken` plus the number of children with
+// non-zero ref counts. For example, if the user has only a single `SyntaxNode`
+// pointing somewhere in the middle of the tree, then all `NodeData` on the path
+// from that point towards the root have ref count equal to one.
+//
+// `NodeData` which doesn&#39;t have a parent (is a root) owns the corresponding
+// green node or token, and is responsible for freeing it. For child `NodeData`
+// however since they hold a strong reference to their parent node and thus
+// to the root, their corresponding green node is guaranteed to be alive as
+// a reference cycle to is know to exist (child `NodeData` -&gt; root `NodeData`
+// -&gt; root `GreenNode` -&gt; child `GreenNode`) and they can safely use a &quot;weak
+// reference&quot; (raw pointer) to the corresponding green node as an optimization
+// to avoid having to track atomic references on the traversal hot path
 
-<span class="kw">mod</span> <span class="ident">element</span>;
-<span class="kw">mod</span> <span class="ident">node</span>;
-<span class="kw">mod</span> <span class="ident">token</span>;
-<span class="kw">mod</span> <span class="ident">trivia</span>;
+</span><span class="kw">mod </span>element;
+<span class="kw">mod </span>node;
+<span class="kw">mod </span>token;
+<span class="kw">mod </span>trivia;
 
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">iter</span>, <span class="ident">ops</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">ptr</span>, <span class="ident">rc::Rc</span>};
+<span class="kw">use </span>std::{iter, ops};
+<span class="kw">use </span>std::{ptr, rc::Rc};
 
-<span class="kw">use</span> <span class="ident">countme::Count</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">trivia</span>::{<span class="ident">SyntaxTrivia</span>, <span class="ident">SyntaxTriviaPiecesIterator</span>};
+<span class="kw">use </span>countme::Count;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>trivia::{SyntaxTrivia, SyntaxTriviaPiecesIterator};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cursor::node::Siblings</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cursor::token::SyntaxToken</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::green</span>::{<span class="self">self</span>, <span class="ident">GreenElement</span>, <span class="ident">GreenNodeData</span>, <span class="ident">GreenTokenData</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">green</span>::{<span class="ident">GreenElementRef</span>, <span class="ident">RawSyntaxKind</span>},
-    <span class="ident">NodeOrToken</span>, <span class="ident">TextRange</span>, <span class="ident">TextSize</span>,
+<span class="kw">use </span><span class="kw">crate</span>::cursor::node::Siblings;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span><span class="kw">crate</span>::cursor::token::SyntaxToken;
+<span class="kw">use </span><span class="kw">crate</span>::green::{<span class="self">self</span>, GreenElement, GreenNodeData, GreenTokenData};
+<span class="kw">use crate</span>::{
+    green::{GreenElementRef, RawSyntaxKind},
+    NodeOrToken, TextRange, TextSize,
 };
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">element::SyntaxElement</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">node</span>::{
-    <span class="ident">Preorder</span>, <span class="ident">PreorderWithTokens</span>, <span class="ident">SyntaxElementChildren</span>, <span class="ident">SyntaxNode</span>, <span class="ident">SyntaxNodeChildren</span>,
-    <span class="ident">SyntaxSlot</span>, <span class="ident">SyntaxSlots</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>element::SyntaxElement;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>node::{
+    Preorder, PreorderWithTokens, SyntaxElementChildren, SyntaxNode, SyntaxNodeChildren,
+    SyntaxSlot, SyntaxSlots,
 };
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">_SyntaxElement</span>;
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>_SyntaxElement;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">has_live</span>() -&gt; <span class="ident">bool</span> {
-    <span class="ident">countme::get</span>::<span class="op">&lt;</span><span class="ident">_SyntaxElement</span><span class="op">&gt;</span>().<span class="ident">live</span> <span class="op">&gt;</span> <span class="number">0</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>has_live() -&gt; bool {
+    countme::get::&lt;_SyntaxElement&gt;().live &gt; <span class="number">0
+</span>}
+
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>NodeData {
+    _c: Count&lt;_SyntaxElement&gt;,
+
+    kind: NodeKind,
+    slot: u32,
+
+    <span class="doccomment">/// Absolute offset for immutable nodes, unused for mutable nodes.
+    </span>offset: TextSize,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">NodeData</span> {
-    <span class="ident">_c</span>: <span class="ident">Count</span><span class="op">&lt;</span><span class="ident">_SyntaxElement</span><span class="op">&gt;</span>,
-
-    <span class="ident">kind</span>: <span class="ident">NodeKind</span>,
-    <span class="ident">slot</span>: <span class="ident">u32</span>,
-
-    <span class="doccomment">/// Absolute offset for immutable nodes, unused for mutable nodes.</span>
-    <span class="ident">offset</span>: <span class="ident">TextSize</span>,
-}
-
-<span class="doccomment">/// A single NodeData (red node) is either a &quot;root node&quot; (no parent node and</span>
-<span class="doccomment">/// holds a strong reference to the root of the green tree) or a &quot;child node&quot;</span>
-<span class="doccomment">/// (holds a strong reference to its parent red node and a weak reference to its</span>
-<span class="doccomment">/// counterpart green node)</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">enum</span> <span class="ident">NodeKind</span> {
-    <span class="ident">Root</span> {
-        <span class="ident">green</span>: <span class="ident">GreenElement</span>,
+<span class="doccomment">/// A single NodeData (red node) is either a &quot;root node&quot; (no parent node and
+/// holds a strong reference to the root of the green tree) or a &quot;child node&quot;
+/// (holds a strong reference to its parent red node and a weak reference to its
+/// counterpart green node)
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">enum </span>NodeKind {
+    Root {
+        green: GreenElement,
     },
-    <span class="ident">Child</span> {
-        <span class="ident">green</span>: <span class="ident">WeakGreenElement</span>,
-        <span class="ident">parent</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">NodeData</span><span class="op">&gt;</span>,
+    Child {
+        green: WeakGreenElement,
+        parent: Rc&lt;NodeData&gt;,
     },
 }
 
-<span class="doccomment">/// Child SyntaxNodes use &quot;unsafe&quot; weak pointers to refer to their green node.</span>
-<span class="doccomment">/// Unlike the safe [std::sync::Weak] these are just a raw pointer: the</span>
-<span class="doccomment">/// corresponding [ThinArc](crate::arc::ThinArc) doesn&#39;t keep a counter of</span>
-<span class="doccomment">/// outstanding weak references or defer the release of the underlying memory</span>
-<span class="doccomment">/// until the last `Weak` is dropped. On the other hand, a weak reference to a</span>
-<span class="doccomment">/// released green node points to deallocated memory and it is undefined</span>
-<span class="doccomment">/// behavior to dereference it, but in the context of `NodeData` this is</span>
-<span class="doccomment">/// statically known to never happen</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">enum</span> <span class="ident">WeakGreenElement</span> {
-    <span class="ident">Node</span> { <span class="ident">ptr</span>: <span class="ident">ptr::NonNull</span><span class="op">&lt;</span><span class="ident">GreenNodeData</span><span class="op">&gt;</span> },
-    <span class="ident">Token</span> { <span class="ident">ptr</span>: <span class="ident">ptr::NonNull</span><span class="op">&lt;</span><span class="ident">GreenTokenData</span><span class="op">&gt;</span> },
+<span class="doccomment">/// Child SyntaxNodes use &quot;unsafe&quot; weak pointers to refer to their green node.
+/// Unlike the safe [std::sync::Weak] these are just a raw pointer: the
+/// corresponding [ThinArc](crate::arc::ThinArc) doesn&#39;t keep a counter of
+/// outstanding weak references or defer the release of the underlying memory
+/// until the last `Weak` is dropped. On the other hand, a weak reference to a
+/// released green node points to deallocated memory and it is undefined
+/// behavior to dereference it, but in the context of `NodeData` this is
+/// statically known to never happen
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">enum </span>WeakGreenElement {
+    Node { ptr: ptr::NonNull&lt;GreenNodeData&gt; },
+    Token { ptr: ptr::NonNull&lt;GreenTokenData&gt; },
 }
 
-<span class="kw">impl</span> <span class="ident">WeakGreenElement</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">green</span>: <span class="ident">GreenElementRef</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">green</span> {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">ptr</span>) =&gt; <span class="ident"><span class="self">Self</span>::Node</span> {
-                <span class="ident">ptr</span>: <span class="ident">ptr::NonNull::from</span>(<span class="ident">ptr</span>),
+<span class="kw">impl </span>WeakGreenElement {
+    <span class="kw">fn </span>new(green: GreenElementRef) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>green {
+            NodeOrToken::Node(ptr) =&gt; <span class="self">Self</span>::Node {
+                ptr: ptr::NonNull::from(ptr),
             },
-            <span class="ident">NodeOrToken::Token</span>(<span class="ident">ptr</span>) =&gt; <span class="ident"><span class="self">Self</span>::Token</span> {
-                <span class="ident">ptr</span>: <span class="ident">ptr::NonNull::from</span>(<span class="ident">ptr</span>),
+            NodeOrToken::Token(ptr) =&gt; <span class="self">Self</span>::Token {
+                ptr: ptr::NonNull::from(ptr),
             },
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">as_deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">GreenElementRef</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">WeakGreenElement::Node</span> { <span class="ident">ptr</span> } =&gt; <span class="ident">GreenElementRef::Node</span>(<span class="kw">unsafe</span> { <span class="ident">ptr</span>.<span class="ident">as_ref</span>() }),
-            <span class="ident">WeakGreenElement::Token</span> { <span class="ident">ptr</span> } =&gt; <span class="ident">GreenElementRef::Token</span>(<span class="kw">unsafe</span> { <span class="ident">ptr</span>.<span class="ident">as_ref</span>() }),
+    <span class="kw">fn </span>as_deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; GreenElementRef {
+        <span class="kw">match </span><span class="self">self </span>{
+            WeakGreenElement::Node { ptr } =&gt; GreenElementRef::Node(<span class="kw">unsafe </span>{ ptr.as_ref() }),
+            WeakGreenElement::Token { ptr } =&gt; GreenElementRef::Token(<span class="kw">unsafe </span>{ ptr.as_ref() }),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">to_owned</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">GreenElement</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">WeakGreenElement::Node</span> { <span class="ident">ptr</span> } =&gt; {
-                <span class="ident">GreenElement::Node</span>(<span class="kw">unsafe</span> { <span class="ident">ptr</span>.<span class="ident">as_ref</span>().<span class="ident">to_owned</span>() })
+    <span class="kw">fn </span>to_owned(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; GreenElement {
+        <span class="kw">match </span><span class="self">self </span>{
+            WeakGreenElement::Node { ptr } =&gt; {
+                GreenElement::Node(<span class="kw">unsafe </span>{ ptr.as_ref().to_owned() })
             }
-            <span class="ident">WeakGreenElement::Token</span> { <span class="ident">ptr</span> } =&gt; {
-                <span class="ident">GreenElement::Token</span>(<span class="kw">unsafe</span> { <span class="ident">ptr</span>.<span class="ident">as_ref</span>().<span class="ident">to_owned</span>() })
+            WeakGreenElement::Token { ptr } =&gt; {
+                GreenElement::Token(<span class="kw">unsafe </span>{ ptr.as_ref().to_owned() })
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">NodeData</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">kind</span>: <span class="ident">NodeKind</span>, <span class="ident">slot</span>: <span class="ident">u32</span>, <span class="ident">offset</span>: <span class="ident">TextSize</span>) -&gt; <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">NodeData</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">NodeData</span> {
-            <span class="ident">_c</span>: <span class="ident">Count::new</span>(),
-            <span class="ident">kind</span>,
-            <span class="ident">slot</span>,
-            <span class="ident">offset</span>,
+<span class="kw">impl </span>NodeData {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>new(kind: NodeKind, slot: u32, offset: TextSize) -&gt; Rc&lt;NodeData&gt; {
+        <span class="kw">let </span>res = NodeData {
+            _c: Count::new(),
+            kind,
+            slot,
+            offset,
         };
 
-        <span class="ident">Rc::new</span>(<span class="ident">res</span>)
+        Rc::new(res)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">ptr::NonNull</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, <span class="ident">TextSize</span>) {
-        <span class="kw">let</span> <span class="ident">weak</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">NodeKind::Root</span> { <span class="ident">green</span> } =&gt; <span class="ident">WeakGreenElement::new</span>(<span class="ident">green</span>.<span class="ident">as_deref</span>()),
-            <span class="ident">NodeKind::Child</span> { <span class="ident">green</span>, .. } =&gt; <span class="ident">green</span>.<span class="ident">clone</span>(),
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (ptr::NonNull&lt;()&gt;, TextSize) {
+        <span class="kw">let </span>weak = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            NodeKind::Root { green } =&gt; WeakGreenElement::new(green.as_deref()),
+            NodeKind::Child { green, .. } =&gt; green.clone(),
         };
-        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">weak</span> {
-            <span class="ident">WeakGreenElement::Node</span> { <span class="ident">ptr</span> } =&gt; <span class="ident">ptr</span>.<span class="ident">cast</span>(),
-            <span class="ident">WeakGreenElement::Token</span> { <span class="ident">ptr</span> } =&gt; <span class="ident">ptr</span>.<span class="ident">cast</span>(),
+        <span class="kw">let </span>ptr = <span class="kw">match </span>weak {
+            WeakGreenElement::Node { ptr } =&gt; ptr.cast(),
+            WeakGreenElement::Token { ptr } =&gt; ptr.cast(),
         };
-        (<span class="ident">ptr</span>, <span class="self">self</span>.<span class="ident">offset</span>())
+        (ptr, <span class="self">self</span>.offset())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parent_node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>parent_node(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
         <span class="macro">debug_assert!</span>(<span class="macro">matches!</span>(
-            <span class="self">self</span>.<span class="ident">parent</span>()<span class="question-mark">?</span>.<span class="ident">green</span>(),
-            <span class="ident">GreenElementRef::Node</span> { .. }
+            <span class="self">self</span>.parent()<span class="question-mark">?</span>.green(),
+            GreenElementRef::Node { .. }
         ));
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">NodeKind::Child</span> { <span class="ident">parent</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="ident">SyntaxNode</span> {
-                <span class="ident">ptr</span>: <span class="ident">parent</span>.<span class="ident">clone</span>(),
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            NodeKind::Child { parent, .. } =&gt; <span class="prelude-val">Some</span>(SyntaxNode {
+                ptr: parent.clone(),
             }),
-            <span class="ident">NodeKind::Root</span> { .. } =&gt; <span class="prelude-val">None</span>,
+            NodeKind::Root { .. } =&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">NodeData</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">NodeKind::Child</span> { <span class="ident">parent</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">parent</span>),
-            <span class="ident">NodeKind::Root</span> { .. } =&gt; <span class="prelude-val">None</span>,
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>NodeData&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            NodeKind::Child { parent, .. } =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;**</span>parent),
+            NodeKind::Root { .. } =&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">green</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">GreenElementRef</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">NodeKind::Root</span> { <span class="ident">green</span> } =&gt; <span class="ident">green</span>.<span class="ident">as_deref</span>(),
-            <span class="ident">NodeKind::Child</span> { <span class="ident">green</span>, .. } =&gt; <span class="ident">green</span>.<span class="ident">as_deref</span>(),
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>green(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; GreenElementRef&lt;<span class="lifetime">&#39;_</span>&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            NodeKind::Root { green } =&gt; green.as_deref(),
+            NodeKind::Child { green, .. } =&gt; green.as_deref(),
         }
     }
 
-    <span class="doccomment">/// Returns an iterator over the siblings of this node. The iterator is positioned at the current node.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">green_siblings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Siblings</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">parent</span>()<span class="question-mark">?</span>.<span class="ident">green</span>() {
-            <span class="ident">GreenElementRef::Node</span>(<span class="ident">ptr</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">Siblings::new</span>(<span class="ident">ptr</span>, <span class="self">self</span>.<span class="ident">slot</span>())),
-            <span class="ident">GreenElementRef::Token</span>(<span class="kw">_</span>) =&gt; {
+    <span class="doccomment">/// Returns an iterator over the siblings of this node. The iterator is positioned at the current node.
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>green_siblings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Siblings&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.parent()<span class="question-mark">?</span>.green() {
+            GreenElementRef::Node(ptr) =&gt; <span class="prelude-val">Some</span>(Siblings::new(ptr, <span class="self">self</span>.slot())),
+            GreenElementRef::Token(<span class="kw">_</span>) =&gt; {
                 <span class="macro">debug_assert!</span>(
                     <span class="bool-val">false</span>,
-                    <span class="string">&quot;A token should never be a parent of a token or node.&quot;</span>
-                );
-                <span class="prelude-val">None</span>
-            }
+                    <span class="string">&quot;A token should never be a parent of a token or node.&quot;
+                </span>);
+                <span class="prelude-val">None
+            </span>}
         }
     }
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="ident">slot</span>
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>slot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="self">self</span>.slot
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextSize</span> {
-        <span class="self">self</span>.<span class="ident">offset</span>
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>offset(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextSize {
+        <span class="self">self</span>.offset
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">text_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TextRange</span> {
-        <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">offset</span>();
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">green</span>().<span class="ident">text_len</span>();
-        <span class="ident">TextRange::at</span>(<span class="ident">offset</span>, <span class="ident">len</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>text_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextRange {
+        <span class="kw">let </span>offset = <span class="self">self</span>.offset();
+        <span class="kw">let </span>len = <span class="self">self</span>.green().text_len();
+        TextRange::at(offset, len)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RawSyntaxKind</span> {
-        <span class="self">self</span>.<span class="ident">green</span>().<span class="ident">kind</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RawSyntaxKind {
+        <span class="self">self</span>.green().kind()
     }
 
-    <span class="kw">fn</span> <span class="ident">next_sibling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">siblings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">green_siblings</span>()<span class="question-mark">?</span>;
-        <span class="ident">siblings</span>.<span class="ident">following</span>().<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="ident">child</span>.<span class="ident">element</span>().<span class="ident">into_node</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">green</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent_node</span>()<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>();
-                <span class="prelude-val">Some</span>(<span class="ident">SyntaxNode::new_child</span>(<span class="ident">green</span>, <span class="ident">parent</span>, <span class="ident">child</span>.<span class="ident">slot</span>(), <span class="ident">offset</span>))
+    <span class="kw">fn </span>next_sibling(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
+        <span class="kw">let </span>siblings = <span class="self">self</span>.green_siblings()<span class="question-mark">?</span>;
+        siblings.following().find_map(|child| {
+            child.element().into_node().and_then(|green| {
+                <span class="kw">let </span>parent = <span class="self">self</span>.parent_node()<span class="question-mark">?</span>;
+                <span class="kw">let </span>offset = parent.offset() + child.rel_offset();
+                <span class="prelude-val">Some</span>(SyntaxNode::new_child(green, parent, child.slot(), offset))
             })
         })
     }
-    <span class="kw">fn</span> <span class="ident">prev_sibling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">siblings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">green_siblings</span>()<span class="question-mark">?</span>;
-        <span class="ident">siblings</span>.<span class="ident">previous</span>().<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="ident">child</span>.<span class="ident">element</span>().<span class="ident">into_node</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">green</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent_node</span>()<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>();
-                <span class="prelude-val">Some</span>(<span class="ident">SyntaxNode::new_child</span>(<span class="ident">green</span>, <span class="ident">parent</span>, <span class="ident">child</span>.<span class="ident">slot</span>(), <span class="ident">offset</span>))
+    <span class="kw">fn </span>prev_sibling(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxNode&gt; {
+        <span class="kw">let </span>siblings = <span class="self">self</span>.green_siblings()<span class="question-mark">?</span>;
+        siblings.previous().find_map(|child| {
+            child.element().into_node().and_then(|green| {
+                <span class="kw">let </span>parent = <span class="self">self</span>.parent_node()<span class="question-mark">?</span>;
+                <span class="kw">let </span>offset = parent.offset() + child.rel_offset();
+                <span class="prelude-val">Some</span>(SyntaxNode::new_child(green, parent, child.slot(), offset))
             })
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">next_sibling_or_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">siblings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">green_siblings</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>next_sibling_or_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="kw">let </span>siblings = <span class="self">self</span>.green_siblings()<span class="question-mark">?</span>;
 
-        <span class="ident">siblings</span>.<span class="ident">following</span>().<span class="ident">next</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent_node</span>()<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>();
-            <span class="prelude-val">Some</span>(<span class="ident">SyntaxElement::new</span>(
-                <span class="ident">child</span>.<span class="ident">element</span>(),
-                <span class="ident">parent</span>,
-                <span class="ident">child</span>.<span class="ident">slot</span>(),
-                <span class="ident">offset</span>,
+        siblings.following().next().and_then(|child| {
+            <span class="kw">let </span>parent = <span class="self">self</span>.parent_node()<span class="question-mark">?</span>;
+            <span class="kw">let </span>offset = parent.offset() + child.rel_offset();
+            <span class="prelude-val">Some</span>(SyntaxElement::new(
+                child.element(),
+                parent,
+                child.slot(),
+                offset,
             ))
         })
     }
-    <span class="kw">fn</span> <span class="ident">prev_sibling_or_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyntaxElement</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">siblings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">green_siblings</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>prev_sibling_or_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SyntaxElement&gt; {
+        <span class="kw">let </span>siblings = <span class="self">self</span>.green_siblings()<span class="question-mark">?</span>;
 
-        <span class="ident">siblings</span>.<span class="ident">previous</span>().<span class="ident">next</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">child</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent_node</span>()<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">offset</span>() <span class="op">+</span> <span class="ident">child</span>.<span class="ident">rel_offset</span>();
-            <span class="prelude-val">Some</span>(<span class="ident">SyntaxElement::new</span>(
-                <span class="ident">child</span>.<span class="ident">element</span>(),
-                <span class="ident">parent</span>,
-                <span class="ident">child</span>.<span class="ident">slot</span>(),
-                <span class="ident">offset</span>,
+        siblings.previous().next().and_then(|child| {
+            <span class="kw">let </span>parent = <span class="self">self</span>.parent_node()<span class="question-mark">?</span>;
+            <span class="kw">let </span>offset = parent.offset() + child.rel_offset();
+            <span class="prelude-val">Some</span>(SyntaxElement::new(
+                child.element(),
+                parent,
+                child.slot(),
+                offset,
             ))
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">into_green</span>(<span class="self">self</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident">GreenElement</span> {
-        <span class="kw">match</span> <span class="ident">Rc::try_unwrap</span>(<span class="self">self</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">data</span>) =&gt; <span class="kw">match</span> <span class="ident">data</span>.<span class="ident">kind</span> {
-                <span class="ident">NodeKind::Root</span> { <span class="ident">green</span> } =&gt; <span class="ident">green</span>,
-                <span class="ident">NodeKind::Child</span> { <span class="ident">green</span>, .. } =&gt; <span class="ident">green</span>.<span class="ident">to_owned</span>(),
+    <span class="kw">fn </span>into_green(<span class="self">self</span>: Rc&lt;<span class="self">Self</span>&gt;) -&gt; GreenElement {
+        <span class="kw">match </span>Rc::try_unwrap(<span class="self">self</span>) {
+            <span class="prelude-val">Ok</span>(data) =&gt; <span class="kw">match </span>data.kind {
+                NodeKind::Root { green } =&gt; green,
+                NodeKind::Child { green, .. } =&gt; green.to_owned(),
             },
-            <span class="prelude-val">Err</span>(<span class="ident">ptr</span>) =&gt; <span class="ident">ptr</span>.<span class="ident">green</span>().<span class="ident">to_owned</span>(),
+            <span class="prelude-val">Err</span>(ptr) =&gt; ptr.green().to_owned(),
         }
     }
 
-    <span class="doccomment">/// Return a clone of this subtree detached from its parent</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">fn</span> <span class="ident">detach</span>(<span class="self">self</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident">Rc</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">NodeKind::Child</span> { <span class="ident">green</span>, .. } =&gt; <span class="ident"><span class="self">Self</span>::new</span>(
-                <span class="ident">NodeKind::Root</span> {
-                    <span class="ident">green</span>: <span class="ident">green</span>.<span class="ident">to_owned</span>(),
+    <span class="doccomment">/// Return a clone of this subtree detached from its parent
+    </span><span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">fn </span>detach(<span class="self">self</span>: Rc&lt;<span class="self">Self</span>&gt;) -&gt; Rc&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            NodeKind::Child { green, .. } =&gt; <span class="self">Self</span>::new(
+                NodeKind::Root {
+                    green: green.to_owned(),
                 },
                 <span class="number">0</span>,
-                <span class="number">0</span>.<span class="ident">into</span>(),
+                <span class="number">0</span>.into(),
             ),
-            <span class="comment">// If this node is already detached, increment the reference count and return a clone</span>
-            <span class="ident">NodeKind::Root</span> { .. } =&gt; <span class="self">self</span>.<span class="ident">clone</span>(),
+            <span class="comment">// If this node is already detached, increment the reference count and return a clone
+            </span>NodeKind::Root { .. } =&gt; <span class="self">self</span>.clone(),
         }
     }
 
-    <span class="doccomment">/// Return a clone of this node with the specified range of slots replaced</span>
-    <span class="doccomment">/// with the elements of the provided iterator</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">fn</span> <span class="ident">splice_slots</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">range</span>: <span class="ident">R</span>, <span class="ident">replace_with</span>: <span class="ident">I</span>) -&gt; <span class="ident">Rc</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">ops::RangeBounds</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">green::GreenElement</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Return a clone of this node with the specified range of slots replaced
+    /// with the elements of the provided iterator
+    </span><span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">fn </span>splice_slots&lt;R, I&gt;(<span class="kw-2">mut </span><span class="self">self</span>: Rc&lt;<span class="self">Self</span>&gt;, range: R, replace_with: I) -&gt; Rc&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>R: ops::RangeBounds&lt;usize&gt;,
+        I: Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;green::GreenElement&gt;&gt;,
     {
-        <span class="kw">let</span> <span class="ident">green</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">green</span>() {
-            <span class="ident">NodeOrToken::Node</span>(<span class="ident">green</span>) =&gt; <span class="ident">green</span>.<span class="ident">splice_slots</span>(<span class="ident">range</span>, <span class="ident">replace_with</span>).<span class="ident">into</span>(),
-            <span class="ident">NodeOrToken::Token</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;called splice_slots on a token node&quot;</span>),
+        <span class="kw">let </span>green = <span class="kw">match </span><span class="self">self</span>.green() {
+            NodeOrToken::Node(green) =&gt; green.splice_slots(range, replace_with).into(),
+            NodeOrToken::Token(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;called splice_slots on a token node&quot;</span>),
         };
 
-        <span class="comment">// Try to reuse the underlying memory allocation if self is the only</span>
-        <span class="comment">// outstanding reference to this NodeData</span>
-        <span class="kw">match</span> <span class="ident">Rc::get_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">node</span>) =&gt; {
-                <span class="ident">node</span>.<span class="ident">kind</span> <span class="op">=</span> <span class="ident">NodeKind::Root</span> { <span class="ident">green</span> };
-                <span class="ident">node</span>.<span class="ident">slot</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="ident">node</span>.<span class="ident">offset</span> <span class="op">=</span> <span class="ident">TextSize::from</span>(<span class="number">0</span>);
-                <span class="self">self</span>
-            }
-            <span class="prelude-val">None</span> =&gt; <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">NodeKind::Root</span> { <span class="ident">green</span> }, <span class="number">0</span>, <span class="number">0</span>.<span class="ident">into</span>()),
+        <span class="comment">// Try to reuse the underlying memory allocation if self is the only
+        // outstanding reference to this NodeData
+        </span><span class="kw">match </span>Rc::get_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+            <span class="prelude-val">Some</span>(node) =&gt; {
+                node.kind = NodeKind::Root { green };
+                node.slot = <span class="number">0</span>;
+                node.offset = TextSize::from(<span class="number">0</span>);
+                <span class="self">self
+            </span>}
+            <span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::new(NodeKind::Root { green }, <span class="number">0</span>, <span class="number">0</span>.into()),
         }
     }
 
-    <span class="doccomment">/// Return a new version of this node with the element `prev_elem` replaced with `next_elem`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `prev_elem` can be a direct child of this node, or an indirect child through any descendant node</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `None` if `prev_elem` is not a descendant of this node</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]</span>
-    <span class="kw">fn</span> <span class="ident">replace_child</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
-        <span class="ident">prev_elem</span>: <span class="ident">SyntaxElement</span>,
-        <span class="ident">next_elem</span>: <span class="ident">SyntaxElement</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">green</span> <span class="op">=</span> <span class="ident">next_elem</span>.<span class="ident">into_green</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">prev_elem</span>;
+    <span class="doccomment">/// Return a new version of this node with the element `prev_elem` replaced with `next_elem`
+    ///
+    /// `prev_elem` can be a direct child of this node, or an indirect child through any descendant node
+    ///
+    /// Returns `None` if `prev_elem` is not a descendant of this node
+    </span><span class="attribute">#[must_use = <span class="string">&quot;syntax elements are immutable, the result of update methods must be propagated to have any effect&quot;</span>]
+    </span><span class="kw">fn </span>replace_child(
+        <span class="kw-2">mut </span><span class="self">self</span>: Rc&lt;<span class="self">Self</span>&gt;,
+        prev_elem: SyntaxElement,
+        next_elem: SyntaxElement,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;Rc&lt;<span class="self">Self</span>&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>green = next_elem.into_green();
+        <span class="kw">let </span><span class="kw-2">mut </span>elem = prev_elem;
 
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">parent</span>()<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">is_self</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">key</span>() <span class="op">==</span> <span class="self">self</span>.<span class="ident">key</span>();
+        <span class="kw">loop </span>{
+            <span class="kw">let </span>node = elem.parent()<span class="question-mark">?</span>;
+            <span class="kw">let </span>is_self = node.key() == <span class="self">self</span>.key();
 
-            <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">index</span>();
-            <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">index</span>..<span class="op">=</span><span class="ident">index</span>;
+            <span class="kw">let </span>index = elem.index();
+            <span class="kw">let </span>range = index..=index;
 
-            <span class="kw">let</span> <span class="ident">replace_with</span> <span class="op">=</span> <span class="ident">iter::once</span>(<span class="prelude-val">Some</span>(<span class="ident">green</span>));
-            <span class="ident">green</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">green</span>().<span class="ident">splice_slots</span>(<span class="ident">range</span>, <span class="ident">replace_with</span>).<span class="ident">into</span>();
-            <span class="ident">elem</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">into</span>();
+            <span class="kw">let </span>replace_with = iter::once(<span class="prelude-val">Some</span>(green));
+            green = node.green().splice_slots(range, replace_with).into();
+            elem = node.into();
 
-            <span class="kw">if</span> <span class="ident">is_self</span> {
+            <span class="kw">if </span>is_self {
                 <span class="kw">break</span>;
             }
         }
 
-        <span class="comment">// Try to reuse the underlying memory allocation if self is the only</span>
-        <span class="comment">// outstanding reference to this NodeData</span>
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">Rc::get_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">node</span>) =&gt; {
-                <span class="ident">node</span>.<span class="ident">kind</span> <span class="op">=</span> <span class="ident">NodeKind::Root</span> { <span class="ident">green</span> };
-                <span class="ident">node</span>.<span class="ident">slot</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="ident">node</span>.<span class="ident">offset</span> <span class="op">=</span> <span class="ident">TextSize::from</span>(<span class="number">0</span>);
-                <span class="self">self</span>
-            }
-            <span class="prelude-val">None</span> =&gt; <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">NodeKind::Root</span> { <span class="ident">green</span> }, <span class="number">0</span>, <span class="number">0</span>.<span class="ident">into</span>()),
+        <span class="comment">// Try to reuse the underlying memory allocation if self is the only
+        // outstanding reference to this NodeData
+        </span><span class="kw">let </span>result = <span class="kw">match </span>Rc::get_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+            <span class="prelude-val">Some</span>(node) =&gt; {
+                node.kind = NodeKind::Root { green };
+                node.slot = <span class="number">0</span>;
+                node.offset = TextSize::from(<span class="number">0</span>);
+                <span class="self">self
+            </span>}
+            <span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::new(NodeKind::Root { green }, <span class="number">0</span>, <span class="number">0</span>.into()),
         };
 
-        <span class="prelude-val">Some</span>(<span class="ident">result</span>)
+        <span class="prelude-val">Some</span>(result)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_rowan" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

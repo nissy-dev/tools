@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/syntax/function.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>function.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_js_parser/src/syntax/function.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>function.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_js_parser/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_js_parser/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -1144,1138 +1144,1130 @@
 <span id="1144">1144</span>
 <span id="1145">1145</span>
 <span id="1146">1146</span>
-<span id="1147">1147</span>
-<span id="1148">1148</span>
-<span id="1149">1149</span>
-<span id="1150">1150</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">ParsedSyntax</span>, <span class="ident">ParserProgress</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state</span>::{<span class="ident">EnterFunction</span>, <span class="ident">EnterParameters</span>, <span class="ident">SignatureFlags</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::binding</span>::{
-    <span class="ident">is_at_identifier_binding</span>, <span class="ident">is_nth_at_identifier_binding</span>, <span class="ident">parse_binding</span>, <span class="ident">parse_binding_pattern</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::parser::{ParsedSyntax, ParserProgress};
+<span class="kw">use </span><span class="kw">crate</span>::state::{EnterFunction, EnterParameters, SignatureFlags};
+<span class="kw">use </span><span class="kw">crate</span>::syntax::binding::{
+    is_at_identifier_binding, is_nth_at_identifier_binding, parse_binding, parse_binding_pattern,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::class::parse_initializer_clause</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::expr</span>::{
-    <span class="ident">is_nth_at_identifier</span>, <span class="ident">parse_assignment_expression_or_higher</span>, <span class="ident">ExpressionContext</span>,
+<span class="kw">use </span><span class="kw">crate</span>::syntax::class::parse_initializer_clause;
+<span class="kw">use </span><span class="kw">crate</span>::syntax::expr::{
+    is_nth_at_identifier, parse_assignment_expression_or_higher, ExpressionContext,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::js_parse_error</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::js_parse_error</span>::{<span class="ident">expected_binding</span>, <span class="ident">expected_parameter</span>, <span class="ident">expected_parameters</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::stmt</span>::{<span class="ident">is_semi</span>, <span class="ident">parse_block_impl</span>, <span class="ident">semi</span>, <span class="ident">StatementContext</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::typescript::ts_parse_error::ts_only_syntax_error</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syntax::typescript</span>::{
-    <span class="ident">parse_ts_return_type_annotation</span>, <span class="ident">parse_ts_type_annotation</span>, <span class="ident">parse_ts_type_parameters</span>,
-    <span class="ident">skip_ts_decorators</span>, <span class="ident">try_parse</span>,
+<span class="kw">use </span><span class="kw">crate</span>::syntax::js_parse_error;
+<span class="kw">use </span><span class="kw">crate</span>::syntax::js_parse_error::{expected_binding, expected_parameter, expected_parameters};
+<span class="kw">use </span><span class="kw">crate</span>::syntax::stmt::{is_semi, parse_block_impl, semi, StatementContext};
+<span class="kw">use </span><span class="kw">crate</span>::syntax::typescript::ts_parse_error::ts_only_syntax_error;
+<span class="kw">use </span><span class="kw">crate</span>::syntax::typescript::{
+    parse_ts_return_type_annotation, parse_ts_type_annotation, parse_ts_type_parameters,
+    skip_ts_decorators, try_parse,
 };
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::JsSyntaxFeature::TypeScript</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ParsedSyntax</span>::{<span class="ident">Absent</span>, <span class="ident">Present</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CompletedMarker</span>, <span class="ident">JsSyntaxFeature</span>, <span class="ident">Marker</span>, <span class="ident">ParseRecovery</span>, <span class="ident">Parser</span>, <span class="ident">SyntaxFeature</span>};
-<span class="kw">use</span> <span class="ident">rome_js_syntax::JsSyntaxKind</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">rome_js_syntax</span>::{<span class="ident">JsSyntaxKind</span>, <span class="ident">TextRange</span>, <span class="ident">T</span>};
-<span class="kw">use</span> <span class="ident">rome_rowan::SyntaxKind</span>;
+<span class="kw">use </span><span class="kw">crate</span>::JsSyntaxFeature::TypeScript;
+<span class="kw">use </span><span class="kw">crate</span>::ParsedSyntax::{Absent, Present};
+<span class="kw">use crate</span>::{CompletedMarker, JsSyntaxFeature, Marker, ParseRecovery, Parser, SyntaxFeature};
+<span class="kw">use </span>rome_js_syntax::JsSyntaxKind::<span class="kw-2">*</span>;
+<span class="kw">use </span>rome_js_syntax::{JsSyntaxKind, TextRange, T};
+<span class="kw">use </span>rome_rowan::SyntaxKind;
 
-<span class="doccomment">/// A function declaration, this could be async and or a generator. This takes a marker</span>
-<span class="doccomment">/// because you need to first advance over async or start a marker and feed it in.</span>
-<span class="comment">// test function_decl</span>
-<span class="comment">// function foo1() {}</span>
-<span class="comment">// function *foo2() {}</span>
-<span class="comment">// async function *foo3() {}</span>
-<span class="comment">// async function foo4() {}</span>
-<span class="comment">// function *foo5() {</span>
-<span class="comment">//   yield foo;</span>
-<span class="comment">// }</span>
-<span class="comment">//</span>
-<span class="comment">// test function_declaration_script</span>
-<span class="comment">// // SCRIPT</span>
-<span class="comment">// function test(await) {}</span>
-<span class="comment">//</span>
-<span class="comment">// test_err function_decl_err</span>
-<span class="comment">// function() {}</span>
-<span class="comment">// function foo {}</span>
-<span class="comment">// function {}</span>
-<span class="comment">// function *() {}</span>
-<span class="comment">// async function() {}</span>
-<span class="comment">// async function *() {}</span>
-<span class="comment">// function *foo2() {}</span>
-<span class="comment">// yield foo3;</span>
-<span class="comment">// function test2(): number {}</span>
-<span class="comment">// function foo4(await) {}</span>
-<span class="comment">// function foo5(yield) {}</span>
-<span class="comment">//</span>
-<span class="comment">// test_err function_broken</span>
-<span class="comment">// function foo())})}{{{  {}</span>
-<span class="comment">//</span>
-<span class="comment">// test ts ts_function_statement</span>
-<span class="comment">// function test(a: string, b?: number, c=&quot;default&quot;) {}</span>
-<span class="comment">// function test2&lt;A, B extends A, C = A&gt;(a: A, b: B, c: C) {}</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse_function_declaration</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-    <span class="ident">context</span>: <span class="ident">StatementContext</span>,
-) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">is_at_function</span>(<span class="ident">p</span>) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="doccomment">/// A function declaration, this could be async and or a generator. This takes a marker
+/// because you need to first advance over async or start a marker and feed it in.
+</span><span class="comment">// test function_decl
+// function foo1() {}
+// function *foo2() {}
+// async function *foo3() {}
+// async function foo4() {}
+// function *foo5() {
+//   yield foo;
+// }
+//
+// test function_declaration_script
+// // SCRIPT
+// function test(await) {}
+//
+// test_err function_decl_err
+// function() {}
+// function foo {}
+// function {}
+// function *() {}
+// async function() {}
+// async function *() {}
+// function *foo2() {}
+// yield foo3;
+// function test2(): number {}
+// function foo4(await) {}
+// function foo5(yield) {}
+//
+// test_err function_broken
+// function foo())})}{{{  {}
+//
+// test ts ts_function_statement
+// function test(a: string, b?: number, c=&quot;default&quot;) {}
+// function test2&lt;A, B extends A, C = A&gt;(a: A, b: B, c: C) {}
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>parse_function_declaration(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+    context: StatementContext,
+) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!is_at_function(p) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">function</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_ambient_context</span>() {
-        <span class="ident">parse_ambient_function</span>(<span class="ident">p</span>, <span class="ident">m</span>)
-    } <span class="kw">else</span> {
-        <span class="ident">parse_function</span>(
-            <span class="ident">p</span>,
-            <span class="ident">m</span>,
-            <span class="ident">FunctionKind::Declaration</span> {
-                <span class="ident">single_statement_context</span>: <span class="ident">context</span>.<span class="ident">is_single_statement</span>(),
+    <span class="kw">let </span>m = p.start();
+    <span class="kw">let </span><span class="kw-2">mut </span>function = <span class="kw">if </span>p.state.in_ambient_context() {
+        parse_ambient_function(p, m)
+    } <span class="kw">else </span>{
+        parse_function(
+            p,
+            m,
+            FunctionKind::Declaration {
+                single_statement_context: context.is_single_statement(),
             },
         )
     };
 
-    <span class="kw">if</span> <span class="ident">context</span> <span class="op">!</span><span class="op">=</span> <span class="ident">StatementContext::StatementList</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">function</span>.<span class="ident">kind</span>().<span class="ident">is_unknown</span>() {
-        <span class="kw">if</span> <span class="ident">JsSyntaxFeature::StrictMode</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) {
-            <span class="comment">// test_err function_in_single_statement_context_strict</span>
-            <span class="comment">// if (true) function a() {}</span>
-            <span class="comment">// label1: function b() {}</span>
-            <span class="comment">// while (true) function c() {}</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;In strict mode code, functions can only be declared at top level or inside a block&quot;</span>, <span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>)).<span class="ident">hint</span>( <span class="string">&quot;wrap the function in a block statement&quot;</span>));
-            <span class="ident">function</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">context</span>, <span class="ident">StatementContext::If</span> <span class="op">|</span> <span class="ident">StatementContext::Label</span>) {
-            <span class="comment">// test function_in_if_or_labelled_stmt_loose_mode</span>
-            <span class="comment">// // SCRIPT</span>
-            <span class="comment">// label1: function a() {}</span>
-            <span class="comment">// if (true) function b() {} else function c() {}</span>
-            <span class="comment">// if (true) function d() {}</span>
-            <span class="comment">// if (true) &quot;test&quot;; else function e() {}</span>
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if or labelled statement&quot;</span>, <span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>)).<span class="ident">hint</span>( <span class="string">&quot;wrap the function in a block statement&quot;</span>));
-            <span class="ident">function</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
+    <span class="kw">if </span>context != StatementContext::StatementList &amp;&amp; !function.kind().is_unknown() {
+        <span class="kw">if </span>JsSyntaxFeature::StrictMode.is_supported(p) {
+            <span class="comment">// test_err function_in_single_statement_context_strict
+            // if (true) function a() {}
+            // label1: function b() {}
+            // while (true) function c() {}
+            </span>p.error(p.err_builder(<span class="string">&quot;In strict mode code, functions can only be declared at top level or inside a block&quot;</span>, function.range(p)).hint( <span class="string">&quot;wrap the function in a block statement&quot;</span>));
+            function.change_to_unknown(p);
+        } <span class="kw">else if </span>!<span class="macro">matches!</span>(context, StatementContext::If | StatementContext::Label) {
+            <span class="comment">// test function_in_if_or_labelled_stmt_loose_mode
+            // // SCRIPT
+            // label1: function a() {}
+            // if (true) function b() {} else function c() {}
+            // if (true) function d() {}
+            // if (true) &quot;test&quot;; else function e() {}
+            </span>p.error(p.err_builder(<span class="string">&quot;In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if or labelled statement&quot;</span>, function.range(p)).hint( <span class="string">&quot;wrap the function in a block statement&quot;</span>));
+            function.change_to_unknown(p);
         }
     }
 
-    <span class="ident">Present</span>(<span class="ident">function</span>)
+    Present(function)
 }
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse_function_expression</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">is_at_function</span>(<span class="ident">p</span>) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>parse_function_expression(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!is_at_function(p) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="ident">Present</span>(<span class="ident">parse_function</span>(<span class="ident">p</span>, <span class="ident">m</span>, <span class="ident">FunctionKind::Expression</span>))
+    <span class="kw">let </span>m = p.start();
+    Present(parse_function(p, m, FunctionKind::Expression))
 }
 
-<span class="comment">// test export_default_function_clause</span>
-<span class="comment">// export default function test(a, b) {}</span>
-<span class="comment">//</span>
-<span class="comment">// test ts ts_export_default_function_overload</span>
-<span class="comment">// export default function test(a: string): string;</span>
-<span class="comment">// export default function test(a: string | undefined): string { return &quot;hello&quot; }</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse_function_export_default_declaration</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">is_at_function</span>(<span class="ident">p</span>) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="comment">// test export_default_function_clause
+// export default function test(a, b) {}
+//
+// test ts ts_export_default_function_overload
+// export default function test(a: string): string;
+// export default function test(a: string | undefined): string { return &quot;hello&quot; }
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>parse_function_export_default_declaration(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!is_at_function(p) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
+    <span class="kw">let </span>m = p.start();
 
-    <span class="ident">Present</span>(<span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_ambient_context</span>() {
-        <span class="ident">parse_ambient_function</span>(<span class="ident">p</span>, <span class="ident">m</span>)
-    } <span class="kw">else</span> {
-        <span class="ident">parse_function</span>(<span class="ident">p</span>, <span class="ident">m</span>, <span class="ident">FunctionKind::ExportDefault</span>)
+    Present(<span class="kw">if </span>p.state.in_ambient_context() {
+        parse_ambient_function(p, m)
+    } <span class="kw">else </span>{
+        parse_function(p, m, FunctionKind::ExportDefault)
     })
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">enum</span> <span class="ident">FunctionKind</span> {
-    <span class="ident">Declaration</span> {
-        <span class="comment">// https://tc39.es/ecma262/multipage/additional-ecmascript-features-for-web-browsers.html#sec-functiondeclarations-in-ifstatement-statement-clauses</span>
-        <span class="ident">single_statement_context</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(PartialEq, Eq, Debug, Copy, Clone)]
+</span><span class="kw">enum </span>FunctionKind {
+    Declaration {
+        <span class="comment">// https://tc39.es/ecma262/multipage/additional-ecmascript-features-for-web-browsers.html#sec-functiondeclarations-in-ifstatement-statement-clauses
+        </span>single_statement_context: bool,
     },
-    <span class="ident">Expression</span>,
-    <span class="ident">ExportDefault</span>,
+    Expression,
+    ExportDefault,
 }
 
-<span class="kw">impl</span> <span class="ident">FunctionKind</span> {
-    <span class="kw">fn</span> <span class="ident">is_id_optional</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">FunctionKind::Expression</span> <span class="op">|</span> <span class="ident">FunctionKind::ExportDefault</span>)
+<span class="kw">impl </span>FunctionKind {
+    <span class="kw">fn </span>is_id_optional(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, FunctionKind::Expression | FunctionKind::ExportDefault)
     }
 
-    <span class="kw">fn</span> <span class="ident">is_expression</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">FunctionKind::Expression</span>)
+    <span class="kw">fn </span>is_expression(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, FunctionKind::Expression)
     }
 
-    <span class="kw">fn</span> <span class="ident">is_in_single_statement_context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">fn </span>is_in_single_statement_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="macro">matches!</span>(
             <span class="self">self</span>,
-            <span class="ident">FunctionKind::Declaration</span> {
-                <span class="ident">single_statement_context</span>: <span class="bool-val">true</span>
-            }
+            FunctionKind::Declaration {
+                single_statement_context: <span class="bool-val">true
+            </span>}
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FunctionKind</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JsSyntaxKind</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">kind</span>: <span class="ident">FunctionKind</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">kind</span> {
-            <span class="ident">FunctionKind::Declaration</span> { .. } =&gt; <span class="ident">JS_FUNCTION_DECLARATION</span>,
-            <span class="ident">FunctionKind::Expression</span> =&gt; <span class="ident">JS_FUNCTION_EXPRESSION</span>,
-            <span class="ident">FunctionKind::ExportDefault</span> =&gt; <span class="ident">JS_FUNCTION_EXPORT_DEFAULT_DECLARATION</span>,
+<span class="kw">impl </span>From&lt;FunctionKind&gt; <span class="kw">for </span>JsSyntaxKind {
+    <span class="kw">fn </span>from(kind: FunctionKind) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>kind {
+            FunctionKind::Declaration { .. } =&gt; JS_FUNCTION_DECLARATION,
+            FunctionKind::Expression =&gt; JS_FUNCTION_EXPRESSION,
+            FunctionKind::ExportDefault =&gt; JS_FUNCTION_EXPORT_DEFAULT_DECLARATION,
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">is_at_function</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span> {
-    <span class="ident">p</span>.<span class="ident">at_ts</span>(<span class="macro">token_set!</span>[<span class="macro">T!</span>[<span class="kw">async</span>], <span class="macro">T!</span>[<span class="ident">function</span>]]) <span class="op">|</span><span class="op">|</span> <span class="ident">is_at_async_function</span>(<span class="ident">p</span>, <span class="ident">LineBreak::DoNotCheck</span>)
+<span class="kw">fn </span>is_at_function(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool {
+    p.at_ts(<span class="macro">token_set!</span>[<span class="macro">T!</span>[<span class="kw">async</span>], <span class="macro">T!</span>[function]]) || is_at_async_function(p, LineBreak::DoNotCheck)
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">parse_function</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">m</span>: <span class="ident">Marker</span>, <span class="ident">kind</span>: <span class="ident">FunctionKind</span>) -&gt; <span class="ident">CompletedMarker</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">SignatureFlags::empty</span>();
+<span class="attribute">#[inline]
+</span><span class="kw">fn </span>parse_function(p: <span class="kw-2">&amp;mut </span>Parser, m: Marker, kind: FunctionKind) -&gt; CompletedMarker {
+    <span class="kw">let </span><span class="kw-2">mut </span>flags = SignatureFlags::empty();
 
-    <span class="kw">let</span> <span class="ident">in_async</span> <span class="op">=</span> <span class="ident">is_at_async_function</span>(<span class="ident">p</span>, <span class="ident">LineBreak::DoNotCheck</span>);
-    <span class="kw">if</span> <span class="ident">in_async</span> {
-        <span class="comment">// test_err function_escaped_async</span>
-        <span class="comment">// void \u0061sync function f(){}</span>
-        <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[<span class="kw">async</span>]);
-        <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">SignatureFlags::ASYNC</span>;
+    <span class="kw">let </span>in_async = is_at_async_function(p, LineBreak::DoNotCheck);
+    <span class="kw">if </span>in_async {
+        <span class="comment">// test_err function_escaped_async
+        // void \u0061sync function f(){}
+        </span>p.eat(<span class="macro">T!</span>[<span class="kw">async</span>]);
+        flags |= SignatureFlags::ASYNC;
     }
 
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="ident">function</span>]);
-    <span class="kw">let</span> <span class="ident">generator_range</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw-2">*</span>]) {
-        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">cur_range</span>();
-        <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="kw-2">*</span>]);
-        <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">SignatureFlags::GENERATOR</span>;
-        <span class="prelude-val">Some</span>(<span class="ident">range</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
-    };
+    p.expect(<span class="macro">T!</span>[function]);
+    <span class="kw">let </span>generator_range = <span class="kw">if </span>p.at(<span class="macro">T!</span>[<span class="kw-2">*</span>]) {
+        <span class="kw">let </span>range = p.cur_range();
+        p.bump(<span class="macro">T!</span>[<span class="kw-2">*</span>]);
+        flags |= SignatureFlags::GENERATOR;
+        <span class="prelude-val">Some</span>(range)
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>};
 
-    <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">parse_function_id</span>(<span class="ident">p</span>, <span class="ident">kind</span>, <span class="ident">flags</span>);
+    <span class="kw">let </span>id = parse_function_id(p, kind, flags);
 
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">kind</span>.<span class="ident">is_id_optional</span>() {
-        <span class="ident">id</span>.<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">range</span><span class="op">|</span> {
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+    <span class="kw">if </span>!kind.is_id_optional() {
+        id.or_add_diagnostic(p, |p, range| {
+            p.err_builder(
                 <span class="string">&quot;expected a name for the function in a function declaration, but found none&quot;</span>,
-                <span class="ident">range</span>,
+                range,
             )
         });
     }
 
-    <span class="ident">TypeScript</span>
-        .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_parameters</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">marker</span><span class="op">|</span> {
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+    TypeScript
+        .parse_exclusive_syntax(p, parse_ts_type_parameters, |p, marker| {
+            p.err_builder(
                 <span class="string">&quot;type parameters can only be used in TypeScript files&quot;</span>,
-                <span class="ident">marker</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                marker.range(p),
             )
         })
-        .<span class="ident">ok</span>();
+        .ok();
 
-    <span class="kw">let</span> <span class="ident">parameter_context</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">kind</span>.<span class="ident">is_expression</span>() <span class="op">&amp;&amp;</span> <span class="ident">TypeScript</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) {
-        <span class="comment">// It isn&#39;t known at this point if this is a function overload definition (body is missing)</span>
-        <span class="comment">// or a regular function implementation.</span>
-        <span class="comment">// Let&#39;s go with the laxer of the two. Ideally, these verifications should be part of</span>
-        <span class="comment">// a second compiler pass.</span>
-        <span class="ident">ParameterContext::Declaration</span>
-    } <span class="kw">else</span> {
-        <span class="ident">ParameterContext::Implementation</span>
+    <span class="kw">let </span>parameter_context = <span class="kw">if </span>!kind.is_expression() &amp;&amp; TypeScript.is_supported(p) {
+        <span class="comment">// It isn&#39;t known at this point if this is a function overload definition (body is missing)
+        // or a regular function implementation.
+        // Let&#39;s go with the laxer of the two. Ideally, these verifications should be part of
+        // a second compiler pass.
+        </span>ParameterContext::Declaration
+    } <span class="kw">else </span>{
+        ParameterContext::Implementation
     };
 
-    <span class="ident">parse_parameter_list</span>(<span class="ident">p</span>, <span class="ident">parameter_context</span>, <span class="ident">flags</span>)
-        .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_parameters</span>);
+    parse_parameter_list(p, parameter_context, flags)
+        .or_add_diagnostic(p, js_parse_error::expected_parameters);
 
-    <span class="ident">TypeScript</span>
-        .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_return_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">marker</span><span class="op">|</span> {
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+    TypeScript
+        .parse_exclusive_syntax(p, parse_ts_return_type_annotation, |p, marker| {
+            p.err_builder(
                 <span class="string">&quot;return types can only be used in TypeScript files&quot;</span>,
-                <span class="ident">marker</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                marker.range(p),
             )
         })
-        .<span class="ident">ok</span>();
+        .ok();
 
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">parse_function_body</span>(<span class="ident">p</span>, <span class="ident">flags</span>);
+    <span class="kw">let </span>body = parse_function_body(p, flags);
 
-    <span class="comment">// test ts ts_function_overload</span>
-    <span class="comment">// function test(a: string): void;</span>
-    <span class="comment">// function test(a: string | undefined): void {}</span>
-    <span class="comment">// function no_semi(a: string)</span>
-    <span class="comment">// function no_semi(a: string) {}</span>
-    <span class="comment">// async function async_overload(a: string)</span>
-    <span class="comment">// async function async_overload(a: string) {}</span>
-    <span class="kw">if</span> <span class="ident">body</span>.<span class="ident">is_absent</span>()
-        <span class="op">&amp;&amp;</span> <span class="ident">TypeScript</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>)
-        <span class="op">&amp;&amp;</span> <span class="ident">is_semi</span>(<span class="ident">p</span>, <span class="number">0</span>)
-        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">kind</span>.<span class="ident">is_in_single_statement_context</span>()
-        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">kind</span>.<span class="ident">is_expression</span>()
+    <span class="comment">// test ts ts_function_overload
+    // function test(a: string): void;
+    // function test(a: string | undefined): void {}
+    // function no_semi(a: string)
+    // function no_semi(a: string) {}
+    // async function async_overload(a: string)
+    // async function async_overload(a: string) {}
+    </span><span class="kw">if </span>body.is_absent()
+        &amp;&amp; TypeScript.is_supported(p)
+        &amp;&amp; is_semi(p, <span class="number">0</span>)
+        &amp;&amp; !kind.is_in_single_statement_context()
+        &amp;&amp; !kind.is_expression()
     {
-        <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[;]);
+        p.eat(<span class="macro">T!</span>[;]);
 
-        <span class="comment">// test_err ts ts_function_overload_generator</span>
-        <span class="comment">// function* test(a: string);</span>
-        <span class="comment">// function* test(a: string) {}</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">generator_range</span>) <span class="op">=</span> <span class="ident">generator_range</span> {
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+        <span class="comment">// test_err ts ts_function_overload_generator
+        // function* test(a: string);
+        // function* test(a: string) {}
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(generator_range) = generator_range {
+            p.error(p.err_builder(
                 <span class="string">&quot;An overload signature cannot be declared as a generator.&quot;</span>,
-                <span class="ident">generator_range</span>,
+                generator_range,
             ));
         }
 
-        <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">TS_DECLARE_FUNCTION_DECLARATION</span>)
-    } <span class="kw">else</span> {
-        <span class="ident">body</span>.<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_function_body</span>);
+        m.complete(p, TS_DECLARE_FUNCTION_DECLARATION)
+    } <span class="kw">else </span>{
+        body.or_add_diagnostic(p, js_parse_error::expected_function_body);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">function</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">kind</span>.<span class="ident">into</span>());
+        <span class="kw">let </span><span class="kw-2">mut </span>function = m.complete(p, kind.into());
 
-        <span class="comment">// test_err async_or_generator_in_single_statement_context</span>
-        <span class="comment">// if (true) async function t() {}</span>
-        <span class="comment">// if (true) function* t() {}</span>
-        <span class="kw">if</span> <span class="ident">kind</span>.<span class="ident">is_in_single_statement_context</span>() <span class="op">&amp;&amp;</span> (<span class="ident">in_async</span> <span class="op">|</span><span class="op">|</span> <span class="ident">generator_range</span>.<span class="ident">is_some</span>()) {
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;`async` and generator functions can only be declared at top level or inside a block&quot;</span>, <span class="ident">function</span>.<span class="ident">range</span>(<span class="ident">p</span>) ));
-            <span class="ident">function</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
+        <span class="comment">// test_err async_or_generator_in_single_statement_context
+        // if (true) async function t() {}
+        // if (true) function* t() {}
+        </span><span class="kw">if </span>kind.is_in_single_statement_context() &amp;&amp; (in_async || generator_range.is_some()) {
+            p.error(p.err_builder(<span class="string">&quot;`async` and generator functions can only be declared at top level or inside a block&quot;</span>, function.range(p) ));
+            function.change_to_unknown(p);
         }
 
-        <span class="ident">function</span>
+        function
     }
 }
 
-<span class="comment">// test_err break_in_nested_function</span>
-<span class="comment">// while (true) {</span>
-<span class="comment">//   function helper() {</span>
-<span class="comment">//     break;</span>
-<span class="comment">//   }</span>
-<span class="comment">// }</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse_function_body</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">flags</span>: <span class="ident">SignatureFlags</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="ident">p</span>.<span class="ident">with_state</span>(<span class="ident">EnterFunction</span>(<span class="ident">flags</span>), <span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-        <span class="ident">parse_block_impl</span>(<span class="ident">p</span>, <span class="ident">JS_FUNCTION_BODY</span>)
+<span class="comment">// test_err break_in_nested_function
+// while (true) {
+//   function helper() {
+//     break;
+//   }
+// }
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>parse_function_body(p: <span class="kw-2">&amp;mut </span>Parser, flags: SignatureFlags) -&gt; ParsedSyntax {
+    p.with_state(EnterFunction(flags), |p| {
+        parse_block_impl(p, JS_FUNCTION_BODY)
     })
 }
 
-<span class="kw">fn</span> <span class="ident">parse_function_id</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">kind</span>: <span class="ident">FunctionKind</span>, <span class="ident">flags</span>: <span class="ident">SignatureFlags</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">match</span> <span class="ident">kind</span> {
-        <span class="comment">// Takes the async and generator restriction from the expression</span>
-        <span class="ident">FunctionKind::Expression</span> =&gt; {
-            <span class="comment">// test function_expression_id</span>
-            <span class="comment">// // SCRIPT</span>
-            <span class="comment">// (function await() {});</span>
-            <span class="comment">// (function yield() {});</span>
-            <span class="comment">// (async function yield() {});</span>
-            <span class="comment">// (function* await() {})</span>
-            <span class="comment">//</span>
-            <span class="comment">// test_err function_expression_id_err</span>
-            <span class="comment">// (async function await() {});</span>
-            <span class="comment">// (function* yield() {});</span>
-            <span class="comment">// function* test() { function yield() {} }</span>
-            <span class="ident">p</span>.<span class="ident">with_state</span>(<span class="ident">EnterFunction</span>(<span class="ident">flags</span>), <span class="ident">parse_binding</span>)
+<span class="kw">fn </span>parse_function_id(p: <span class="kw-2">&amp;mut </span>Parser, kind: FunctionKind, flags: SignatureFlags) -&gt; ParsedSyntax {
+    <span class="kw">match </span>kind {
+        <span class="comment">// Takes the async and generator restriction from the expression
+        </span>FunctionKind::Expression =&gt; {
+            <span class="comment">// test function_expression_id
+            // // SCRIPT
+            // (function await() {});
+            // (function yield() {});
+            // (async function yield() {});
+            // (function* await() {})
+            //
+            // test_err function_expression_id_err
+            // (async function await() {});
+            // (function* yield() {});
+            // function* test() { function yield() {} }
+            </span>p.with_state(EnterFunction(flags), parse_binding)
         }
-        <span class="comment">// Inherits the async and generator from the parent</span>
-        <span class="kw">_</span> =&gt; {
-            <span class="comment">// test function_id</span>
-            <span class="comment">// // SCRIPT</span>
-            <span class="comment">// function test() {}</span>
-            <span class="comment">// function await(test) {}</span>
-            <span class="comment">// async function await(test) {}</span>
-            <span class="comment">// function yield(test) {}</span>
-            <span class="comment">// function* yield(test) {}</span>
-            <span class="comment">//</span>
-            <span class="comment">//</span>
-            <span class="comment">// test_err function_id_err</span>
-            <span class="comment">// function* test() {</span>
-            <span class="comment">//   function yield(test) {}</span>
-            <span class="comment">// }</span>
-            <span class="ident">parse_binding</span>(<span class="ident">p</span>)
+        <span class="comment">// Inherits the async and generator from the parent
+        </span><span class="kw">_ </span>=&gt; {
+            <span class="comment">// test function_id
+            // // SCRIPT
+            // function test() {}
+            // function await(test) {}
+            // async function await(test) {}
+            // function yield(test) {}
+            // function* yield(test) {}
+            //
+            //
+            // test_err function_id_err
+            // function* test() {
+            //   function yield(test) {}
+            // }
+            </span>parse_binding(p)
         }
     }
 }
 
-<span class="comment">// test ts ts_declare_function</span>
-<span class="comment">// declare function test&lt;A, B, R&gt;(a: A, b: B): R;</span>
-<span class="comment">// declare function test2({ a }?: { a: &quot;string&quot; })</span>
-<span class="comment">// declare</span>
-<span class="comment">// function not_a_declaration() {}</span>
-<span class="comment">//</span>
-<span class="comment">// test_err ts ts_declare_function_with_body</span>
-<span class="comment">// declare function test&lt;A&gt;(a: A): string { return &quot;ambient function with a body&quot;; }</span>
-<span class="comment">//</span>
-<span class="comment">// test ts ts_ambient_function</span>
-<span class="comment">// declare module a {</span>
-<span class="comment">//   function test(): string;</span>
-<span class="comment">// }</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_ambient_function</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">m</span>: <span class="ident">Marker</span>) -&gt; <span class="ident">CompletedMarker</span> {
-    <span class="kw">let</span> <span class="ident">stmt_start</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>();
+<span class="comment">// test ts ts_declare_function
+// declare function test&lt;A, B, R&gt;(a: A, b: B): R;
+// declare function test2({ a }?: { a: &quot;string&quot; })
+// declare
+// function not_a_declaration() {}
+//
+// test_err ts ts_declare_function_with_body
+// declare function test&lt;A&gt;(a: A): string { return &quot;ambient function with a body&quot;; }
+//
+// test ts ts_ambient_function
+// declare module a {
+//   function test(): string;
+// }
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_ambient_function(p: <span class="kw-2">&amp;mut </span>Parser, m: Marker) -&gt; CompletedMarker {
+    <span class="kw">let </span>stmt_start = p.cur_range().start();
 
-    <span class="comment">// test_err ts ts_declare_async_function</span>
-    <span class="comment">// declare async function test();</span>
-    <span class="kw">let</span> <span class="ident">is_async</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw">async</span>]);
-    <span class="kw">if</span> <span class="ident">is_async</span> {
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+    <span class="comment">// test_err ts ts_declare_async_function
+    // declare async function test();
+    </span><span class="kw">let </span>is_async = p.at(<span class="macro">T!</span>[<span class="kw">async</span>]);
+    <span class="kw">if </span>is_async {
+        p.error(p.err_builder(
             <span class="string">&quot;&#39;async&#39; modifier cannot be used in an ambient context.&quot;</span>,
-            <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+            p.cur_range(),
         ));
-        <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="kw">async</span>]);
+        p.bump(<span class="macro">T!</span>[<span class="kw">async</span>]);
     }
 
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="ident">function</span>]);
-    <span class="ident">parse_binding</span>(<span class="ident">p</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">expected_binding</span>);
-    <span class="ident">parse_ts_type_parameters</span>(<span class="ident">p</span>).<span class="ident">ok</span>();
-    <span class="ident">parse_parameter_list</span>(<span class="ident">p</span>, <span class="ident">ParameterContext::Declaration</span>, <span class="ident">SignatureFlags::empty</span>())
-        .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">expected_parameters</span>);
-    <span class="ident">parse_ts_return_type_annotation</span>(<span class="ident">p</span>).<span class="ident">ok</span>();
+    p.expect(<span class="macro">T!</span>[function]);
+    parse_binding(p).or_add_diagnostic(p, expected_binding);
+    parse_ts_type_parameters(p).ok();
+    parse_parameter_list(p, ParameterContext::Declaration, SignatureFlags::empty())
+        .or_add_diagnostic(p, expected_parameters);
+    parse_ts_return_type_annotation(p).ok();
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">body</span>) <span class="op">=</span> <span class="ident">parse_function_body</span>(<span class="ident">p</span>, <span class="ident">SignatureFlags::empty</span>()) {
-        <span class="ident">p</span>.<span class="ident">error</span>(
-            <span class="ident">p</span>.<span class="ident">err_builder</span>(
+    <span class="kw">if let </span>Present(body) = parse_function_body(p, SignatureFlags::empty()) {
+        p.error(
+            p.err_builder(
                 <span class="string">&quot;A &#39;declare&#39; function cannot have a function body&quot;</span>,
-                <span class="ident">body</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                body.range(p),
             )
-            .<span class="ident">hint</span>(<span class="string">&quot;remove this body&quot;</span>),
+            .hint(<span class="string">&quot;remove this body&quot;</span>),
         );
     }
 
-    <span class="ident">semi</span>(<span class="ident">p</span>, <span class="ident">TextRange::new</span>(<span class="ident">stmt_start</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>()));
+    semi(p, TextRange::new(stmt_start, p.cur_range().start()));
 
-    <span class="kw">if</span> <span class="ident">is_async</span> {
-        <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_UNKNOWN_STATEMENT</span>)
-    } <span class="kw">else</span> {
-        <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">TS_DECLARE_FUNCTION_DECLARATION</span>)
+    <span class="kw">if </span>is_async {
+        m.complete(p, JS_UNKNOWN_STATEMENT)
+    } <span class="kw">else </span>{
+        m.complete(p, TS_DECLARE_FUNCTION_DECLARATION)
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_ts_type_annotation_or_error</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="ident">TypeScript</span>.<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">annotation</span><span class="op">|</span> {
-        <span class="ident">p</span>.<span class="ident">err_builder</span>(
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_ts_type_annotation_or_error(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    TypeScript.parse_exclusive_syntax(p, parse_ts_type_annotation, |p, annotation| {
+        p.err_builder(
             <span class="string">&quot;return types can only be used in TypeScript files&quot;</span>,
-            <span class="ident">annotation</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            annotation.range(p),
         )
-        .<span class="ident">hint</span>(<span class="string">&quot;remove this type annotation&quot;</span>)
+        .hint(<span class="string">&quot;remove this type annotation&quot;</span>)
     })
 }
 
-<span class="doccomment">/// Tells [is_at_async_function] if it needs to check line breaks</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">LineBreak</span> {
-    <span class="comment">// check line breaks</span>
-    <span class="ident">DoCheck</span>,
-    <span class="comment">// do not check line break</span>
-    <span class="ident">DoNotCheck</span>,
+<span class="doccomment">/// Tells [is_at_async_function] if it needs to check line breaks
+</span><span class="attribute">#[derive(PartialEq, Eq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>LineBreak {
+    <span class="comment">// check line breaks
+    </span>DoCheck,
+    <span class="comment">// do not check line break
+    </span>DoNotCheck,
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="doccomment">/// Checks if the parser is inside a &quot;async function&quot;</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">is_at_async_function</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">should_check_line_break</span>: <span class="ident">LineBreak</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">let</span> <span class="ident">async_function_tokens</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw">async</span>]) <span class="op">&amp;&amp;</span> <span class="ident">p</span>.<span class="ident">nth_at</span>(<span class="number">1</span>, <span class="macro">T!</span>[<span class="ident">function</span>]);
-    <span class="kw">if</span> <span class="ident">should_check_line_break</span> <span class="op">==</span> <span class="ident">LineBreak::DoCheck</span> {
-        <span class="ident">async_function_tokens</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">has_nth_preceding_line_break</span>(<span class="number">1</span>)
-    } <span class="kw">else</span> {
-        <span class="ident">async_function_tokens</span>
+<span class="attribute">#[inline]
+</span><span class="doccomment">/// Checks if the parser is inside a &quot;async function&quot;
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>is_at_async_function(p: <span class="kw-2">&amp;mut </span>Parser, should_check_line_break: LineBreak) -&gt; bool {
+    <span class="kw">let </span>async_function_tokens = p.at(<span class="macro">T!</span>[<span class="kw">async</span>]) &amp;&amp; p.nth_at(<span class="number">1</span>, <span class="macro">T!</span>[function]);
+    <span class="kw">if </span>should_check_line_break == LineBreak::DoCheck {
+        async_function_tokens &amp;&amp; !p.has_nth_preceding_line_break(<span class="number">1</span>)
+    } <span class="kw">else </span>{
+        async_function_tokens
     }
 }
 
-<span class="doccomment">/// There are cases where the parser must speculatively parse a syntax. For example,</span>
-<span class="doccomment">/// parsing `&lt;string&gt;(test)` very much looks like an arrow expression *except* that it isn&#39;t followed</span>
-<span class="doccomment">/// by a `=&gt;`. This enum tells a parse function if ambiguity should be tolerated or if it should stop if it is not.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">Ambiguity</span> {
-    <span class="doccomment">/// Ambiguity is allowed. A parse method should continue even if an expected character is missing.</span>
-    <span class="ident">Allowed</span>,
+<span class="doccomment">/// There are cases where the parser must speculatively parse a syntax. For example,
+/// parsing `&lt;string&gt;(test)` very much looks like an arrow expression *except* that it isn&#39;t followed
+/// by a `=&gt;`. This enum tells a parse function if ambiguity should be tolerated or if it should stop if it is not.
+</span><span class="attribute">#[derive(Debug, Copy, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Ambiguity {
+    <span class="doccomment">/// Ambiguity is allowed. A parse method should continue even if an expected character is missing.
+    </span>Allowed,
 
-    <span class="doccomment">/// Ambiguity isn&#39;t allowed. A parse method should stop parsing if an expected character is missing</span>
-    <span class="doccomment">/// and let the caller decide what to do in this case.</span>
-    <span class="ident">Disallowed</span>,
+    <span class="doccomment">/// Ambiguity isn&#39;t allowed. A parse method should stop parsing if an expected character is missing
+    /// and let the caller decide what to do in this case.
+    </span>Disallowed,
 }
 
-<span class="kw">impl</span> <span class="ident">Ambiguity</span> {
-    <span class="kw">fn</span> <span class="ident">is_disallowed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">Ambiguity::Disallowed</span>)
+<span class="kw">impl </span>Ambiguity {
+    <span class="kw">fn </span>is_disallowed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, Ambiguity::Disallowed)
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_arrow_function_expression</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="ident">parse_parenthesized_arrow_function_expression</span>(<span class="ident">p</span>)
-        .<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">parse_arrow_function_with_single_parameter</span>(<span class="ident">p</span>))
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_arrow_function_expression(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    parse_parenthesized_arrow_function_expression(p)
+        .or_else(|| parse_arrow_function_with_single_parameter(p))
 }
 
-<span class="doccomment">/// Tries to parse the header of a parenthesized arrow function expression.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The header is everything coming before the (or everything up and including the `=&gt;` token):</span>
-<span class="doccomment">/// `async (a) =&gt;`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns the [Marker] for the parsed arrow function header that must be completed by the caller.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Errors</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns `Err` if `ambiguity` is [Ambiguity::Disallowed] and the syntax</span>
-<span class="doccomment">/// is ambiguous. The `Err` contains the [Marker] of the syntax parsed to this point. It&#39;s up</span>
-<span class="doccomment">/// to the caller to abandon or complete the returned marker.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// For example, the parser speculatively tries to parse `&lt;string&gt;(test)` as an arrow</span>
-<span class="doccomment">/// function because the start very much looks like one, except that the `=&gt;` token is missing</span>
-<span class="doccomment">/// (it&#39;s a TypeScript `&lt;string&gt;` cast followed by a parenthesized expression).</span>
-<span class="kw">fn</span> <span class="ident">try_parse_parenthesized_arrow_function_head</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-    <span class="ident">ambiguity</span>: <span class="ident">Ambiguity</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Marker</span>, <span class="ident">SignatureFlags</span>), <span class="ident">Marker</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
+<span class="doccomment">/// Tries to parse the header of a parenthesized arrow function expression.
+///
+/// The header is everything coming before the (or everything up and including the `=&gt;` token):
+/// `async (a) =&gt;`.
+///
+/// Returns the [Marker] for the parsed arrow function header that must be completed by the caller.
+///
+/// ## Errors
+///
+/// Returns `Err` if `ambiguity` is [Ambiguity::Disallowed] and the syntax
+/// is ambiguous. The `Err` contains the [Marker] of the syntax parsed to this point. It&#39;s up
+/// to the caller to abandon or complete the returned marker.
+///
+/// For example, the parser speculatively tries to parse `&lt;string&gt;(test)` as an arrow
+/// function because the start very much looks like one, except that the `=&gt;` token is missing
+/// (it&#39;s a TypeScript `&lt;string&gt;` cast followed by a parenthesized expression).
+</span><span class="kw">fn </span>try_parse_parenthesized_arrow_function_head(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+    ambiguity: Ambiguity,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(Marker, SignatureFlags), Marker&gt; {
+    <span class="kw">let </span>m = p.start();
 
-    <span class="comment">// test_err arrow_escaped_async</span>
-    <span class="comment">// \u0061sync () =&gt; {}</span>
-    <span class="kw">let</span> <span class="ident">flags</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[<span class="kw">async</span>]) {
-        <span class="ident">SignatureFlags::ASYNC</span>
-    } <span class="kw">else</span> {
-        <span class="ident">SignatureFlags::empty</span>()
+    <span class="comment">// test_err arrow_escaped_async
+    // \u0061sync () =&gt; {}
+    </span><span class="kw">let </span>flags = <span class="kw">if </span>p.eat(<span class="macro">T!</span>[<span class="kw">async</span>]) {
+        SignatureFlags::ASYNC
+    } <span class="kw">else </span>{
+        SignatureFlags::empty()
     };
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="op">&lt;</span>]) {
-        <span class="ident">parse_ts_type_parameters</span>(<span class="ident">p</span>).<span class="ident">ok</span>();
+    <span class="kw">if </span>p.at(<span class="macro">T!</span>[&lt;]) {
+        parse_ts_type_parameters(p).ok();
 
-        <span class="kw">if</span> <span class="ident">ambiguity</span>.<span class="ident">is_disallowed</span>() <span class="op">&amp;&amp;</span> <span class="ident">p</span>.<span class="ident">last</span>() <span class="op">!</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="macro">T!</span>[<span class="op">&gt;</span>]) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">m</span>);
+        <span class="kw">if </span>ambiguity.is_disallowed() &amp;&amp; p.last() != <span class="prelude-val">Some</span>(<span class="macro">T!</span>[&gt;]) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(m);
         }
     }
 
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]) <span class="op">&amp;&amp;</span> <span class="ident">ambiguity</span>.<span class="ident">is_disallowed</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">m</span>);
+    <span class="kw">if </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]) &amp;&amp; ambiguity.is_disallowed() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(m);
     }
 
-    <span class="ident">parse_parameter_list</span>(
-        <span class="ident">p</span>,
-        <span class="ident">ParameterContext::Arrow</span>,
-        <span class="ident">arrow_function_parameter_flags</span>(<span class="ident">p</span>, <span class="ident">flags</span>),
+    parse_parameter_list(
+        p,
+        ParameterContext::Arrow,
+        arrow_function_parameter_flags(p, flags),
     )
-    .<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">expected_parameters</span>);
+    .or_add_diagnostic(p, expected_parameters);
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">last</span>() <span class="op">!</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]) <span class="op">&amp;&amp;</span> <span class="ident">ambiguity</span>.<span class="ident">is_disallowed</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">m</span>);
+    <span class="kw">if </span>p.last() != <span class="prelude-val">Some</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]) &amp;&amp; ambiguity.is_disallowed() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(m);
     }
 
-    <span class="ident">TypeScript</span>
-        .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_return_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">annotation</span><span class="op">|</span> {
-            <span class="ident">ts_only_syntax_error</span>(<span class="ident">p</span>, <span class="string">&quot;return type annotation&quot;</span>, <span class="ident">annotation</span>.<span class="ident">range</span>(<span class="ident">p</span>))
+    TypeScript
+        .parse_exclusive_syntax(p, parse_ts_return_type_annotation, |p, annotation| {
+            ts_only_syntax_error(p, <span class="string">&quot;return type annotation&quot;</span>, annotation.range(p))
         })
-        .<span class="ident">ok</span>();
+        .ok();
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">has_preceding_line_break</span>() {
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;Line terminator not permitted before arrow.&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>()));
+    <span class="kw">if </span>p.has_preceding_line_break() {
+        p.error(p.err_builder(<span class="string">&quot;Line terminator not permitted before arrow.&quot;</span>, p.cur_range()));
     }
 
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[=&gt;]) <span class="op">&amp;&amp;</span> <span class="ident">ambiguity</span>.<span class="ident">is_disallowed</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">m</span>);
+    <span class="kw">if </span>!p.expect(<span class="macro">T!</span>[=&gt;]) &amp;&amp; ambiguity.is_disallowed() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(m);
     }
 
-    <span class="prelude-val">Ok</span>((<span class="ident">m</span>, <span class="ident">flags</span>))
+    <span class="prelude-val">Ok</span>((m, flags))
 }
 
-<span class="comment">// test ts ts_arrow_function_type_parameters</span>
-<span class="comment">// let a = &lt;A, B extends A, C = string&gt;(a: A, b: B, c: C) =&gt; &quot;hello&quot;;</span>
-<span class="comment">// let b = async &lt;A, B&gt;(a: A, b: B): Promise&lt;string&gt; =&gt; &quot;hello&quot;;</span>
-<span class="kw">fn</span> <span class="ident">parse_possible_parenthesized_arrow_function_expression</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">let</span> <span class="ident">start_pos</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">cur_range</span>().<span class="ident">start</span>();
+<span class="comment">// test ts ts_arrow_function_type_parameters
+// let a = &lt;A, B extends A, C = string&gt;(a: A, b: B, c: C) =&gt; &quot;hello&quot;;
+// let b = async &lt;A, B&gt;(a: A, b: B): Promise&lt;string&gt; =&gt; &quot;hello&quot;;
+</span><span class="kw">fn </span>parse_possible_parenthesized_arrow_function_expression(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">let </span>start_pos = p.cur_range().start();
 
-    <span class="comment">// Test if we already tried to parse this position as an arrow function and failed.</span>
-    <span class="comment">// If so, bail out immediately.</span>
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">not_parenthesized_arrow</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">start_pos</span>) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+    <span class="comment">// Test if we already tried to parse this position as an arrow function and failed.
+    // If so, bail out immediately.
+    </span><span class="kw">if </span>p.state.not_parenthesized_arrow.contains(<span class="kw-2">&amp;</span>start_pos) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">match</span> <span class="ident">try_parse</span>(<span class="ident">p</span>, <span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-        <span class="ident">try_parse_parenthesized_arrow_function_head</span>(<span class="ident">p</span>, <span class="ident">Ambiguity::Disallowed</span>)
+    <span class="kw">match </span>try_parse(p, |p| {
+        try_parse_parenthesized_arrow_function_head(p, Ambiguity::Disallowed)
     }) {
-        <span class="prelude-val">Ok</span>((<span class="ident">m</span>, <span class="ident">flags</span>)) =&gt; {
-            <span class="ident">parse_arrow_body</span>(<span class="ident">p</span>, <span class="ident">flags</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_arrow_body</span>);
+        <span class="prelude-val">Ok</span>((m, flags)) =&gt; {
+            parse_arrow_body(p, flags).or_add_diagnostic(p, js_parse_error::expected_arrow_body);
 
-            <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_ARROW_FUNCTION_EXPRESSION</span>))
+            Present(m.complete(p, JS_ARROW_FUNCTION_EXPRESSION))
         }
-        <span class="prelude-val">Err</span>(<span class="ident">m</span>) =&gt; {
-            <span class="comment">// SAFETY: Abandoning the marker here is safe because `try_parse` rewinds if</span>
-            <span class="comment">// the callback returns `Err` (which is the case that this branch is handling).</span>
-            <span class="ident">m</span>.<span class="ident">abandon</span>(<span class="ident">p</span>);
+        <span class="prelude-val">Err</span>(m) =&gt; {
+            <span class="comment">// SAFETY: Abandoning the marker here is safe because `try_parse` rewinds if
+            // the callback returns `Err` (which is the case that this branch is handling).
+            </span>m.abandon(p);
 
-            <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">not_parenthesized_arrow</span>.<span class="ident">insert</span>(<span class="ident">start_pos</span>);
-            <span class="ident">Absent</span>
+            p.state.not_parenthesized_arrow.insert(start_pos);
+            Absent
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">parse_parenthesized_arrow_function_expression</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">let</span> <span class="ident">is_parenthesized</span> <span class="op">=</span> <span class="ident">is_parenthesized_arrow_function_expression</span>(<span class="ident">p</span>);
-    <span class="kw">match</span> <span class="ident">is_parenthesized</span> {
-        <span class="ident">IsParenthesizedArrowFunctionExpression::True</span> =&gt; {
-            <span class="kw">let</span> (<span class="ident">m</span>, <span class="ident">flags</span>) <span class="op">=</span> <span class="ident">try_parse_parenthesized_arrow_function_head</span>(<span class="ident">p</span>, <span class="ident">Ambiguity::Allowed</span>).<span class="ident">expect</span>(<span class="string">&quot;&#39;CompletedMarker&#39; because function should never return &#39;Err&#39; if called with &#39;Ambiguity::Allowed&#39;.&quot;</span>);
-            <span class="ident">parse_arrow_body</span>(<span class="ident">p</span>, <span class="ident">flags</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_arrow_body</span>);
-            <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_ARROW_FUNCTION_EXPRESSION</span>))
+<span class="kw">fn </span>parse_parenthesized_arrow_function_expression(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">let </span>is_parenthesized = is_parenthesized_arrow_function_expression(p);
+    <span class="kw">match </span>is_parenthesized {
+        IsParenthesizedArrowFunctionExpression::True =&gt; {
+            <span class="kw">let </span>(m, flags) = try_parse_parenthesized_arrow_function_head(p, Ambiguity::Allowed).expect(<span class="string">&quot;&#39;CompletedMarker&#39; because function should never return &#39;Err&#39; if called with &#39;Ambiguity::Allowed&#39;.&quot;</span>);
+            parse_arrow_body(p, flags).or_add_diagnostic(p, js_parse_error::expected_arrow_body);
+            Present(m.complete(p, JS_ARROW_FUNCTION_EXPRESSION))
         }
-        <span class="ident">IsParenthesizedArrowFunctionExpression::Unknown</span> =&gt; {
-            <span class="ident">parse_possible_parenthesized_arrow_function_expression</span>(<span class="ident">p</span>)
+        IsParenthesizedArrowFunctionExpression::Unknown =&gt; {
+            parse_possible_parenthesized_arrow_function_expression(p)
         }
-        <span class="ident">IsParenthesizedArrowFunctionExpression::False</span> =&gt; <span class="ident">Absent</span>,
+        IsParenthesizedArrowFunctionExpression::False =&gt; Absent,
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">enum</span> <span class="ident">IsParenthesizedArrowFunctionExpression</span> {
-    <span class="ident">True</span>,
-    <span class="ident">False</span>,
-    <span class="ident">Unknown</span>,
+<span class="attribute">#[derive(Debug, Copy, Clone)]
+</span><span class="kw">enum </span>IsParenthesizedArrowFunctionExpression {
+    True,
+    False,
+    Unknown,
 }
 
-<span class="comment">// test paren_or_arrow_expr</span>
-<span class="comment">// (foo);</span>
-<span class="comment">// (foo) =&gt; {};</span>
-<span class="comment">// (5 + 5);</span>
-<span class="comment">// ({foo, bar, b: [f, ...baz]}) =&gt; {};</span>
-<span class="comment">// (foo, ...bar) =&gt; {}</span>
+<span class="comment">// test paren_or_arrow_expr
+// (foo);
+// (foo) =&gt; {};
+// (5 + 5);
+// ({foo, bar, b: [f, ...baz]}) =&gt; {};
+// (foo, ...bar) =&gt; {}
 
-<span class="comment">// test_err paren_or_arrow_expr_invalid_params</span>
-<span class="comment">// (5 + 5) =&gt; {}</span>
-<span class="comment">// (a, ,b) =&gt; {}</span>
-<span class="comment">// (a, b) =&gt;;</span>
-<span class="comment">// (a: string;</span>
-<span class="comment">// (a, b)</span>
-<span class="comment">//  =&gt; {}</span>
+// test_err paren_or_arrow_expr_invalid_params
+// (5 + 5) =&gt; {}
+// (a, ,b) =&gt; {}
+// (a, b) =&gt;;
+// (a: string;
+// (a, b)
+//  =&gt; {}
 
-<span class="kw">fn</span> <span class="ident">is_parenthesized_arrow_function_expression</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-) -&gt; <span class="ident">IsParenthesizedArrowFunctionExpression</span> {
-    <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">cur</span>() {
-        <span class="comment">// These could be the start of a parenthesized arrow function expression but needs further verification</span>
-        <span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>] <span class="op">|</span> <span class="macro">T!</span>[<span class="op">&lt;</span>] =&gt; {
-            <span class="ident">is_parenthesized_arrow_function_expression_impl</span>(<span class="ident">p</span>, <span class="ident">SignatureFlags::empty</span>())
+</span><span class="kw">fn </span>is_parenthesized_arrow_function_expression(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+) -&gt; IsParenthesizedArrowFunctionExpression {
+    <span class="kw">match </span>p.cur() {
+        <span class="comment">// These could be the start of a parenthesized arrow function expression but needs further verification
+        </span><span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>] | <span class="macro">T!</span>[&lt;] =&gt; {
+            is_parenthesized_arrow_function_expression_impl(p, SignatureFlags::empty())
         }
         <span class="macro">T!</span>[<span class="kw">async</span>] =&gt; {
-            <span class="comment">// test async_arrow_expr</span>
-            <span class="comment">// let a = async foo =&gt; {}</span>
-            <span class="comment">// let b = async (bar) =&gt; {}</span>
-            <span class="comment">// async (foo, bar, ...baz) =&gt; foo</span>
-            <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">has_nth_preceding_line_break</span>(<span class="number">1</span>) {
-                <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">p</span>.<span class="ident">nth</span>(<span class="number">1</span>), <span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>] <span class="op">|</span> <span class="macro">T!</span>[<span class="op">&lt;</span>]) {
-                <span class="ident">is_parenthesized_arrow_function_expression_impl</span>(<span class="ident">p</span>, <span class="ident">SignatureFlags::ASYNC</span>)
-            } <span class="kw">else</span> {
-                <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>
+            <span class="comment">// test async_arrow_expr
+            // let a = async foo =&gt; {}
+            // let b = async (bar) =&gt; {}
+            // async (foo, bar, ...baz) =&gt; foo
+            </span><span class="kw">if </span>p.has_nth_preceding_line_break(<span class="number">1</span>) {
+                IsParenthesizedArrowFunctionExpression::False
+            } <span class="kw">else if </span><span class="macro">matches!</span>(p.nth(<span class="number">1</span>), <span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>] | <span class="macro">T!</span>[&lt;]) {
+                is_parenthesized_arrow_function_expression_impl(p, SignatureFlags::ASYNC)
+            } <span class="kw">else </span>{
+                IsParenthesizedArrowFunctionExpression::False
             }
         }
 
-        <span class="comment">// Not entirely correct but that&#39;s probably what the user intended</span>
-        <span class="macro">T!</span>[=&gt;] =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::True</span>,
-        <span class="kw">_</span> =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>,
+        <span class="comment">// Not entirely correct but that&#39;s probably what the user intended
+        </span><span class="macro">T!</span>[=&gt;] =&gt; IsParenthesizedArrowFunctionExpression::True,
+        <span class="kw">_ </span>=&gt; IsParenthesizedArrowFunctionExpression::False,
     }
 }
 
-<span class="comment">// Tests if the parser is at an arrow function expression</span>
-<span class="kw">fn</span> <span class="ident">is_parenthesized_arrow_function_expression_impl</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-    <span class="ident">flags</span>: <span class="ident">SignatureFlags</span>,
-) -&gt; <span class="ident">IsParenthesizedArrowFunctionExpression</span> {
-    <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">SignatureFlags::ASYNC</span>) {
-        <span class="number">1</span>
-    } <span class="kw">else</span> {
-        <span class="number">0</span>
-    };
+<span class="comment">// Tests if the parser is at an arrow function expression
+</span><span class="kw">fn </span>is_parenthesized_arrow_function_expression_impl(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+    flags: SignatureFlags,
+) -&gt; IsParenthesizedArrowFunctionExpression {
+    <span class="kw">let </span>n = usize::from(flags.contains(SignatureFlags::ASYNC));
 
-    <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">n</span>) {
+    <span class="kw">match </span>p.nth(n) {
         <span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>] =&gt; {
-            <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">n</span> <span class="op">+</span> <span class="number">1</span>) {
+            <span class="kw">match </span>p.nth(n + <span class="number">1</span>) {
                 <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>] =&gt; {
-                    <span class="comment">// &#39;()&#39; is an arrow expression if followed by an &#39;=&gt;&#39;, a type annotation or body.</span>
-                    <span class="comment">// Otherwise, a parenthesized expression with a missing inner expression</span>
-                    <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">n</span> <span class="op">+</span> <span class="number">2</span>) {
-                        <span class="macro">T!</span>[=&gt;] <span class="op">|</span> <span class="macro">T!</span>[:] <span class="op">|</span> <span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>] =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::True</span>,
-                        <span class="kw">_</span> =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>,
+                    <span class="comment">// &#39;()&#39; is an arrow expression if followed by an &#39;=&gt;&#39;, a type annotation or body.
+                    // Otherwise, a parenthesized expression with a missing inner expression
+                    </span><span class="kw">match </span>p.nth(n + <span class="number">2</span>) {
+                        <span class="macro">T!</span>[=&gt;] | <span class="macro">T!</span>[:] | <span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>] =&gt; IsParenthesizedArrowFunctionExpression::True,
+                        <span class="kw">_ </span>=&gt; IsParenthesizedArrowFunctionExpression::False,
                     }
                 }
-                <span class="comment">// Rest parameter &#39;(...a&#39; is certainly not a parenthesized expression</span>
-                <span class="macro">T!</span>[...] =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::True</span>,
-                <span class="comment">// &#39;([ ...&#39;, &#39;({ ... } can either be a parenthesized object or array expression or a destructing parameter</span>
-                <span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>] <span class="op">|</span> <span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>] =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::Unknown</span>,
+                <span class="comment">// Rest parameter &#39;(...a&#39; is certainly not a parenthesized expression
+                </span><span class="macro">T!</span>[...] =&gt; IsParenthesizedArrowFunctionExpression::True,
+                <span class="comment">// &#39;([ ...&#39;, &#39;({ ... } can either be a parenthesized object or array expression or a destructing parameter
+                </span><span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>] | <span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>] =&gt; IsParenthesizedArrowFunctionExpression::Unknown,
 
-                <span class="comment">// &#39;(a...&#39;</span>
-                <span class="kw">_</span> <span class="kw">if</span> <span class="ident">is_nth_at_identifier_binding</span>(<span class="ident">p</span>, <span class="ident">n</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">nth_at</span>(<span class="ident">n</span> <span class="op">+</span> <span class="number">1</span>, <span class="macro">T!</span>[<span class="ident">this</span>]) =&gt; {
-                    <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">n</span> <span class="op">+</span> <span class="number">2</span>) {
-                        <span class="comment">// &#39;(a: &#39; must be a type annotation</span>
-                        <span class="macro">T!</span>[:] =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::True</span>,
+                <span class="comment">// &#39;(a...&#39;
+                </span><span class="kw">_ if </span>is_nth_at_identifier_binding(p, n + <span class="number">1</span>) || p.nth_at(n + <span class="number">1</span>, <span class="macro">T!</span>[this]) =&gt; {
+                    <span class="kw">match </span>p.nth(n + <span class="number">2</span>) {
+                        <span class="comment">// &#39;(a: &#39; must be a type annotation
+                        </span><span class="macro">T!</span>[:] =&gt; IsParenthesizedArrowFunctionExpression::True,
 
-                        <span class="comment">// Unclear because it could either be</span>
-                        <span class="comment">// * &#39;(a = &#39;: an initializer or a parenthesized assignment expression</span>
-                        <span class="comment">// * &#39;(a, &#39;: separator to next parameter or a parenthesized sequence expression</span>
-                        <span class="comment">// * &#39;(a)&#39;: a single parameter OR a parenthesized expression</span>
-                        <span class="macro">T!</span>[<span class="op">=</span>] <span class="op">|</span> <span class="macro">T!</span>[,] <span class="op">|</span> <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>] =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::Unknown</span>,
+                        <span class="comment">// Unclear because it could either be
+                        // * &#39;(a = &#39;: an initializer or a parenthesized assignment expression
+                        // * &#39;(a, &#39;: separator to next parameter or a parenthesized sequence expression
+                        // * &#39;(a)&#39;: a single parameter OR a parenthesized expression
+                        </span><span class="macro">T!</span>[=] | <span class="macro">T!</span>[,] | <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>] =&gt; IsParenthesizedArrowFunctionExpression::Unknown,
 
                         <span class="macro">T!</span>[<span class="question-mark">?</span>] =&gt; {
-                            <span class="comment">// Disambiguate between an optional parameter and a parenthesized conditional expression</span>
-                            <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">n</span> <span class="op">+</span> <span class="number">3</span>) {
-                                <span class="comment">// &#39;(a?:&#39; | &#39;(a?,&#39; | &#39;(a?=&#39; | &#39;(a?)&#39;</span>
-                                <span class="macro">T!</span>[:] <span class="op">|</span> <span class="macro">T!</span>[,] <span class="op">|</span> <span class="macro">T!</span>[<span class="op">=</span>] <span class="op">|</span> <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>] =&gt; {
-                                    <span class="ident">IsParenthesizedArrowFunctionExpression::True</span>
+                            <span class="comment">// Disambiguate between an optional parameter and a parenthesized conditional expression
+                            </span><span class="kw">match </span>p.nth(n + <span class="number">3</span>) {
+                                <span class="comment">// &#39;(a?:&#39; | &#39;(a?,&#39; | &#39;(a?=&#39; | &#39;(a?)&#39;
+                                </span><span class="macro">T!</span>[:] | <span class="macro">T!</span>[,] | <span class="macro">T!</span>[=] | <span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>] =&gt; {
+                                    IsParenthesizedArrowFunctionExpression::True
                                 }
-                                <span class="kw">_</span> =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>,
+                                <span class="kw">_ </span>=&gt; IsParenthesizedArrowFunctionExpression::False,
                             }
                         }
-                        <span class="kw">_</span> =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>,
+                        <span class="kw">_ </span>=&gt; IsParenthesizedArrowFunctionExpression::False,
                     }
                 }
-                <span class="kw">_</span> =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>,
+                <span class="kw">_ </span>=&gt; IsParenthesizedArrowFunctionExpression::False,
             }
         }
-        <span class="comment">// potential start of type parameters</span>
-        <span class="macro">T!</span>[<span class="op">&lt;</span>] =&gt; {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">is_nth_at_identifier</span>(<span class="ident">p</span>, <span class="ident">n</span> <span class="op">+</span> <span class="number">1</span>) {
-                <span class="comment">// &lt;5...</span>
-                <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>
+        <span class="comment">// potential start of type parameters
+        </span><span class="macro">T!</span>[&lt;] =&gt; {
+            <span class="kw">if </span>!is_nth_at_identifier(p, n + <span class="number">1</span>) {
+                <span class="comment">// &lt;5...
+                </span>IsParenthesizedArrowFunctionExpression::False
             }
-            <span class="comment">// test jsx jsx_type_arguments</span>
-            <span class="comment">// // These may look like a valid arrows but are JSX</span>
-            <span class="comment">// &lt;A extends&gt;() =&lt;/A&gt;;</span>
-            <span class="comment">// &lt;A extends=&quot;B&quot;&gt;() =&lt;/A&gt;;</span>
-            <span class="comment">// &lt;A extends ok&gt;() =&lt;/A&gt;;</span>
+            <span class="comment">// test jsx jsx_type_arguments
+            // // These may look like a valid arrows but are JSX
+            // &lt;A extends&gt;() =&lt;/A&gt;;
+            // &lt;A extends=&quot;B&quot;&gt;() =&lt;/A&gt;;
+            // &lt;A extends ok&gt;() =&lt;/A&gt;;
 
-            <span class="comment">// test tsx tsx_type_arguments</span>
-            <span class="comment">// // These are valid type arguments</span>
-            <span class="comment">// &lt;A extends B&gt;() =&gt; {};</span>
-            <span class="comment">// &lt;A=string&gt;() =&gt; {};</span>
-            <span class="comment">// &lt;A, B&gt;() =&gt; {};</span>
-            <span class="comment">// &lt;A extends B&lt;C&gt;&gt;() =&gt; {}</span>
+            // test tsx tsx_type_arguments
+            // // These are valid type arguments
+            // &lt;A extends B&gt;() =&gt; {};
+            // &lt;A=string&gt;() =&gt; {};
+            // &lt;A, B&gt;() =&gt; {};
+            // &lt;A extends B&lt;C&gt;&gt;() =&gt; {}
 
-            <span class="comment">// &lt;a... JSX override</span>
-            <span class="kw">else</span> <span class="kw">if</span> <span class="ident">JsSyntaxFeature::Jsx</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) {
-                <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">n</span> <span class="op">+</span> <span class="number">2</span>) {
-                    <span class="macro">T!</span>[<span class="ident">extends</span>] =&gt; {
-                        <span class="comment">// `&lt;a extends=` OR `&lt;a extends&gt;` is a JSX start element</span>
-                        <span class="comment">// and a `extends` type refinement: `&lt;A extends string&gt;`</span>
-                        <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">p</span>.<span class="ident">nth</span>(<span class="ident">n</span> <span class="op">+</span> <span class="number">3</span>), <span class="macro">T!</span>[<span class="op">=</span>] <span class="op">|</span> <span class="macro">T!</span>[<span class="op">&gt;</span>]) {
-                            <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>
+            // &lt;a... JSX override
+            </span><span class="kw">else if </span>JsSyntaxFeature::Jsx.is_supported(p) {
+                <span class="kw">match </span>p.nth(n + <span class="number">2</span>) {
+                    <span class="macro">T!</span>[extends] =&gt; {
+                        <span class="comment">// `&lt;a extends=` OR `&lt;a extends&gt;` is a JSX start element
+                        // and a `extends` type refinement: `&lt;A extends string&gt;`
+                        </span><span class="kw">if </span><span class="macro">matches!</span>(p.nth(n + <span class="number">3</span>), <span class="macro">T!</span>[=] | <span class="macro">T!</span>[&gt;]) {
+                            IsParenthesizedArrowFunctionExpression::False
                         }
-                        <span class="comment">// `&lt;A extends B&gt;` Could be either</span>
-                        <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_nth_at_identifier</span>(<span class="ident">p</span>, <span class="ident">n</span> <span class="op">+</span> <span class="number">3</span>) {
-                            <span class="ident">IsParenthesizedArrowFunctionExpression::Unknown</span>
-                        } <span class="kw">else</span> {
-                            <span class="comment">// &lt;A extends B&gt; must be type arguments</span>
-                            <span class="ident">IsParenthesizedArrowFunctionExpression::True</span>
+                        <span class="comment">// `&lt;A extends B&gt;` Could be either
+                        </span><span class="kw">else if </span>is_nth_at_identifier(p, n + <span class="number">3</span>) {
+                            IsParenthesizedArrowFunctionExpression::Unknown
+                        } <span class="kw">else </span>{
+                            <span class="comment">// &lt;A extends B&gt; must be type arguments
+                            </span>IsParenthesizedArrowFunctionExpression::True
                         }
                     }
-                    <span class="comment">// `&lt;A=` or `&lt;A,` or always type arguments and never JSX tags</span>
-                    <span class="macro">T!</span>[<span class="op">=</span>] <span class="op">|</span> <span class="macro">T!</span>[,] =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::True</span>,
-                    <span class="kw">_</span> =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>,
+                    <span class="comment">// `&lt;A=` or `&lt;A,` or always type arguments and never JSX tags
+                    </span><span class="macro">T!</span>[=] | <span class="macro">T!</span>[,] =&gt; IsParenthesizedArrowFunctionExpression::True,
+                    <span class="kw">_ </span>=&gt; IsParenthesizedArrowFunctionExpression::False,
                 }
-            } <span class="kw">else</span> {
-                <span class="comment">// &lt;a...</span>
-                <span class="ident">IsParenthesizedArrowFunctionExpression::Unknown</span>
+            } <span class="kw">else </span>{
+                <span class="comment">// &lt;a...
+                </span>IsParenthesizedArrowFunctionExpression::Unknown
             }
         }
-        <span class="kw">_</span> =&gt; <span class="ident">IsParenthesizedArrowFunctionExpression::False</span>,
+        <span class="kw">_ </span>=&gt; IsParenthesizedArrowFunctionExpression::False,
     }
 }
 
-<span class="doccomment">/// Computes the signature flags for parsing the parameters of an arrow expression. These</span>
-<span class="doccomment">/// have different semantics from parsing the body</span>
-<span class="kw">fn</span> <span class="ident">arrow_function_parameter_flags</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Parser</span>, <span class="kw-2">mut</span> <span class="ident">flags</span>: <span class="ident">SignatureFlags</span>) -&gt; <span class="ident">SignatureFlags</span> {
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_generator</span>() {
-        <span class="comment">// Arrow functions inherit whatever yield is a valid identifier name from the parent.</span>
-        <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">SignatureFlags::GENERATOR</span>;
+<span class="doccomment">/// Computes the signature flags for parsing the parameters of an arrow expression. These
+/// have different semantics from parsing the body
+</span><span class="kw">fn </span>arrow_function_parameter_flags(p: <span class="kw-2">&amp;</span>Parser, <span class="kw-2">mut </span>flags: SignatureFlags) -&gt; SignatureFlags {
+    <span class="kw">if </span>p.state.in_generator() {
+        <span class="comment">// Arrow functions inherit whatever yield is a valid identifier name from the parent.
+        </span>flags |= SignatureFlags::GENERATOR;
     }
 
-    <span class="comment">// The arrow function is in an async context if the outer function is in an async context or itself is</span>
-    <span class="comment">// declared async</span>
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_async</span>() {
-        <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">SignatureFlags::ASYNC</span>;
+    <span class="comment">// The arrow function is in an async context if the outer function is in an async context or itself is
+    // declared async
+    </span><span class="kw">if </span>p.state.in_async() {
+        flags |= SignatureFlags::ASYNC;
     }
 
-    <span class="ident">flags</span>
+    flags
 }
 
-<span class="comment">// test arrow_expr_single_param</span>
-<span class="comment">// // SCRIPT</span>
-<span class="comment">// foo =&gt; {}</span>
-<span class="comment">// yield =&gt; {}</span>
-<span class="comment">// await =&gt; {}</span>
-<span class="comment">// baz =&gt;</span>
-<span class="comment">// {}</span>
-<span class="kw">fn</span> <span class="ident">parse_arrow_function_with_single_parameter</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">is_arrow_function_with_single_parameter</span>(<span class="ident">p</span>) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="comment">// test arrow_expr_single_param
+// // SCRIPT
+// foo =&gt; {}
+// yield =&gt; {}
+// await =&gt; {}
+// baz =&gt;
+// {}
+</span><span class="kw">fn </span>parse_arrow_function_with_single_parameter(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!is_arrow_function_with_single_parameter(p) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="kw">let</span> <span class="ident">is_async</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw">async</span>]) <span class="op">&amp;&amp;</span> <span class="ident">is_nth_at_identifier_binding</span>(<span class="ident">p</span>, <span class="number">1</span>);
+    <span class="kw">let </span>m = p.start();
+    <span class="kw">let </span>is_async = p.at(<span class="macro">T!</span>[<span class="kw">async</span>]) &amp;&amp; is_nth_at_identifier_binding(p, <span class="number">1</span>);
 
-    <span class="kw">let</span> <span class="ident">flags</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_async</span> {
-        <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[<span class="kw">async</span>]);
-        <span class="ident">SignatureFlags::ASYNC</span>
-    } <span class="kw">else</span> {
-        <span class="ident">SignatureFlags::empty</span>()
+    <span class="kw">let </span>flags = <span class="kw">if </span>is_async {
+        p.eat(<span class="macro">T!</span>[<span class="kw">async</span>]);
+        SignatureFlags::ASYNC
+    } <span class="kw">else </span>{
+        SignatureFlags::empty()
     };
 
-    <span class="comment">// test_err async_arrow_expr_await_parameter</span>
-    <span class="comment">// let a = async await =&gt; {}</span>
-    <span class="comment">// async() =&gt; { (a = await) =&gt; {} };</span>
-    <span class="ident">p</span>.<span class="ident">with_state</span>(<span class="ident">EnterParameters</span>(<span class="ident">arrow_function_parameter_flags</span>(<span class="ident">p</span>, <span class="ident">flags</span>)), <span class="ident">parse_binding</span>)
-        .<span class="ident">expect</span>(<span class="string">&quot;Expected function parameter to be present as guaranteed by is_arrow_function_with_simple_parameter&quot;</span>);
+    <span class="comment">// test_err async_arrow_expr_await_parameter
+    // let a = async await =&gt; {}
+    // async() =&gt; { (a = await) =&gt; {} };
+    </span>p.with_state(EnterParameters(arrow_function_parameter_flags(p, flags)), parse_binding)
+        .expect(<span class="string">&quot;Expected function parameter to be present as guaranteed by is_arrow_function_with_simple_parameter&quot;</span>);
 
-    <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[=&gt;]);
-    <span class="ident">parse_arrow_body</span>(<span class="ident">p</span>, <span class="ident">flags</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">js_parse_error::expected_arrow_body</span>);
+    p.bump(<span class="macro">T!</span>[=&gt;]);
+    parse_arrow_body(p, flags).or_add_diagnostic(p, js_parse_error::expected_arrow_body);
 
-    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_ARROW_FUNCTION_EXPRESSION</span>))
+    Present(m.complete(p, JS_ARROW_FUNCTION_EXPRESSION))
 }
 
-<span class="kw">fn</span> <span class="ident">is_arrow_function_with_single_parameter</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span> {
-    <span class="comment">// a =&gt; ...</span>
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">nth_at</span>(<span class="number">1</span>, <span class="macro">T!</span>[=&gt;]) {
-        <span class="comment">// test single_parameter_arrow_function_with_parameter_named_async</span>
-        <span class="comment">// let id = async =&gt; async;</span>
-        <span class="ident">is_at_identifier_binding</span>(<span class="ident">p</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">has_nth_preceding_line_break</span>(<span class="number">1</span>)
+<span class="kw">fn </span>is_arrow_function_with_single_parameter(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool {
+    <span class="comment">// a =&gt; ...
+    </span><span class="kw">if </span>p.nth_at(<span class="number">1</span>, <span class="macro">T!</span>[=&gt;]) {
+        <span class="comment">// test single_parameter_arrow_function_with_parameter_named_async
+        // let id = async =&gt; async;
+        </span>is_at_identifier_binding(p) &amp;&amp; !p.has_nth_preceding_line_break(<span class="number">1</span>)
     }
-    <span class="comment">// async ident =&gt; ...</span>
-    <span class="kw">else</span> {
-        <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="kw">async</span>])
-            <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">has_nth_preceding_line_break</span>(<span class="number">1</span>)
-            <span class="op">&amp;&amp;</span> <span class="ident">is_nth_at_identifier_binding</span>(<span class="ident">p</span>, <span class="number">1</span>)
-            <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">has_nth_preceding_line_break</span>(<span class="number">2</span>)
-            <span class="op">&amp;&amp;</span> <span class="ident">p</span>.<span class="ident">nth_at</span>(<span class="number">2</span>, <span class="macro">T!</span>[=&gt;])
+    <span class="comment">// async ident =&gt; ...
+    </span><span class="kw">else </span>{
+        p.at(<span class="macro">T!</span>[<span class="kw">async</span>])
+            &amp;&amp; !p.has_nth_preceding_line_break(<span class="number">1</span>)
+            &amp;&amp; is_nth_at_identifier_binding(p, <span class="number">1</span>)
+            &amp;&amp; !p.has_nth_preceding_line_break(<span class="number">2</span>)
+            &amp;&amp; p.nth_at(<span class="number">2</span>, <span class="macro">T!</span>[=&gt;])
     }
 }
 
-<span class="kw">fn</span> <span class="ident">parse_arrow_body</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="kw-2">mut</span> <span class="ident">flags</span>: <span class="ident">SignatureFlags</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="comment">// test arrow_in_constructor</span>
-    <span class="comment">// class A {</span>
-    <span class="comment">//   constructor() {</span>
-    <span class="comment">//     () =&gt; { super() };</span>
-    <span class="comment">//     () =&gt; super();</span>
-    <span class="comment">//  }</span>
-    <span class="comment">// }</span>
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">state</span>.<span class="ident">in_constructor</span>() {
-        <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">SignatureFlags::CONSTRUCTOR</span>
+<span class="kw">fn </span>parse_arrow_body(p: <span class="kw-2">&amp;mut </span>Parser, <span class="kw-2">mut </span>flags: SignatureFlags) -&gt; ParsedSyntax {
+    <span class="comment">// test arrow_in_constructor
+    // class A {
+    //   constructor() {
+    //     () =&gt; { super() };
+    //     () =&gt; super();
+    //  }
+    // }
+    </span><span class="kw">if </span>p.state.in_constructor() {
+        flags |= SignatureFlags::CONSTRUCTOR
     }
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]) {
-        <span class="ident">parse_function_body</span>(<span class="ident">p</span>, <span class="ident">flags</span>)
-    } <span class="kw">else</span> {
-        <span class="ident">p</span>.<span class="ident">with_state</span>(<span class="ident">EnterFunction</span>(<span class="ident">flags</span>), <span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-            <span class="ident">parse_assignment_expression_or_higher</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>())
+    <span class="kw">if </span>p.at(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]) {
+        parse_function_body(p, flags)
+    } <span class="kw">else </span>{
+        p.with_state(EnterFunction(flags), |p| {
+            parse_assignment_expression_or_higher(p, ExpressionContext::default())
         })
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_any_parameter</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-    <span class="ident">parameter_context</span>: <span class="ident">ParameterContext</span>,
-    <span class="ident">expression_context</span>: <span class="ident">ExpressionContext</span>,
-) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">let</span> <span class="ident">parameter</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">cur</span>() {
-        <span class="macro">T!</span>[...] =&gt; <span class="ident">parse_rest_parameter</span>(<span class="ident">p</span>, <span class="ident">expression_context</span>),
-        <span class="macro">T!</span>[<span class="ident">this</span>] =&gt; <span class="ident">parse_ts_this_parameter</span>(<span class="ident">p</span>),
-        <span class="kw">_</span> =&gt; <span class="ident">parse_formal_parameter</span>(<span class="ident">p</span>, <span class="ident">parameter_context</span>, <span class="ident">expression_context</span>),
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_any_parameter(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+    parameter_context: ParameterContext,
+    expression_context: ExpressionContext,
+) -&gt; ParsedSyntax {
+    <span class="kw">let </span>parameter = <span class="kw">match </span>p.cur() {
+        <span class="macro">T!</span>[...] =&gt; parse_rest_parameter(p, expression_context),
+        <span class="macro">T!</span>[this] =&gt; parse_ts_this_parameter(p),
+        <span class="kw">_ </span>=&gt; parse_formal_parameter(p, parameter_context, expression_context),
     };
 
-    <span class="ident">parameter</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">parameter</span><span class="op">|</span> {
-        <span class="kw">if</span> <span class="ident">parameter</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">TS_THIS_PARAMETER</span> {
-            <span class="kw">if</span> <span class="ident">TypeScript</span>.<span class="ident">is_unsupported</span>(<span class="ident">p</span>) {
-                <span class="ident">parameter</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">ts_only_syntax_error</span>(
-                    <span class="ident">p</span>,
+    parameter.map(|<span class="kw-2">mut </span>parameter| {
+        <span class="kw">if </span>parameter.kind() == TS_THIS_PARAMETER {
+            <span class="kw">if </span>TypeScript.is_unsupported(p) {
+                parameter.change_to_unknown(p);
+                p.error(ts_only_syntax_error(
+                    p,
                     <span class="string">&quot;this parameter&quot;</span>,
-                    <span class="ident">parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                    parameter.range(p),
                 ));
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">parameter_context</span>.<span class="ident">is_arrow_function</span>() {
-                <span class="comment">// test_err ts ts_arrow_function_this_parameter</span>
-                <span class="comment">// let a = (this: string) =&gt; {}</span>
-                <span class="ident">parameter</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            } <span class="kw">else if </span>parameter_context.is_arrow_function() {
+                <span class="comment">// test_err ts ts_arrow_function_this_parameter
+                // let a = (this: string) =&gt; {}
+                </span>parameter.change_to_unknown(p);
+                p.error(p.err_builder(
                     <span class="string">&quot;An arrow function cannot have a &#39;this&#39; parameter.&quot;</span>,
-                    <span class="ident">parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                    parameter.range(p),
                 ));
             }
         }
 
-        <span class="ident">parameter</span>
+        parameter
     })
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_rest_parameter</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">context</span>: <span class="ident">ExpressionContext</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[...]) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_rest_parameter(p: <span class="kw-2">&amp;mut </span>Parser, context: ExpressionContext) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!p.at(<span class="macro">T!</span>[...]) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[...]);
-    <span class="ident">parse_binding_pattern</span>(<span class="ident">p</span>, <span class="ident">context</span>).<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">expected_binding</span>);
+    <span class="kw">let </span>m = p.start();
+    p.bump(<span class="macro">T!</span>[...]);
+    parse_binding_pattern(p, context).or_add_diagnostic(p, expected_binding);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>valid = <span class="bool-val">true</span>;
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">eat</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>]) {
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(<span class="string">&quot;rest patterns cannot be optional&quot;</span>, <span class="ident">p</span>.<span class="ident">cur_range</span>());
+    <span class="kw">if </span>p.eat(<span class="macro">T!</span>[<span class="question-mark">?</span>]) {
+        <span class="kw">let </span>err = p.err_builder(<span class="string">&quot;rest patterns cannot be optional&quot;</span>, p.cur_range());
 
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
-        <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        p.error(err);
+        valid = <span class="bool-val">false</span>;
     }
 
-    <span class="comment">// type annotation `...foo: number[]`</span>
-    <span class="ident">TypeScript</span>
-        .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">annotation</span><span class="op">|</span> {
-            <span class="ident">ts_only_syntax_error</span>(<span class="ident">p</span>, <span class="string">&quot;type annotation&quot;</span>, <span class="ident">annotation</span>.<span class="ident">range</span>(<span class="ident">p</span>))
+    <span class="comment">// type annotation `...foo: number[]`
+    </span>TypeScript
+        .parse_exclusive_syntax(p, parse_ts_type_annotation, |p, annotation| {
+            ts_only_syntax_error(p, <span class="string">&quot;type annotation&quot;</span>, annotation.range(p))
         })
-        .<span class="ident">ok</span>();
+        .ok();
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">initializer</span>) <span class="op">=</span> <span class="ident">parse_initializer_clause</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>()) {
-        <span class="comment">// test_err arrow_rest_in_expr_in_initializer</span>
-        <span class="comment">// for ((...a = &quot;b&quot; in {}) =&gt; {};;) {}</span>
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+    <span class="kw">if let </span>Present(initializer) = parse_initializer_clause(p, ExpressionContext::default()) {
+        <span class="comment">// test_err arrow_rest_in_expr_in_initializer
+        // for ((...a = &quot;b&quot; in {}) =&gt; {};;) {}
+        </span><span class="kw">let </span>err = p.err_builder(
             <span class="string">&quot;rest elements may not have default initializers&quot;</span>,
-            <span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            initializer.range(p),
         );
 
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
-        <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        p.error(err);
+        valid = <span class="bool-val">false</span>;
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rest_parameter</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_REST_PARAMETER</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>rest_parameter = m.complete(p, JS_REST_PARAMETER);
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[,]) {
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">err_builder</span>(
+    <span class="kw">if </span>p.at(<span class="macro">T!</span>[,]) {
+        <span class="kw">let </span>err = p.err_builder(
             <span class="string">&quot;rest elements may not have trailing commas&quot;</span>,
-            <span class="ident">rest_parameter</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+            rest_parameter.range(p),
         );
 
-        <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">err</span>);
-        <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        p.error(err);
+        valid = <span class="bool-val">false</span>;
     }
 
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">valid</span> {
-        <span class="ident">rest_parameter</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
+    <span class="kw">if </span>!valid {
+        rest_parameter.change_to_unknown(p);
     }
 
-    <span class="ident">Present</span>(<span class="ident">rest_parameter</span>)
+    Present(rest_parameter)
 }
 
-<span class="comment">// test ts ts_this_parameter</span>
-<span class="comment">// function a(this) {}</span>
-<span class="comment">// function b(this: string) {}</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_ts_this_parameter</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="ident">this</span>]) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="comment">// test ts ts_this_parameter
+// function a(this) {}
+// function b(this: string) {}
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_ts_this_parameter(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!p.at(<span class="macro">T!</span>[this]) {
+        <span class="kw">return </span>Absent;
     }
 
-    <span class="kw">let</span> <span class="ident">parameter</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="ident">this</span>]);
-    <span class="ident">parse_ts_type_annotation</span>(<span class="ident">p</span>).<span class="ident">ok</span>();
-    <span class="ident">Present</span>(<span class="ident">parameter</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">TS_THIS_PARAMETER</span>))
+    <span class="kw">let </span>parameter = p.start();
+    p.expect(<span class="macro">T!</span>[this]);
+    parse_ts_type_annotation(p).ok();
+    Present(parameter.complete(p, TS_THIS_PARAMETER))
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">ParameterContext</span> {
-    <span class="doccomment">/// Regular parameter in a function / method implementation: `function x(a) {}`</span>
-    <span class="ident">Implementation</span>,
+<span class="attribute">#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>ParameterContext {
+    <span class="doccomment">/// Regular parameter in a function / method implementation: `function x(a) {}`
+    </span>Implementation,
 
-    <span class="doccomment">/// Parameter of a function/method declaration: `declare function x(a);`</span>
-    <span class="ident">Declaration</span>,
+    <span class="doccomment">/// Parameter of a function/method declaration: `declare function x(a);`
+    </span>Declaration,
 
-    <span class="doccomment">/// Parameter of a setter function: `set a(b: string)`</span>
-    <span class="ident">Setter</span>,
+    <span class="doccomment">/// Parameter of a setter function: `set a(b: string)`
+    </span>Setter,
 
-    <span class="doccomment">/// Parameter of an arrow function</span>
-    <span class="ident">Arrow</span>,
+    <span class="doccomment">/// Parameter of an arrow function
+    </span>Arrow,
 
-    <span class="doccomment">/// Parameter inside a TS property parameter: `constructor(private a)`</span>
-    <span class="ident">ParameterProperty</span>,
+    <span class="doccomment">/// Parameter inside a TS property parameter: `constructor(private a)`
+    </span>ParameterProperty,
 }
 
-<span class="kw">impl</span> <span class="ident">ParameterContext</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_setter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">ParameterContext::Setter</span>
+<span class="kw">impl </span>ParameterContext {
+    <span class="kw">pub fn </span>is_setter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self </span>== <span class="kw-2">&amp;</span>ParameterContext::Setter
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_parameter_property</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">ParameterContext::ParameterProperty</span>
+    <span class="kw">pub fn </span>is_parameter_property(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self </span>== <span class="kw-2">&amp;</span>ParameterContext::ParameterProperty
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_arrow_function</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">ParameterContext::Arrow</span>
+    <span class="kw">pub fn </span>is_arrow_function(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self </span>== <span class="kw-2">&amp;</span>ParameterContext::Arrow
     }
 }
 
-<span class="comment">// test ts ts_formal_parameter</span>
-<span class="comment">// function a(x) {}</span>
-<span class="comment">// function b({ x, y } = {}) {}</span>
-<span class="comment">// function c(x: string, y?: number, z: string = &quot;test&quot;) {}</span>
-<span class="comment">//</span>
-<span class="comment">// test_err ts ts_formal_parameter_error</span>
-<span class="comment">// function a(x?: string = &quot;test&quot;) {}</span>
-<span class="comment">// function b(...rest: string[] = &quot;init&quot;) {}</span>
-<span class="comment">// function c(...rest, b: string) {}</span>
-<span class="comment">//</span>
-<span class="comment">// test_err js_formal_parameter_error</span>
-<span class="comment">// function a(x: string) {}</span>
-<span class="comment">// function b(x?) {}</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">parse_formal_parameter</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-    <span class="ident">parameter_context</span>: <span class="ident">ParameterContext</span>,
-    <span class="ident">expression_context</span>: <span class="ident">ExpressionContext</span>,
-) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="ident">skip_ts_decorators</span>(<span class="ident">p</span>);
-    <span class="ident">parse_binding_pattern</span>(<span class="ident">p</span>, <span class="ident">expression_context</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">binding</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">binding_kind</span> <span class="op">=</span> <span class="ident">binding</span>.<span class="ident">kind</span>();
-        <span class="kw">let</span> <span class="ident">binding_range</span> <span class="op">=</span> <span class="ident">binding</span>.<span class="ident">range</span>(<span class="ident">p</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">binding</span>.<span class="ident">precede</span>(<span class="ident">p</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">true</span>;
+<span class="comment">// test ts ts_formal_parameter
+// function a(x) {}
+// function b({ x, y } = {}) {}
+// function c(x: string, y?: number, z: string = &quot;test&quot;) {}
+//
+// test_err ts ts_formal_parameter_error
+// function a(x?: string = &quot;test&quot;) {}
+// function b(...rest: string[] = &quot;init&quot;) {}
+// function c(...rest, b: string) {}
+//
+// test_err js_formal_parameter_error
+// function a(x: string) {}
+// function b(x?) {}
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_formal_parameter(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+    parameter_context: ParameterContext,
+    expression_context: ExpressionContext,
+) -&gt; ParsedSyntax {
+    skip_ts_decorators(p);
+    parse_binding_pattern(p, expression_context).map(|binding| {
+        <span class="kw">let </span>binding_kind = binding.kind();
+        <span class="kw">let </span>binding_range = binding.range(p);
+        <span class="kw">let </span>m = binding.precede(p);
+        <span class="kw">let </span><span class="kw-2">mut </span>valid = <span class="bool-val">true</span>;
 
-        <span class="kw">let</span> <span class="ident">is_optional</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>]) {
-            <span class="kw">if</span> <span class="ident">TypeScript</span>.<span class="ident">is_unsupported</span>(<span class="ident">p</span>) {
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">ts_only_syntax_error</span>(
-                    <span class="ident">p</span>,
+        <span class="kw">let </span>is_optional = <span class="kw">if </span>p.at(<span class="macro">T!</span>[<span class="question-mark">?</span>]) {
+            <span class="kw">if </span>TypeScript.is_unsupported(p) {
+                p.error(ts_only_syntax_error(
+                    p,
                     <span class="string">&quot;optional parameters&quot;</span>,
-                    <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+                    p.cur_range(),
                 ));
-                <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">parameter_context</span>.<span class="ident">is_setter</span>() {
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+                valid = <span class="bool-val">false</span>;
+            } <span class="kw">else if </span>parameter_context.is_setter() {
+                p.error(p.err_builder(
                     <span class="string">&quot;A &#39;set&#39; accessor cannot have an optional parameter.&quot;</span>,
-                    <span class="ident">p</span>.<span class="ident">cur_range</span>(),
+                    p.cur_range(),
                 ));
-                <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
+                valid = <span class="bool-val">false</span>;
             }
 
-            <span class="ident">p</span>.<span class="ident">bump</span>(<span class="macro">T!</span>[<span class="question-mark">?</span>]);
-            <span class="bool-val">true</span>
-        } <span class="kw">else</span> {
-            <span class="bool-val">false</span>
-        };
+            p.bump(<span class="macro">T!</span>[<span class="question-mark">?</span>]);
+            <span class="bool-val">true
+        </span>} <span class="kw">else </span>{
+            <span class="bool-val">false
+        </span>};
 
-        <span class="comment">// test ts ts_parameter_option_binding_pattern</span>
-        <span class="comment">// declare namespace A {</span>
-        <span class="comment">//   export class Ajv {</span>
-        <span class="comment">//     errorsText(errors?: string[] | null | undefined, { separator, dataVar }?: ErrorsTextOptions): string;</span>
-        <span class="comment">//   }</span>
-        <span class="comment">// }</span>
-        <span class="kw">if</span> <span class="ident">valid</span>
-            <span class="op">&amp;&amp;</span> <span class="macro">matches!</span>(
-                <span class="ident">binding_kind</span>,
-                <span class="ident">JS_OBJECT_BINDING_PATTERN</span> <span class="op">|</span> <span class="ident">JS_ARRAY_BINDING_PATTERN</span>
+        <span class="comment">// test ts ts_parameter_option_binding_pattern
+        // declare namespace A {
+        //   export class Ajv {
+        //     errorsText(errors?: string[] | null | undefined, { separator, dataVar }?: ErrorsTextOptions): string;
+        //   }
+        // }
+        </span><span class="kw">if </span>valid
+            &amp;&amp; <span class="macro">matches!</span>(
+                binding_kind,
+                JS_OBJECT_BINDING_PATTERN | JS_ARRAY_BINDING_PATTERN
             )
-            <span class="op">&amp;&amp;</span> <span class="ident">parameter_context</span>.<span class="ident">is_parameter_property</span>()
+            &amp;&amp; parameter_context.is_parameter_property()
         {
-            <span class="ident">valid</span> <span class="op">=</span> <span class="bool-val">false</span>;
-            <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            valid = <span class="bool-val">false</span>;
+            p.error(p.err_builder(
                 <span class="string">&quot;A parameter property may not be declared using a binding pattern.&quot;</span>,
-                <span class="ident">binding_range</span>,
+                binding_range,
             ));
         }
 
-        <span class="ident">TypeScript</span>
-            .<span class="ident">parse_exclusive_syntax</span>(<span class="ident">p</span>, <span class="ident">parse_ts_type_annotation</span>, <span class="op">|</span><span class="ident">p</span>, <span class="ident">annotation</span><span class="op">|</span> {
-                <span class="ident">ts_only_syntax_error</span>(<span class="ident">p</span>, <span class="string">&quot;Type annotations&quot;</span>, <span class="ident">annotation</span>.<span class="ident">range</span>(<span class="ident">p</span>))
+        TypeScript
+            .parse_exclusive_syntax(p, parse_ts_type_annotation, |p, annotation| {
+                ts_only_syntax_error(p, <span class="string">&quot;Type annotations&quot;</span>, annotation.range(p))
             })
-            .<span class="ident">ok</span>();
+            .ok();
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Present</span>(<span class="ident">initializer</span>) <span class="op">=</span> <span class="ident">parse_initializer_clause</span>(<span class="ident">p</span>, <span class="ident">expression_context</span>) {
-            <span class="kw">if</span> <span class="ident">valid</span> <span class="op">&amp;&amp;</span> <span class="ident">parameter_context</span>.<span class="ident">is_setter</span>() <span class="op">&amp;&amp;</span> <span class="ident">TypeScript</span>.<span class="ident">is_supported</span>(<span class="ident">p</span>) {
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+        <span class="kw">if let </span>Present(initializer) = parse_initializer_clause(p, expression_context) {
+            <span class="kw">if </span>valid &amp;&amp; parameter_context.is_setter() &amp;&amp; TypeScript.is_supported(p) {
+                p.error(p.err_builder(
                     <span class="string">&quot;A &#39;set&#39; accessor parameter cannot have an initializer.&quot;</span>,
-                    <span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                    initializer.range(p),
                 ));
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_optional</span> <span class="op">&amp;&amp;</span> <span class="ident">valid</span> {
-                <span class="ident">p</span>.<span class="ident">error</span>(<span class="ident">p</span>.<span class="ident">err_builder</span>(
+            } <span class="kw">else if </span>is_optional &amp;&amp; valid {
+                p.error(p.err_builder(
                     <span class="string">&quot;Parameter cannot have question mark and initializer&quot;</span>,
-                    <span class="ident">initializer</span>.<span class="ident">range</span>(<span class="ident">p</span>),
+                    initializer.range(p),
                 ));
             }
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parameter</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_FORMAL_PARAMETER</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>parameter = m.complete(p, JS_FORMAL_PARAMETER);
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">valid</span> {
-            <span class="ident">parameter</span>.<span class="ident">change_to_unknown</span>(<span class="ident">p</span>);
+        <span class="kw">if </span>!valid {
+            parameter.change_to_unknown(p);
         }
 
-        <span class="ident">parameter</span>
+        parameter
     })
 }
 
-<span class="doccomment">/// Skips over the binding token of a parameter. Useful in the context of lookaheads to determine</span>
-<span class="doccomment">/// if any typescript specific syntax like `:` is present after the parameter name.</span>
-<span class="doccomment">/// Returns `true` if the function skipped over a valid binding, returns false if the parser</span>
-<span class="doccomment">/// is not positioned at a binding.</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">skip_parameter_start</span>(<span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">if</span> <span class="ident">is_at_identifier_binding</span>(<span class="ident">p</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="ident">this</span>]) {
-        <span class="comment">// a</span>
-        <span class="ident">p</span>.<span class="ident">bump_any</span>();
-        <span class="kw">return</span> <span class="bool-val">true</span>;
+<span class="doccomment">/// Skips over the binding token of a parameter. Useful in the context of lookaheads to determine
+/// if any typescript specific syntax like `:` is present after the parameter name.
+/// Returns `true` if the function skipped over a valid binding, returns false if the parser
+/// is not positioned at a binding.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>skip_parameter_start(p: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool {
+    <span class="kw">if </span>is_at_identifier_binding(p) || p.at(<span class="macro">T!</span>[this]) {
+        <span class="comment">// a
+        </span>p.bump_any();
+        <span class="kw">return </span><span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]) <span class="op">|</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]) {
-        <span class="comment">// Array or object pattern. Try to parse it and return true if there were no parsing errors</span>
-        <span class="kw">let</span> <span class="ident">previous_error_count</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">diagnostics</span>.<span class="ident">len</span>();
-        <span class="kw">let</span> <span class="ident">pattern</span> <span class="op">=</span> <span class="ident">parse_binding_pattern</span>(<span class="ident">p</span>, <span class="ident">ExpressionContext::default</span>());
-        <span class="ident">pattern</span>.<span class="ident">is_present</span>() <span class="op">&amp;&amp;</span> <span class="ident">p</span>.<span class="ident">diagnostics</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="ident">previous_error_count</span>
-    } <span class="kw">else</span> {
-        <span class="bool-val">false</span>
-    }
+    <span class="kw">if </span>p.at(<span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>]) || p.at(<span class="macro">T!</span>[<span class="string">&#39;{&#39;</span>]) {
+        <span class="comment">// Array or object pattern. Try to parse it and return true if there were no parsing errors
+        </span><span class="kw">let </span>previous_error_count = p.diagnostics.len();
+        <span class="kw">let </span>pattern = parse_binding_pattern(p, ExpressionContext::default());
+        pattern.is_present() &amp;&amp; p.diagnostics.len() == previous_error_count
+    } <span class="kw">else </span>{
+        <span class="bool-val">false
+    </span>}
 }
 
-<span class="comment">// test parameter_list</span>
-<span class="comment">// function evalInComputedPropertyKey({ [computed]: ignored }) {}</span>
-<span class="doccomment">/// parse the whole list of parameters, brackets included</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse_parameter_list</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-    <span class="ident">parameter_context</span>: <span class="ident">ParameterContext</span>,
-    <span class="ident">flags</span>: <span class="ident">SignatureFlags</span>,
-) -&gt; <span class="ident">ParsedSyntax</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]) {
-        <span class="kw">return</span> <span class="ident">Absent</span>;
+<span class="comment">// test parameter_list
+// function evalInComputedPropertyKey({ [computed]: ignored }) {}
+</span><span class="doccomment">/// parse the whole list of parameters, brackets included
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>parse_parameter_list(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+    parameter_context: ParameterContext,
+    flags: SignatureFlags,
+) -&gt; ParsedSyntax {
+    <span class="kw">if </span>!p.at(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]) {
+        <span class="kw">return </span>Absent;
     }
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-    <span class="ident">parse_parameters_list</span>(
-        <span class="ident">p</span>,
-        <span class="ident">flags</span>,
-        <span class="op">|</span><span class="ident">p</span>, <span class="ident">expression_context</span><span class="op">|</span> <span class="ident">parse_any_parameter</span>(<span class="ident">p</span>, <span class="ident">parameter_context</span>, <span class="ident">expression_context</span>),
-        <span class="ident">JS_PARAMETER_LIST</span>,
+    <span class="kw">let </span>m = p.start();
+    parse_parameters_list(
+        p,
+        flags,
+        |p, expression_context| parse_any_parameter(p, parameter_context, expression_context),
+        JS_PARAMETER_LIST,
     );
 
-    <span class="ident">Present</span>(<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">JS_PARAMETERS</span>))
+    Present(m.complete(p, JS_PARAMETERS))
 }
 
-<span class="doccomment">/// Parses a (param, param) list into the current active node</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse_parameters_list</span>(
-    <span class="ident">p</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>,
-    <span class="ident">flags</span>: <span class="ident">SignatureFlags</span>,
-    <span class="ident">parse_parameter</span>: <span class="kw">impl</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>, <span class="ident">ExpressionContext</span>) -&gt; <span class="ident">ParsedSyntax</span>,
-    <span class="ident">list_kind</span>: <span class="ident">JsSyntaxKind</span>,
+<span class="doccomment">/// Parses a (param, param) list into the current active node
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>parse_parameters_list(
+    p: <span class="kw-2">&amp;mut </span>Parser,
+    flags: SignatureFlags,
+    parse_parameter: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Parser, ExpressionContext) -&gt; ParsedSyntax,
+    list_kind: JsSyntaxKind,
 ) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">first</span> <span class="op">=</span> <span class="bool-val">true</span>;
-    <span class="kw">let</span> <span class="ident">has_l_paren</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]);
+    <span class="kw">let </span><span class="kw-2">mut </span>first = <span class="bool-val">true</span>;
+    <span class="kw">let </span>has_l_paren = p.expect(<span class="macro">T!</span>[<span class="string">&#39;(&#39;</span>]);
 
-    <span class="ident">p</span>.<span class="ident">with_state</span>(<span class="ident">EnterParameters</span>(<span class="ident">flags</span>), <span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">parameters_list</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">progress</span> <span class="op">=</span> <span class="ident">ParserProgress::default</span>();
+    p.with_state(EnterParameters(flags), |p| {
+        <span class="kw">let </span>parameters_list = p.start();
+        <span class="kw">let </span><span class="kw-2">mut </span>progress = ParserProgress::default();
 
-        <span class="kw">while</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="ident">EOF</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]) {
-            <span class="kw">if</span> <span class="ident">first</span> {
-                <span class="ident">first</span> <span class="op">=</span> <span class="bool-val">false</span>;
-            } <span class="kw">else</span> {
-                <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[,]);
+        <span class="kw">while </span>!p.at(EOF) &amp;&amp; !p.at(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]) {
+            <span class="kw">if </span>first {
+                first = <span class="bool-val">false</span>;
+            } <span class="kw">else </span>{
+                p.expect(<span class="macro">T!</span>[,]);
             }
 
-            <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]) {
+            <span class="kw">if </span>p.at(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]) {
                 <span class="kw">break</span>;
             }
 
-            <span class="ident">progress</span>.<span class="ident">assert_progressing</span>(<span class="ident">p</span>);
+            progress.assert_progressing(p);
 
-            <span class="kw">let</span> <span class="ident">parameter</span> <span class="op">=</span> <span class="ident">parse_parameter</span>(
-                <span class="ident">p</span>,
-                <span class="ident">ExpressionContext::default</span>().<span class="ident">and_object_expression_allowed</span>(<span class="op">!</span><span class="ident">first</span> <span class="op">|</span><span class="op">|</span> <span class="ident">has_l_paren</span>),
+            <span class="kw">let </span>parameter = parse_parameter(
+                p,
+                ExpressionContext::default().and_object_expression_allowed(!first || has_l_paren),
             );
 
-            <span class="kw">if</span> <span class="ident">parameter</span>.<span class="ident">is_absent</span>() <span class="op">&amp;&amp;</span> <span class="ident">p</span>.<span class="ident">at</span>(<span class="macro">T!</span>[,]) {
-                <span class="comment">// a missing parameter,</span>
-                <span class="ident">parameter</span>.<span class="ident">or_add_diagnostic</span>(<span class="ident">p</span>, <span class="ident">expected_parameter</span>);
+            <span class="kw">if </span>parameter.is_absent() &amp;&amp; p.at(<span class="macro">T!</span>[,]) {
+                <span class="comment">// a missing parameter,
+                </span>parameter.or_add_diagnostic(p, expected_parameter);
                 <span class="kw">continue</span>;
             }
 
-            <span class="comment">// test_err formal_params_no_binding_element</span>
-            <span class="comment">// function foo(true) {}</span>
+            <span class="comment">// test_err formal_params_no_binding_element
+            // function foo(true) {}
 
-            <span class="comment">// test_err formal_params_invalid</span>
-            <span class="comment">// function (a++, c) {}</span>
-            <span class="kw">let</span> <span class="ident">recovered_result</span> <span class="op">=</span> <span class="ident">parameter</span>.<span class="ident">or_recover</span>(
-                <span class="ident">p</span>,
-                <span class="kw-2">&amp;</span><span class="ident">ParseRecovery::new</span>(
-                    <span class="ident">JS_UNKNOWN_PARAMETER</span>,
+            // test_err formal_params_invalid
+            // function (a++, c) {}
+            </span><span class="kw">let </span>recovered_result = parameter.or_recover(
+                p,
+                <span class="kw-2">&amp;</span>ParseRecovery::new(
+                    JS_UNKNOWN_PARAMETER,
                     <span class="macro">token_set!</span>[
-                        <span class="macro">T!</span>[<span class="ident">ident</span>],
+                        <span class="macro">T!</span>[ident],
                         <span class="macro">T!</span>[<span class="kw">await</span>],
                         <span class="macro">T!</span>[<span class="kw">yield</span>],
-                        <span class="macro">T!</span>[<span class="ident">this</span>],
+                        <span class="macro">T!</span>[this],
                         <span class="macro">T!</span>[,],
                         <span class="macro">T!</span>[<span class="string">&#39;[&#39;</span>],
                         <span class="macro">T!</span>[...],
@@ -2284,19 +2276,19 @@
                         <span class="macro">T!</span>[;],
                     ],
                 )
-                .<span class="ident">enable_recovery_on_line_break</span>(),
-                <span class="ident">js_parse_error::expected_parameter</span>,
+                .enable_recovery_on_line_break(),
+                js_parse_error::expected_parameter,
             );
 
-            <span class="kw">if</span> <span class="ident">recovered_result</span>.<span class="ident">is_err</span>() {
+            <span class="kw">if </span>recovered_result.is_err() {
                 <span class="kw">break</span>;
             }
         }
 
-        <span class="ident">parameters_list</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">list_kind</span>);
+        parameters_list.complete(p, list_kind);
     });
 
-    <span class="ident">p</span>.<span class="ident">expect</span>(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]);
+    p.expect(<span class="macro">T!</span>[<span class="string">&#39;)&#39;</span>]);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_js_parser" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

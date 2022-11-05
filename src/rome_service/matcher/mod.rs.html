@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/matcher/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_service/src/matcher/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rome_service/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rome_service/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -134,141 +134,141 @@
 <span id="134">134</span>
 <span id="135">135</span>
 <span id="136">136</span>
-</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pattern</span>;
+</pre><pre class="rust"><code><span class="kw">pub mod </span>pattern;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pattern</span>::{<span class="ident">MatchOptions</span>, <span class="ident">Pattern</span>, <span class="ident">PatternError</span>};
-<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">std::path::Path</span>;
-<span class="kw">use</span> <span class="ident">std::sync::RwLock</span>;
+<span class="kw">pub use </span>pattern::{MatchOptions, Pattern, PatternError};
+<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::path::Path;
+<span class="kw">use </span>std::sync::RwLock;
 
-<span class="doccomment">/// A data structure to use when there&#39;s need to match a string or a path a against</span>
-<span class="doccomment">/// a unix shell style patterns</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Matcher</span> {
-    <span class="ident">patterns</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Pattern</span><span class="op">&gt;</span>,
-    <span class="ident">options</span>: <span class="ident">MatchOptions</span>,
-    <span class="ident">already_ignored</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A data structure to use when there&#39;s need to match a string or a path a against
+/// a unix shell style patterns
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Matcher {
+    patterns: Vec&lt;Pattern&gt;,
+    options: MatchOptions,
+    already_ignored: RwLock&lt;HashMap&lt;String, bool&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Matcher</span> {
-    <span class="doccomment">/// Creates a new Matcher with given options.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Check [glob website](https://docs.rs/glob/latest/glob/struct.MatchOptions.html) for [MatchOptions]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">options</span>: <span class="ident">MatchOptions</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">patterns</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">options</span>,
-            <span class="ident">already_ignored</span>: <span class="ident">RwLock::new</span>(<span class="ident">HashMap::default</span>()),
+<span class="kw">impl </span>Matcher {
+    <span class="doccomment">/// Creates a new Matcher with given options.
+    ///
+    /// Check [glob website](https://docs.rs/glob/latest/glob/struct.MatchOptions.html) for [MatchOptions]
+    </span><span class="kw">pub fn </span>new(options: MatchOptions) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            patterns: Vec::new(),
+            options,
+            already_ignored: RwLock::new(HashMap::default()),
         }
     }
 
-    <span class="doccomment">/// It adds a unix shell style pattern</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_pattern</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">pattern</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">PatternError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">pattern</span> <span class="op">=</span> <span class="ident">Pattern::new</span>(<span class="ident">pattern</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">patterns</span>.<span class="ident">push</span>(<span class="ident">pattern</span>);
+    <span class="doccomment">/// It adds a unix shell style pattern
+    </span><span class="kw">pub fn </span>add_pattern(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pattern: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(), PatternError&gt; {
+        <span class="kw">let </span>pattern = Pattern::new(pattern)<span class="question-mark">?</span>;
+        <span class="self">self</span>.patterns.push(pattern);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// It matches the given string against the stored patterns.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It returns [true] if there&#39;s at least a match</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">already_ignored</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">already_ignored</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">matches</span>) <span class="op">=</span> <span class="ident">already_ignored</span>.<span class="ident">get</span>(<span class="ident">source</span>) {
-            <span class="kw">return</span> <span class="kw-2">*</span><span class="ident">matches</span>;
+    <span class="doccomment">/// It matches the given string against the stored patterns.
+    ///
+    /// It returns [true] if there&#39;s at least a match
+    </span><span class="kw">pub fn </span>matches(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>str) -&gt; bool {
+        <span class="kw">let </span><span class="kw-2">mut </span>already_ignored = <span class="self">self</span>.already_ignored.write().unwrap();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(matches) = already_ignored.get(source) {
+            <span class="kw">return </span><span class="kw-2">*</span>matches;
         }
-        <span class="kw">for</span> <span class="ident">pattern</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">patterns</span> {
-            <span class="kw">if</span> <span class="ident">pattern</span>.<span class="ident">matches_with</span>(<span class="ident">source</span>, <span class="self">self</span>.<span class="ident">options</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">source</span>.<span class="ident">contains</span>(<span class="ident">pattern</span>.<span class="ident">as_str</span>()) {
-                <span class="ident">already_ignored</span>.<span class="ident">insert</span>(<span class="ident">source</span>.<span class="ident">to_string</span>(), <span class="bool-val">true</span>);
-                <span class="kw">return</span> <span class="bool-val">true</span>;
+        <span class="kw">for </span>pattern <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.patterns {
+            <span class="kw">if </span>pattern.matches_with(source, <span class="self">self</span>.options) || source.contains(pattern.as_str()) {
+                already_ignored.insert(source.to_string(), <span class="bool-val">true</span>);
+                <span class="kw">return </span><span class="bool-val">true</span>;
             }
         }
-        <span class="ident">already_ignored</span>.<span class="ident">insert</span>(<span class="ident">source</span>.<span class="ident">to_string</span>(), <span class="bool-val">false</span>);
-        <span class="bool-val">false</span>
-    }
+        already_ignored.insert(source.to_string(), <span class="bool-val">false</span>);
+        <span class="bool-val">false
+    </span>}
 
-    <span class="doccomment">/// It matches the given path against the stored patterns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It returns [true] if there&#39;s a lest a match</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matches_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">already_ignored</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">already_ignored</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">source_as_string</span> <span class="op">=</span> <span class="ident">source</span>.<span class="ident">to_str</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">source_as_string</span>) <span class="op">=</span> <span class="ident">source_as_string</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">matches</span>) <span class="op">=</span> <span class="ident">already_ignored</span>.<span class="ident">get</span>(<span class="ident">source_as_string</span>) {
-                <span class="kw">return</span> <span class="kw-2">*</span><span class="ident">matches</span>;
+    <span class="doccomment">/// It matches the given path against the stored patterns
+    ///
+    /// It returns [true] if there&#39;s a lest a match
+    </span><span class="kw">pub fn </span>matches_path(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>Path) -&gt; bool {
+        <span class="kw">let </span><span class="kw-2">mut </span>already_ignored = <span class="self">self</span>.already_ignored.write().unwrap();
+        <span class="kw">let </span>source_as_string = source.to_str();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(source_as_string) = source_as_string {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(matches) = already_ignored.get(source_as_string) {
+                <span class="kw">return </span><span class="kw-2">*</span>matches;
             }
         }
-        <span class="kw">let</span> <span class="ident">matches</span> <span class="op">=</span> {
-            <span class="kw">for</span> <span class="ident">pattern</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">patterns</span> {
-                <span class="kw">let</span> <span class="ident">matches</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">pattern</span>.<span class="ident">matches_path_with</span>(<span class="ident">source</span>, <span class="self">self</span>.<span class="ident">options</span>) {
-                    <span class="bool-val">true</span>
-                } <span class="kw">else</span> {
-                    <span class="comment">// Here we cover cases where the user specifies single files inside the patterns.</span>
-                    <span class="comment">// The pattern library doesn&#39;t support single files, we here we just do a check</span>
-                    <span class="comment">// on contains</span>
-                    <span class="ident">source_as_string</span>.<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">source</span>.<span class="ident">contains</span>(<span class="ident">pattern</span>.<span class="ident">as_str</span>()))
+        <span class="kw">let </span>matches = {
+            <span class="kw">for </span>pattern <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.patterns {
+                <span class="kw">let </span>matches = <span class="kw">if </span>pattern.matches_path_with(source, <span class="self">self</span>.options) {
+                    <span class="bool-val">true
+                </span>} <span class="kw">else </span>{
+                    <span class="comment">// Here we cover cases where the user specifies single files inside the patterns.
+                    // The pattern library doesn&#39;t support single files, we here we just do a check
+                    // on contains
+                    </span>source_as_string.map_or(<span class="bool-val">false</span>, |source| source.contains(pattern.as_str()))
                 };
 
-                <span class="kw">if</span> <span class="ident">matches</span> {
-                    <span class="kw">return</span> <span class="bool-val">true</span>;
+                <span class="kw">if </span>matches {
+                    <span class="kw">return </span><span class="bool-val">true</span>;
                 }
             }
 
-            <span class="bool-val">false</span>
-        };
+            <span class="bool-val">false
+        </span>};
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">source_as_string</span>) <span class="op">=</span> <span class="ident">source_as_string</span> {
-            <span class="ident">already_ignored</span>.<span class="ident">insert</span>(<span class="ident">source_as_string</span>.<span class="ident">to_string</span>(), <span class="ident">matches</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(source_as_string) = source_as_string {
+            already_ignored.insert(source_as_string.to_string(), matches);
         }
 
-        <span class="ident">matches</span>
+        matches
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::matcher::pattern::MatchOptions</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::matcher::Matcher</span>;
-    <span class="kw">use</span> <span class="ident">std::env</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use </span><span class="kw">crate</span>::matcher::pattern::MatchOptions;
+    <span class="kw">use </span><span class="kw">crate</span>::matcher::Matcher;
+    <span class="kw">use </span>std::env;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">matches</span>() {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">env::current_dir</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}/**/*.rs&quot;</span>, <span class="ident">current</span>.<span class="ident">display</span>());
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ignore</span> <span class="op">=</span> <span class="ident">Matcher::new</span>(<span class="ident">MatchOptions::default</span>());
-        <span class="ident">ignore</span>.<span class="ident">add_pattern</span>(<span class="kw-2">&amp;</span><span class="ident">dir</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">env::current_dir</span>().<span class="ident">unwrap</span>().<span class="ident">join</span>(<span class="string">&quot;src/workspace.rs&quot;</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">ignore</span>.<span class="ident">matches</span>(<span class="ident">path</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>matches() {
+        <span class="kw">let </span>current = env::current_dir().unwrap();
+        <span class="kw">let </span>dir = <span class="macro">format!</span>(<span class="string">&quot;{}/**/*.rs&quot;</span>, current.display());
+        <span class="kw">let </span><span class="kw-2">mut </span>ignore = Matcher::new(MatchOptions::default());
+        ignore.add_pattern(<span class="kw-2">&amp;</span>dir).unwrap();
+        <span class="kw">let </span>path = env::current_dir().unwrap().join(<span class="string">&quot;src/workspace.rs&quot;</span>);
+        <span class="kw">let </span>result = ignore.matches(path.to_str().unwrap());
 
-        <span class="macro">assert!</span>(<span class="ident">result</span>);
+        <span class="macro">assert!</span>(result);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">matches_path</span>() {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">env::current_dir</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}/**/*.rs&quot;</span>, <span class="ident">current</span>.<span class="ident">display</span>());
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ignore</span> <span class="op">=</span> <span class="ident">Matcher::new</span>(<span class="ident">MatchOptions::default</span>());
-        <span class="ident">ignore</span>.<span class="ident">add_pattern</span>(<span class="kw-2">&amp;</span><span class="ident">dir</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">env::current_dir</span>().<span class="ident">unwrap</span>().<span class="ident">join</span>(<span class="string">&quot;src/workspace.rs&quot;</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">ignore</span>.<span class="ident">matches_path</span>(<span class="ident">path</span>.<span class="ident">as_path</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>matches_path() {
+        <span class="kw">let </span>current = env::current_dir().unwrap();
+        <span class="kw">let </span>dir = <span class="macro">format!</span>(<span class="string">&quot;{}/**/*.rs&quot;</span>, current.display());
+        <span class="kw">let </span><span class="kw-2">mut </span>ignore = Matcher::new(MatchOptions::default());
+        ignore.add_pattern(<span class="kw-2">&amp;</span>dir).unwrap();
+        <span class="kw">let </span>path = env::current_dir().unwrap().join(<span class="string">&quot;src/workspace.rs&quot;</span>);
+        <span class="kw">let </span>result = ignore.matches_path(path.as_path());
 
-        <span class="macro">assert!</span>(<span class="ident">result</span>);
+        <span class="macro">assert!</span>(result);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">matches_single_path</span>() {
-        <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="string">&quot;workspace.rs&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ignore</span> <span class="op">=</span> <span class="ident">Matcher::new</span>(<span class="ident">MatchOptions</span> {
-            <span class="ident">require_literal_separator</span>: <span class="bool-val">true</span>,
-            <span class="ident">case_sensitive</span>: <span class="bool-val">true</span>,
-            <span class="ident">require_literal_leading_dot</span>: <span class="bool-val">true</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>matches_single_path() {
+        <span class="kw">let </span>dir = <span class="string">&quot;workspace.rs&quot;</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>ignore = Matcher::new(MatchOptions {
+            require_literal_separator: <span class="bool-val">true</span>,
+            case_sensitive: <span class="bool-val">true</span>,
+            require_literal_leading_dot: <span class="bool-val">true</span>,
         });
-        <span class="ident">ignore</span>.<span class="ident">add_pattern</span>(<span class="ident">dir</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">env::current_dir</span>().<span class="ident">unwrap</span>().<span class="ident">join</span>(<span class="string">&quot;src/workspace.rs&quot;</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">ignore</span>.<span class="ident">matches</span>(<span class="ident">path</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>());
+        ignore.add_pattern(dir).unwrap();
+        <span class="kw">let </span>path = env::current_dir().unwrap().join(<span class="string">&quot;src/workspace.rs&quot;</span>);
+        <span class="kw">let </span>result = ignore.matches(path.to_str().unwrap());
 
-        <span class="macro">assert!</span>(<span class="ident">result</span>);
+        <span class="macro">assert!</span>(result);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rome_service" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

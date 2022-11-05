@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_analyze/src/registry.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>registry.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_analyze/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/rome_analyze/src/registry.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>registry.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rome_analyze/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rome_analyze/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -383,390 +383,390 @@
 <span id="383">383</span>
 <span id="384">384</span>
 <span id="385">385</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>, <span class="ident">collections::BTreeSet</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::{borrow, collections::BTreeSet};
 
-<span class="kw">use</span> <span class="ident">rome_diagnostics::v2::Error</span>;
-<span class="kw">use</span> <span class="ident">rome_rowan</span>::{<span class="ident">AstNode</span>, <span class="ident">Language</span>, <span class="ident">RawSyntaxKind</span>, <span class="ident">SyntaxKind</span>, <span class="ident">SyntaxNode</span>};
-<span class="kw">use</span> <span class="ident">rustc_hash::FxHashSet</span>;
+<span class="kw">use </span>rome_diagnostics::v2::Error;
+<span class="kw">use </span>rome_rowan::{AstNode, Language, RawSyntaxKind, SyntaxKind, SyntaxNode};
+<span class="kw">use </span>rustc_hash::FxHashSet;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">context::RuleContext</span>,
-    <span class="ident">matcher</span>::{<span class="ident">GroupKey</span>, <span class="ident">MatchQueryParams</span>},
-    <span class="ident">query</span>::{<span class="ident">QueryKey</span>, <span class="ident">QueryMatch</span>, <span class="ident">Queryable</span>},
-    <span class="ident">signals::RuleSignal</span>,
-    <span class="ident">AnalysisFilter</span>, <span class="ident">GroupCategory</span>, <span class="ident">QueryMatcher</span>, <span class="ident">Rule</span>, <span class="ident">RuleGroup</span>, <span class="ident">RuleKey</span>, <span class="ident">RuleMetadata</span>,
-    <span class="ident">SignalEntry</span>,
+<span class="kw">use crate</span>::{
+    context::RuleContext,
+    matcher::{GroupKey, MatchQueryParams},
+    query::{QueryKey, QueryMatch, Queryable},
+    signals::RuleSignal,
+    AnalysisFilter, GroupCategory, QueryMatcher, Rule, RuleGroup, RuleKey, RuleMetadata,
+    SignalEntry,
 };
 
-<span class="doccomment">/// Defines all the phases that the [RuleRegistry] supports.</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">usize</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Phases</span> {
-    <span class="ident">Syntax</span> <span class="op">=</span> <span class="number">0</span>,
-    <span class="ident">Semantic</span> <span class="op">=</span> <span class="number">1</span>,
+<span class="doccomment">/// Defines all the phases that the [RuleRegistry] supports.
+</span><span class="attribute">#[repr(usize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+</span><span class="kw">pub enum </span>Phases {
+    Syntax = <span class="number">0</span>,
+    Semantic = <span class="number">1</span>,
 }
 
-<span class="doccomment">/// Defines which phase a rule will run. This will be defined</span>
-<span class="doccomment">/// by the set of services a rule demands.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Phase</span> {
-    <span class="kw">fn</span> <span class="ident">phase</span>() -&gt; <span class="ident">Phases</span>;
+<span class="doccomment">/// Defines which phase a rule will run. This will be defined
+/// by the set of services a rule demands.
+</span><span class="kw">pub trait </span>Phase {
+    <span class="kw">fn </span>phase() -&gt; Phases;
 }
 
-<span class="doccomment">/// If a rule do not need any service it can run on the syntax phase.</span>
-<span class="kw">impl</span> <span class="ident">Phase</span> <span class="kw">for</span> () {
-    <span class="kw">fn</span> <span class="ident">phase</span>() -&gt; <span class="ident">Phases</span> {
-        <span class="ident">Phases::Syntax</span>
+<span class="doccomment">/// If a rule do not need any service it can run on the syntax phase.
+</span><span class="kw">impl </span>Phase <span class="kw">for </span>() {
+    <span class="kw">fn </span>phase() -&gt; Phases {
+        Phases::Syntax
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RegistryVisitor</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Record the category `C` to this visitor</span>
-    <span class="kw">fn</span> <span class="ident">record_category</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">GroupCategory</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="ident">C::record_groups</span>(<span class="self">self</span>);
+<span class="kw">pub trait </span>RegistryVisitor&lt;L: Language&gt; {
+    <span class="doccomment">/// Record the category `C` to this visitor
+    </span><span class="kw">fn </span>record_category&lt;C: GroupCategory&lt;Language = L&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        C::record_groups(<span class="self">self</span>);
     }
 
-    <span class="doccomment">/// Record the group `G` to this visitor</span>
-    <span class="kw">fn</span> <span class="ident">record_group</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">RuleGroup</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="ident">G::record_rules</span>(<span class="self">self</span>);
+    <span class="doccomment">/// Record the group `G` to this visitor
+    </span><span class="kw">fn </span>record_group&lt;G: RuleGroup&lt;Language = L&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        G::record_rules(<span class="self">self</span>);
     }
 
-    <span class="doccomment">/// Record the rule `R` to this visitor</span>
-    <span class="kw">fn</span> <span class="ident">record_rule</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Rule</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">R::Query</span>: <span class="ident">Queryable</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="op">&lt;</span><span class="ident">R::Query</span> <span class="kw">as</span> <span class="ident">Queryable</span><span class="op">&gt;</span><span class="ident">::Output</span>: <span class="ident">Clone</span>;
+    <span class="doccomment">/// Record the rule `R` to this visitor
+    </span><span class="kw">fn </span>record_rule&lt;R&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>)
+    <span class="kw">where
+        </span>R: Rule + <span class="lifetime">&#39;static</span>,
+        R::Query: Queryable&lt;Language = L&gt;,
+        &lt;R::Query <span class="kw">as </span>Queryable&gt;::Output: Clone;
 }
 
-<span class="doccomment">/// Stores metadata information for all the rules in the registry, sorted</span>
-<span class="doccomment">/// alphabetically</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MetadataRegistry</span> {
-    <span class="ident">inner</span>: <span class="ident">BTreeSet</span><span class="op">&lt;</span><span class="ident">MetadataKey</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Stores metadata information for all the rules in the registry, sorted
+/// alphabetically
+</span><span class="attribute">#[derive(Default)]
+</span><span class="kw">pub struct </span>MetadataRegistry {
+    inner: BTreeSet&lt;MetadataKey&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">MetadataRegistry</span> {
-    <span class="doccomment">/// Return a unique identifier for a rule group if it&#39;s known by this registry</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_group</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GroupKey</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">get</span>(<span class="ident">group</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Some</span>(<span class="ident">key</span>.<span class="ident">into_group_key</span>())
+<span class="kw">impl </span>MetadataRegistry {
+    <span class="doccomment">/// Return a unique identifier for a rule group if it&#39;s known by this registry
+    </span><span class="kw">pub fn </span>find_group(<span class="kw-2">&amp;</span><span class="self">self</span>, group: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;GroupKey&gt; {
+        <span class="kw">let </span>key = <span class="self">self</span>.inner.get(group)<span class="question-mark">?</span>;
+        <span class="prelude-val">Some</span>(key.into_group_key())
     }
 
-    <span class="doccomment">/// Return a unique identifier for a rule if it&#39;s known by this registry</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_rule</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">rule</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RuleKey</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span>(<span class="ident">group</span>, <span class="ident">rule</span>))<span class="question-mark">?</span>;
-        <span class="prelude-val">Some</span>(<span class="ident">key</span>.<span class="ident">into_rule_key</span>())
+    <span class="doccomment">/// Return a unique identifier for a rule if it&#39;s known by this registry
+    </span><span class="kw">pub fn </span>find_rule(<span class="kw-2">&amp;</span><span class="self">self</span>, group: <span class="kw-2">&amp;</span>str, rule: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;RuleKey&gt; {
+        <span class="kw">let </span>key = <span class="self">self</span>.inner.get(<span class="kw-2">&amp;</span>(group, rule))<span class="question-mark">?</span>;
+        <span class="prelude-val">Some</span>(key.into_rule_key())
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">insert_rule</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">rule</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">insert</span>(<span class="ident">MetadataKey</span> {
-            <span class="ident">inner</span>: (<span class="ident">group</span>, <span class="ident">rule</span>),
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>insert_rule(<span class="kw-2">&amp;mut </span><span class="self">self</span>, group: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str, rule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) {
+        <span class="self">self</span>.inner.insert(MetadataKey {
+            inner: (group, rule),
         });
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">RegistryVisitor</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MetadataRegistry</span> {
-    <span class="kw">fn</span> <span class="ident">record_rule</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Rule</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">R::Query</span>: <span class="ident">Queryable</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="op">&lt;</span><span class="ident">R::Query</span> <span class="kw">as</span> <span class="ident">Queryable</span><span class="op">&gt;</span><span class="ident">::Output</span>: <span class="ident">Clone</span>,
+<span class="kw">impl</span>&lt;L: Language&gt; RegistryVisitor&lt;L&gt; <span class="kw">for </span>MetadataRegistry {
+    <span class="kw">fn </span>record_rule&lt;R&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>)
+    <span class="kw">where
+        </span>R: Rule + <span class="lifetime">&#39;static</span>,
+        R::Query: Queryable&lt;Language = L&gt;,
+        &lt;R::Query <span class="kw">as </span>Queryable&gt;::Output: Clone,
     {
-        <span class="self">self</span>.<span class="ident">insert_rule</span>(<span class="op">&lt;</span><span class="ident">R::Group</span> <span class="kw">as</span> <span class="ident">RuleGroup</span><span class="op">&gt;</span><span class="ident">::NAME</span>, <span class="ident">R::METADATA</span>.<span class="ident">name</span>);
+        <span class="self">self</span>.insert_rule(&lt;R::Group <span class="kw">as </span>RuleGroup&gt;::NAME, R::METADATA.name);
     }
 }
 
-<span class="doccomment">/// The rule registry holds type-erased instances of all active analysis rules</span>
-<span class="doccomment">/// for each phase.</span>
-<span class="doccomment">/// What defines a phase is the set of services that a phase offers. Currently</span>
-<span class="doccomment">/// we have:</span>
-<span class="doccomment">/// - Syntax Phase: No services are offered, thus its rules can be run immediately;</span>
-<span class="doccomment">/// - Semantic Phase: Offers the semantic model, thus these rules can only run</span>
-<span class="doccomment">/// after the &quot;SemanticModel&quot; is ready, which demands a whole transverse of the parsed tree.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuleRegistry</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Holds a collection of rules for each phase.</span>
-    <span class="ident">phase_rules</span>: [<span class="ident">PhaseRules</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>; <span class="number">2</span>],
+<span class="doccomment">/// The rule registry holds type-erased instances of all active analysis rules
+/// for each phase.
+/// What defines a phase is the set of services that a phase offers. Currently
+/// we have:
+/// - Syntax Phase: No services are offered, thus its rules can be run immediately;
+/// - Semantic Phase: Offers the semantic model, thus these rules can only run
+/// after the &quot;SemanticModel&quot; is ready, which demands a whole transverse of the parsed tree.
+</span><span class="kw">pub struct </span>RuleRegistry&lt;L: Language&gt; {
+    <span class="doccomment">/// Holds a collection of rules for each phase.
+    </span>phase_rules: [PhaseRules&lt;L&gt;; <span class="number">2</span>],
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span> <span class="op">+</span> <span class="ident">Default</span><span class="op">&gt;</span> <span class="ident">RuleRegistry</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">filter</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AnalysisFilter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="ident">RuleRegistryBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">RuleRegistryBuilder</span> {
-            <span class="ident">registry</span>: <span class="ident">RuleRegistry</span> {
-                <span class="ident">phase_rules</span>: <span class="ident">Default::default</span>(),
+<span class="kw">impl</span>&lt;L: Language + Default&gt; RuleRegistry&lt;L&gt; {
+    <span class="kw">pub fn </span>builder&lt;<span class="lifetime">&#39;a</span>&gt;(filter: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>AnalysisFilter&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; RuleRegistryBuilder&lt;<span class="lifetime">&#39;a</span>, L&gt; {
+        RuleRegistryBuilder {
+            registry: RuleRegistry {
+                phase_rules: Default::default(),
             },
-            <span class="ident">filter</span>,
+            filter,
         }
     }
 }
 
-<span class="doccomment">/// Holds a collection of rules for each phase.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">struct</span> <span class="ident">PhaseRules</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Holds a collection of rules for each [SyntaxKind] node type that has</span>
-    <span class="doccomment">/// lint rules associated with it</span>
-    <span class="ident">ast_rules</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SyntaxKindRules</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">control_flow</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RegistryRule</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">semantic_model</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RegistryRule</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Holds a list of states for all the rules in this phase</span>
-    <span class="ident">rule_states</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RuleState</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Holds a collection of rules for each phase.
+</span><span class="attribute">#[derive(Default)]
+</span><span class="kw">struct </span>PhaseRules&lt;L: Language&gt; {
+    <span class="doccomment">/// Holds a collection of rules for each [SyntaxKind] node type that has
+    /// lint rules associated with it
+    </span>ast_rules: Vec&lt;SyntaxKindRules&lt;L&gt;&gt;,
+    control_flow: Vec&lt;RegistryRule&lt;L&gt;&gt;,
+    semantic_model: Vec&lt;RegistryRule&lt;L&gt;&gt;,
+    <span class="doccomment">/// Holds a list of states for all the rules in this phase
+    </span>rule_states: Vec&lt;RuleState&lt;L&gt;&gt;,
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuleRegistryBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">registry</span>: <span class="ident">RuleRegistry</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="ident">filter</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AnalysisFilter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="kw">pub struct </span>RuleRegistryBuilder&lt;<span class="lifetime">&#39;a</span>, L: Language&gt; {
+    registry: RuleRegistry&lt;L&gt;,
+    filter: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>AnalysisFilter&lt;<span class="lifetime">&#39;a</span>&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span> <span class="op">+</span> <span class="ident">Default</span><span class="op">&gt;</span> <span class="ident">RegistryVisitor</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RuleRegistryBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record_category</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">GroupCategory</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">filter</span>.<span class="ident">match_category</span>::<span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>() {
-            <span class="ident">C::record_groups</span>(<span class="self">self</span>);
+<span class="kw">impl</span>&lt;L: Language + Default&gt; RegistryVisitor&lt;L&gt; <span class="kw">for </span>RuleRegistryBuilder&lt;<span class="lifetime">&#39;_</span>, L&gt; {
+    <span class="kw">fn </span>record_category&lt;C: GroupCategory&lt;Language = L&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if </span><span class="self">self</span>.filter.match_category::&lt;C&gt;() {
+            C::record_groups(<span class="self">self</span>);
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">record_group</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">RuleGroup</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">filter</span>.<span class="ident">match_group</span>::<span class="op">&lt;</span><span class="ident">G</span><span class="op">&gt;</span>() {
-            <span class="ident">G::record_rules</span>(<span class="self">self</span>);
+    <span class="kw">fn </span>record_group&lt;G: RuleGroup&lt;Language = L&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if </span><span class="self">self</span>.filter.match_group::&lt;G&gt;() {
+            G::record_rules(<span class="self">self</span>);
         }
     }
 
-    <span class="doccomment">/// Add the rule `R` to the list of rules stores in this registry instance</span>
-    <span class="kw">fn</span> <span class="ident">record_rule</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Rule</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">R::Query</span>: <span class="ident">Queryable</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span>,
-        <span class="op">&lt;</span><span class="ident">R::Query</span> <span class="kw">as</span> <span class="ident">Queryable</span><span class="op">&gt;</span><span class="ident">::Output</span>: <span class="ident">Clone</span>,
+    <span class="doccomment">/// Add the rule `R` to the list of rules stores in this registry instance
+    </span><span class="kw">fn </span>record_rule&lt;R&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>)
+    <span class="kw">where
+        </span>R: Rule + <span class="lifetime">&#39;static</span>,
+        R::Query: Queryable&lt;Language = L&gt;,
+        &lt;R::Query <span class="kw">as </span>Queryable&gt;::Output: Clone,
     {
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">filter</span>.<span class="ident">match_rule</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>() {
+        <span class="kw">if </span>!<span class="self">self</span>.filter.match_rule::&lt;R&gt;() {
             <span class="kw">return</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">phase</span> <span class="op">=</span> <span class="ident">R::phase</span>() <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">phase</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">registry</span>.<span class="ident">phase_rules</span>[<span class="ident">phase</span>];
+        <span class="kw">let </span>phase = R::phase() <span class="kw">as </span>usize;
+        <span class="kw">let </span>phase = <span class="kw-2">&amp;mut </span><span class="self">self</span>.registry.phase_rules[phase];
 
-        <span class="kw">let</span> <span class="ident">rule</span> <span class="op">=</span> <span class="ident">RegistryRule::new</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">phase</span>.<span class="ident">rule_states</span>.<span class="ident">len</span>());
+        <span class="kw">let </span>rule = RegistryRule::new::&lt;R&gt;(phase.rule_states.len());
 
-        <span class="kw">match</span> <span class="op">&lt;</span><span class="ident">R::Query</span> <span class="kw">as</span> <span class="ident">Queryable</span><span class="op">&gt;</span><span class="ident">::KEY</span> {
-            <span class="ident">QueryKey::Syntax</span>(<span class="ident">key</span>) =&gt; {
-                <span class="comment">// Iterate on all the SyntaxKind variants this node can match</span>
-                <span class="kw">for</span> <span class="ident">kind</span> <span class="kw">in</span> <span class="ident">key</span>.<span class="ident">iter</span>() {
-                    <span class="comment">// Convert the numerical value of `kind` to an index in the</span>
-                    <span class="comment">// `nodes` vector</span>
-                    <span class="kw">let</span> <span class="ident">RawSyntaxKind</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="ident">kind</span>.<span class="ident">to_raw</span>();
-                    <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">usize::from</span>(<span class="ident">index</span>);
+        <span class="kw">match </span>&lt;R::Query <span class="kw">as </span>Queryable&gt;::KEY {
+            QueryKey::Syntax(key) =&gt; {
+                <span class="comment">// Iterate on all the SyntaxKind variants this node can match
+                </span><span class="kw">for </span>kind <span class="kw">in </span>key.iter() {
+                    <span class="comment">// Convert the numerical value of `kind` to an index in the
+                    // `nodes` vector
+                    </span><span class="kw">let </span>RawSyntaxKind(index) = kind.to_raw();
+                    <span class="kw">let </span>index = usize::from(index);
 
-                    <span class="comment">// Ensure the vector has enough capacity by inserting empty</span>
-                    <span class="comment">// `SyntaxKindRules` as required</span>
-                    <span class="kw">if</span> <span class="ident">phase</span>.<span class="ident">ast_rules</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">index</span> {
-                        <span class="ident">phase</span>.<span class="ident">ast_rules</span>.<span class="ident">resize_with</span>(<span class="ident">index</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">SyntaxKindRules::new</span>);
+                    <span class="comment">// Ensure the vector has enough capacity by inserting empty
+                    // `SyntaxKindRules` as required
+                    </span><span class="kw">if </span>phase.ast_rules.len() &lt;= index {
+                        phase.ast_rules.resize_with(index + <span class="number">1</span>, SyntaxKindRules::new);
                     }
 
-                    <span class="comment">// Insert a handle to the rule `R` into the `SyntaxKindRules` entry</span>
-                    <span class="comment">// corresponding to the SyntaxKind index</span>
-                    <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">phase</span>.<span class="ident">ast_rules</span>[<span class="ident">index</span>];
-                    <span class="ident">node</span>.<span class="ident">rules</span>.<span class="ident">push</span>(<span class="ident">rule</span>);
+                    <span class="comment">// Insert a handle to the rule `R` into the `SyntaxKindRules` entry
+                    // corresponding to the SyntaxKind index
+                    </span><span class="kw">let </span>node = <span class="kw-2">&amp;mut </span>phase.ast_rules[index];
+                    node.rules.push(rule);
                 }
             }
-            <span class="ident">QueryKey::ControlFlowGraph</span> =&gt; {
-                <span class="ident">phase</span>.<span class="ident">control_flow</span>.<span class="ident">push</span>(<span class="ident">rule</span>);
+            QueryKey::ControlFlowGraph =&gt; {
+                phase.control_flow.push(rule);
             }
-            <span class="ident">QueryKey::SemanticModel</span> =&gt; {
-                <span class="ident">phase</span>.<span class="ident">semantic_model</span>.<span class="ident">push</span>(<span class="ident">rule</span>);
+            QueryKey::SemanticModel =&gt; {
+                phase.semantic_model.push(rule);
             }
         }
 
-        <span class="ident">phase</span>.<span class="ident">rule_states</span>.<span class="ident">push</span>(<span class="ident">RuleState::default</span>());
+        phase.rule_states.push(RuleState::default());
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">RuleRegistryBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) -&gt; <span class="ident">RuleRegistry</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">registry</span>
+<span class="kw">impl</span>&lt;L: Language&gt; RuleRegistryBuilder&lt;<span class="lifetime">&#39;_</span>, L&gt; {
+    <span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; RuleRegistry&lt;L&gt; {
+        <span class="self">self</span>.registry
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">QueryMatcher</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RuleRegistry</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">match_query</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">params</span>: <span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">phase</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">phase_rules</span>[<span class="ident">params</span>.<span class="ident">phase</span> <span class="kw">as</span> <span class="ident">usize</span>];
+<span class="kw">impl</span>&lt;L: Language&gt; QueryMatcher&lt;L&gt; <span class="kw">for </span>RuleRegistry&lt;L&gt; {
+    <span class="kw">fn </span>match_query(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>params: MatchQueryParams&lt;L&gt;) {
+        <span class="kw">let </span>phase = <span class="kw-2">&amp;mut </span><span class="self">self</span>.phase_rules[params.phase <span class="kw">as </span>usize];
 
-        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">query</span> {
-            <span class="ident">QueryMatch::Syntax</span>(<span class="ident">node</span>) =&gt; {
-                <span class="comment">// Convert the numerical value of the SyntaxKind to an index in the</span>
-                <span class="comment">// `syntax` vector</span>
-                <span class="kw">let</span> <span class="ident">RawSyntaxKind</span>(<span class="ident">kind</span>) <span class="op">=</span> <span class="ident">node</span>.<span class="ident">kind</span>().<span class="ident">to_raw</span>();
-                <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">usize::from</span>(<span class="ident">kind</span>);
+        <span class="kw">let </span>rules = <span class="kw">match </span><span class="kw-2">&amp;</span>params.query {
+            QueryMatch::Syntax(node) =&gt; {
+                <span class="comment">// Convert the numerical value of the SyntaxKind to an index in the
+                // `syntax` vector
+                </span><span class="kw">let </span>RawSyntaxKind(kind) = node.kind().to_raw();
+                <span class="kw">let </span>kind = usize::from(kind);
 
-                <span class="comment">// Lookup the syntax entry corresponding to the SyntaxKind index</span>
-                <span class="kw">match</span> <span class="ident">phase</span>.<span class="ident">ast_rules</span>.<span class="ident">get_mut</span>(<span class="ident">kind</span>) {
-                    <span class="prelude-val">Some</span>(<span class="ident">entry</span>) =&gt; <span class="kw-2">&amp;mut</span> <span class="ident">entry</span>.<span class="ident">rules</span>,
-                    <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
+                <span class="comment">// Lookup the syntax entry corresponding to the SyntaxKind index
+                </span><span class="kw">match </span>phase.ast_rules.get_mut(kind) {
+                    <span class="prelude-val">Some</span>(entry) =&gt; <span class="kw-2">&amp;mut </span>entry.rules,
+                    <span class="prelude-val">None </span>=&gt; <span class="kw">return</span>,
                 }
             }
-            <span class="ident">QueryMatch::ControlFlowGraph</span>(..) =&gt; <span class="kw-2">&amp;mut</span> <span class="ident">phase</span>.<span class="ident">control_flow</span>,
-            <span class="ident">QueryMatch::SemanticModel</span>(..) =&gt; <span class="kw-2">&amp;mut</span> <span class="ident">phase</span>.<span class="ident">semantic_model</span>,
+            QueryMatch::ControlFlowGraph(..) =&gt; <span class="kw-2">&amp;mut </span>phase.control_flow,
+            QueryMatch::SemanticModel(..) =&gt; <span class="kw-2">&amp;mut </span>phase.semantic_model,
         };
 
-        <span class="comment">// Run all the rules registered to this QueryMatch</span>
-        <span class="kw">for</span> <span class="ident">rule</span> <span class="kw">in</span> <span class="ident">rules</span> {
-            <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">phase</span>.<span class="ident">rule_states</span>[<span class="ident">rule</span>.<span class="ident">state_index</span>];
-            <span class="comment">// TODO: #3394 track error in the signal queue</span>
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> (<span class="ident">rule</span>.<span class="ident">run</span>)(<span class="kw-2">&amp;mut</span> <span class="ident">params</span>, <span class="ident">state</span>);
+        <span class="comment">// Run all the rules registered to this QueryMatch
+        </span><span class="kw">for </span>rule <span class="kw">in </span>rules {
+            <span class="kw">let </span>state = <span class="kw-2">&amp;mut </span>phase.rule_states[rule.state_index];
+            <span class="comment">// TODO: #3394 track error in the signal queue
+            </span><span class="kw">let _ </span>= (rule.run)(<span class="kw-2">&amp;mut </span>params, state);
         }
     }
 }
 
-<span class="doccomment">/// [SyntaxKindRules] holds a collection of [Rule]s that match a specific [SyntaxKind] value</span>
-<span class="kw">struct</span> <span class="ident">SyntaxKindRules</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">rules</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RegistryRule</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// [SyntaxKindRules] holds a collection of [Rule]s that match a specific [SyntaxKind] value
+</span><span class="kw">struct </span>SyntaxKindRules&lt;L: Language&gt; {
+    rules: Vec&lt;RegistryRule&lt;L&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">SyntaxKindRules</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">rules</span>: <span class="ident">Vec::new</span>() }
+<span class="kw">impl</span>&lt;L: Language&gt; SyntaxKindRules&lt;L&gt; {
+    <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ rules: Vec::new() }
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">RuleLanguage</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">QueryLanguage</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Rule</span><span class="op">&gt;</span><span class="ident">::Query</span><span class="op">&gt;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">QueryLanguage</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">N</span> <span class="kw">as</span> <span class="ident">Queryable</span><span class="op">&gt;</span><span class="ident">::Language</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">NodeLanguage</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">N</span> <span class="kw">as</span> <span class="ident">AstNode</span><span class="op">&gt;</span><span class="ident">::Language</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>RuleLanguage&lt;R&gt; = QueryLanguage&lt;&lt;R <span class="kw">as </span>Rule&gt;::Query&gt;;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>QueryLanguage&lt;N&gt; = &lt;N <span class="kw">as </span>Queryable&gt;::Language;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>NodeLanguage&lt;N&gt; = &lt;N <span class="kw">as </span>AstNode&gt;::Language;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">RuleRoot</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">LanguageRoot</span><span class="op">&lt;</span><span class="ident">RuleLanguage</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>;
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">LanguageRoot</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">L</span> <span class="kw">as</span> <span class="ident">Language</span><span class="op">&gt;</span><span class="ident">::Root</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>RuleRoot&lt;R&gt; = LanguageRoot&lt;RuleLanguage&lt;R&gt;&gt;;
+<span class="kw">pub type </span>LanguageRoot&lt;L&gt; = &lt;L <span class="kw">as </span>Language&gt;::Root;
 
-<span class="doccomment">/// Key struct for a rule in the metadata map, sorted alphabetically</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MetadataKey</span> {
-    <span class="ident">inner</span>: (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>),
+<span class="doccomment">/// Key struct for a rule in the metadata map, sorted alphabetically
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+</span><span class="kw">pub struct </span>MetadataKey {
+    inner: (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str),
 }
 
-<span class="kw">impl</span> <span class="ident">MetadataKey</span> {
-    <span class="kw">fn</span> <span class="ident">into_group_key</span>(<span class="self">self</span>) -&gt; <span class="ident">GroupKey</span> {
-        <span class="kw">let</span> (<span class="ident">group</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>;
-        <span class="ident">GroupKey::new</span>(<span class="ident">group</span>)
+<span class="kw">impl </span>MetadataKey {
+    <span class="kw">fn </span>into_group_key(<span class="self">self</span>) -&gt; GroupKey {
+        <span class="kw">let </span>(group, <span class="kw">_</span>) = <span class="self">self</span>.inner;
+        GroupKey::new(group)
     }
 
-    <span class="kw">fn</span> <span class="ident">into_rule_key</span>(<span class="self">self</span>) -&gt; <span class="ident">RuleKey</span> {
-        <span class="kw">let</span> (<span class="ident">group</span>, <span class="ident">rule</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>;
-        <span class="ident">RuleKey::new</span>(<span class="ident">group</span>, <span class="ident">rule</span>)
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">borrow::Borrow</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MetadataKey</span> {
-    <span class="kw">fn</span> <span class="ident">borrow</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>
+    <span class="kw">fn </span>into_rule_key(<span class="self">self</span>) -&gt; RuleKey {
+        <span class="kw">let </span>(group, rule) = <span class="self">self</span>.inner;
+        RuleKey::new(group, rule)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">borrow::Borrow</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MetadataKey</span> {
-    <span class="kw">fn</span> <span class="ident">borrow</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="number">0</span>
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; borrow::Borrow&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str)&gt; <span class="kw">for </span>MetadataKey {
+    <span class="kw">fn </span>borrow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.inner
     }
 }
 
-<span class="doccomment">/// Metadata entry for a rule and its group in the registry</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RegistryRuleMetadata</span> {
-    <span class="kw">pub</span> <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
-    <span class="kw">pub</span> <span class="ident">rule</span>: <span class="ident">RuleMetadata</span>,
+<span class="kw">impl </span>borrow::Borrow&lt;str&gt; <span class="kw">for </span>MetadataKey {
+    <span class="kw">fn </span>borrow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="self">self</span>.inner.<span class="number">0
+    </span>}
 }
 
-<span class="kw">impl</span> <span class="ident">RegistryRuleMetadata</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_rule_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RuleKey</span> {
-        <span class="ident">RuleKey::new</span>(<span class="self">self</span>.<span class="ident">group</span>, <span class="self">self</span>.<span class="ident">rule</span>.<span class="ident">name</span>)
+<span class="doccomment">/// Metadata entry for a rule and its group in the registry
+</span><span class="kw">pub struct </span>RegistryRuleMetadata {
+    <span class="kw">pub </span>group: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
+    <span class="kw">pub </span>rule: RuleMetadata,
+}
+
+<span class="kw">impl </span>RegistryRuleMetadata {
+    <span class="kw">pub fn </span>to_rule_key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RuleKey {
+        RuleKey::new(<span class="self">self</span>.group, <span class="self">self</span>.rule.name)
     }
 }
 
-<span class="doccomment">/// Internal representation of a single rule in the registry</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RegistryRule</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">run</span>: <span class="ident">RuleExecutor</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="ident">state_index</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// Internal representation of a single rule in the registry
+</span><span class="attribute">#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>RegistryRule&lt;L: Language&gt; {
+    run: RuleExecutor&lt;L&gt;,
+    state_index: usize,
 }
 
-<span class="doccomment">/// Internal state for a given rule</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">struct</span> <span class="ident">RuleState</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">suppressions</span>: <span class="ident">RuleSuppressions</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Internal state for a given rule
+</span><span class="attribute">#[derive(Default)]
+</span><span class="kw">struct </span>RuleState&lt;L: Language&gt; {
+    suppressions: RuleSuppressions&lt;L&gt;,
 }
 
-<span class="doccomment">/// Set of nodes this rule has suppressed from matching its query</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuleSuppressions</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> {
-    <span class="ident">inner</span>: <span class="ident">FxHashSet</span><span class="op">&lt;</span><span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Set of nodes this rule has suppressed from matching its query
+</span><span class="attribute">#[derive(Default)]
+</span><span class="kw">pub struct </span>RuleSuppressions&lt;L: Language&gt; {
+    inner: FxHashSet&lt;SyntaxNode&lt;L&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span><span class="op">&gt;</span> <span class="ident">RuleSuppressions</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Suppress query matching for the given node</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">suppress_node</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident">SyntaxNode</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">insert</span>(<span class="ident">node</span>);
+<span class="kw">impl</span>&lt;L: Language&gt; RuleSuppressions&lt;L&gt; {
+    <span class="doccomment">/// Suppress query matching for the given node
+    </span><span class="kw">pub fn </span>suppress_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: SyntaxNode&lt;L&gt;) {
+        <span class="self">self</span>.inner.insert(node);
     }
 }
 
-<span class="doccomment">/// Executor for rule as a generic function pointer</span>
-<span class="kw">type</span> <span class="ident">RuleExecutor</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>, <span class="kw-2">&amp;mut</span> <span class="ident">RuleState</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Executor for rule as a generic function pointer
+</span><span class="kw">type </span>RuleExecutor&lt;L&gt; = <span class="kw">fn</span>(<span class="kw-2">&amp;mut </span>MatchQueryParams&lt;L&gt;, <span class="kw-2">&amp;mut </span>RuleState&lt;L&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Language</span> <span class="op">+</span> <span class="ident">Default</span><span class="op">&gt;</span> <span class="ident">RegistryRule</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">state_index</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Rule</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">R::Query</span>: <span class="ident">Queryable</span><span class="op">&lt;</span><span class="ident">Language</span> <span class="op">=</span> <span class="ident">L</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="op">&lt;</span><span class="ident">R::Query</span> <span class="kw">as</span> <span class="ident">Queryable</span><span class="op">&gt;</span><span class="ident">::Output</span>: <span class="ident">Clone</span>,
+<span class="kw">impl</span>&lt;L: Language + Default&gt; RegistryRule&lt;L&gt; {
+    <span class="kw">fn </span>new&lt;R&gt;(state_index: usize) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>R: Rule + <span class="lifetime">&#39;static</span>,
+        R::Query: Queryable&lt;Language = L&gt; + <span class="lifetime">&#39;static</span>,
+        &lt;R::Query <span class="kw">as </span>Queryable&gt;::Output: Clone,
     {
-        <span class="doccomment">/// Generic implementation of RuleExecutor for any rule type R</span>
-        <span class="kw">fn</span> <span class="ident">run</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
-            <span class="ident">params</span>: <span class="kw-2">&amp;mut</span> <span class="ident">MatchQueryParams</span><span class="op">&lt;</span><span class="ident">RuleLanguage</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-            <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">RuleState</span><span class="op">&lt;</span><span class="ident">RuleLanguage</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>
-        <span class="kw">where</span>
-            <span class="ident">R</span>: <span class="ident">Rule</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-            <span class="ident">R::Query</span>: <span class="lifetime">&#39;static</span>,
-            <span class="op">&lt;</span><span class="ident">R::Query</span> <span class="kw">as</span> <span class="ident">Queryable</span><span class="op">&gt;</span><span class="ident">::Output</span>: <span class="ident">Clone</span>,
+        <span class="doccomment">/// Generic implementation of RuleExecutor for any rule type R
+        </span><span class="kw">fn </span>run&lt;R&gt;(
+            params: <span class="kw-2">&amp;mut </span>MatchQueryParams&lt;RuleLanguage&lt;R&gt;&gt;,
+            state: <span class="kw-2">&amp;mut </span>RuleState&lt;RuleLanguage&lt;R&gt;&gt;,
+        ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;
+        <span class="kw">where
+            </span>R: Rule + <span class="lifetime">&#39;static</span>,
+            R::Query: <span class="lifetime">&#39;static</span>,
+            &lt;R::Query <span class="kw">as </span>Queryable&gt;::Output: Clone,
         {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">QueryMatch::Syntax</span>(<span class="ident">node</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">query</span> {
-                <span class="kw">if</span> <span class="ident">state</span>.<span class="ident">suppressions</span>.<span class="ident">inner</span>.<span class="ident">contains</span>(<span class="ident">node</span>) {
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+            <span class="kw">if let </span>QueryMatch::Syntax(node) = <span class="kw-2">&amp;</span>params.query {
+                <span class="kw">if </span>state.suppressions.inner.contains(node) {
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(());
                 }
             }
 
-            <span class="comment">// SAFETY: The rule should never get executed in the first place</span>
-            <span class="comment">// if the query doesn&#39;t match</span>
-            <span class="kw">let</span> <span class="ident">query_result</span> <span class="op">=</span>
-                <span class="op">&lt;</span><span class="ident">R::Query</span> <span class="kw">as</span> <span class="ident">Queryable</span><span class="op">&gt;</span><span class="ident">::unwrap_match</span>(<span class="ident">params</span>.<span class="ident">services</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">query</span>);
-            <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span>
-                <span class="kw">match</span> <span class="ident">RuleContext::new</span>(<span class="kw-2">&amp;</span><span class="ident">query_result</span>, <span class="ident">params</span>.<span class="ident">root</span>, <span class="ident">params</span>.<span class="ident">services</span>, <span class="ident">params</span>.<span class="ident">options</span>)
+            <span class="comment">// SAFETY: The rule should never get executed in the first place
+            // if the query doesn&#39;t match
+            </span><span class="kw">let </span>query_result =
+                &lt;R::Query <span class="kw">as </span>Queryable&gt;::unwrap_match(params.services, <span class="kw-2">&amp;</span>params.query);
+            <span class="kw">let </span>ctx =
+                <span class="kw">match </span>RuleContext::new(<span class="kw-2">&amp;</span>query_result, params.root, params.services, params.options)
                 {
-                    <span class="prelude-val">Ok</span>(<span class="ident">ctx</span>) =&gt; <span class="ident">ctx</span>,
-                    <span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>),
+                    <span class="prelude-val">Ok</span>(ctx) =&gt; ctx,
+                    <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(error),
                 };
 
-            <span class="kw">for</span> <span class="ident">result</span> <span class="kw">in</span> <span class="ident">R::run</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>) {
-                <span class="kw">let</span> <span class="ident">text_range</span> <span class="op">=</span>
-                    <span class="ident">R::text_range</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>, <span class="kw-2">&amp;</span><span class="ident">result</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">params</span>.<span class="ident">query</span>.<span class="ident">text_range</span>());
+            <span class="kw">for </span>result <span class="kw">in </span>R::run(<span class="kw-2">&amp;</span>ctx) {
+                <span class="kw">let </span>text_range =
+                    R::text_range(<span class="kw-2">&amp;</span>ctx, <span class="kw-2">&amp;</span>result).unwrap_or_else(|| params.query.text_range());
 
-                <span class="ident">R::suppressed_nodes</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>, <span class="kw-2">&amp;</span><span class="ident">result</span>, <span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">suppressions</span>);
+                R::suppressed_nodes(<span class="kw-2">&amp;</span>ctx, <span class="kw-2">&amp;</span>result, <span class="kw-2">&amp;mut </span>state.suppressions);
 
-                <span class="kw">let</span> <span class="ident">signal</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">RuleSignal</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::new</span>(
-                    <span class="ident">params</span>.<span class="ident">file_id</span>,
-                    <span class="ident">params</span>.<span class="ident">root</span>,
-                    <span class="ident">query_result</span>.<span class="ident">clone</span>(),
-                    <span class="ident">result</span>,
-                    <span class="ident">params</span>.<span class="ident">services</span>,
-                    <span class="ident">params</span>.<span class="ident">options</span>.<span class="ident">clone</span>(),
+                <span class="kw">let </span>signal = Box::new(RuleSignal::&lt;R&gt;::new(
+                    params.file_id,
+                    params.root,
+                    query_result.clone(),
+                    result,
+                    params.services,
+                    params.options.clone(),
                 ));
 
-                <span class="ident">params</span>.<span class="ident">signal_queue</span>.<span class="ident">push</span>(<span class="ident">SignalEntry</span> {
-                    <span class="ident">signal</span>,
-                    <span class="ident">rule</span>: <span class="ident">RuleKey::rule</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(),
-                    <span class="ident">text_range</span>,
+                params.signal_queue.push(SignalEntry {
+                    signal,
+                    rule: RuleKey::rule::&lt;R&gt;(),
+                    text_range,
                 });
             }
 
             <span class="prelude-val">Ok</span>(())
         }
 
-        <span class="self">Self</span> {
-            <span class="ident">run</span>: <span class="ident">run</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-            <span class="ident">state_index</span>,
+        <span class="self">Self </span>{
+            run: run::&lt;R&gt;,
+            state_index,
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rome_analyze" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>
