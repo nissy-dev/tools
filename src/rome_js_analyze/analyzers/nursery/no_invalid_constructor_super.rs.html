@@ -200,12 +200,26 @@
 <span id="200">200</span>
 <span id="201">201</span>
 <span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
 </pre><pre class="rust"><code><span class="kw">use </span>rome_analyze::context::RuleContext;
 <span class="kw">use </span>rome_analyze::{declare_rule, Ast, Rule, RuleDiagnostic};
 <span class="kw">use </span>rome_console::{markup, MarkupBuf};
 <span class="kw">use </span>rome_js_syntax::{
-    JsAnyExpression, JsAssignmentOperator, JsClassDeclaration, JsConstructorClassMember,
-    JsLogicalOperator,
+    JsAnyClass, JsAnyExpression, JsAssignmentOperator, JsConstructorClassMember, JsLogicalOperator,
 };
 <span class="kw">use </span>rome_rowan::{AstNode, AstNodeList, TextRange};
 
@@ -228,6 +242,22 @@
     ///     constructor() {
     ///         super();
     ///     }
+    /// }
+    /// ```
+    ///
+    /// ### Valid
+    ///
+    /// ```js
+    /// export default class A extends B {
+    ///     constructor() {
+    ///         super();
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// ```js
+    /// export class A {
+    ///     constructor() {}
     /// }
     /// ```
     ///
@@ -305,7 +335,7 @@
         <span class="kw">let </span>extends_clause = node
             .syntax()
             .ancestors()
-            .find_map(|node| JsClassDeclaration::cast(node)<span class="question-mark">?</span>.extends_clause());
+            .find_map(|node| JsAnyClass::cast(node)<span class="question-mark">?</span>.extends_clause());
 
         <span class="kw">match </span>(super_expression, extends_clause) {
             (<span class="prelude-val">Some</span>(super_expression), <span class="prelude-val">Some</span>(extends_clause)) =&gt; {
