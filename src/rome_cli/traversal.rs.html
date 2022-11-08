@@ -919,11 +919,42 @@
 <span id="919">919</span>
 <span id="920">920</span>
 <span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
+<span id="948">948</span>
+<span id="949">949</span>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{
     CliSession, Execution, FormatterReportFileDetail, FormatterReportSummary, Report,
     ReportDiagnostic, ReportDiff, ReportErrorKind, ReportKind, Termination, TraversalMode,
 };
-<span class="kw">use </span>crossbeam::channel::{unbounded, Receiver, Sender};
+<span class="kw">use </span>crossbeam::{
+    channel::{unbounded, Receiver, Sender},
+    select,
+};
 <span class="kw">use </span>rome_console::{markup, Console, ConsoleExt};
 <span class="kw">use </span>rome_diagnostics::{
     file::FileId,
@@ -952,13 +983,16 @@
     panic::catch_unwind,
     path::{Path, PathBuf},
     sync::{
-        atomic::{AtomicU64, AtomicUsize, Ordering},
-        Arc,
+        atomic::{AtomicU16, AtomicUsize, Ordering},
+        Once,
     },
+    thread,
     time::{Duration, Instant},
 };
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>traverse(execution: Execution, <span class="kw-2">mut </span>session: CliSession) -&gt; <span class="prelude-ty">Result</span>&lt;(), Termination&gt; {
+    init_thread_pool();
+
     <span class="comment">// Check that at least one input file / directory was specified in the command line
     </span><span class="kw">let </span><span class="kw-2">mut </span>inputs = <span class="macro">vec!</span>[];
 
@@ -989,7 +1023,7 @@
 
     <span class="kw">let </span>(interner, recv_files) = AtomicInterner::new();
     <span class="kw">let </span>(send_msgs, recv_msgs) = unbounded();
-    <span class="kw">let </span>(sender_reports_from_traversal, receiver_reports) = unbounded();
+    <span class="kw">let </span>(sender_reports, recv_reports) = unbounded();
 
     <span class="kw">let </span>processed = AtomicUsize::new(<span class="number">0</span>);
     <span class="kw">let </span>skipped = AtomicUsize::new(<span class="number">0</span>);
@@ -998,102 +1032,103 @@
     <span class="kw">let </span>workspace = <span class="kw-2">&amp;*</span>session.app.workspace;
     <span class="kw">let </span>console = <span class="kw-2">&amp;mut *</span>session.app.console;
 
-    <span class="kw">let </span><span class="kw-2">mut </span>has_errors = <span class="prelude-val">None</span>;
-    <span class="kw">let </span>remaining_diagnostics = Arc::new(AtomicU64::new(u64::MAX));
+    <span class="comment">// The command `rome check` gives a default value of 20.
+    // In case of other commands that pass here, we limit to 50 to avoid to delay the terminal.
+    // Once `--max-diagnostics` will be a global argument, `unwrap_of_default` should be enough.
+    </span><span class="kw">let </span>max_diagnostics = execution
+        .get_max_diagnostics()
+        .unwrap_or(MAXIMUM_DISPLAYABLE_DIAGNOSTICS);
 
-    <span class="kw">let </span><span class="kw-2">mut </span>duration = <span class="prelude-val">None</span>;
-    <span class="kw">let </span><span class="kw-2">mut </span>report = <span class="prelude-val">None</span>;
-    <span class="kw">let </span>sender_reports_from_messages = sender_reports_from_traversal.clone();
-    rayon::scope(|s| {
-        s.spawn(|<span class="kw">_</span>| {
-            report = <span class="prelude-val">Some</span>(collect_reports(receiver_reports));
-        });
+    <span class="kw">let </span>remaining_diagnostics = AtomicU16::new(max_diagnostics);
 
-        s.spawn(|<span class="kw">_</span>| {
-            has_errors = <span class="prelude-val">Some</span>(process_messages(ProcessMessagesOptions {
-                execution: execution.clone(),
-                console,
-                recv_files,
-                recv_msgs,
-                sender_reports: sender_reports_from_messages,
-                remaining_diagnostics: Arc::clone(<span class="kw-2">&amp;</span>remaining_diagnostics),
-            }));
-        });
-        s.spawn(|<span class="kw">_</span>| {
-            <span class="comment">// The traversal context is scoped to ensure all the channels it
-            // contains are properly closed once the traversal finishes
-            </span>duration = <span class="prelude-val">Some</span>(traverse_inputs(
+    <span class="kw">let </span><span class="kw-2">mut </span>has_errors = <span class="bool-val">false</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>report = Report::default();
+
+    <span class="kw">let </span>duration = thread::scope(|s| {
+        thread::Builder::new()
+            .name(String::from(<span class="string">&quot;rome::console&quot;</span>))
+            .spawn_scoped(s, || {
+                process_messages(ProcessMessagesOptions {
+                    execution: <span class="kw-2">&amp;</span>execution,
+                    console,
+                    recv_reports,
+                    recv_files,
+                    recv_msgs,
+                    max_diagnostics,
+                    remaining_diagnostics: <span class="kw-2">&amp;</span>remaining_diagnostics,
+                    has_errors: <span class="kw-2">&amp;mut </span>has_errors,
+                    report: <span class="kw-2">&amp;mut </span>report,
+                });
+            })
+            .expect(<span class="string">&quot;failed to spawn console thread&quot;</span>);
+
+        <span class="comment">// The traversal context is scoped to ensure all the channels it
+        // contains are properly closed once the traversal finishes
+        </span>traverse_inputs(
+            fs,
+            inputs,
+            <span class="kw-2">&amp;</span>TraversalOptions {
                 fs,
-                inputs,
-                <span class="kw-2">&amp;</span>TraversalOptions {
-                    fs,
-                    workspace,
-                    execution: execution.clone(),
-                    interner,
-                    processed: <span class="kw-2">&amp;</span>processed,
-                    skipped: <span class="kw-2">&amp;</span>skipped,
-                    messages: send_msgs,
-                    sender_reports: sender_reports_from_traversal,
-                    remaining_diagnostics: Arc::clone(<span class="kw-2">&amp;</span>remaining_diagnostics),
-                },
-            ));
-        })
+                workspace,
+                execution: <span class="kw-2">&amp;</span>execution,
+                interner,
+                processed: <span class="kw-2">&amp;</span>processed,
+                skipped: <span class="kw-2">&amp;</span>skipped,
+                messages: send_msgs,
+                sender_reports,
+                remaining_diagnostics: <span class="kw-2">&amp;</span>remaining_diagnostics,
+            },
+        )
     });
 
     <span class="kw">let </span>count = processed.load(Ordering::Relaxed);
     <span class="kw">let </span>skipped = skipped.load(Ordering::Relaxed);
 
-    <span class="kw">let </span>to_terminal = execution.should_report_to_terminal();
-
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(duration) = duration {
-        <span class="kw">if </span>to_terminal {
-            <span class="kw">match </span>execution.traversal_mode() {
-                TraversalMode::Check { .. } =&gt; {
-                    <span class="kw">if </span>execution.as_fix_file_mode().is_some() {
-                        console.log(<span class="macro">markup! </span>{
-                            &lt;Info&gt;<span class="string">&quot;Fixed &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
-                        });
-                    } <span class="kw">else </span>{
-                        console.log(<span class="macro">markup! </span>{
-                            &lt;Info&gt;<span class="string">&quot;Checked &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
-                        });
-                    }
-                }
-                TraversalMode::CI { .. } =&gt; {
+    <span class="kw">if </span>execution.should_report_to_terminal() {
+        <span class="kw">match </span>execution.traversal_mode() {
+            TraversalMode::Check { .. } =&gt; {
+                <span class="kw">if </span>execution.as_fix_file_mode().is_some() {
+                    console.log(<span class="macro">markup! </span>{
+                        &lt;Info&gt;<span class="string">&quot;Fixed &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
+                    });
+                } <span class="kw">else </span>{
                     console.log(<span class="macro">markup! </span>{
                         &lt;Info&gt;<span class="string">&quot;Checked &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
                     });
                 }
-                TraversalMode::Format { write: <span class="bool-val">false</span>, .. } =&gt; {
-                    <span class="kw">if </span>to_terminal {
-                        console.log(<span class="macro">markup! </span>{
-                            &lt;Info&gt;<span class="string">&quot;Compared &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
-                        });
-                    }
-                }
-                TraversalMode::Format { write: <span class="bool-val">true</span>, .. } =&gt; {
-                    console.log(<span class="macro">markup! </span>{
-                        &lt;Info&gt;<span class="string">&quot;Formatted &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
-                    });
-                }
             }
-        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>report) = report {
-            <span class="kw">if let </span>TraversalMode::Format { write, .. } = execution.traversal_mode() {
-                <span class="kw">let </span><span class="kw-2">mut </span>summary = FormatterReportSummary::default();
-                <span class="kw">if </span><span class="kw-2">*</span>write {
-                    summary.set_files_written(count);
-                } <span class="kw">else </span>{
-                    summary.set_files_compared(count);
-                }
-                report.set_formatter_summary(summary);
+            TraversalMode::CI { .. } =&gt; {
+                console.log(<span class="macro">markup! </span>{
+                    &lt;Info&gt;<span class="string">&quot;Checked &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
+                });
             }
-
-            <span class="kw">let </span>to_print = report.as_serialized_reports()<span class="question-mark">?</span>;
-            console.log(<span class="macro">markup! </span>{
-                {to_print}
-            });
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+            TraversalMode::Format { write: <span class="bool-val">false</span>, .. } =&gt; {
+                console.log(<span class="macro">markup! </span>{
+                    &lt;Info&gt;<span class="string">&quot;Compared &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
+                });
+            }
+            TraversalMode::Format { write: <span class="bool-val">true</span>, .. } =&gt; {
+                console.log(<span class="macro">markup! </span>{
+                    &lt;Info&gt;<span class="string">&quot;Formatted &quot;</span>{count}<span class="string">&quot; files in &quot;</span>{duration}&lt;/Info&gt;
+                });
+            }
         }
+    } <span class="kw">else </span>{
+        <span class="kw">if let </span>TraversalMode::Format { write, .. } = execution.traversal_mode() {
+            <span class="kw">let </span><span class="kw-2">mut </span>summary = FormatterReportSummary::default();
+            <span class="kw">if </span><span class="kw-2">*</span>write {
+                summary.set_files_written(count);
+            } <span class="kw">else </span>{
+                summary.set_files_compared(count);
+            }
+            report.set_formatter_summary(summary);
+        }
+
+        <span class="kw">let </span>to_print = report.as_serialized_reports()<span class="question-mark">?</span>;
+        console.log(<span class="macro">markup! </span>{
+            {to_print}
+        });
+        <span class="kw">return </span><span class="prelude-val">Ok</span>(());
     }
 
     <span class="kw">if </span>skipped &gt; <span class="number">0 </span>{
@@ -1103,11 +1138,24 @@
     }
 
     <span class="comment">// Processing emitted error diagnostics, exit with a non-zero code
-    </span><span class="kw">if </span><span class="macro">matches!</span>(has_errors, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)) {
+    </span><span class="kw">if </span>has_errors {
         <span class="prelude-val">Err</span>(Termination::CheckError)
     } <span class="kw">else </span>{
         <span class="prelude-val">Ok</span>(())
     }
+}
+
+<span class="doccomment">/// This function will setup the global Rayon thread pool the first time it&#39;s called
+///
+/// This is currently only used to assign friendly debug names to the threads of the pool
+</span><span class="kw">fn </span>init_thread_pool() {
+    <span class="kw">static </span>INIT_ONCE: Once = Once::new();
+    INIT_ONCE.call_once(|| {
+        rayon::ThreadPoolBuilder::new()
+            .thread_name(|index| <span class="macro">format!</span>(<span class="string">&quot;rome::worker_{index}&quot;</span>))
+            .build_global()
+            .expect(<span class="string">&quot;failed to initialize the global thread pool&quot;</span>);
+    });
 }
 
 <span class="doccomment">/// Initiate the filesystem traversal tasks with the provided input paths and
@@ -1126,18 +1174,26 @@
 
 <span class="kw">struct </span>ProcessMessagesOptions&lt;<span class="lifetime">&#39;ctx</span>&gt; {
     <span class="doccomment">///  Execution of the traversal
-    </span>execution: Execution,
+    </span>execution: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span>Execution,
     <span class="doccomment">/// Mutable reference to the [console](Console)
     </span>console: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span><span class="kw-2">mut </span><span class="kw">dyn </span>Console,
+    <span class="doccomment">/// Receiver channel for reporting statistics
+    </span>recv_reports: Receiver&lt;ReportKind&gt;,
     <span class="doccomment">/// Receiver channel that expects info when a file is processed
     </span>recv_files: Receiver&lt;(FileId, PathBuf)&gt;,
     <span class="doccomment">/// Receiver channel that expects info when a message is sent
     </span>recv_msgs: Receiver&lt;Message&gt;,
-    <span class="doccomment">/// Sender of reports
-    </span>sender_reports: Sender&lt;ReportKind&gt;,
+    <span class="doccomment">/// The maximum number of diagnostics the console thread is allowed to print
+    </span>max_diagnostics: u16,
     <span class="doccomment">/// The approximate number of diagnostics the console will print before
     /// folding the rest into the &quot;skipped diagnostics&quot; counter
-    </span>remaining_diagnostics: Arc&lt;AtomicU64&gt;,
+    </span>remaining_diagnostics: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span>AtomicU16,
+    <span class="doccomment">/// Mutable reference to a boolean flag tracking whether the console thread
+    /// printed any error-level message
+    </span>has_errors: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span><span class="kw-2">mut </span>bool,
+    <span class="doccomment">/// Mutable handle to a [Report] instance the console thread should write
+    /// stats into
+    </span>report: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span><span class="kw-2">mut </span>Report,
 }
 
 <span class="attribute">#[derive(Debug, v2::Diagnostic)]
@@ -1193,30 +1249,49 @@
 
 <span class="doccomment">/// This thread receives [Message]s from the workers through the `recv_msgs`
 /// and `recv_files` channels and handles them based on [Execution]
-</span><span class="kw">fn </span>process_messages(options: ProcessMessagesOptions) -&gt; bool {
+</span><span class="kw">fn </span>process_messages(options: ProcessMessagesOptions) {
     <span class="kw">let </span>ProcessMessagesOptions {
         execution: mode,
         console,
+        recv_reports,
         recv_files,
         recv_msgs,
-        sender_reports,
+        max_diagnostics,
         remaining_diagnostics,
+        has_errors,
+        report,
     } = options;
 
-    <span class="comment">// The command `rome check` gives a default value of 20.
-    // In case of other commands that pass here, we limit to 50 to avoid to delay the terminal.
-    // Once `--max-diagnostics` will be a global argument, `unwrap_of_default` should be enough.
-    </span><span class="kw">let </span>max_diagnostics = mode
-        .get_max_diagnostics()
-        .unwrap_or(MAXIMUM_DISPLAYABLE_DIAGNOSTICS);
-
-    <span class="kw">let </span><span class="kw-2">mut </span>has_errors = <span class="bool-val">false</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>paths = HashMap::new();
     <span class="kw">let </span><span class="kw-2">mut </span>printed_diagnostics: u16 = <span class="number">0</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>not_printed_diagnostics = <span class="number">0</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>total_skipped_suggested_fixes = <span class="number">0</span>;
 
-    <span class="kw">while let </span><span class="prelude-val">Ok</span>(msg) = recv_msgs.recv() {
+    <span class="kw">let </span><span class="kw-2">mut </span>is_msg_open = <span class="bool-val">true</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>is_report_open = <span class="bool-val">true</span>;
+
+    <span class="kw">while </span>is_msg_open || is_report_open {
+        <span class="kw">let </span>msg = <span class="macro">select! </span>{
+            recv(recv_msgs) -&gt; msg =&gt; <span class="kw">match </span>msg {
+                <span class="prelude-val">Ok</span>(msg) =&gt; msg,
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                    is_msg_open = <span class="bool-val">false</span>;
+                    <span class="kw">continue</span>;
+                },
+            },
+            recv(recv_reports) -&gt; stat =&gt; {
+                <span class="kw">match </span>stat {
+                    <span class="prelude-val">Ok</span>(stat) =&gt; {
+                        report.push_detail_report(stat);
+                    }
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                        is_report_open = <span class="bool-val">false</span>;
+                    },
+                }
+                <span class="kw">continue</span>;
+            }
+        };
+
         <span class="kw">match </span>msg {
             Message::SkippedFixes {
                 skipped_suggested_fixes,
@@ -1276,16 +1351,14 @@
                     <span class="kw">let </span>title = PrintDescription(<span class="kw-2">&amp;</span>err).to_string();
                     <span class="kw">let </span>code = err.category().and_then(|code| code.name().parse().ok());
 
-                    sender_reports
-                        .send(ReportKind::Error(
-                            file_name.to_string(),
-                            ReportErrorKind::Diagnostic(ReportDiagnostic {
-                                code,
-                                title,
-                                severity: err.severity(),
-                            }),
-                        ))
-                        .ok();
+                    report.push_detail_report(ReportKind::Error(
+                        file_name.to_string(),
+                        ReportErrorKind::Diagnostic(ReportDiagnostic {
+                            code,
+                            title,
+                            severity: err.severity(),
+                        }),
+                    ));
                 }
             }
 
@@ -1300,7 +1373,7 @@
                 <span class="comment">// is CI mode we want to print all the diagnostics
                 </span><span class="kw">if </span>mode.is_ci() {
                     <span class="kw">for </span>diag <span class="kw">in </span>diagnostics {
-                        has_errors |= diag.severity() == Severity::Error;
+                        <span class="kw-2">*</span>has_errors |= diag.severity() == Severity::Error;
                         <span class="kw">let </span>diag = diag.with_file_path(<span class="kw-2">&amp;</span>name).with_file_source_code(<span class="kw-2">&amp;</span>content);
                         console.error(<span class="macro">markup! </span>{
                             {PrintDiagnostic(<span class="kw-2">&amp;</span>diag)}
@@ -1309,13 +1382,13 @@
                 } <span class="kw">else </span>{
                     <span class="kw">for </span>diag <span class="kw">in </span>diagnostics {
                         <span class="kw">let </span>severity = diag.severity();
-                        has_errors |= severity == Severity::Error;
+                        <span class="kw-2">*</span>has_errors |= severity == Severity::Error;
 
                         <span class="kw">let </span>should_print = printed_diagnostics &lt; max_diagnostics;
                         <span class="kw">if </span>should_print {
                             printed_diagnostics += <span class="number">1</span>;
                             remaining_diagnostics.store(
-                                u64::from(max_diagnostics.saturating_sub(printed_diagnostics)),
+                                max_diagnostics.saturating_sub(printed_diagnostics),
                                 Ordering::Relaxed,
                             );
                         } <span class="kw">else </span>{
@@ -1331,18 +1404,14 @@
                                 });
                             }
                         } <span class="kw">else </span>{
-                            sender_reports
-                                .send(ReportKind::Error(
-                                    name.to_string(),
-                                    ReportErrorKind::Diagnostic(ReportDiagnostic {
-                                        code: diag
-                                            .category()
-                                            .and_then(|code| code.name().parse().ok()),
-                                        title: String::from(<span class="string">&quot;test here&quot;</span>),
-                                        severity,
-                                    }),
-                                ))
-                                .ok();
+                            report.push_detail_report(ReportKind::Error(
+                                name.to_string(),
+                                ReportErrorKind::Diagnostic(ReportDiagnostic {
+                                    code: diag.category().and_then(|code| code.name().parse().ok()),
+                                    title: String::from(<span class="string">&quot;test here&quot;</span>),
+                                    severity,
+                                }),
+                            ));
                         }
                     }
                 }
@@ -1355,7 +1424,7 @@
             } =&gt; {
                 <span class="kw">if </span>mode.is_ci() {
                     <span class="comment">// A diff is an error in CI mode
-                    </span>has_errors = <span class="bool-val">true</span>;
+                    </span><span class="kw-2">*</span>has_errors = <span class="bool-val">true</span>;
                 }
 
                 <span class="kw">if </span>mode.should_report_to_terminal() {
@@ -1385,16 +1454,14 @@
                         });
                     }
                 } <span class="kw">else </span>{
-                    sender_reports
-                        .send(ReportKind::Error(
-                            file_name,
-                            ReportErrorKind::Diff(ReportDiff {
-                                before: old,
-                                after: new,
-                                severity: Severity::Error,
-                            }),
-                        ))
-                        .ok();
+                    report.push_detail_report(ReportKind::Error(
+                        file_name,
+                        ReportErrorKind::Diff(ReportDiff {
+                            before: old,
+                            after: new,
+                            severity: Severity::Error,
+                        }),
+                    ));
                 }
             }
         }
@@ -1413,17 +1480,6 @@
             &lt;Info&gt;<span class="string">&quot;Diagnostics not shown: &quot;</span>&lt;/Info&gt;&lt;Emphasis&gt;{not_printed_diagnostics}&lt;/Emphasis&gt;&lt;Info&gt;<span class="string">&quot;.&quot;</span>&lt;/Info&gt;
         })
     }
-
-    has_errors
-}
-
-<span class="kw">fn </span>collect_reports(receiver: Receiver&lt;ReportKind&gt;) -&gt; Report {
-    <span class="kw">let </span><span class="kw-2">mut </span>report = Report::default();
-    <span class="kw">while let </span><span class="prelude-val">Ok</span>(stat) = receiver.recv() {
-        report.push_detail_report(stat);
-    }
-
-    report
 }
 
 <span class="doccomment">/// Context object shared between directory traversal tasks
@@ -1433,7 +1489,7 @@
     <span class="doccomment">/// Instance of [Workspace] used by this instance of the CLI
     </span>workspace: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span><span class="kw">dyn </span>Workspace,
     <span class="doccomment">/// Determines how the files should be processed
-    </span>execution: Execution,
+    </span>execution: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span>Execution,
     <span class="doccomment">/// File paths interner used by the filesystem traversal
     </span>interner: AtomicInterner,
     <span class="doccomment">/// Shared atomic counter storing the number of processed files
@@ -1446,7 +1502,7 @@
     </span>sender_reports: Sender&lt;ReportKind&gt;,
     <span class="doccomment">/// The approximate number of diagnostics the console will print before
     /// folding the rest into the &quot;skipped diagnostics&quot; counter
-    </span>remaining_diagnostics: Arc&lt;AtomicU64&gt;,
+    </span>remaining_diagnostics: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ctx </span>AtomicU16,
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span>&gt; TraversalOptions&lt;<span class="lifetime">&#39;ctx</span>, <span class="lifetime">&#39;app</span>&gt; {
@@ -1658,7 +1714,7 @@
 
         <span class="kw">let </span>max_diagnostics = ctx.remaining_diagnostics.load(Ordering::Relaxed);
         <span class="kw">let </span>result = file_guard
-            .pull_diagnostics(categories, max_diagnostics)
+            .pull_diagnostics(categories, max_diagnostics.into())
             .with_file_id_and_code(file_id, <span class="macro">category!</span>(<span class="string">&quot;lint&quot;</span>))<span class="question-mark">?</span>;
 
         <span class="comment">// In formatting mode, abort immediately if the file has errors
