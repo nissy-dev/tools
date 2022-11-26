@@ -57,9 +57,15 @@ jobs:
           args: --workspace --all-targets --verbose -- --deny warnings
 
   test:
-    name: Test
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: windows-2022
+          - os: ubuntu-20.04
+          - os: macos-11
 
+    name: Test
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -72,7 +78,7 @@ jobs:
         with:
           command: test
           args: --no-run --workspace --verbose
-      - name: Run tests
+      - name: Run tests on ${{ matrix.os }}
         uses: actions-rs/cargo@v1
         env:
           RUST_TEST_THREADS: 1
