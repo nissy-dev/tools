@@ -38,7 +38,7 @@ pub(crate) struct TypeContext(TypeContextFlags);
 
 bitflags! {
     struct TypeContextFlags: u8 {
-        /// TODO: write the description
+        /// If `true` allows a conditional type
         const ALLOW_CONDITIONAL_TYPE = 1 << 0;
     }
 }
