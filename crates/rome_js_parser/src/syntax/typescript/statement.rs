@@ -7,6 +7,7 @@ use crate::syntax::class::parse_initializer_clause;
 use crate::syntax::expr::{is_nth_at_identifier, parse_name, ExpressionContext};
 
 use super::ts_parse_error::expected_ts_enum_member;
+use super::TypeContext;
 use crate::state::EnterAmbientContext;
 use crate::syntax::auxiliary::{is_nth_at_declaration_clause, parse_declaration_clause};
 use crate::syntax::js_parse_error::{expected_identifier, expected_module_source};
@@ -209,7 +210,7 @@ pub(crate) fn parse_ts_type_alias_declaration(p: &mut JsParser) -> ParsedSyntax 
         .or_add_diagnostic(p, expected_identifier);
     parse_ts_type_parameters(p).ok();
     p.expect(T![=]);
-    parse_ts_type(p).or_add_diagnostic(p, expected_ts_type);
+    parse_ts_type(p, TypeContext::default()).or_add_diagnostic(p, expected_ts_type);
 
     semi(p, TextRange::new(start, p.cur_range().end()));
 

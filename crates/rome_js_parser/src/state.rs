@@ -164,12 +164,6 @@ impl ParserState {
             .contains(ParsingContextFlags::BREAK_ALLOWED)
     }
 
-    pub fn allow_conditional_type(&self) -> bool {
-        !self
-            .parsing_context
-            .contains(ParsingContextFlags::DISALLOW_CONDITIONAL_TYPE)
-    }
-
     pub fn strict(&self) -> Option<&StrictMode> {
         self.strict.as_ref()
     }
@@ -403,8 +397,6 @@ bitflags! {
         /// Whatever the parser is in a TypeScript ambient context
         const AMBIENT_CONTEXT = 1 << 7;
 
-        const DISALLOW_CONDITIONAL_TYPE = 1 << 8;
-
         const LOOP = Self::BREAK_ALLOWED.bits | Self::CONTINUE_ALLOWED.bits;
 
         /// Bitmask of all the flags that must be reset (shouldn't be inherited) when the parser enters a function
@@ -585,27 +577,6 @@ pub(crate) struct EnterType;
 impl ChangeParserStateFlags for EnterType {
     fn compute_new_flags(&self, existing: ParsingContextFlags) -> ParsingContextFlags {
         existing - ParsingContextFlags::IN_ASYNC - ParsingContextFlags::IN_GENERATOR
-    }
-}
-
-pub(crate) struct EnterConditionalTypes(bool);
-
-impl EnterConditionalTypes {
-    pub(crate) const fn allow() -> Self {
-        Self(true)
-    }
-    pub(crate) const fn disallow() -> Self {
-        Self(false)
-    }
-}
-
-impl ChangeParserStateFlags for EnterConditionalTypes {
-    fn compute_new_flags(&self, existing: ParsingContextFlags) -> ParsingContextFlags {
-        if self.0 {
-            existing - ParsingContextFlags::DISALLOW_CONDITIONAL_TYPE
-        } else {
-            existing | ParsingContextFlags::DISALLOW_CONDITIONAL_TYPE
-        }
     }
 }
 
