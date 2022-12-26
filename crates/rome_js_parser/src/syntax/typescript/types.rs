@@ -156,7 +156,7 @@ impl ParseSeparatedList for TsTypeParameterList {
     const LIST_KIND: Self::Kind = TS_TYPE_PARAMETER_LIST;
 
     fn parse_element(&mut self, p: &mut JsParser) -> ParsedSyntax {
-        parse_ts_type_parameter(p, TypeContext::default())
+        parse_ts_type_parameter(p)
     }
 
     fn is_at_list_end(&self, p: &mut JsParser) -> bool {
@@ -184,10 +184,10 @@ impl ParseSeparatedList for TsTypeParameterList {
     }
 }
 
-fn parse_ts_type_parameter(p: &mut JsParser, context: TypeContext) -> ParsedSyntax {
+fn parse_ts_type_parameter(p: &mut JsParser) -> ParsedSyntax {
     parse_ts_type_parameter_name(p).map(|name| {
         let m = name.precede(p);
-        parse_ts_type_constraint_clause(p, context).ok();
+        parse_ts_type_constraint_clause(p, TypeContext::default()).ok();
         parse_ts_default_type_clause(p).ok();
         m.complete(p, TS_TYPE_PARAMETER)
     })
