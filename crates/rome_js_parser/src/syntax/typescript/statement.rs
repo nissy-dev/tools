@@ -1,9 +1,11 @@
+use std::collections::HashMap;
+
 use crate::parser::RecoveryResult;
 use crate::prelude::*;
 use crate::syntax::binding::{
     is_nth_at_identifier_binding, parse_binding, parse_identifier_binding,
 };
-use crate::syntax::class::parse_initializer_clause;
+use crate::syntax::class::{parse_initializer_clause, parse_private_class_member_name, MemberType};
 use crate::syntax::expr::{is_nth_at_identifier, parse_name, ExpressionContext};
 
 use super::ts_parse_error::expected_ts_enum_member;
@@ -53,10 +55,12 @@ fn parse_ts_enum_member(p: &mut JsParser) -> ParsedSyntax {
         T![#] => {
             let err = p.err_builder("An `enum` member cannot be private", p.cur_range());
             p.error(err);
-            syntax::class::parse_private_class_member_name(p).map(|mut x| {
-                x.change_to_bogus(p);
-                x
-            })
+            parse_private_class_member_name(p, &mut HashMap::new(), &MemberType::Normal).map(
+                |mut x| {
+                    x.change_to_bogus(p);
+                    x
+                },
+            )
         }
         _ => parse_literal_as_ts_enum_member(p),
     };

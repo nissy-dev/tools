@@ -46,6 +46,9 @@ use rome_parser::parse_recovery::ParseRecovery;
 use rome_parser::ParserProgress;
 use rome_rowan::{SyntaxKind, TextRange};
 use smallvec::SmallVec;
+use std::borrow::Cow;
+use std::cell::RefCell;
+use std::collections::HashMap;
 use std::fmt::Debug;
 use std::ops::Add;
 use std::slice::Iter;
@@ -267,6 +270,7 @@ fn parse_class(p: &mut JsParser, kind: ClassKind) -> CompletedMarker {
     p.expect(T!['{']);
     ClassMembersList {
         inside_abstract_class: is_abstract,
+        defined_private_members: RefCell::new(HashMap::new()),
     }
     .parse_list(p);
     p.expect(T!['}']);
@@ -417,8 +421,16 @@ fn parse_extends_expression(p: &mut JsParser) -> ParsedSyntax {
     parse_lhs_expr(p, ExpressionContext::default())
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub(crate) enum MemberType {
+    Normal,
+    Getter,
+    Setter,
+}
+
 struct ClassMembersList {
     inside_abstract_class: bool,
+    defined_private_members: RefCell<HashMap<Cow<'static, str>, HashMap<MemberType, bool>>>,
 }
 
 impl ParseNodeList for ClassMembersList {
@@ -428,7 +440,11 @@ impl ParseNodeList for ClassMembersList {
     const LIST_KIND: JsSyntaxKind = JS_CLASS_MEMBER_LIST;
 
     fn parse_element(&mut self, p: &mut JsParser) -> ParsedSyntax {
-        parse_class_member(p, self.inside_abstract_class)
+        parse_class_member(
+            p,
+            self.inside_abstract_class,
+            &mut self.defined_private_members.borrow_mut(),
+        )
     }
 
     fn is_at_list_end(&self, p: &mut JsParser) -> bool {
@@ -480,7 +496,11 @@ impl ParseNodeList for ClassMembersList {
 //  static async foo() {}
 //  static async *foo() {}
 // }
-fn parse_class_member(p: &mut JsParser, inside_abstract_class: bool) -> ParsedSyntax {
+fn parse_class_member(
+    p: &mut JsParser,
+    inside_abstract_class: bool,
+    defined_private_members: &mut HashMap<Cow<'static, str>, HashMap<MemberType, bool>>,
+) -> ParsedSyntax {
     let member_marker = p.start();
     // test class_empty_element
     // class foo { ;;;;;;;;;; get foo() {};;;;}
@@ -499,7 +519,7 @@ fn parse_class_member(p: &mut JsParser, inside_abstract_class: bool) -> ParsedSy
         ));
     }
 
-    let member = parse_class_member_impl(p, member_marker, &mut modifiers);
+    let member = parse_class_member_impl(p, member_marker, &mut modifiers, defined_private_members);
 
     match member {
         Present(mut member) => {
@@ -574,6 +594,7 @@ fn parse_class_member_impl(
     p: &mut JsParser,
     member_marker: Marker,
     modifiers: &mut ClassMemberModifiers,
+    defined_private_members: &mut HashMap<Cow<'static, str>, HashMap<MemberType, bool>>,
 ) -> ParsedSyntax {
     let start_token_pos = p.source().position();
     let generator_range = p.cur_range();
@@ -592,6 +613,8 @@ fn parse_class_member_impl(
             member_marker,
             modifiers,
             SignatureFlags::GENERATOR,
+            defined_private_members,
+            &MemberType::Normal,
         ));
     };
 
@@ -616,10 +639,18 @@ fn parse_class_member_impl(
             let err = p.err_builder("constructors cannot be async", async_range);
 
             p.error(err);
-            parse_class_member_name(p, modifiers).unwrap();
+            parse_class_member_name(p, modifiers, defined_private_members, &MemberType::Normal)
+                .unwrap();
             parse_constructor_class_member_body(p, member_marker, modifiers)
         } else {
-            parse_method_class_member(p, member_marker, modifiers, flags)
+            parse_method_class_member(
+                p,
+                member_marker,
+                modifiers,
+                flags,
+                defined_private_members,
+                &MemberType::Normal,
+            )
         });
     }
 
@@ -674,13 +705,13 @@ fn parse_class_member_impl(
         let is_getter = p.at(T![get]);
         if is_getter {
             p.expect(T![get]);
+            parse_class_member_name(p, modifiers, defined_private_members, &MemberType::Getter)
+                .or_add_diagnostic(p, js_parse_error::expected_class_member_name);
         } else {
             p.expect(T![set]);
+            parse_class_member_name(p, modifiers, defined_private_members, &MemberType::Setter)
+                .or_add_diagnostic(p, js_parse_error::expected_class_member_name);
         }
-
-        // So we've seen a get that now must be followed by a getter/setter name
-        parse_class_member_name(p, modifiers)
-            .or_add_diagnostic(p, js_parse_error::expected_class_member_name);
 
         // test_err ts ts_getter_setter_type_parameters
         // class Test {
@@ -729,8 +760,9 @@ fn parse_class_member_impl(
     }
 
     let is_constructor = is_at_constructor(p, modifiers);
-    let member_name = parse_class_member_name(p, modifiers)
-        .or_add_diagnostic(p, js_parse_error::expected_class_member_name);
+    let member_name =
+        parse_class_member_name(p, modifiers, defined_private_members, &MemberType::Normal)
+            .or_add_diagnostic(p, js_parse_error::expected_class_member_name);
 
     if is_at_method_class_member(p, 0) {
         // test class_static_constructor_method
@@ -1125,8 +1157,10 @@ fn parse_method_class_member(
     m: Marker,
     modifiers: &mut ClassMemberModifiers,
     flags: SignatureFlags,
+    defined_private_members: &mut HashMap<Cow<'static, str>, HashMap<MemberType, bool>>,
+    member_type: &MemberType,
 ) -> CompletedMarker {
-    parse_class_member_name(p, modifiers)
+    parse_class_member_name(p, modifiers, defined_private_members, member_type)
         .or_add_diagnostic(p, js_parse_error::expected_class_member_name);
     parse_method_class_member_rest(p, m, modifiers, flags)
 }
@@ -1534,18 +1568,52 @@ fn is_at_class_member_name(p: &mut JsParser, offset: usize) -> bool {
 }
 
 /// Parses a `AnyJsClassMemberName` and returns its completion marker
-fn parse_class_member_name(p: &mut JsParser, modifiers: &mut ClassMemberModifiers) -> ParsedSyntax {
+fn parse_class_member_name(
+    p: &mut JsParser,
+    modifiers: &mut ClassMemberModifiers,
+    defined_private_members: &mut HashMap<Cow<'static, str>, HashMap<MemberType, bool>>,
+    member_type: &MemberType,
+) -> ParsedSyntax {
     modifiers.set_private_member_name(p.at(T![#]));
     match p.cur() {
-        T![#] => parse_private_class_member_name(p),
+        T![#] => parse_private_class_member_name(p, defined_private_members, member_type),
         T!['['] => parse_computed_member_name(p),
         _ => parse_literal_member_name(p),
     }
 }
 
-pub(crate) fn parse_private_class_member_name(p: &mut JsParser) -> ParsedSyntax {
+// test_err class_private_member_no_duplicate
+// class A { #foo; #foo; }
+// class B { #foo() {}; #foo() {}; }
+// class C { #foo; #foo = 1; }
+// class D { get #foo() {}; #foo; }
+// class D { #foo() {}; get #foo() {}; }
+// class D { get #foo() {}; get #foo() {}; }
+pub(crate) fn parse_private_class_member_name(
+    p: &mut JsParser,
+    defined_private_members: &mut HashMap<Cow<'static, str>, HashMap<MemberType, bool>>,
+    member_type: &MemberType,
+) -> ParsedSyntax {
     parse_private_name(p).map(|mut name| {
-        name.change_kind(p, JS_PRIVATE_CLASS_MEMBER_NAME);
+        let member_name = name.text(p);
+        if let Some(value) = defined_private_members.get_mut(member_name) {
+            if value.get(&MemberType::Normal).is_some()
+                || value.get(member_type).is_some()
+                || member_type == &MemberType::Normal
+            {
+                p.error(p.err_builder("Duplicate private member name", name.range(p)));
+                name.change_to_bogus(p);
+            } else {
+                value.insert(*member_type, true);
+                name.change_kind(p, JS_PRIVATE_CLASS_MEMBER_NAME);
+            }
+        } else {
+            defined_private_members.insert(
+                member_name.to_string().into(),
+                HashMap::from([(*member_type, true)]),
+            );
+            name.change_kind(p, JS_PRIVATE_CLASS_MEMBER_NAME);
+        }
         name
     })
 }
