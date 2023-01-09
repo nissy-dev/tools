@@ -817,6 +817,8 @@ struct NurserySchema {
     use_exhaustive_dependencies: Option<RuleConfiguration>,
     #[doc = "Disallow the use of Math.pow in favor of the ** operator."]
     use_exponentiation_operator: Option<RuleConfiguration>,
+    #[doc = "Put your description here"]
+    use_heading_content: Option<RuleConfiguration>,
     #[doc = "Enforce that all React hooks are being called from the Top Level component functions."]
     use_hook_at_top_level: Option<RuleConfiguration>,
     #[doc = "Enforces the usage of the attribute title for the element iframe"]
@@ -836,7 +838,7 @@ struct NurserySchema {
 }
 impl Nursery {
     const CATEGORY_NAME: &'static str = "nursery";
-    pub(crate) const CATEGORY_RULES: [&'static str; 51] = [
+    pub(crate) const CATEGORY_RULES: [&'static str; 52] = [
         "noAccessKey",
         "noAssignInExpressions",
         "noBannedTypes",
@@ -880,6 +882,7 @@ impl Nursery {
         "useEnumInitializers",
         "useExhaustiveDependencies",
         "useExponentiationOperator",
+        "useHeadingContent",
         "useHookAtTopLevel",
         "useIframeTitle",
         "useIsNan",
@@ -969,13 +972,13 @@ impl Nursery {
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[39]),
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[40]),
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[41]),
-        RuleFilter::Rule("nursery", Self::CATEGORY_RULES[44]),
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[45]),
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[46]),
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[47]),
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[48]),
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[49]),
         RuleFilter::Rule("nursery", Self::CATEGORY_RULES[50]),
+        RuleFilter::Rule("nursery", Self::CATEGORY_RULES[51]),
     ];
     pub(crate) fn is_recommended(&self) -> bool { !matches!(self.recommended, Some(false)) }
     pub(crate) fn get_enabled_rules(&self) -> IndexSet<RuleFilter> {

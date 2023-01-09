@@ -461,6 +461,10 @@ export interface Nursery {
 	 */
 	useExponentiationOperator?: RuleConfiguration;
 	/**
+	 * Put your description here
+	 */
+	useHeadingContent?: RuleConfiguration;
+	/**
 	 * Enforce that all React hooks are being called from the Top Level component functions.
 	 */
 	useHookAtTopLevel?: RuleConfiguration;
@@ -814,6 +818,7 @@ export type Category =
 	| "lint/nursery/noDuplicateJsxProps"
 	| "lint/nursery/useYield"
 	| "lint/nursery/noGlobalObjectCalls"
+	| "lint/nursery/useHeadingContent"
 	| "lint/performance/noDelete"
 	| "lint/security/noDangerouslySetInnerHtml"
 	| "lint/security/noDangerouslySetInnerHtmlWithChildren"
