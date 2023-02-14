@@ -16,6 +16,7 @@ use rome_json_formatter::context::JsonFormatOptions;
 use rome_json_formatter::format_node;
 use rome_json_syntax::{JsonLanguage, JsonRoot, JsonSyntaxNode};
 use rome_parser::AnyParse;
+use rome_rowan::NodeCache;
 use rome_rowan::{TextRange, TextSize, TokenAtOffset};
 
 impl Language for JsonLanguage {
@@ -77,8 +78,8 @@ impl ExtensionHandler for JsonFileHandler {
     }
 }
 
-fn parse(_: &RomePath, _: LanguageId, text: &str) -> AnyParse {
-    let parse = rome_json_parser::parse_json(text);
+fn parse(_: &RomePath, _: LanguageId, text: &str, cache: &mut NodeCache) -> AnyParse {
+    let parse = rome_json_parser::parse_json_with_cache(text, cache);
     AnyParse::from(parse)
 }
 
